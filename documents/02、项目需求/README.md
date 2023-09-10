@@ -13,16 +13,16 @@
 
 
 
-业务参考项目源码地址：
+业务参考项目源码地址：https://gitee.com/07fly/FLY-CRM
 
 业务参考项目其他参考：
 
-- 参考1：
-- 参考2：
+- 参考1：http://www.07fly.xyz/doc/v2doc/1.html
+- 参考2：http://www.07fly.xyz/html/doc
 
 业务参考项目在线演示：
 
-- 访问地址：
-- 账号：
-- 密码：
+- 访问地址：http://v2.07fly.xyz
+- 账号：admin
+- 密码：admin123456
 
