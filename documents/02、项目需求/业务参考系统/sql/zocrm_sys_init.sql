@@ -1,6 +1,6 @@
 USE `zocrm_sys`;
 
-#栏目数据
+-- 栏目数据
 INSERT INTO `fly_sys_menu` (`id`, `name`, `name_en`, `url`, `parentID`, `sort`, `visible`) VALUES (1, '系统管理', 'SystemManage', 'cogs', 0, 1, 1);
 INSERT INTO `fly_sys_menu` (`id`, `name`, `name_en`, `url`, `parentID`, `sort`, `visible`) VALUES (2, '客户管理', 'Customer', 'user', 0, 20, 1);
 INSERT INTO `fly_sys_menu` (`id`, `name`, `name_en`, `url`, `parentID`, `sort`, `visible`) VALUES (3, '统计分析', '', 'line-chart', 0, 50, 1);
@@ -91,7 +91,7 @@ INSERT INTO `fly_sys_menu` (`id`, `name`, `name_en`, `url`, `parentID`, `sort`, 
 INSERT INTO `fly_sys_menu` (`id`, `name`, `name_en`, `url`, `parentID`, `sort`, `visible`) VALUES (89, '字典分类', '栏目名称', '/crm/CstDictType/cst_dict_type_show/', 7, 1, 1);
 
 
-#方法数据
+-- 方法数据
 INSERT INTO `fly_sys_method` (`id`, `menuID`, `name`, `value`, `sort`, `visible`) VALUES (2, 21, '增加2', 'dept_add', 2, 0);
 INSERT INTO `fly_sys_method` (`id`, `menuID`, `name`, `value`, `sort`, `visible`) VALUES (3, 21, '删除', 'dept_del', 3, 1);
 INSERT INTO `fly_sys_method` (`id`, `menuID`, `name`, `value`, `sort`, `visible`) VALUES (4, 22, '删除', 'position_del', 3, 1);
@@ -183,33 +183,37 @@ INSERT INTO `fly_sys_method` (`id`, `menuID`, `name`, `value`, `sort`, `visible`
 
 
 
-#部门管理
+-- 部门管理
 INSERT INTO `fly_sys_dept` VALUES('1','技术部','0','1','1','12345677','02888133145','主要是用来产的哟');
 INSERT INTO `fly_sys_dept` VALUES('2','商务部','0','0','1','028 8976214','028 8976214','');
 INSERT INTO `fly_sys_dept` VALUES('6','行政部','0','1','1','02861833149','02861833149','');
 
-#职位数据
+-- 职位数据
 INSERT INTO `fly_sys_position` VALUES('1','董事会','0','1','1','董事会，管理全公司的信息的');
 INSERT INTO `fly_sys_position` VALUES('2','总经理','1','10','1','');
 INSERT INTO `fly_sys_position` VALUES('3','财务总监','1','20','1','');
 INSERT INTO `fly_sys_position` VALUES('4','人事总监','1','21','0','');
 INSERT INTO `fly_sys_position` VALUES('5','技术总监','1','31','1','');
 
-#权限维护
+-- 权限维护
 INSERT IGNORE INTO `fly_sys_role` (`id`, `sort`, `visible`, `name`, `intro`)  VALUES (1, 1, 1, '超级管理员', '权限介绍,这是最高管理权限');
 INSERT IGNORE INTO `fly_sys_power` (`id`, `master`, `master_value`, `access`, `access_value`, `operation`) VALUES (1, 'role', '1', 'SYS_MENU', '1', NULL);
 INSERT IGNORE INTO `fly_sys_power` (`id`, `master`, `master_value`, `access`, `access_value`, `operation`) VALUES (2, 'role', '1', 'SYS_METHOD', '1', NULL);
 
-#系统参数
-INSERT INTO `fly_sys_config` VALUES('1','系统根网址： ','cfg_basehost','http://www.07fly.com/','string','0');
-INSERT INTO `fly_sys_config` VALUES('2','主页链接名： ','cfg_indexname','首页','string','0');
-INSERT INTO `fly_sys_config` VALUES('3','系统名称:','cfg_webname','成都零起飞（07FLY-CRM）客户管理系统','string','0');
-INSERT INTO `fly_sys_config` VALUES('4','系统版信息:','cfg_powerby','成都零起飞网络工作室','bstring','0');
-INSERT INTO `fly_sys_config` VALUES('5','每张默认关键字： ','cfg_keywords','成都零起飞网络','bstring','0');
-INSERT INTO `fly_sys_config` VALUES('6','系统描述:','cfg_intro','成都零起飞（07FLY-CRM）客户管理系统','bstring','0');
+-- 系统管理员
+INSERT INTO `fly_sys_user` (`id`, `account`, `password`, `name`, `gender`, `tel`, `mobile`, `qicq`, `address`, `zipcode`, `email`, `roleID`, `deptID`, `positionID`, `intro`, `adt`, `identity`) VALUES (1, 'admin', '$2a$10$K7U.Xolbbz3fGsAzpIawmeQuTWt/W0TXA8DpugqRwWsE0PeRSi1Vu', '管理员', '1', '', '', '', '', '', '', '1', 1, 5, '', NULL, NULL);
+INSERT INTO `fly_sys_user_role` (`id`, `role_id`, `user_id`) VALUES (1, 1, 1);
+
+-- 系统参数
+INSERT INTO `fly_sys_config` VALUES('1','系统根网址： ','cfg_basehost','http://www.zostar.com','string','0');
+INSERT INTO `fly_sys_config` VALUES('2','主页链接名： ','cfg_indexname','零壹CRM','string','0');
+INSERT INTO `fly_sys_config` VALUES('3','系统名称:','cfg_webname','零壹客户管理系统','string','0');
+INSERT INTO `fly_sys_config` VALUES('4','系统版信息:','cfg_powerby','零壹星球','bstring','0');
+INSERT INTO `fly_sys_config` VALUES('5','每张默认关键字： ','cfg_keywords','零壹星球','bstring','0');
+INSERT INTO `fly_sys_config` VALUES('6','系统描述:','cfg_intro','零壹客户管理系统','bstring','0');
 INSERT INTO `fly_sys_config` VALUES('7','系统主页链接： ','cfg_indexurl','/','string','0');
 
-#字典分类
+-- 字典分类
 INSERT INTO `cst_dict_type` VALUES('1','客户等级','','level','0','1','','','');
 INSERT INTO `cst_dict_type` VALUES('2','隶属行业','','trade','0','1','','','');
 INSERT INTO `cst_dict_type` VALUES('3','经济类型','','ecotype','0','1','','','');
@@ -219,7 +223,7 @@ INSERT INTO `cst_dict_type` VALUES('6','销售阶段','','salestage','0','1','',
 INSERT INTO `cst_dict_type` VALUES('7','服务类型','','services','0','1','','','');
 INSERT INTO `cst_dict_type` VALUES('8','服务方式','','servicesmodel','0','1','','','');
 
-#字典管理
+-- 字典管理
 INSERT INTO `cst_dict` VALUES('1','VIP客户','level','3','1');
 INSERT INTO `cst_dict` VALUES('23','一般客户','level','4','1');
 INSERT INTO `cst_dict` VALUES('24','工业品企业','trade','1','1');
@@ -268,7 +272,7 @@ INSERT INTO `cst_dict` VALUES('66','加微信号','talk','5','1');
 INSERT INTO `cst_dict` VALUES('67','超级客户1','level','0','1');
 INSERT INTO `cst_dict` VALUES('68','超级客户2','level','0','1');
 
-#扩展字段数据
+-- 扩展字段数据
 INSERT INTO `cst_field_ext` (`field_ext_id`, `main_table`, `ext_table`, `show_name`, `field_name`, `field_type`, `default`, `maxlength`, `desc`, `visible`, `is_system`, `is_must`, `sort`, `create_time`, `create_user_id`) VALUES (2, 'cst_customer', 'cst_customer', '客户代表', 'linkman', 'varchar', '', '250', '', 1, 1, 1, 0, '2019-05-28 12:15:19', 1);
 INSERT INTO `cst_field_ext` (`field_ext_id`, `main_table`, `ext_table`, `show_name`, `field_name`, `field_type`, `default`, `maxlength`, `desc`, `visible`, `is_system`, `is_must`, `sort`, `create_time`, `create_user_id`) VALUES (3, 'cst_customer', 'cst_customer', '客户来源', 'source', 'option', '网络,客户介绍,主动开发', '250', '', 1, 1, 1, 0, '2019-05-28 12:16:35', 1);
 INSERT INTO `cst_field_ext` (`field_ext_id`, `main_table`, `ext_table`, `show_name`, `field_name`, `field_type`, `default`, `maxlength`, `desc`, `visible`, `is_system`, `is_must`, `sort`, `create_time`, `create_user_id`) VALUES (4, 'cst_customer', 'cst_customer', '客户等级', 'grade', 'option', '普通客户,一般客户,重点客户', '250', '', 1, 1, 1, 0, '2019-05-28 12:17:40', 1);

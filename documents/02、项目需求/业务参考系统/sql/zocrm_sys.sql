@@ -7,8 +7,7 @@ USE `zocrm_sys`;
 
 SET FOREIGN_KEY_CHECKS=0;
 
--- 导出  表 07fly_crm_v2.cst_chance 结构
-CREATE TABLE IF NOT EXISTS `cst_chance` (
+CREATE TABLE `cst_chance` (
   `chance_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `customer_id` int(16) NOT NULL DEFAULT '0',
   `linkman_id` varchar(256) NOT NULL DEFAULT '0',
@@ -24,17 +23,15 @@ CREATE TABLE IF NOT EXISTS `cst_chance` (
   `create_user_id` int(16) NOT NULL DEFAULT '0',
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`chance_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='销售机会';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='销售机会';
 
--- 正在导出表  07fly_crm_v2.cst_chance 的数据：1 rows
 DELETE FROM `cst_chance`;
 /*!40000 ALTER TABLE `cst_chance` DISABLE KEYS */;
 INSERT INTO `cst_chance` (`chance_id`, `customer_id`, `linkman_id`, `find_date`, `bill_date`, `salestage`, `money`, `success_rate`, `userID`, `name`, `intro`, `status`, `create_user_id`, `create_time`) VALUES
 	(1, 1, '1', '2021-06-03', '2020-07-01', 39, 5000.00, 0, 0, '公司网站开发', '', 1, 1, '2021-06-03 09:32:01');
 /*!40000 ALTER TABLE `cst_chance` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.cst_customer 结构
-CREATE TABLE IF NOT EXISTS `cst_customer` (
+CREATE TABLE `cst_customer` (
   `customer_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL DEFAULT '' COMMENT '客户名称',
   `customer_no` varchar(64) NOT NULL DEFAULT '' COMMENT '客户编号',
@@ -54,9 +51,8 @@ CREATE TABLE IF NOT EXISTS `cst_customer` (
   `intro` varchar(250) DEFAULT '' COMMENT '客户介绍',
   `needs` varchar(250) DEFAULT '' COMMENT '客户需求',
   PRIMARY KEY (`customer_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='客户信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='客户信息表';
 
--- 正在导出表  07fly_crm_v2.cst_customer 的数据：2 rows
 DELETE FROM `cst_customer`;
 /*!40000 ALTER TABLE `cst_customer` DISABLE KEYS */;
 INSERT INTO `cst_customer` (`customer_id`, `name`, `customer_no`, `create_user_id`, `owner_user_id`, `create_time`, `next_time`, `conn_time`, `conn_body`, `linkman`, `source`, `grade`, `industry`, `mobile`, `tel`, `address`, `intro`, `needs`) VALUES
@@ -64,17 +60,15 @@ INSERT INTO `cst_customer` (`customer_id`, `name`, `customer_no`, `create_user_i
 	(2, '李四', '', 1, 1, '2022-12-19 08:45:40', NULL, '2022-12-19 08:45:40', '', '李总', '网络', '普通客户', '互联网企业', '18525256565', '18525256565', '成都市', '', '');
 /*!40000 ALTER TABLE `cst_customer` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.cst_dict 结构
-CREATE TABLE IF NOT EXISTS `cst_dict` (
+CREATE TABLE `cst_dict` (
   `dict_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '名字',
   `typetag` varchar(256) NOT NULL DEFAULT '' COMMENT '分类标识',
   `sort` smallint(8) NOT NULL DEFAULT '0',
   `visible` smallint(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`dict_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=71 DEFAULT CHARSET=utf8 COMMENT='字典表';
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8 COMMENT='字典表';
 
--- 正在导出表  07fly_crm_v2.cst_dict 的数据：46 rows
 DELETE FROM `cst_dict`;
 /*!40000 ALTER TABLE `cst_dict` DISABLE KEYS */;
 INSERT INTO `cst_dict` (`dict_id`, `name`, `typetag`, `sort`, `visible`) VALUES
@@ -126,8 +120,7 @@ INSERT INTO `cst_dict` (`dict_id`, `name`, `typetag`, `sort`, `visible`) VALUES
 	(68, '钻石客户', 'level', 0, 0);
 /*!40000 ALTER TABLE `cst_dict` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.cst_dict_type 结构
-CREATE TABLE IF NOT EXISTS `cst_dict_type` (
+CREATE TABLE `cst_dict_type` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `typename` varchar(256) NOT NULL DEFAULT '' COMMENT '分类名称',
   `typedir` varchar(256) NOT NULL DEFAULT '' COMMENT '分类目录',
@@ -138,9 +131,8 @@ CREATE TABLE IF NOT EXISTS `cst_dict_type` (
   `seotitle` varchar(256) NOT NULL DEFAULT '',
   `keywords` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='字典分类';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='字典分类';
 
--- 正在导出表  07fly_crm_v2.cst_dict_type 的数据：8 rows
 DELETE FROM `cst_dict_type`;
 /*!40000 ALTER TABLE `cst_dict_type` DISABLE KEYS */;
 INSERT INTO `cst_dict_type` (`id`, `typename`, `typedir`, `typetag`, `sort`, `visible`, `intro`, `seotitle`, `keywords`) VALUES
@@ -154,8 +146,7 @@ INSERT INTO `cst_dict_type` (`id`, `typename`, `typedir`, `typetag`, `sort`, `vi
 	(8, '服务方式', '', 'servicesmodel', 0, 1, NULL, '', '');
 /*!40000 ALTER TABLE `cst_dict_type` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.cst_field_ext 结构
-CREATE TABLE IF NOT EXISTS `cst_field_ext` (
+CREATE TABLE `cst_field_ext` (
   `field_ext_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `main_table` varchar(50) NOT NULL DEFAULT '' COMMENT '关联主表',
   `ext_table` varchar(50) NOT NULL DEFAULT '' COMMENT '扩展表名',
@@ -172,9 +163,8 @@ CREATE TABLE IF NOT EXISTS `cst_field_ext` (
   `create_time` datetime DEFAULT NULL,
   `create_user_id` int(16) NOT NULL DEFAULT '0',
   PRIMARY KEY (`field_ext_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='客户字段扩展表';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COMMENT='客户字段扩展表';
 
--- 正在导出表  07fly_crm_v2.cst_field_ext 的数据：10 rows
 DELETE FROM `cst_field_ext`;
 /*!40000 ALTER TABLE `cst_field_ext` DISABLE KEYS */;
 INSERT INTO `cst_field_ext` (`field_ext_id`, `main_table`, `ext_table`, `show_name`, `field_name`, `field_type`, `default`, `maxlength`, `desc`, `visible`, `is_system`, `is_must`, `sort`, `create_time`, `create_user_id`) VALUES
@@ -190,8 +180,7 @@ INSERT INTO `cst_field_ext` (`field_ext_id`, `main_table`, `ext_table`, `show_na
 	(14, 'sup_supplier', 'sup_supplier', 'test', 'test', 'varchar', '', '250', '', 1, 0, 0, 0, '2020-12-29 09:45:10', 1);
 /*!40000 ALTER TABLE `cst_field_ext` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.cst_filing 结构
-CREATE TABLE IF NOT EXISTS `cst_filing` (
+CREATE TABLE `cst_filing` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `cusID` int(16) NOT NULL DEFAULT '0',
   `linkmanID` int(16) NOT NULL DEFAULT '0',
@@ -207,9 +196,8 @@ CREATE TABLE IF NOT EXISTS `cst_filing` (
   `create_userID` int(16) NOT NULL DEFAULT '0',
   `adt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='项目报备';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='项目报备';
 
--- 正在导出表  07fly_crm_v2.cst_filing 的数据：3 rows
 DELETE FROM `cst_filing`;
 /*!40000 ALTER TABLE `cst_filing` DISABLE KEYS */;
 INSERT INTO `cst_filing` (`id`, `cusID`, `linkmanID`, `chanceID`, `userID`, `applicant_userID`, `audit_userID`, `audit_dt`, `title`, `intro`, `support`, `status`, `create_userID`, `adt`) VALUES
@@ -218,8 +206,7 @@ INSERT INTO `cst_filing` (`id`, `cusID`, `linkmanID`, `chanceID`, `userID`, `app
 	(5, 1, 2, 2, 0, 5, 4, '2016-12-22 11:23:32', '这是一个不错的项目的呢', '', '需要技术部门和销售部门的支持和帮助的呢', 3, 4, '2013-09-23 10:35:16');
 /*!40000 ALTER TABLE `cst_filing` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.cst_linkman 结构
-CREATE TABLE IF NOT EXISTS `cst_linkman` (
+CREATE TABLE `cst_linkman` (
   `linkman_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `customer_id` int(16) NOT NULL DEFAULT '0',
   `name` varchar(256) NOT NULL DEFAULT '',
@@ -235,9 +222,8 @@ CREATE TABLE IF NOT EXISTS `cst_linkman` (
   `create_user_id` int(16) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`linkman_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='客户联系人';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='客户联系人';
 
--- 正在导出表  07fly_crm_v2.cst_linkman 的数据：2 rows
 DELETE FROM `cst_linkman`;
 /*!40000 ALTER TABLE `cst_linkman` DISABLE KEYS */;
 INSERT INTO `cst_linkman` (`linkman_id`, `customer_id`, `name`, `gender`, `postion`, `tel`, `mobile`, `qicq`, `email`, `zipcode`, `address`, `intro`, `create_user_id`, `create_time`) VALUES
@@ -245,8 +231,7 @@ INSERT INTO `cst_linkman` (`linkman_id`, `customer_id`, `name`, `gender`, `posti
 	(2, 2, '李总', 0, '', '18525256565', '18525256565', '', '', '', '', '', 1, '2022-12-19 08:45:40');
 /*!40000 ALTER TABLE `cst_linkman` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.cst_quoted 结构
-CREATE TABLE IF NOT EXISTS `cst_quoted` (
+CREATE TABLE `cst_quoted` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `cusID` int(16) NOT NULL DEFAULT '0',
   `linkmanID` int(16) NOT NULL DEFAULT '0',
@@ -264,15 +249,9 @@ CREATE TABLE IF NOT EXISTS `cst_quoted` (
   `create_userID` int(16) NOT NULL DEFAULT '0',
   `adt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='报价表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报价表';
 
--- 正在导出表  07fly_crm_v2.cst_quoted 的数据：0 rows
-DELETE FROM `cst_quoted`;
-/*!40000 ALTER TABLE `cst_quoted` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cst_quoted` ENABLE KEYS */;
-
--- 导出  表 07fly_crm_v2.cst_quoted_detail 结构
-CREATE TABLE IF NOT EXISTS `cst_quoted_detail` (
+CREATE TABLE `cst_quoted_detail` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `quotedID` int(16) NOT NULL DEFAULT '0',
   `pro_number` varchar(64) NOT NULL DEFAULT '',
@@ -287,15 +266,9 @@ CREATE TABLE IF NOT EXISTS `cst_quoted_detail` (
   `userID` int(16) NOT NULL DEFAULT '0' COMMENT '归属人员',
   `adt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='报价明细';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='报价明细';
 
--- 正在导出表  07fly_crm_v2.cst_quoted_detail 的数据：0 rows
-DELETE FROM `cst_quoted_detail`;
-/*!40000 ALTER TABLE `cst_quoted_detail` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cst_quoted_detail` ENABLE KEYS */;
-
--- 导出  表 07fly_crm_v2.cst_service 结构
-CREATE TABLE IF NOT EXISTS `cst_service` (
+CREATE TABLE `cst_service` (
   `service_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `customer_id` int(16) NOT NULL DEFAULT '0',
   `linkman_id` int(16) NOT NULL DEFAULT '0',
@@ -310,32 +283,24 @@ CREATE TABLE IF NOT EXISTS `cst_service` (
   `create_user_id` int(16) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`service_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='服务记录';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='服务记录';
 
--- 正在导出表  07fly_crm_v2.cst_service 的数据：1 rows
 DELETE FROM `cst_service`;
 /*!40000 ALTER TABLE `cst_service` DISABLE KEYS */;
 INSERT INTO `cst_service` (`service_id`, `customer_id`, `linkman_id`, `services`, `servicesmodel`, `price`, `status`, `service_time`, `tlen`, `content`, `intro`, `create_user_id`, `create_time`) VALUES
 	(1, 1, 0, 45, 49, 0, 0, '2021-06-02 00:00:00', '200', '给客户培训指导', '', 1, '2021-06-02 16:37:11');
 /*!40000 ALTER TABLE `cst_service` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.cst_talk 结构
-CREATE TABLE IF NOT EXISTS `cst_talk` (
+CREATE TABLE `cst_talk` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `cusID` int(16) NOT NULL DEFAULT '0',
   `name` varchar(1024) NOT NULL DEFAULT '',
   `create_userID` int(16) NOT NULL DEFAULT '0',
   `adt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='打电话沟通记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='打电话沟通记录';
 
--- 正在导出表  07fly_crm_v2.cst_talk 的数据：0 rows
-DELETE FROM `cst_talk`;
-/*!40000 ALTER TABLE `cst_talk` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cst_talk` ENABLE KEYS */;
-
--- 导出  表 07fly_crm_v2.cst_trace 结构
-CREATE TABLE IF NOT EXISTS `cst_trace` (
+CREATE TABLE `cst_trace` (
   `trace_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `customer_id` int(16) NOT NULL DEFAULT '0',
   `linkman_id` int(11) NOT NULL DEFAULT '0',
@@ -351,15 +316,9 @@ CREATE TABLE IF NOT EXISTS `cst_trace` (
   `create_user_id` int(16) unsigned NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`trace_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='跟踪记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='跟踪记录';
 
--- 正在导出表  07fly_crm_v2.cst_trace 的数据：0 rows
-DELETE FROM `cst_trace`;
-/*!40000 ALTER TABLE `cst_trace` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cst_trace` ENABLE KEYS */;
-
--- 导出  表 07fly_crm_v2.cst_website 结构
-CREATE TABLE IF NOT EXISTS `cst_website` (
+CREATE TABLE `cst_website` (
   `website_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `customer_id` int(16) NOT NULL DEFAULT '0',
   `name` varchar(256) NOT NULL DEFAULT '',
@@ -380,15 +339,9 @@ CREATE TABLE IF NOT EXISTS `cst_website` (
   `status` int(2) NOT NULL DEFAULT '1' COMMENT '网站状态1=新增，2=续费，3=流失',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`website_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网站业务';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='网站业务';
 
--- 正在导出表  07fly_crm_v2.cst_website 的数据：0 rows
-DELETE FROM `cst_website`;
-/*!40000 ALTER TABLE `cst_website` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cst_website` ENABLE KEYS */;
-
--- 导出  表 07fly_crm_v2.fin_bank_account 结构
-CREATE TABLE IF NOT EXISTS `fin_bank_account` (
+CREATE TABLE `fin_bank_account` (
   `bank_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '开户银行名称',
   `card` varchar(256) NOT NULL DEFAULT '' COMMENT '帐号号',
@@ -397,9 +350,8 @@ CREATE TABLE IF NOT EXISTS `fin_bank_account` (
   `sort` smallint(2) NOT NULL DEFAULT '0',
   `visible` smallint(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`bank_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='银行帐户';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='银行帐户';
 
--- 正在导出表  07fly_crm_v2.fin_bank_account 的数据：2 rows
 DELETE FROM `fin_bank_account`;
 /*!40000 ALTER TABLE `fin_bank_account` DISABLE KEYS */;
 INSERT INTO `fin_bank_account` (`bank_id`, `name`, `card`, `address`, `holders`, `sort`, `visible`) VALUES
@@ -407,8 +359,7 @@ INSERT INTO `fin_bank_account` (`bank_id`, `name`, `card`, `address`, `holders`,
 	(2, '农业银行', '624404040231212', '成都市犀浦', '李枭', 1, 0);
 /*!40000 ALTER TABLE `fin_bank_account` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fin_capital_record 结构
-CREATE TABLE IF NOT EXISTS `fin_capital_record` (
+CREATE TABLE `fin_capital_record` (
   `record_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `type_id` int(16) NOT NULL DEFAULT '1' COMMENT '费用类别，1=注入，-1=抽取',
   `create_user_id` int(16) NOT NULL DEFAULT '0',
@@ -418,15 +369,9 @@ CREATE TABLE IF NOT EXISTS `fin_capital_record` (
   `create_time` datetime DEFAULT NULL,
   `happen_date` date DEFAULT NULL COMMENT '产生日期',
   PRIMARY KEY (`record_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='资金注入抽取';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='资金注入抽取';
 
--- 正在导出表  07fly_crm_v2.fin_capital_record 的数据：0 rows
-DELETE FROM `fin_capital_record`;
-/*!40000 ALTER TABLE `fin_capital_record` DISABLE KEYS */;
-/*!40000 ALTER TABLE `fin_capital_record` ENABLE KEYS */;
-
--- 导出  表 07fly_crm_v2.fin_expenses_record 结构
-CREATE TABLE IF NOT EXISTS `fin_expenses_record` (
+CREATE TABLE `fin_expenses_record` (
   `record_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `type_id` int(16) NOT NULL DEFAULT '0' COMMENT '费用类别',
   `create_user_id` int(16) NOT NULL DEFAULT '0',
@@ -436,15 +381,9 @@ CREATE TABLE IF NOT EXISTS `fin_expenses_record` (
   `create_time` datetime DEFAULT NULL,
   `happen_date` date DEFAULT NULL COMMENT '产生日期',
   PRIMARY KEY (`record_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='其它支出记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='其它支出记录';
 
--- 正在导出表  07fly_crm_v2.fin_expenses_record 的数据：0 rows
-DELETE FROM `fin_expenses_record`;
-/*!40000 ALTER TABLE `fin_expenses_record` DISABLE KEYS */;
-/*!40000 ALTER TABLE `fin_expenses_record` ENABLE KEYS */;
-
--- 导出  表 07fly_crm_v2.fin_expenses_type 结构
-CREATE TABLE IF NOT EXISTS `fin_expenses_type` (
+CREATE TABLE `fin_expenses_type` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `parentID` int(11) NOT NULL DEFAULT '0',
@@ -452,9 +391,8 @@ CREATE TABLE IF NOT EXISTS `fin_expenses_type` (
   `visible` tinyint(2) NOT NULL DEFAULT '1',
   `intro` varchar(1024) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=armscii8 COMMENT='其它支出类型';
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=armscii8 COMMENT='其它支出类型';
 
--- 正在导出表  07fly_crm_v2.fin_expenses_type 的数据：4 rows
 DELETE FROM `fin_expenses_type`;
 /*!40000 ALTER TABLE `fin_expenses_type` DISABLE KEYS */;
 INSERT INTO `fin_expenses_type` (`id`, `name`, `parentID`, `sort`, `visible`, `intro`) VALUES
@@ -464,8 +402,7 @@ INSERT INTO `fin_expenses_type` (`id`, `name`, `parentID`, `sort`, `visible`, `i
 	(19, '日常开支', 17, 2, 1, '2');
 /*!40000 ALTER TABLE `fin_expenses_type` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fin_flow_record 结构
-CREATE TABLE IF NOT EXISTS `fin_flow_record` (
+CREATE TABLE `fin_flow_record` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `balance` decimal(20,2) NOT NULL DEFAULT '0.00' COMMENT '余额',
   `pay_money` decimal(20,2) NOT NULL DEFAULT '0.00' COMMENT '支出',
@@ -477,17 +414,15 @@ CREATE TABLE IF NOT EXISTS `fin_flow_record` (
   `create_time` datetime DEFAULT NULL,
   `create_user_id` int(16) NOT NULL DEFAULT '0' COMMENT '创建人',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='财务流水';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='财务流水';
 
--- 正在导出表  07fly_crm_v2.fin_flow_record 的数据：1 rows
 DELETE FROM `fin_flow_record`;
 /*!40000 ALTER TABLE `fin_flow_record` DISABLE KEYS */;
 INSERT INTO `fin_flow_record` (`id`, `balance`, `pay_money`, `rece_money`, `bank_id`, `bus_id`, `bus_type`, `intro`, `create_time`, `create_user_id`) VALUES
 	(4, -500.50, 500.50, 0.00, 1, 1, 'pos_contract', '', '2021-06-02 18:08:09', 1);
 /*!40000 ALTER TABLE `fin_flow_record` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fin_income_record 结构
-CREATE TABLE IF NOT EXISTS `fin_income_record` (
+CREATE TABLE `fin_income_record` (
   `record_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `type_id` int(16) NOT NULL DEFAULT '0' COMMENT '费用类别',
   `bank_id` int(16) NOT NULL DEFAULT '0',
@@ -497,9 +432,8 @@ CREATE TABLE IF NOT EXISTS `fin_income_record` (
   `create_user_id` int(16) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`record_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='其它收入记录';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='其它收入记录';
 
--- 正在导出表  07fly_crm_v2.fin_income_record 的数据：4 rows
 DELETE FROM `fin_income_record`;
 /*!40000 ALTER TABLE `fin_income_record` DISABLE KEYS */;
 INSERT INTO `fin_income_record` (`record_id`, `type_id`, `bank_id`, `money`, `intro`, `happen_date`, `create_user_id`, `create_time`) VALUES
@@ -509,8 +443,7 @@ INSERT INTO `fin_income_record` (`record_id`, `type_id`, `bank_id`, `money`, `in
 	(5, 19, 2, 65400.00, 'fsgsfgsfg', '2018-12-25', 4, '2018-12-28 15:52:45');
 /*!40000 ALTER TABLE `fin_income_record` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fin_income_type 结构
-CREATE TABLE IF NOT EXISTS `fin_income_type` (
+CREATE TABLE `fin_income_type` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `parentID` int(11) NOT NULL DEFAULT '0',
@@ -518,9 +451,8 @@ CREATE TABLE IF NOT EXISTS `fin_income_type` (
   `visible` tinyint(2) NOT NULL DEFAULT '1',
   `intro` varchar(1024) CHARACTER SET utf8 DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=armscii8 COMMENT='其它收入类型';
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=armscii8 COMMENT='其它收入类型';
 
--- 正在导出表  07fly_crm_v2.fin_income_type 的数据：4 rows
 DELETE FROM `fin_income_type`;
 /*!40000 ALTER TABLE `fin_income_type` DISABLE KEYS */;
 INSERT INTO `fin_income_type` (`id`, `name`, `parentID`, `sort`, `visible`, `intro`) VALUES
@@ -530,8 +462,7 @@ INSERT INTO `fin_income_type` (`id`, `name`, `parentID`, `sort`, `visible`, `int
 	(21, '其它分类收入', 0, 1, 1, '杂七杂入');
 /*!40000 ALTER TABLE `fin_income_type` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fin_invoice_pay 结构
-CREATE TABLE IF NOT EXISTS `fin_invoice_pay` (
+CREATE TABLE `fin_invoice_pay` (
   `record_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `contract_id` int(16) NOT NULL DEFAULT '0' COMMENT '合同订单号',
   `contract_name` varchar(256) NOT NULL DEFAULT '',
@@ -547,9 +478,8 @@ CREATE TABLE IF NOT EXISTS `fin_invoice_pay` (
   `create_time` datetime DEFAULT NULL,
   `create_user_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`record_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COMMENT='开票记录、';
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 COMMENT='开票记录、';
 
--- 正在导出表  07fly_crm_v2.fin_invoice_pay 的数据：5 rows
 DELETE FROM `fin_invoice_pay`;
 /*!40000 ALTER TABLE `fin_invoice_pay` DISABLE KEYS */;
 INSERT INTO `fin_invoice_pay` (`record_id`, `contract_id`, `contract_name`, `customer_id`, `customer_name`, `money`, `pay_date`, `stages`, `invoice_no`, `name`, `bus_type`, `intro`, `create_time`, `create_user_id`) VALUES
@@ -560,8 +490,7 @@ INSERT INTO `fin_invoice_pay` (`record_id`, `contract_id`, `contract_name`, `cus
 	(22, 8, '0', 11, '0', 4770, '2017-11-01', 1, '', '合同', 'sal_contract', '4500合同金额，补了270的发票', '2017-11-15 15:04:44', 4);
 /*!40000 ALTER TABLE `fin_invoice_pay` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fin_invoice_rece 结构
-CREATE TABLE IF NOT EXISTS `fin_invoice_rece` (
+CREATE TABLE `fin_invoice_rece` (
   `record_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `contract_id` int(16) NOT NULL DEFAULT '0' COMMENT '关联采购号',
   `supplier_id` int(16) NOT NULL DEFAULT '0' COMMENT '供应商号',
@@ -576,17 +505,15 @@ CREATE TABLE IF NOT EXISTS `fin_invoice_rece` (
   `create_time` datetime DEFAULT NULL,
   `create_user_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`record_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='收票记录';
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COMMENT='收票记录';
 
--- 正在导出表  07fly_crm_v2.fin_invoice_rece 的数据：1 rows
 DELETE FROM `fin_invoice_rece`;
 /*!40000 ALTER TABLE `fin_invoice_rece` DISABLE KEYS */;
 INSERT INTO `fin_invoice_rece` (`record_id`, `contract_id`, `supplier_id`, `contract_name`, `supplier_name`, `money`, `rece_date`, `stages`, `name`, `invoice_no`, `intro`, `create_time`, `create_user_id`) VALUES
 	(21, 3, 1, '', '山西太原', 5000, '2020-03-27', 1, '货款', 'XWR', '', '2020-03-27 14:53:45', 1);
 /*!40000 ALTER TABLE `fin_invoice_rece` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fin_pay_plan 结构
-CREATE TABLE IF NOT EXISTS `fin_pay_plan` (
+CREATE TABLE `fin_pay_plan` (
   `plan_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `contract_id` int(16) NOT NULL DEFAULT '0' COMMENT '采购订单号',
   `contract_name` varchar(256) NOT NULL DEFAULT '' COMMENT '采购合同名称',
@@ -601,15 +528,9 @@ CREATE TABLE IF NOT EXISTS `fin_pay_plan` (
   `create_user_id` int(16) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`plan_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='付款计划表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='付款计划表';
 
--- 正在导出表  07fly_crm_v2.fin_pay_plan 的数据：0 rows
-DELETE FROM `fin_pay_plan`;
-/*!40000 ALTER TABLE `fin_pay_plan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `fin_pay_plan` ENABLE KEYS */;
-
--- 导出  表 07fly_crm_v2.fin_pay_record 结构
-CREATE TABLE IF NOT EXISTS `fin_pay_record` (
+CREATE TABLE `fin_pay_record` (
   `record_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `plan_id` int(16) unsigned NOT NULL DEFAULT '0' COMMENT '关联付款记划',
   `contract_id` int(16) NOT NULL DEFAULT '0' COMMENT '采购订单号',
@@ -625,17 +546,15 @@ CREATE TABLE IF NOT EXISTS `fin_pay_record` (
   `create_time` datetime DEFAULT NULL,
   `create_user_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`record_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=48 DEFAULT CHARSET=utf8 COMMENT='付款记录';
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8 COMMENT='付款记录';
 
--- 正在导出表  07fly_crm_v2.fin_pay_record 的数据：1 rows
 DELETE FROM `fin_pay_record`;
 /*!40000 ALTER TABLE `fin_pay_record` DISABLE KEYS */;
 INSERT INTO `fin_pay_record` (`record_id`, `plan_id`, `contract_id`, `contract_name`, `supplier_id`, `supplier_name`, `bank_id`, `pay_date`, `money`, `zero_money`, `stages`, `intro`, `create_time`, `create_user_id`) VALUES
 	(47, 0, 1, '天河一期', 12, '上海八达', 0, '2021-06-02', 500.50, 0.00, 1, '', '2021-06-02 18:08:09', 1);
 /*!40000 ALTER TABLE `fin_pay_record` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fin_rece_plan 结构
-CREATE TABLE IF NOT EXISTS `fin_rece_plan` (
+CREATE TABLE `fin_rece_plan` (
   `plan_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `contract_id` int(16) NOT NULL DEFAULT '0' COMMENT '合同订单号',
   `contract_name` varchar(256) NOT NULL DEFAULT '' COMMENT '合同名称',
@@ -650,15 +569,9 @@ CREATE TABLE IF NOT EXISTS `fin_rece_plan` (
   `intro` text,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`plan_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='计划回款表';
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='计划回款表';
 
--- 正在导出表  07fly_crm_v2.fin_rece_plan 的数据：0 rows
-DELETE FROM `fin_rece_plan`;
-/*!40000 ALTER TABLE `fin_rece_plan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `fin_rece_plan` ENABLE KEYS */;
-
--- 导出  表 07fly_crm_v2.fin_rece_record 结构
-CREATE TABLE IF NOT EXISTS `fin_rece_record` (
+CREATE TABLE `fin_rece_record` (
   `record_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `contract_id` int(16) NOT NULL DEFAULT '0' COMMENT '合同订单号',
   `contract_name` varchar(256) NOT NULL DEFAULT '',
@@ -675,9 +588,8 @@ CREATE TABLE IF NOT EXISTS `fin_rece_record` (
   `create_time` datetime DEFAULT NULL,
   `create_user_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`record_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=133 DEFAULT CHARSET=utf8 COMMENT='回款记录';
+) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8 COMMENT='回款记录';
 
--- 正在导出表  07fly_crm_v2.fin_rece_record 的数据：80 rows
 DELETE FROM `fin_rece_record`;
 /*!40000 ALTER TABLE `fin_rece_record` DISABLE KEYS */;
 INSERT INTO `fin_rece_record` (`record_id`, `contract_id`, `contract_name`, `plan_id`, `customer_id`, `customer_name`, `bank_id`, `money`, `zero_money`, `back_date`, `stages`, `bus_type`, `intro`, `create_time`, `create_user_id`) VALUES
@@ -763,8 +675,7 @@ INSERT INTO `fin_rece_record` (`record_id`, `contract_id`, `contract_name`, `pla
 	(132, 92, '直线官网续费', 0, 254, '', 0, 1000.00, 0.00, '2020-03-10', 1, '0', '', '2020-03-21 13:47:01', 1);
 /*!40000 ALTER TABLE `fin_rece_record` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_goods 结构
-CREATE TABLE IF NOT EXISTS `fly_goods` (
+CREATE TABLE `fly_goods` (
   `goods_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '商品id(SKU)',
   `goods_name` varchar(100) NOT NULL DEFAULT '' COMMENT '商品名称',
   `shop_id` int(10) unsigned NOT NULL DEFAULT '1' COMMENT '店铺id',
@@ -853,9 +764,8 @@ CREATE TABLE IF NOT EXISTS `fly_goods` (
   KEY `UK_fly_goods_goods_attribute_id` (`goods_attribute_id`),
   KEY `UK_fly_goods_group_id_array` (`group_id_array`),
   KEY `UK_fly_goods_promotion_price` (`promotion_price`)
-) ENGINE=MyISAM AUTO_INCREMENT=78 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=16554 COMMENT='商品表';
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=16554 COMMENT='商品表';
 
--- 正在导出表  07fly_crm_v2.fly_goods 的数据：2 rows
 DELETE FROM `fly_goods`;
 /*!40000 ALTER TABLE `fly_goods` DISABLE KEYS */;
 INSERT INTO `fly_goods` (`goods_id`, `goods_name`, `shop_id`, `category_id`, `category_id_1`, `category_id_2`, `category_id_3`, `brand_id`, `group_id_array`, `promotion_type`, `goods_type`, `market_price`, `sale_price`, `cost_price`, `price`, `promotion_price`, `give_point`, `is_member_discount`, `shipping_fee`, `shipping_fee_id`, `stock`, `max_buy`, `clicks`, `min_stock_alarm`, `sales`, `collects`, `star`, `evaluates`, `shares`, `province_id`, `city_id`, `defaultpic`, `keywords`, `introduction`, `description`, `content`, `code`, `is_hot`, `is_recommend`, `is_new`, `is_bill`, `state`, `sort`, `img_id_array`, `sku_img_array`, `match_point`, `match_ratio`, `real_sales`, `goods_attribute_id`, `goods_spec_format`, `goods_weight`, `goods_volume`, `shipping_fee_type`, `extend_category_id`, `extend_category_id_1`, `extend_category_id_2`, `extend_category_id_3`, `supplier_id`, `sale_date`, `create_time`, `update_time`, `min_buy`, `virtual_goods_type_id`, `production_date`, `shelf_life`, `goods_video_address`, `pc_custom_template`, `wap_custom_template`, `max_use_point`, `is_open_presell`, `presell_time`, `presell_day`, `presell_delivery_type`, `presell_price`, `goods_unit`) VALUES
@@ -863,8 +773,7 @@ INSERT INTO `fly_goods` (`goods_id`, `goods_name`, `shop_id`, `category_id`, `ca
 	(77, '精品商品', 1, 4, 0, 0, 0, 0, '', 0, 1, 100.00, 100.00, 100.00, 0.00, 0.00, 0, 0, 0.00, 0, 100, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, '', '系统', '', '好的呀', '', '', 0, 0, 0, 0, 1, 100, NULL, NULL, NULL, NULL, 0, 0, '', 0.00, 0.00, 1, NULL, NULL, NULL, NULL, 0, '0000-00-00 00:00:00', '2020-04-05 14:56:55', '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', 0, 0, 0, 0, 1, 0.00, '');
 /*!40000 ALTER TABLE `fly_goods` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_goods_attr 结构
-CREATE TABLE IF NOT EXISTS `fly_goods_attr` (
+CREATE TABLE `fly_goods_attr` (
   `attr_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '商品属性ID',
   `attr_name` varchar(255) NOT NULL DEFAULT '' COMMENT '属性名称',
   `visible` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否使用',
@@ -874,9 +783,8 @@ CREATE TABLE IF NOT EXISTS `fly_goods_attr` (
   `modify_time` int(11) DEFAULT '0' COMMENT '修改时间',
   `brand_id_array` varchar(255) NOT NULL DEFAULT '' COMMENT '关联品牌',
   PRIMARY KEY (`attr_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=16384 COMMENT='商品相关属性';
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=16384 COMMENT='商品相关属性';
 
--- 正在导出表  07fly_crm_v2.fly_goods_attr 的数据：4 rows
 DELETE FROM `fly_goods_attr`;
 /*!40000 ALTER TABLE `fly_goods_attr` DISABLE KEYS */;
 INSERT INTO `fly_goods_attr` (`attr_id`, `attr_name`, `visible`, `spec_id_array`, `sort`, `create_time`, `modify_time`, `brand_id_array`) VALUES
@@ -886,8 +794,7 @@ INSERT INTO `fly_goods_attr` (`attr_id`, `attr_name`, `visible`, `spec_id_array`
 	(29, '硬盘', 1, '', 1, 0, 0, '');
 /*!40000 ALTER TABLE `fly_goods_attr` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_goods_attr_relation 结构
-CREATE TABLE IF NOT EXISTS `fly_goods_attr_relation` (
+CREATE TABLE `fly_goods_attr_relation` (
   `attr_relation_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `shop_id` int(11) NOT NULL DEFAULT '0' COMMENT '店铺ID',
   `goods_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品ID',
@@ -900,9 +807,8 @@ CREATE TABLE IF NOT EXISTS `fly_goods_attr_relation` (
   `create_time` int(11) DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`attr_relation_id`),
   KEY `UK_fly_goods_attribute_attr_value_id` (`attr_value_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=315 COMMENT='商品和属性关联表\r\n';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=315 COMMENT='商品和属性关联表\r\n';
 
--- 正在导出表  07fly_crm_v2.fly_goods_attr_relation 的数据：4 rows
 DELETE FROM `fly_goods_attr_relation`;
 /*!40000 ALTER TABLE `fly_goods_attr_relation` DISABLE KEYS */;
 INSERT INTO `fly_goods_attr_relation` (`attr_relation_id`, `shop_id`, `goods_id`, `attr_id`, `attr_name`, `attr_value_id`, `attr_value_name`, `attr_value_data`, `sort`, `create_time`) VALUES
@@ -912,8 +818,7 @@ INSERT INTO `fly_goods_attr_relation` (`attr_relation_id`, `shop_id`, `goods_id`
 	(12, 0, 24, 8, '', 3, '103', '大红色', 2, 1537101643);
 /*!40000 ALTER TABLE `fly_goods_attr_relation` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_goods_attr_value 结构
-CREATE TABLE IF NOT EXISTS `fly_goods_attr_value` (
+CREATE TABLE `fly_goods_attr_value` (
   `attr_value_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '属性值ID',
   `attr_id` int(11) NOT NULL DEFAULT '0' COMMENT '属性ID',
   `attr_value_name` varchar(50) NOT NULL DEFAULT '' COMMENT '属性值名称',
@@ -922,9 +827,8 @@ CREATE TABLE IF NOT EXISTS `fly_goods_attr_value` (
   `sort` int(11) NOT NULL DEFAULT '1999' COMMENT '排序号',
   `is_search` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否使用',
   PRIMARY KEY (`attr_value_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=4096 COMMENT='商品属性值';
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=4096 COMMENT='商品属性值';
 
--- 正在导出表  07fly_crm_v2.fly_goods_attr_value 的数据：11 rows
 DELETE FROM `fly_goods_attr_value`;
 /*!40000 ALTER TABLE `fly_goods_attr_value` DISABLE KEYS */;
 INSERT INTO `fly_goods_attr_value` (`attr_value_id`, `attr_id`, `attr_value_name`, `attr_value_data`, `type`, `sort`, `is_search`) VALUES
@@ -941,8 +845,7 @@ INSERT INTO `fly_goods_attr_value` (`attr_value_id`, `attr_id`, `attr_value_name
 	(24, 29, '颜色', '黑色\r\n白色\r\n蓝色', 3, 1, 1);
 /*!40000 ALTER TABLE `fly_goods_attr_value` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_goods_brand 结构
-CREATE TABLE IF NOT EXISTS `fly_goods_brand` (
+CREATE TABLE `fly_goods_brand` (
   `brand_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '索引ID',
   `shop_id` int(11) NOT NULL DEFAULT '0' COMMENT '店铺ID',
   `brand_name` varchar(100) NOT NULL DEFAULT '' COMMENT '品牌名称',
@@ -958,9 +861,8 @@ CREATE TABLE IF NOT EXISTS `fly_goods_brand` (
   `category_id_2` int(11) NOT NULL DEFAULT '0' COMMENT '二级分类ID',
   `category_id_3` int(11) NOT NULL DEFAULT '0' COMMENT '三级分类ID',
   PRIMARY KEY (`brand_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1024 COMMENT='品牌表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1024 COMMENT='品牌表';
 
--- 正在导出表  07fly_crm_v2.fly_goods_brand 的数据：2 rows
 DELETE FROM `fly_goods_brand`;
 /*!40000 ALTER TABLE `fly_goods_brand` DISABLE KEYS */;
 INSERT INTO `fly_goods_brand` (`brand_id`, `shop_id`, `brand_name`, `brand_initial`, `brand_pic`, `brand_recommend`, `sort`, `brand_category_name`, `category_id_array`, `brand_ads`, `category_name`, `category_id_1`, `category_id_2`, `category_id_3`) VALUES
@@ -968,8 +870,7 @@ INSERT INTO `fly_goods_brand` (`brand_id`, `shop_id`, `brand_name`, `brand_initi
 	(2, 0, '零起飞网络', 'L', '/upload/images/181117/20181117223043637.jpg', 1, 1, '', '', '', '', 0, 0, 0);
 /*!40000 ALTER TABLE `fly_goods_brand` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_goods_category 结构
-CREATE TABLE IF NOT EXISTS `fly_goods_category` (
+CREATE TABLE `fly_goods_category` (
   `category_id` int(11) NOT NULL AUTO_INCREMENT,
   `category_name` varchar(50) NOT NULL DEFAULT '',
   `short_name` varchar(50) NOT NULL DEFAULT '' COMMENT '商品分类简称 ',
@@ -985,9 +886,8 @@ CREATE TABLE IF NOT EXISTS `fly_goods_category` (
   `pc_custom_template` varchar(255) NOT NULL DEFAULT '' COMMENT 'pc端商品分类自定义模板',
   `wap_custom_template` varchar(255) NOT NULL DEFAULT '' COMMENT 'wap端商品分类自定义模板',
   PRIMARY KEY (`category_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=244 COMMENT='商品分类表';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=244 COMMENT='商品分类表';
 
--- 正在导出表  07fly_crm_v2.fly_goods_category 的数据：8 rows
 DELETE FROM `fly_goods_category`;
 /*!40000 ALTER TABLE `fly_goods_category` DISABLE KEYS */;
 INSERT INTO `fly_goods_category` (`category_id`, `category_name`, `short_name`, `parent_id`, `level`, `visible`, `attr_id`, `attr_name`, `keywords`, `description`, `sort`, `category_pic`, `pc_custom_template`, `wap_custom_template`) VALUES
@@ -1001,15 +901,13 @@ INSERT INTO `fly_goods_category` (`category_id`, `category_name`, `short_name`, 
 	(9, '老年版', '1', 3, 0, 1, 0, '', '111', '11', 1, '', '', '');
 /*!40000 ALTER TABLE `fly_goods_category` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_goods_img 结构
-CREATE TABLE IF NOT EXISTS `fly_goods_img` (
+CREATE TABLE `fly_goods_img` (
   `img_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `goods_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品ID',
   `img_path` varchar(256) NOT NULL DEFAULT '' COMMENT '图片路径',
   PRIMARY KEY (`img_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=112 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=16384 COMMENT='商品图片';
+) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=16384 COMMENT='商品图片';
 
--- 正在导出表  07fly_crm_v2.fly_goods_img 的数据：56 rows
 DELETE FROM `fly_goods_img`;
 /*!40000 ALTER TABLE `fly_goods_img` DISABLE KEYS */;
 INSERT INTO `fly_goods_img` (`img_id`, `goods_id`, `img_path`) VALUES
@@ -1071,8 +969,7 @@ INSERT INTO `fly_goods_img` (`img_id`, `goods_id`, `img_path`) VALUES
 	(111, 76, '/upload/images/190903/20190903095648913.jpg');
 /*!40000 ALTER TABLE `fly_goods_img` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_goods_sku 结构
-CREATE TABLE IF NOT EXISTS `fly_goods_sku` (
+CREATE TABLE `fly_goods_sku` (
   `sku_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '表序号',
   `goods_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品编号',
   `goods_name` varchar(500) NOT NULL DEFAULT '' COMMENT '商品名称',
@@ -1094,9 +991,8 @@ CREATE TABLE IF NOT EXISTS `fly_goods_sku` (
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   `update_date` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`sku_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=481 COMMENT='商品skui规格价格库存信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=481 COMMENT='商品skui规格价格库存信息表';
 
--- 正在导出表  07fly_crm_v2.fly_goods_sku 的数据：4 rows
 DELETE FROM `fly_goods_sku`;
 /*!40000 ALTER TABLE `fly_goods_sku` DISABLE KEYS */;
 INSERT INTO `fly_goods_sku` (`sku_id`, `goods_id`, `goods_name`, `sku_name`, `sku_value_items`, `sku_value_items_format`, `market_price`, `sale_price`, `price`, `promote_price`, `cost_price`, `total_cost_money`, `total_sale_money`, `total_profit_money`, `stock`, `picture`, `code`, `QRcode`, `create_date`, `update_date`) VALUES
@@ -1106,8 +1002,7 @@ INSERT INTO `fly_goods_sku` (`sku_id`, `goods_id`, `goods_name`, `sku_name`, `sk
 	(23, 76, '老人鞋子', '颜色:白色,尺寸:40码', '颜色:白色,尺寸:40码', '', 200.00, 160.00, 0.00, 0.00, 70.00, 700.00, 0.00, 0.00, 10, 0, '', '', '2020-03-10 14:04:42', '2020-03-10 14:04:42');
 /*!40000 ALTER TABLE `fly_goods_sku` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_goods_spec 结构
-CREATE TABLE IF NOT EXISTS `fly_goods_spec` (
+CREATE TABLE `fly_goods_spec` (
   `spec_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '属性ID',
   `shop_id` int(11) NOT NULL DEFAULT '0' COMMENT '店铺ID',
   `spec_name` varchar(255) NOT NULL DEFAULT '' COMMENT '属性名称',
@@ -1121,9 +1016,8 @@ CREATE TABLE IF NOT EXISTS `fly_goods_spec` (
   PRIMARY KEY (`spec_id`),
   KEY `IDX_category_props_categoryId` (`shop_id`),
   KEY `IDX_category_props_orders` (`sort`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=3276 COMMENT='商品属性（规格）表';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=3276 COMMENT='商品属性（规格）表';
 
--- 正在导出表  07fly_crm_v2.fly_goods_spec 的数据：3 rows
 DELETE FROM `fly_goods_spec`;
 /*!40000 ALTER TABLE `fly_goods_spec` DISABLE KEYS */;
 INSERT INTO `fly_goods_spec` (`spec_id`, `shop_id`, `spec_name`, `visible`, `sort`, `show_type`, `create_time`, `is_screen`, `spec_des`, `goods_id`) VALUES
@@ -1132,8 +1026,7 @@ INSERT INTO `fly_goods_spec` (`spec_id`, `shop_id`, `spec_name`, `visible`, `sor
 	(5, 0, '尺寸', 1, 2, 1, NULL, 1, '', 0);
 /*!40000 ALTER TABLE `fly_goods_spec` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_goods_spec_value 结构
-CREATE TABLE IF NOT EXISTS `fly_goods_spec_value` (
+CREATE TABLE `fly_goods_spec_value` (
   `spec_value_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '商品属性值ID',
   `spec_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品属性ID',
   `spec_value_name` varchar(255) NOT NULL DEFAULT '' COMMENT '商品属性值名称',
@@ -1146,9 +1039,8 @@ CREATE TABLE IF NOT EXISTS `fly_goods_spec_value` (
   KEY `IDX_category_propvalues_c_pId` (`spec_id`),
   KEY `IDX_category_propvalues_orders` (`sort`),
   KEY `IDX_category_propvalues_value` (`spec_value_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1092 COMMENT='商品规格值模版表';
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=1092 COMMENT='商品规格值模版表';
 
--- 正在导出表  07fly_crm_v2.fly_goods_spec_value 的数据：9 rows
 DELETE FROM `fly_goods_spec_value`;
 /*!40000 ALTER TABLE `fly_goods_spec_value` DISABLE KEYS */;
 INSERT INTO `fly_goods_spec_value` (`spec_value_id`, `spec_id`, `spec_value_name`, `spec_value_data`, `is_visible`, `sort`, `create_time`, `goods_id`) VALUES
@@ -1163,8 +1055,7 @@ INSERT INTO `fly_goods_spec_value` (`spec_value_id`, `spec_id`, `spec_value_name
 	(31, 5, '40码', '', 0, 1, NULL, 0);
 /*!40000 ALTER TABLE `fly_goods_spec_value` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_sys_area 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_area` (
+CREATE TABLE `fly_sys_area` (
   `id` int(4) NOT NULL AUTO_INCREMENT,
   `parentID` int(4) NOT NULL DEFAULT '0',
   `sort` int(4) NOT NULL DEFAULT '0',
@@ -1173,9 +1064,8 @@ CREATE TABLE IF NOT EXISTS `fly_sys_area` (
   `visible` int(1) NOT NULL DEFAULT '0',
   `intro` varchar(256) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='地区表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='地区表';
 
--- 正在导出表  07fly_crm_v2.fly_sys_area 的数据：2 rows
 DELETE FROM `fly_sys_area`;
 /*!40000 ALTER TABLE `fly_sys_area` DISABLE KEYS */;
 INSERT INTO `fly_sys_area` (`id`, `parentID`, `sort`, `name`, `type`, `visible`, `intro`) VALUES
@@ -1183,8 +1073,7 @@ INSERT INTO `fly_sys_area` (`id`, `parentID`, `sort`, `name`, `type`, `visible`,
 	(2, 1, 22, '222', 0, 1, '22');
 /*!40000 ALTER TABLE `fly_sys_area` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_sys_config 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_config` (
+CREATE TABLE `fly_sys_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL DEFAULT '',
   `varname` varchar(128) NOT NULL DEFAULT '',
@@ -1193,9 +1082,8 @@ CREATE TABLE IF NOT EXISTS `fly_sys_config` (
   `groupid` tinyint(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COMMENT='系统配置表';
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COMMENT='系统配置表';
 
--- 正在导出表  07fly_crm_v2.fly_sys_config 的数据：8 rows
 DELETE FROM `fly_sys_config`;
 /*!40000 ALTER TABLE `fly_sys_config` DISABLE KEYS */;
 INSERT INTO `fly_sys_config` (`id`, `name`, `varname`, `value`, `type`, `groupid`) VALUES
@@ -1209,8 +1097,7 @@ INSERT INTO `fly_sys_config` (`id`, `name`, `varname`, `value`, `type`, `groupid
 	(8, '联系地址', 'address', '四川省成都市量力钢材城贸易区A4-3', 'string', 0);
 /*!40000 ALTER TABLE `fly_sys_config` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_sys_dept 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_dept` (
+CREATE TABLE `fly_sys_dept` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `parentID` int(11) NOT NULL DEFAULT '0',
@@ -1220,9 +1107,8 @@ CREATE TABLE IF NOT EXISTS `fly_sys_dept` (
   `fax` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `intro` varchar(1024) CHARACTER SET utf8 DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=armscii8 COMMENT='部门表';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=armscii8 COMMENT='部门表';
 
--- 正在导出表  07fly_crm_v2.fly_sys_dept 的数据：5 rows
 DELETE FROM `fly_sys_dept`;
 /*!40000 ALTER TABLE `fly_sys_dept` DISABLE KEYS */;
 INSERT INTO `fly_sys_dept` (`id`, `name`, `parentID`, `sort`, `visible`, `tel`, `fax`, `intro`) VALUES
@@ -1233,23 +1119,16 @@ INSERT INTO `fly_sys_dept` (`id`, `name`, `parentID`, `sort`, `visible`, `tel`, 
 	(8, '财务部', 1, 22, 1, '2222222222', '22222222222222', '222');
 /*!40000 ALTER TABLE `fly_sys_dept` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_sys_log 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_log` (
+CREATE TABLE `fly_sys_log` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `ipaddr` varchar(16) NOT NULL DEFAULT '',
   `content` text,
   `create_user_id` varchar(32) DEFAULT '',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='系统日志表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统日志表';
 
--- 正在导出表  07fly_crm_v2.fly_sys_log 的数据：0 rows
-DELETE FROM `fly_sys_log`;
-/*!40000 ALTER TABLE `fly_sys_log` DISABLE KEYS */;
-/*!40000 ALTER TABLE `fly_sys_log` ENABLE KEYS */;
-
--- 导出  表 07fly_crm_v2.fly_sys_menu 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_menu` (
+CREATE TABLE `fly_sys_menu` (
   `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL DEFAULT '',
   `name_en` varchar(64) NOT NULL DEFAULT '',
@@ -1258,9 +1137,8 @@ CREATE TABLE IF NOT EXISTS `fly_sys_menu` (
   `sort` int(4) NOT NULL DEFAULT '0',
   `visible` int(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=100 DEFAULT CHARSET=utf8 COMMENT='系统菜单栏目';
+) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8 COMMENT='系统菜单栏目';
 
--- 正在导出表  07fly_crm_v2.fly_sys_menu 的数据：97 rows
 DELETE FROM `fly_sys_menu`;
 /*!40000 ALTER TABLE `fly_sys_menu` DISABLE KEYS */;
 INSERT INTO `fly_sys_menu` (`id`, `name`, `name_en`, `url`, `parentID`, `sort`, `visible`) VALUES
@@ -1363,8 +1241,7 @@ INSERT INTO `fly_sys_menu` (`id`, `name`, `name_en`, `url`, `parentID`, `sort`, 
 	(99, '劳动合同', '', '/hrm/HrmStaffContract/hrm_staff_contract_show/', 92, 7, 1);
 /*!40000 ALTER TABLE `fly_sys_menu` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_sys_message 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_message` (
+CREATE TABLE `fly_sys_message` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `msg_type` varchar(256) NOT NULL DEFAULT '' COMMENT '消息类型',
   `msg_title` varchar(256) NOT NULL DEFAULT '' COMMENT '消息主题',
@@ -1375,15 +1252,9 @@ CREATE TABLE IF NOT EXISTS `fly_sys_message` (
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `remind_time` datetime DEFAULT NULL COMMENT '提醒时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='消息信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='消息信息';
 
--- 正在导出表  07fly_crm_v2.fly_sys_message 的数据：0 rows
-DELETE FROM `fly_sys_message`;
-/*!40000 ALTER TABLE `fly_sys_message` DISABLE KEYS */;
-/*!40000 ALTER TABLE `fly_sys_message` ENABLE KEYS */;
-
--- 导出  表 07fly_crm_v2.fly_sys_method 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_method` (
+CREATE TABLE `fly_sys_method` (
   `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
   `menuID` int(4) NOT NULL DEFAULT '0',
   `name` varchar(64) NOT NULL DEFAULT '',
@@ -1391,9 +1262,8 @@ CREATE TABLE IF NOT EXISTS `fly_sys_method` (
   `sort` int(4) NOT NULL DEFAULT '0',
   `visible` int(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=106 DEFAULT CHARSET=utf8 COMMENT='系统方法';
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8 COMMENT='系统方法';
 
--- 正在导出表  07fly_crm_v2.fly_sys_method 的数据：88 rows
 DELETE FROM `fly_sys_method`;
 /*!40000 ALTER TABLE `fly_sys_method` DISABLE KEYS */;
 INSERT INTO `fly_sys_method` (`id`, `menuID`, `name`, `value`, `sort`, `visible`) VALUES
@@ -1487,8 +1357,7 @@ INSERT INTO `fly_sys_method` (`id`, `menuID`, `name`, `value`, `sort`, `visible`
 	(105, 29, '删除', 'cst_dict_type_del', 3, 1);
 /*!40000 ALTER TABLE `fly_sys_method` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_sys_position 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_position` (
+CREATE TABLE `fly_sys_position` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `parentID` int(11) NOT NULL DEFAULT '0',
@@ -1496,9 +1365,8 @@ CREATE TABLE IF NOT EXISTS `fly_sys_position` (
   `visible` tinyint(2) NOT NULL DEFAULT '1',
   `intro` varchar(1024) CHARACTER SET utf8 DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=armscii8 COMMENT='职位表';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=armscii8 COMMENT='职位表';
 
--- 正在导出表  07fly_crm_v2.fly_sys_position 的数据：5 rows
 DELETE FROM `fly_sys_position`;
 /*!40000 ALTER TABLE `fly_sys_position` DISABLE KEYS */;
 INSERT INTO `fly_sys_position` (`id`, `name`, `parentID`, `sort`, `visible`, `intro`) VALUES
@@ -1509,8 +1377,7 @@ INSERT INTO `fly_sys_position` (`id`, `name`, `parentID`, `sort`, `visible`, `in
 	(7, '技术总监', 3, 31, 1, '');
 /*!40000 ALTER TABLE `fly_sys_position` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_sys_power 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_power` (
+CREATE TABLE `fly_sys_power` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `master` varchar(64) NOT NULL DEFAULT '' COMMENT '权限类型，如role,user',
   `master_value` varchar(64) NOT NULL DEFAULT '' COMMENT '权限类型值',
@@ -1518,9 +1385,8 @@ CREATE TABLE IF NOT EXISTS `fly_sys_power` (
   `access_value` text COMMENT '权限属性名称值',
   `operation` varchar(64) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 COMMENT='权限功能关联表';
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 COMMENT='权限功能关联表';
 
--- 正在导出表  07fly_crm_v2.fly_sys_power 的数据：13 rows
 DELETE FROM `fly_sys_power`;
 /*!40000 ALTER TABLE `fly_sys_power` DISABLE KEYS */;
 INSERT INTO `fly_sys_power` (`id`, `master`, `master_value`, `access`, `access_value`, `operation`) VALUES
@@ -1539,8 +1405,7 @@ INSERT INTO `fly_sys_power` (`id`, `master`, `master_value`, `access`, `access_v
 	(58, 'role', '1', 'SYS_METHOD', 'cst_customer_add,cst_customer_modify,cst_customer_del,cst_linkman_add,cst_linkman_modify,cst_linkman_del,cst_service_add,cst_service_modify,cst_service_del,cst_chance_add,cst_chance_modify,cst_chance_del,cst_trace_add,cst_trace_del,cst_trace_modify,sal_contract_add,sal_contract_modify,sal_contract_del,cst_website_add,cst_website_modify,cst_website_del,sup_supplier_add,sup_supplier_modify,sup_supplier_del,sup_linkman_add,sup_linkman_modify,sup_linkman_del,pos_contract_add,pos_contract_modify,pos_contract_del,fin_capital_add,fin_capital_del,fin_pay_plan_add,fin_pay_plan_modify,fin_pay_plan_del,fin_pay_plan_sure,fin_pay_record_add,fin_pay_record_del,fin_invoice_rece_add,fin_invoice_rece_del,fin_rece_plan_add,fin_rece_plan_modify,fin_rece_plan_del,fin_rece_record_add,fin_rece_record_modify,fin_invoice_rece_add,fin_invoice_rece_del,fin_income_record_add,fin_income_record_del,fin_expenses_record_add,fin_expenses_record_del,dept_add,dept_modify,dept_del,role_add,role_modify,role_del,role_check_power,position_add,position_del,postion_del,user_add,user_modify,user_del,cst_dict_add,cst_dict_modify,cst_dict_del,cst_dict_type_modify,cst_dict_type_add,cst_dict_type_del,pro_dict_add,pro_type_add,pro_type_modify,pro_type_del,product_add,product_modify,product_del', NULL);
 /*!40000 ALTER TABLE `fly_sys_power` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_sys_role 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_role` (
+CREATE TABLE `fly_sys_role` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `sort` int(16) NOT NULL DEFAULT '0',
   `visible` int(2) NOT NULL DEFAULT '0',
@@ -1548,9 +1413,8 @@ CREATE TABLE IF NOT EXISTS `fly_sys_role` (
   `name` varchar(32) DEFAULT '',
   `intro` varchar(1024) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='权限列表';
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8 COMMENT='权限列表';
 
--- 正在导出表  07fly_crm_v2.fly_sys_role 的数据：5 rows
 DELETE FROM `fly_sys_role`;
 /*!40000 ALTER TABLE `fly_sys_role` DISABLE KEYS */;
 INSERT INTO `fly_sys_role` (`id`, `sort`, `visible`, `parentID`, `name`, `intro`) VALUES
@@ -1561,11 +1425,10 @@ INSERT INTO `fly_sys_role` (`id`, `sort`, `visible`, `parentID`, `name`, `intro`
 	(16, 1, 1, 1, '主管', '222');
 /*!40000 ALTER TABLE `fly_sys_role` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_sys_user 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_user` (
+CREATE TABLE `fly_sys_user` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `account` varchar(32) NOT NULL DEFAULT '',
-  `password` varchar(32) NOT NULL DEFAULT '',
+  `password` varchar(500) NOT NULL DEFAULT '',
   `name` varchar(32) DEFAULT '',
   `gender` varchar(2) DEFAULT '',
   `tel` varchar(32) DEFAULT '',
@@ -1581,9 +1444,8 @@ CREATE TABLE IF NOT EXISTS `fly_sys_user` (
   `adt` datetime DEFAULT NULL,
   `identity` varchar(50) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='系统用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='系统用户表';
 
--- 正在导出表  07fly_crm_v2.fly_sys_user 的数据：4 rows
 DELETE FROM `fly_sys_user`;
 /*!40000 ALTER TABLE `fly_sys_user` DISABLE KEYS */;
 INSERT INTO `fly_sys_user` (`id`, `account`, `password`, `name`, `gender`, `tel`, `mobile`, `qicq`, `address`, `zipcode`, `email`, `roleID`, `deptID`, `positionID`, `intro`, `adt`, `identity`) VALUES
@@ -1593,8 +1455,7 @@ INSERT INTO `fly_sys_user` (`id`, `account`, `password`, `name`, `gender`, `tel`
 	(7, 'cw', 'cw', 'cw', '1', '', '13800000000', '', '', '', '', '14', 2, 4, '', '2017-06-26 15:59:39', NULL);
 /*!40000 ALTER TABLE `fly_sys_user` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_sys_user_notice 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_user_notice` (
+CREATE TABLE `fly_sys_user_notice` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `title` varchar(256) NOT NULL DEFAULT '' COMMENT '标题',
   `content` text COMMENT '通知内容',
@@ -1603,9 +1464,8 @@ CREATE TABLE IF NOT EXISTS `fly_sys_user_notice` (
   `create_user_id` int(11) NOT NULL DEFAULT '0' COMMENT '发布人员的编号',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=70 DEFAULT CHARSET=utf8 COMMENT='系统员工通知信息';
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8 COMMENT='系统员工通知信息';
 
--- 正在导出表  07fly_crm_v2.fly_sys_user_notice 的数据：9 rows
 DELETE FROM `fly_sys_user_notice`;
 /*!40000 ALTER TABLE `fly_sys_user_notice` DISABLE KEYS */;
 INSERT INTO `fly_sys_user_notice` (`id`, `title`, `content`, `status`, `owner_user_id`, `create_user_id`, `create_time`) VALUES
@@ -1620,21 +1480,14 @@ INSERT INTO `fly_sys_user_notice` (`id`, `title`, `content`, `status`, `owner_us
 	(69, '全体员工今天开会了哟', '全体员工今天开会了哟', -1, 7, 1, '2020-04-06 12:03:40');
 /*!40000 ALTER TABLE `fly_sys_user_notice` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.fly_sys_user_role 结构
-CREATE TABLE IF NOT EXISTS `fly_sys_user_role` (
+CREATE TABLE `fly_sys_user_role` (
   `id` int(16) NOT NULL AUTO_INCREMENT,
   `role_id` int(16) NOT NULL DEFAULT '0',
   `user_id` int(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户权限关联列表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户权限关联列表';
 
--- 正在导出表  07fly_crm_v2.fly_sys_user_role 的数据：0 rows
-DELETE FROM `fly_sys_user_role`;
-/*!40000 ALTER TABLE `fly_sys_user_role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `fly_sys_user_role` ENABLE KEYS */;
-
--- 导出  表 07fly_crm_v2.hrm_staff 结构
-CREATE TABLE IF NOT EXISTS `hrm_staff` (
+CREATE TABLE `hrm_staff` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `staff_no` varchar(50) NOT NULL DEFAULT '' COMMENT '员工编号',
   `name` varchar(256) NOT NULL DEFAULT '',
@@ -1659,9 +1512,8 @@ CREATE TABLE IF NOT EXISTS `hrm_staff` (
   `create_user_id` int(16) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=168 DEFAULT CHARSET=utf8 COMMENT='员工档案';
+) ENGINE=InnoDB AUTO_INCREMENT=168 DEFAULT CHARSET=utf8 COMMENT='员工档案';
 
--- 正在导出表  07fly_crm_v2.hrm_staff 的数据：2 rows
 DELETE FROM `hrm_staff`;
 /*!40000 ALTER TABLE `hrm_staff` DISABLE KEYS */;
 INSERT INTO `hrm_staff` (`id`, `staff_no`, `name`, `gender`, `idcard`, `age`, `dept_id`, `position_id`, `marriage`, `politics`, `degree`, `major`, `qualification`, `position`, `social`, `mobile`, `qicq`, `email`, `zipcode`, `address`, `intro`, `create_user_id`, `create_time`) VALUES
@@ -1669,8 +1521,7 @@ INSERT INTO `hrm_staff` (`id`, `staff_no`, `name`, `gender`, `idcard`, `age`, `d
 	(167, 'DSA215455', 'DSA215455', 1, '511929198005127894', 100, '2', '4', '未婚', '团员', '本科', '电子商务', '计算机', '经理', '协会员', '18030402705', '1871720801', 'goodmuzi@qq.com', '', '这是那时呀', '这是一个好员工的呀', 0, '2020-03-31 10:11:09');
 /*!40000 ALTER TABLE `hrm_staff` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.hrm_staff_achiev 结构
-CREATE TABLE IF NOT EXISTS `hrm_staff_achiev` (
+CREATE TABLE `hrm_staff_achiev` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `staff_id` int(16) NOT NULL DEFAULT '0' COMMENT '员工编号',
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '名称',
@@ -1680,17 +1531,15 @@ CREATE TABLE IF NOT EXISTS `hrm_staff_achiev` (
   `create_user_id` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=156 DEFAULT CHARSET=utf8 COMMENT='员工工作业绩';
+) ENGINE=InnoDB AUTO_INCREMENT=156 DEFAULT CHARSET=utf8 COMMENT='员工工作业绩';
 
--- 正在导出表  07fly_crm_v2.hrm_staff_achiev 的数据：1 rows
 DELETE FROM `hrm_staff_achiev`;
 /*!40000 ALTER TABLE `hrm_staff_achiev` DISABLE KEYS */;
 INSERT INTO `hrm_staff_achiev` (`id`, `staff_id`, `name`, `work_date`, `content`, `remark`, `create_user_id`, `create_time`) VALUES
 	(155, 164, '零起飞科技 001', '2020-03-30', '零起飞科技 零起飞科技 零起飞科技 232323', '说明输入法2323', 1, '2020-03-31 08:24:32');
 /*!40000 ALTER TABLE `hrm_staff_achiev` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.hrm_staff_certified 结构
-CREATE TABLE IF NOT EXISTS `hrm_staff_certified` (
+CREATE TABLE `hrm_staff_certified` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `staff_id` int(16) NOT NULL DEFAULT '0' COMMENT '员工编号',
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '名称',
@@ -1700,9 +1549,8 @@ CREATE TABLE IF NOT EXISTS `hrm_staff_certified` (
   `create_user_id` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=162 DEFAULT CHARSET=utf8 COMMENT='员工个人证书';
+) ENGINE=InnoDB AUTO_INCREMENT=162 DEFAULT CHARSET=utf8 COMMENT='员工个人证书';
 
--- 正在导出表  07fly_crm_v2.hrm_staff_certified 的数据：5 rows
 DELETE FROM `hrm_staff_certified`;
 /*!40000 ALTER TABLE `hrm_staff_certified` DISABLE KEYS */;
 INSERT INTO `hrm_staff_certified` (`id`, `staff_id`, `name`, `company`, `gettime`, `remark`, `create_user_id`, `create_time`) VALUES
@@ -1713,8 +1561,7 @@ INSERT INTO `hrm_staff_certified` (`id`, `staff_id`, `name`, `company`, `gettime
 	(161, 164, '模压', '阿斯蒂芬', '2025-07-10', '', 1, '2020-03-31 13:55:49');
 /*!40000 ALTER TABLE `hrm_staff_certified` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.hrm_staff_contract 结构
-CREATE TABLE IF NOT EXISTS `hrm_staff_contract` (
+CREATE TABLE `hrm_staff_contract` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `staff_id` int(16) NOT NULL DEFAULT '0' COMMENT '员工编号',
   `begin_date` date DEFAULT NULL COMMENT '开始时间',
@@ -1724,9 +1571,8 @@ CREATE TABLE IF NOT EXISTS `hrm_staff_contract` (
   `create_time` datetime DEFAULT NULL,
   `create_user_id` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COMMENT='员工劳动合作';
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COMMENT='员工劳动合作';
 
--- 正在导出表  07fly_crm_v2.hrm_staff_contract 的数据：2 rows
 DELETE FROM `hrm_staff_contract`;
 /*!40000 ALTER TABLE `hrm_staff_contract` DISABLE KEYS */;
 INSERT INTO `hrm_staff_contract` (`id`, `staff_id`, `begin_date`, `end_date`, `content`, `remark`, `create_time`, `create_user_id`) VALUES
@@ -1734,8 +1580,7 @@ INSERT INTO `hrm_staff_contract` (`id`, `staff_id`, `begin_date`, `end_date`, `c
 	(159, 167, '2020-01-28', '2025-07-16', '这是一个长期的合同', '你要相恍如隔世哟', '2020-03-31 14:21:12', 1);
 /*!40000 ALTER TABLE `hrm_staff_contract` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.hrm_staff_employ 结构
-CREATE TABLE IF NOT EXISTS `hrm_staff_employ` (
+CREATE TABLE `hrm_staff_employ` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `staff_id` int(16) NOT NULL DEFAULT '0' COMMENT '员工编号',
   `position` varchar(256) NOT NULL DEFAULT '' COMMENT '职务',
@@ -1745,9 +1590,8 @@ CREATE TABLE IF NOT EXISTS `hrm_staff_employ` (
   `create_user_id` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=159 DEFAULT CHARSET=utf8 COMMENT='员工用工记录';
+) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=utf8 COMMENT='员工用工记录';
 
--- 正在导出表  07fly_crm_v2.hrm_staff_employ 的数据：3 rows
 DELETE FROM `hrm_staff_employ`;
 /*!40000 ALTER TABLE `hrm_staff_employ` DISABLE KEYS */;
 INSERT INTO `hrm_staff_employ` (`id`, `staff_id`, `position`, `work_date`, `content`, `remark`, `create_user_id`, `create_time`) VALUES
@@ -1756,8 +1600,7 @@ INSERT INTO `hrm_staff_employ` (`id`, `staff_id`, `position`, `work_date`, `cont
 	(158, 164, '商务', '2020-03-31', '测试', '测试备注说明', 1, '2020-03-31 13:48:31');
 /*!40000 ALTER TABLE `hrm_staff_employ` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.hrm_staff_examine 结构
-CREATE TABLE IF NOT EXISTS `hrm_staff_examine` (
+CREATE TABLE `hrm_staff_examine` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `staff_id` int(16) NOT NULL DEFAULT '0' COMMENT '员工编号',
   `exa_time` date DEFAULT NULL COMMENT '考核时间',
@@ -1767,9 +1610,8 @@ CREATE TABLE IF NOT EXISTS `hrm_staff_examine` (
   `create_user_id` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COMMENT='员工考核记录';
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COMMENT='员工考核记录';
 
--- 正在导出表  07fly_crm_v2.hrm_staff_examine 的数据：2 rows
 DELETE FROM `hrm_staff_examine`;
 /*!40000 ALTER TABLE `hrm_staff_examine` DISABLE KEYS */;
 INSERT INTO `hrm_staff_examine` (`id`, `staff_id`, `exa_time`, `score`, `results`, `remark`, `create_user_id`, `create_time`) VALUES
@@ -1777,8 +1619,7 @@ INSERT INTO `hrm_staff_examine` (`id`, `staff_id`, `exa_time`, `score`, `results
 	(159, 167, '2025-07-16', '345', '过了', '好的哈', 1, '2020-03-31 13:59:52');
 /*!40000 ALTER TABLE `hrm_staff_examine` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.hrm_staff_reward 结构
-CREATE TABLE IF NOT EXISTS `hrm_staff_reward` (
+CREATE TABLE `hrm_staff_reward` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `staff_id` int(16) NOT NULL DEFAULT '0' COMMENT '员工编号',
   `type` varchar(256) NOT NULL DEFAULT '' COMMENT '奖励、处罚',
@@ -1788,9 +1629,8 @@ CREATE TABLE IF NOT EXISTS `hrm_staff_reward` (
   `create_user_id` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COMMENT='员工奖罚记录';
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COMMENT='员工奖罚记录';
 
--- 正在导出表  07fly_crm_v2.hrm_staff_reward 的数据：2 rows
 DELETE FROM `hrm_staff_reward`;
 /*!40000 ALTER TABLE `hrm_staff_reward` DISABLE KEYS */;
 INSERT INTO `hrm_staff_reward` (`id`, `staff_id`, `type`, `content`, `gettime`, `remark`, `create_user_id`, `create_time`) VALUES
@@ -1798,8 +1638,7 @@ INSERT INTO `hrm_staff_reward` (`id`, `staff_id`, `type`, `content`, `gettime`, 
 	(159, 167, '处罚', '好的哈，不错的哟', '2020-03-31', '我们是中国人', 1, '2020-03-31 14:14:26');
 /*!40000 ALTER TABLE `hrm_staff_reward` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.hrm_staff_school 结构
-CREATE TABLE IF NOT EXISTS `hrm_staff_school` (
+CREATE TABLE `hrm_staff_school` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `staff_id` int(16) NOT NULL DEFAULT '0' COMMENT '员工编号',
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '学校名称',
@@ -1809,9 +1648,8 @@ CREATE TABLE IF NOT EXISTS `hrm_staff_school` (
   `intro` text COMMENT '介绍',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=158 DEFAULT CHARSET=utf8 COMMENT='员工学习经历';
+) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8 COMMENT='员工学习经历';
 
--- 正在导出表  07fly_crm_v2.hrm_staff_school 的数据：3 rows
 DELETE FROM `hrm_staff_school`;
 /*!40000 ALTER TABLE `hrm_staff_school` DISABLE KEYS */;
 INSERT INTO `hrm_staff_school` (`id`, `staff_id`, `name`, `begin_date`, `end_date`, `position`, `intro`, `create_time`) VALUES
@@ -1820,8 +1658,7 @@ INSERT INTO `hrm_staff_school` (`id`, `staff_id`, `name`, `begin_date`, `end_dat
 	(157, 164, '东软慧鼎HCM人力资源管理平台', '2020-01-27', '2024-06-11', '学生会的哟', '', '2020-03-30 17:05:34');
 /*!40000 ALTER TABLE `hrm_staff_school` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.hrm_staff_talk 结构
-CREATE TABLE IF NOT EXISTS `hrm_staff_talk` (
+CREATE TABLE `hrm_staff_talk` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `staff_id` int(16) NOT NULL DEFAULT '0' COMMENT '员工编号',
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '谈话人',
@@ -1831,9 +1668,8 @@ CREATE TABLE IF NOT EXISTS `hrm_staff_talk` (
   `create_user_id` int(11) NOT NULL DEFAULT '0' COMMENT '创建人',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COMMENT='员工谈话记录';
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COMMENT='员工谈话记录';
 
--- 正在导出表  07fly_crm_v2.hrm_staff_talk 的数据：2 rows
 DELETE FROM `hrm_staff_talk`;
 /*!40000 ALTER TABLE `hrm_staff_talk` DISABLE KEYS */;
 INSERT INTO `hrm_staff_talk` (`id`, `staff_id`, `name`, `content`, `gettime`, `remark`, `create_user_id`, `create_time`) VALUES
@@ -1841,8 +1677,7 @@ INSERT INTO `hrm_staff_talk` (`id`, `staff_id`, `name`, `content`, `gettime`, `r
 	(159, 167, '总经理', '这是测试谈的', '2020-03-31', '好吧', 1, '2020-03-31 14:18:19');
 /*!40000 ALTER TABLE `hrm_staff_talk` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.hrm_staff_work 结构
-CREATE TABLE IF NOT EXISTS `hrm_staff_work` (
+CREATE TABLE `hrm_staff_work` (
   `id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `staff_id` int(16) NOT NULL DEFAULT '0' COMMENT '员工编号',
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '工作单位',
@@ -1852,9 +1687,8 @@ CREATE TABLE IF NOT EXISTS `hrm_staff_work` (
   `intro` text COMMENT '介绍',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COMMENT='员工工作经历';
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8 COMMENT='员工工作经历';
 
--- 正在导出表  07fly_crm_v2.hrm_staff_work 的数据：5 rows
 DELETE FROM `hrm_staff_work`;
 /*!40000 ALTER TABLE `hrm_staff_work` DISABLE KEYS */;
 INSERT INTO `hrm_staff_work` (`id`, `staff_id`, `name`, `begin_date`, `end_date`, `position`, `intro`, `create_time`) VALUES
@@ -1865,8 +1699,7 @@ INSERT INTO `hrm_staff_work` (`id`, `staff_id`, `name`, `begin_date`, `end_date`
 	(159, 164, '公司资质', '2020-01-28', '2025-07-10', '铃声 ', '', '2020-03-30 16:58:48');
 /*!40000 ALTER TABLE `hrm_staff_work` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.pos_contract 结构
-CREATE TABLE IF NOT EXISTS `pos_contract` (
+CREATE TABLE `pos_contract` (
   `contract_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `contract_no` varchar(50) NOT NULL DEFAULT '' COMMENT '合同编号',
   `supplier_id` int(16) NOT NULL DEFAULT '0',
@@ -1895,9 +1728,8 @@ CREATE TABLE IF NOT EXISTS `pos_contract` (
   `create_user_id` int(16) NOT NULL DEFAULT '0',
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`contract_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='采购合同';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='采购合同';
 
--- 正在导出表  07fly_crm_v2.pos_contract 的数据：2 rows
 DELETE FROM `pos_contract`;
 /*!40000 ALTER TABLE `pos_contract` DISABLE KEYS */;
 INSERT INTO `pos_contract` (`contract_id`, `contract_no`, `supplier_id`, `linkman_id`, `chance_id`, `website_id`, `start_date`, `end_date`, `our_user_id`, `money`, `goods_money`, `zero_money`, `back_money`, `owe_money`, `pay_money`, `unpaid_money`, `invoice_money`, `title`, `intro`, `status`, `back_status`, `pay_status`, `deliver_status`, `invoice_status`, `rece_status`, `create_user_id`, `create_time`) VALUES
@@ -1905,8 +1737,7 @@ INSERT INTO `pos_contract` (`contract_id`, `contract_no`, `supplier_id`, `linkma
 	(2, '2106021754', 12, 1, 0, 0, '2021-06-02', '2020-01-28', 1, 5000.00, 0.00, 0.00, 0.00, 5000.00, 0.00, 0.00, 0.00, '天河二期', '', 1, 1, 1, 1, 1, 1, 1, '2021-06-02 18:00:10');
 /*!40000 ALTER TABLE `pos_contract` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.pos_contract_file 结构
-CREATE TABLE IF NOT EXISTS `pos_contract_file` (
+CREATE TABLE `pos_contract_file` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '订单项ID',
   `contract_id` int(11) NOT NULL DEFAULT '0' COMMENT '合同ID',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '文件名称',
@@ -1917,9 +1748,8 @@ CREATE TABLE IF NOT EXISTS `pos_contract_file` (
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `UK_ns_order_goods_order_id` (`contract_id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=72 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=289 COMMENT='采购合同附件';
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=289 COMMENT='采购合同附件';
 
--- 正在导出表  07fly_crm_v2.pos_contract_file 的数据：2 rows
 DELETE FROM `pos_contract_file`;
 /*!40000 ALTER TABLE `pos_contract_file` DISABLE KEYS */;
 INSERT INTO `pos_contract_file` (`id`, `contract_id`, `name`, `type`, `remarks`, `filepath`, `create_user_id`, `create_time`) VALUES
@@ -1927,8 +1757,7 @@ INSERT INTO `pos_contract_file` (`id`, `contract_id`, `name`, `type`, `remarks`,
 	(71, 2, '2342342', '', '', '/upload/images/210603/20210603113256912.png', 0, NULL);
 /*!40000 ALTER TABLE `pos_contract_file` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.pos_contract_list 结构
-CREATE TABLE IF NOT EXISTS `pos_contract_list` (
+CREATE TABLE `pos_contract_list` (
   `list_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '订单项ID',
   `contract_id` int(11) NOT NULL DEFAULT '0' COMMENT '合同ID',
   `goods_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品ID',
@@ -1951,9 +1780,8 @@ CREATE TABLE IF NOT EXISTS `pos_contract_list` (
   KEY `UK_ns_order_goods_goods_id` (`goods_id`),
   KEY `UK_ns_order_goods_order_id` (`contract_id`),
   KEY `UK_ns_order_goods_sku_id` (`sku_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=289 COMMENT='采购订单商品表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=289 COMMENT='采购订单商品表';
 
--- 正在导出表  07fly_crm_v2.pos_contract_list 的数据：2 rows
 DELETE FROM `pos_contract_list`;
 /*!40000 ALTER TABLE `pos_contract_list` DISABLE KEYS */;
 INSERT INTO `pos_contract_list` (`list_id`, `contract_id`, `goods_id`, `goods_name`, `sku_id`, `sku_name`, `sale_price`, `cost_price`, `num`, `into_num`, `owe_num`, `owe_money`, `adjust_money`, `goods_money`, `goods_picture`, `remarks`, `create_user_id`, `create_time`) VALUES
@@ -1961,8 +1789,7 @@ INSERT INTO `pos_contract_list` (`list_id`, `contract_id`, `goods_id`, `goods_na
 	(2, 1, 76, '老人鞋子', 24, '颜色:黑色,尺寸:35码', 0.00, 100.00, '10', '10', '0', 0.00, 0.00, 1000.00, 0, '', 1, '2021-06-02 17:56:59');
 /*!40000 ALTER TABLE `pos_contract_list` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.sal_contract 结构
-CREATE TABLE IF NOT EXISTS `sal_contract` (
+CREATE TABLE `sal_contract` (
   `contract_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(256) NOT NULL DEFAULT '' COMMENT '订单主题',
   `contract_no` varchar(50) NOT NULL DEFAULT '' COMMENT '合同编号',
@@ -1989,9 +1816,8 @@ CREATE TABLE IF NOT EXISTS `sal_contract` (
   `create_user_id` int(16) NOT NULL DEFAULT '0' COMMENT '创建者',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`contract_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='销售合同';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='销售合同';
 
--- 正在导出表  07fly_crm_v2.sal_contract 的数据：2 rows
 DELETE FROM `sal_contract`;
 /*!40000 ALTER TABLE `sal_contract` DISABLE KEYS */;
 INSERT INTO `sal_contract` (`contract_id`, `title`, `contract_no`, `customer_id`, `linkman_id`, `chance_id`, `website_id`, `start_date`, `end_date`, `our_user_id`, `money`, `goods_money`, `zero_money`, `back_money`, `owe_money`, `deliver_money`, `invoice_money`, `intro`, `status`, `back_status`, `deliver_status`, `invoice_status`, `renew_status`, `create_user_id`, `create_time`) VALUES
@@ -1999,8 +1825,7 @@ INSERT INTO `sal_contract` (`contract_id`, `title`, `contract_no`, `customer_id`
 	(2, '', '', 0, 0, 0, 0, '2021-06-02', '2023-01-01', 0, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, '', 1, 1, 1, 1, 1, 1, '2021-06-03 10:49:59');
 /*!40000 ALTER TABLE `sal_contract` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.sal_contract_file 结构
-CREATE TABLE IF NOT EXISTS `sal_contract_file` (
+CREATE TABLE `sal_contract_file` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '订单项ID',
   `contract_id` int(11) NOT NULL DEFAULT '0' COMMENT '合同ID',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '文件名称',
@@ -2011,17 +1836,15 @@ CREATE TABLE IF NOT EXISTS `sal_contract_file` (
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   KEY `UK_ns_order_goods_order_id` (`contract_id`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=70 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=289 COMMENT='销售合同明附件';
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=289 COMMENT='销售合同明附件';
 
--- 正在导出表  07fly_crm_v2.sal_contract_file 的数据：1 rows
 DELETE FROM `sal_contract_file`;
 /*!40000 ALTER TABLE `sal_contract_file` DISABLE KEYS */;
 INSERT INTO `sal_contract_file` (`id`, `contract_id`, `name`, `type`, `remarks`, `filepath`, `create_user_id`, `create_time`) VALUES
 	(69, 1, '11111', '', '', '/upload/images/210603/20210603112117314.png', 0, NULL);
 /*!40000 ALTER TABLE `sal_contract_file` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.sal_contract_list 结构
-CREATE TABLE IF NOT EXISTS `sal_contract_list` (
+CREATE TABLE `sal_contract_list` (
   `list_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '订单项ID',
   `contract_id` int(11) NOT NULL DEFAULT '0' COMMENT '合同ID',
   `goods_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品ID',
@@ -2044,9 +1867,8 @@ CREATE TABLE IF NOT EXISTS `sal_contract_list` (
   KEY `UK_ns_order_goods_goods_id` (`goods_id`),
   KEY `UK_ns_order_goods_order_id` (`contract_id`),
   KEY `UK_ns_order_goods_sku_id` (`sku_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=67 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=289 COMMENT='销售合同明细表';
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=289 COMMENT='销售合同明细表';
 
--- 正在导出表  07fly_crm_v2.sal_contract_list 的数据：4 rows
 DELETE FROM `sal_contract_list`;
 /*!40000 ALTER TABLE `sal_contract_list` DISABLE KEYS */;
 INSERT INTO `sal_contract_list` (`list_id`, `contract_id`, `goods_id`, `goods_name`, `sku_id`, `sku_name`, `sale_price`, `cost_price`, `num`, `out_num`, `owe_num`, `owe_money`, `adjust_money`, `goods_money`, `goods_picture`, `remarks`, `create_user_id`, `create_time`) VALUES
@@ -2056,8 +1878,7 @@ INSERT INTO `sal_contract_list` (`list_id`, `contract_id`, `goods_id`, `goods_na
 	(63, 93, 76, '老人鞋子', 23, '颜色:白色,尺寸:40码', 160.00, 0.00, 1, 3, -3, -640.00, 0.00, 160.00, 0, '', 1, '2021-06-02 15:00:06');
 /*!40000 ALTER TABLE `sal_contract_list` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.stock_goods_sku 结构
-CREATE TABLE IF NOT EXISTS `stock_goods_sku` (
+CREATE TABLE `stock_goods_sku` (
   `stock_goods_sku_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '表序号',
   `sku_id` int(11) NOT NULL DEFAULT '0' COMMENT 'skuID',
   `store_id` int(11) NOT NULL DEFAULT '0' COMMENT '仓库编号',
@@ -2074,9 +1895,8 @@ CREATE TABLE IF NOT EXISTS `stock_goods_sku` (
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`stock_goods_sku_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=481 COMMENT='库存清单';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=481 COMMENT='库存清单';
 
--- 正在导出表  07fly_crm_v2.stock_goods_sku 的数据：2 rows
 DELETE FROM `stock_goods_sku`;
 /*!40000 ALTER TABLE `stock_goods_sku` DISABLE KEYS */;
 INSERT INTO `stock_goods_sku` (`stock_goods_sku_id`, `sku_id`, `store_id`, `goods_id`, `goods_name`, `sku_name`, `sale_price`, `cost_price`, `total_cost_money`, `total_sale_money`, `total_profit_money`, `stock`, `code`, `create_time`, `update_time`) VALUES
@@ -2084,8 +1904,7 @@ INSERT INTO `stock_goods_sku` (`stock_goods_sku_id`, `sku_id`, `store_id`, `good
 	(2, 24, 8, 76, '老人鞋子', '颜色:黑色,尺寸:35码', 160.00, 93.33, 840.00, 1440.00, 600.00, 9, '', '2021-06-02 17:57:18', '2021-06-02 17:58:45');
 /*!40000 ALTER TABLE `stock_goods_sku` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.stock_into 结构
-CREATE TABLE IF NOT EXISTS `stock_into` (
+CREATE TABLE `stock_into` (
   `into_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `store_id` int(16) unsigned NOT NULL DEFAULT '0' COMMENT '仓库编号',
   `contract_id` int(16) unsigned NOT NULL DEFAULT '0' COMMENT '采购合同编号',
@@ -2100,17 +1919,15 @@ CREATE TABLE IF NOT EXISTS `stock_into` (
   `create_user_id` int(16) NOT NULL COMMENT '创建人',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`into_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='入库单';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='入库单';
 
--- 正在导出表  07fly_crm_v2.stock_into 的数据：1 rows
 DELETE FROM `stock_into`;
 /*!40000 ALTER TABLE `stock_into` DISABLE KEYS */;
 INSERT INTO `stock_into` (`into_id`, `store_id`, `contract_id`, `title`, `money`, `number`, `intro`, `status`, `into_user_id`, `into_time`, `into_type`, `create_user_id`, `create_time`) VALUES
 	(1, 8, 1, '天河一期', 2000.00, 20, '', 1, 1, '2021-06-02 17:57:18', '采购入库', 1, '2021-06-02 17:57:04');
 /*!40000 ALTER TABLE `stock_into` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.stock_into_list 结构
-CREATE TABLE IF NOT EXISTS `stock_into_list` (
+CREATE TABLE `stock_into_list` (
   `list_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '订单项ID',
   `into_id` int(11) NOT NULL DEFAULT '0' COMMENT '入库单编号 ',
   `contract_id` int(11) NOT NULL DEFAULT '0' COMMENT '合同ID',
@@ -2132,9 +1949,8 @@ CREATE TABLE IF NOT EXISTS `stock_into_list` (
   KEY `UK_ns_order_goods_goods_id` (`goods_id`),
   KEY `UK_ns_order_goods_order_id` (`contract_id`),
   KEY `UK_ns_order_goods_sku_id` (`sku_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=289 COMMENT='入库单明细表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=289 COMMENT='入库单明细表';
 
--- 正在导出表  07fly_crm_v2.stock_into_list 的数据：2 rows
 DELETE FROM `stock_into_list`;
 /*!40000 ALTER TABLE `stock_into_list` DISABLE KEYS */;
 INSERT INTO `stock_into_list` (`list_id`, `into_id`, `contract_id`, `contract_list_id`, `store_id`, `goods_id`, `goods_name`, `sku_id`, `sku_name`, `number`, `price`, `money`, `remarks`, `create_user_id`, `create_time`, `into_user_id`, `into_time`) VALUES
@@ -2142,8 +1958,7 @@ INSERT INTO `stock_into_list` (`list_id`, `into_id`, `contract_id`, `contract_li
 	(2, 1, 1, 2, 8, 76, '老人鞋子', 24, '颜色:黑色,尺寸:35码', '10', 100.00, 1000.00, '', 1, '2021-06-02 17:57:04', 1, '2021-06-02 17:57:18');
 /*!40000 ALTER TABLE `stock_into_list` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.stock_out 结构
-CREATE TABLE IF NOT EXISTS `stock_out` (
+CREATE TABLE `stock_out` (
   `out_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `store_id` int(16) unsigned NOT NULL DEFAULT '0' COMMENT '仓库编号',
   `contract_id` int(16) unsigned NOT NULL DEFAULT '0' COMMENT '销售合同编号',
@@ -2158,17 +1973,15 @@ CREATE TABLE IF NOT EXISTS `stock_out` (
   `create_user_id` int(16) NOT NULL DEFAULT '0' COMMENT '创建人',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`out_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='入库单';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='入库单';
 
--- 正在导出表  07fly_crm_v2.stock_out 的数据：1 rows
 DELETE FROM `stock_out`;
 /*!40000 ALTER TABLE `stock_out` DISABLE KEYS */;
 INSERT INTO `stock_out` (`out_id`, `store_id`, `contract_id`, `title`, `money`, `number`, `intro`, `status`, `out_user_id`, `out_time`, `out_type`, `create_user_id`, `create_time`) VALUES
 	(1, 8, 1, '天河项目订单', 310.00, 2, '', 1, 1, '2021-06-02 17:58:45', '销售出库', 1, '2021-06-02 17:58:32');
 /*!40000 ALTER TABLE `stock_out` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.stock_out_list 结构
-CREATE TABLE IF NOT EXISTS `stock_out_list` (
+CREATE TABLE `stock_out_list` (
   `list_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '订单项ID',
   `out_id` int(11) NOT NULL DEFAULT '0' COMMENT '出库单编号 ',
   `contract_id` int(11) NOT NULL DEFAULT '0' COMMENT '合同ID',
@@ -2190,9 +2003,8 @@ CREATE TABLE IF NOT EXISTS `stock_out_list` (
   KEY `UK_ns_order_goods_goods_id` (`goods_id`),
   KEY `UK_ns_order_goods_order_id` (`contract_id`),
   KEY `UK_ns_order_goods_sku_id` (`sku_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=289 COMMENT='入库单明细表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=289 COMMENT='入库单明细表';
 
--- 正在导出表  07fly_crm_v2.stock_out_list 的数据：2 rows
 DELETE FROM `stock_out_list`;
 /*!40000 ALTER TABLE `stock_out_list` DISABLE KEYS */;
 INSERT INTO `stock_out_list` (`list_id`, `out_id`, `contract_id`, `contract_list_id`, `store_id`, `goods_id`, `goods_name`, `sku_id`, `sku_name`, `number`, `price`, `money`, `remarks`, `create_user_id`, `create_time`, `out_user_id`, `out_time`) VALUES
@@ -2200,8 +2012,7 @@ INSERT INTO `stock_out_list` (`list_id`, `out_id`, `contract_id`, `contract_list
 	(2, 1, 1, 66, 8, 76, '老人鞋子', 24, '颜色:黑色,尺寸:35码', '1', 0.00, 160.00, '', 1, '2021-06-02 17:58:32', 1, '2021-06-02 17:58:45');
 /*!40000 ALTER TABLE `stock_out_list` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.stock_store 结构
-CREATE TABLE IF NOT EXISTS `stock_store` (
+CREATE TABLE `stock_store` (
   `store_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(256) NOT NULL DEFAULT '' COMMENT '名称',
   `create_user_id` int(11) NOT NULL DEFAULT '0' COMMENT '创建人员',
@@ -2210,9 +2021,8 @@ CREATE TABLE IF NOT EXISTS `stock_store` (
   `visible` smallint(2) NOT NULL DEFAULT '0',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`store_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='仓库管理';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='仓库管理';
 
--- 正在导出表  07fly_crm_v2.stock_store 的数据：2 rows
 DELETE FROM `stock_store`;
 /*!40000 ALTER TABLE `stock_store` DISABLE KEYS */;
 INSERT INTO `stock_store` (`store_id`, `name`, `create_user_id`, `own_user_id`, `sort`, `visible`, `create_time`) VALUES
@@ -2220,8 +2030,7 @@ INSERT INTO `stock_store` (`store_id`, `name`, `create_user_id`, `own_user_id`, 
 	(10, '222444', 1, '', 22, 1, '2019-05-20 09:39:27');
 /*!40000 ALTER TABLE `stock_store` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.sup_linkman 结构
-CREATE TABLE IF NOT EXISTS `sup_linkman` (
+CREATE TABLE `sup_linkman` (
   `linkman_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `supplier_id` int(16) NOT NULL DEFAULT '0',
   `name` varchar(256) NOT NULL DEFAULT '',
@@ -2237,9 +2046,8 @@ CREATE TABLE IF NOT EXISTS `sup_linkman` (
   `create_time` datetime DEFAULT NULL,
   `create_user_id` int(16) NOT NULL DEFAULT '0',
   PRIMARY KEY (`linkman_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='供应商联系人';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='供应商联系人';
 
--- 正在导出表  07fly_crm_v2.sup_linkman 的数据：11 rows
 DELETE FROM `sup_linkman`;
 /*!40000 ALTER TABLE `sup_linkman` DISABLE KEYS */;
 INSERT INTO `sup_linkman` (`linkman_id`, `supplier_id`, `name`, `gender`, `postion`, `tel`, `mobile`, `qicq`, `email`, `zipcode`, `address`, `intro`, `create_time`, `create_user_id`) VALUES
@@ -2256,8 +2064,7 @@ INSERT INTO `sup_linkman` (`linkman_id`, `supplier_id`, `name`, `gender`, `posti
 	(11, 13, 'dadfadf', 1, '123', '123', 'a1123', '123', '123', '', '123', '', '2019-05-04 18:08:18', 1);
 /*!40000 ALTER TABLE `sup_linkman` ENABLE KEYS */;
 
--- 导出  表 07fly_crm_v2.sup_supplier 结构
-CREATE TABLE IF NOT EXISTS `sup_supplier` (
+CREATE TABLE `sup_supplier` (
   `supplier_id` int(16) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL DEFAULT '',
   `area_id` int(16) NOT NULL DEFAULT '0' COMMENT '所在地区',
@@ -2278,9 +2085,8 @@ CREATE TABLE IF NOT EXISTS `sup_supplier` (
   `create_time` datetime DEFAULT NULL,
   `test` varchar(250) DEFAULT '' COMMENT 'test',
   PRIMARY KEY (`supplier_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='供应商';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='供应商';
 
--- 正在导出表  07fly_crm_v2.sup_supplier 的数据：4 rows
 DELETE FROM `sup_supplier`;
 /*!40000 ALTER TABLE `sup_supplier` DISABLE KEYS */;
 INSERT INTO `sup_supplier` (`supplier_id`, `name`, `area_id`, `create_user_id`, `level`, `ecotype`, `trade`, `satisfy`, `credit`, `address`, `linkman`, `website`, `zipcode`, `tel`, `fax`, `email`, `intro`, `create_time`, `test`) VALUES
