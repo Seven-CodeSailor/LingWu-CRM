@@ -436,7 +436,6 @@ CREATE TABLE `fly_goods` (
   `is_member_discount` int(1) NOT NULL DEFAULT '0' COMMENT '参与会员折扣',
   `shipping_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '运费 0为免运费',
   `shipping_fee_id` int(11) NOT NULL DEFAULT '0' COMMENT '售卖区域id 物流模板id  ns_order_shipping_fee 表id',
-  `stock` int(10) NOT NULL DEFAULT '0' COMMENT '商品库存',
   `max_buy` int(11) NOT NULL DEFAULT '0' COMMENT '限购 0 不限购',
   `clicks` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '商品点击数量',
   `min_stock_alarm` int(11) NOT NULL DEFAULT '0' COMMENT '库存预警值',
@@ -602,14 +601,13 @@ CREATE TABLE `fly_goods_sku` (
   `total_cost_money` decimal(19,2) NOT NULL DEFAULT '0.00' COMMENT '成本总金额',
   `total_sale_money` decimal(19,2) NOT NULL DEFAULT '0.00' COMMENT '销售总金额',
   `total_profit_money` decimal(19,2) NOT NULL DEFAULT '0.00' COMMENT '利润总金额',
-  `stock` int(11) NOT NULL DEFAULT '0' COMMENT '库存',
   `picture` int(11) NOT NULL DEFAULT '0' COMMENT '如果是第一个sku编码, 可以加图片',
   `code` varchar(255) NOT NULL DEFAULT '' COMMENT '商家编码',
   `QRcode` varchar(255) NOT NULL DEFAULT '' COMMENT '商品二维码',
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   `update_date` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`sku_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=481 COMMENT='商品skui规格价格库存信息表';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=481 COMMENT='商品sku规格价格信息表';
 
 CREATE TABLE `fly_goods_spec` (
   `spec_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '属性ID',
@@ -767,6 +765,7 @@ CREATE TABLE `fly_sys_user` (
   `intro` varchar(1024) NOT NULL DEFAULT '',
   `adt` datetime DEFAULT NULL,
   `identity` varchar(50) DEFAULT '',
+  `status` int(16) DEFAULT '0' COMMENT '账号状态 0=正常，1=冻结',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='系统用户表';
 

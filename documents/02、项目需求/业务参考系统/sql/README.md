@@ -42,7 +42,3 @@ set @@sql_mode = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBST
 set global max_allowed_packet=1024102416;
 ```
 
-
-
-
-

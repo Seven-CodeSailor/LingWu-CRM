@@ -696,7 +696,6 @@ CREATE TABLE `fly_goods` (
   `is_member_discount` int(1) NOT NULL DEFAULT '0' COMMENT '参与会员折扣',
   `shipping_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '运费 0为免运费',
   `shipping_fee_id` int(11) NOT NULL DEFAULT '0' COMMENT '售卖区域id 物流模板id  ns_order_shipping_fee 表id',
-  `stock` int(10) NOT NULL DEFAULT '0' COMMENT '商品库存',
   `max_buy` int(11) NOT NULL DEFAULT '0' COMMENT '限购 0 不限购',
   `clicks` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '商品点击数量',
   `min_stock_alarm` int(11) NOT NULL DEFAULT '0' COMMENT '库存预警值',
@@ -768,9 +767,8 @@ CREATE TABLE `fly_goods` (
 
 DELETE FROM `fly_goods`;
 /*!40000 ALTER TABLE `fly_goods` DISABLE KEYS */;
-INSERT INTO `fly_goods` (`goods_id`, `goods_name`, `shop_id`, `category_id`, `category_id_1`, `category_id_2`, `category_id_3`, `brand_id`, `group_id_array`, `promotion_type`, `goods_type`, `market_price`, `sale_price`, `cost_price`, `price`, `promotion_price`, `give_point`, `is_member_discount`, `shipping_fee`, `shipping_fee_id`, `stock`, `max_buy`, `clicks`, `min_stock_alarm`, `sales`, `collects`, `star`, `evaluates`, `shares`, `province_id`, `city_id`, `defaultpic`, `keywords`, `introduction`, `description`, `content`, `code`, `is_hot`, `is_recommend`, `is_new`, `is_bill`, `state`, `sort`, `img_id_array`, `sku_img_array`, `match_point`, `match_ratio`, `real_sales`, `goods_attribute_id`, `goods_spec_format`, `goods_weight`, `goods_volume`, `shipping_fee_type`, `extend_category_id`, `extend_category_id_1`, `extend_category_id_2`, `extend_category_id_3`, `supplier_id`, `sale_date`, `create_time`, `update_time`, `min_buy`, `virtual_goods_type_id`, `production_date`, `shelf_life`, `goods_video_address`, `pc_custom_template`, `wap_custom_template`, `max_use_point`, `is_open_presell`, `presell_time`, `presell_day`, `presell_delivery_type`, `presell_price`, `goods_unit`) VALUES
-	(76, '老人鞋子', 1, 4, 0, 0, 0, 0, '', 0, 1, 200.00, 160.00, 100.00, 0.00, 0.00, 0, 0, 0.00, 0, 80, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, '/upload/images/190903/20190903095648913.jpg', '老人鞋子', '', '老人鞋子', '<p>老人鞋子老人鞋子老人鞋子</p>', '', 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL, 0, 0, '', 0.00, 0.00, 1, NULL, NULL, NULL, NULL, 0, '0000-00-00 00:00:00', '2019-09-03 09:57:49', '2020-03-10 14:04:42', 0, 0, 0, '', '', '', '', 0, 0, 0, 0, 1, 0.00, ''),
-	(77, '精品商品', 1, 4, 0, 0, 0, 0, '', 0, 1, 100.00, 100.00, 100.00, 0.00, 0.00, 0, 0, 0.00, 0, 100, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, '', '系统', '', '好的呀', '', '', 0, 0, 0, 0, 1, 100, NULL, NULL, NULL, NULL, 0, 0, '', 0.00, 0.00, 1, NULL, NULL, NULL, NULL, 0, '0000-00-00 00:00:00', '2020-04-05 14:56:55', '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', 0, 0, 0, 0, 1, 0.00, '');
+INSERT INTO `fly_goods` VALUES (76, '老人鞋子', 1, 4, 0, 0, 0, 0, '', 0, 1, 200.00, 160.00, 100.00, 0.00, 0.00, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, '/upload/images/190903/20190903095648913.jpg', '老人鞋子', '', '老人鞋子', '<p>老人鞋子老人鞋子老人鞋子</p>', '', 0, 0, 0, 0, 1, 1, NULL, NULL, NULL, NULL, 0, 0, '', 0.00, 0.00, 1, NULL, NULL, NULL, NULL, 0, '0000-00-00 00:00:00', '2019-09-03 09:57:49', '2020-03-10 14:04:42', 0, 0, 0, '', '', '', '', 0, 0, 0, 0, 1, 0.00, '');
+INSERT INTO `fly_goods` VALUES (77, '精品商品', 1, 4, 0, 0, 0, 0, '', 0, 1, 100.00, 100.00, 100.00, 0.00, 0.00, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, '', '系统', '', '好的呀', '', '', 0, 0, 0, 0, 1, 100, NULL, NULL, NULL, NULL, 0, 0, '', 0.00, 0.00, 1, NULL, NULL, NULL, NULL, 0, '0000-00-00 00:00:00', '2020-04-05 14:56:55', '0000-00-00 00:00:00', 0, 0, 0, '', '', '', '', 0, 0, 0, 0, 1, 0.00, '');
 /*!40000 ALTER TABLE `fly_goods` ENABLE KEYS */;
 
 CREATE TABLE `fly_goods_attr` (
@@ -984,22 +982,20 @@ CREATE TABLE `fly_goods_sku` (
   `total_cost_money` decimal(19,2) NOT NULL DEFAULT '0.00' COMMENT '成本总金额',
   `total_sale_money` decimal(19,2) NOT NULL DEFAULT '0.00' COMMENT '销售总金额',
   `total_profit_money` decimal(19,2) NOT NULL DEFAULT '0.00' COMMENT '利润总金额',
-  `stock` int(11) NOT NULL DEFAULT '0' COMMENT '库存',
   `picture` int(11) NOT NULL DEFAULT '0' COMMENT '如果是第一个sku编码, 可以加图片',
   `code` varchar(255) NOT NULL DEFAULT '' COMMENT '商家编码',
   `QRcode` varchar(255) NOT NULL DEFAULT '' COMMENT '商品二维码',
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   `update_date` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`sku_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=481 COMMENT='商品skui规格价格库存信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=481 COMMENT='商品sku规格价格信息表';
 
 DELETE FROM `fly_goods_sku`;
 /*!40000 ALTER TABLE `fly_goods_sku` DISABLE KEYS */;
-INSERT INTO `fly_goods_sku` (`sku_id`, `goods_id`, `goods_name`, `sku_name`, `sku_value_items`, `sku_value_items_format`, `market_price`, `sale_price`, `price`, `promote_price`, `cost_price`, `total_cost_money`, `total_sale_money`, `total_profit_money`, `stock`, `picture`, `code`, `QRcode`, `create_date`, `update_date`) VALUES
-	(22, 76, '老人鞋子', '颜色:白色,尺寸:35码', '颜色:白色,尺寸:35码', '', 200.00, 300.00, 0.00, 0.00, -200.00, -800.00, 5100.00, 3200.00, 4, 0, '', '', '2020-03-10 14:04:42', '2020-03-10 14:04:42'),
-	(25, 76, '老人鞋子', '颜色:黑色,尺寸:40码', '颜色:黑色,尺寸:40码', '', 200.00, 150.00, 0.00, 0.00, 94.44, 850.00, 2850.00, 550.00, 9, 0, '', '', '2020-03-10 14:04:42', '2020-03-10 14:04:42'),
-	(24, 76, '老人鞋子', '颜色:黑色,尺寸:35码', '颜色:黑色,尺寸:35码', '', 200.00, 160.00, 0.00, 0.00, 93.33, 840.00, 0.00, 0.00, 9, 0, '', '', '2020-03-10 14:04:42', '2020-03-10 14:04:42'),
-	(23, 76, '老人鞋子', '颜色:白色,尺寸:40码', '颜色:白色,尺寸:40码', '', 200.00, 160.00, 0.00, 0.00, 70.00, 700.00, 0.00, 0.00, 10, 0, '', '', '2020-03-10 14:04:42', '2020-03-10 14:04:42');
+INSERT INTO `fly_goods_sku` VALUES (22, 76, '老人鞋子', '颜色:白色,尺寸:35码', '颜色:白色,尺寸:35码', '', 200.00, 300.00, 0.00, 0.00, -200.00, -800.00, 5100.00, 3200.00, 0, '', '', '2020-03-10 14:04:42', '2020-03-10 14:04:42');
+INSERT INTO `fly_goods_sku` VALUES (23, 76, '老人鞋子', '颜色:白色,尺寸:40码', '颜色:白色,尺寸:40码', '', 200.00, 160.00, 0.00, 0.00, 70.00, 700.00, 0.00, 0.00, 0, '', '', '2020-03-10 14:04:42', '2020-03-10 14:04:42');
+INSERT INTO `fly_goods_sku` VALUES (24, 76, '老人鞋子', '颜色:黑色,尺寸:35码', '颜色:黑色,尺寸:35码', '', 200.00, 160.00, 0.00, 0.00, 93.33, 840.00, 0.00, 0.00, 0, '', '', '2020-03-10 14:04:42', '2020-03-10 14:04:42');
+INSERT INTO `fly_goods_sku` VALUES (25, 76, '老人鞋子', '颜色:黑色,尺寸:40码', '颜色:黑色,尺寸:40码', '', 200.00, 150.00, 0.00, 0.00, 94.44, 850.00, 2850.00, 550.00, 0, '', '', '2020-03-10 14:04:42', '2020-03-10 14:04:42');
 /*!40000 ALTER TABLE `fly_goods_sku` ENABLE KEYS */;
 
 CREATE TABLE `fly_goods_spec` (
@@ -1443,6 +1439,7 @@ CREATE TABLE `fly_sys_user` (
   `intro` varchar(1024) NOT NULL DEFAULT '',
   `adt` datetime DEFAULT NULL,
   `identity` varchar(50) DEFAULT '',
+  `status` int(16) DEFAULT '0' COMMENT '账号状态 0=正常，1=冻结',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='系统用户表';
 

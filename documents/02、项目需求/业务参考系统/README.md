@@ -160,12 +160,17 @@ unzip fly-crm.zip
 
 有几个红叉需要我们处理一下。
 
-目录权限文件，需要给他上面列举出来的目录或文件授予写入权限，执行下列命令
+目录权限文件，修改一下项目目录归属即可，如果后期更新了数据卷里面的内容，也建议重新执行一下修改归属命令
 
 ```sh
-chmod -R 777 /home/dnmp/www/fly-crm/ERP/Config/
-chmod -R 777 /home/dnmp/www/fly-crm/ERP/Cache/
-chmod -R 777 /home/dnmp/www/fly-crm/install/
+# 进入php容器
+docker exec -it php-crm bash
+
+# 进入数据卷目录对应的容器目录
+cd /var/www/html
+
+# 修改目录归属
+chown www-data:www-data -R fly-crm/
 ```
 
 其他问题就是缺少`php`扩展，进入`php`容器，然后安装扩展，需要一行一行的执行下面命令行
