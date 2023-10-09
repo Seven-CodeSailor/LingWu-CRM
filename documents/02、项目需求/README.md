@@ -22,7 +22,7 @@
 
 业务参考项目在线演示：
 
-- 访问地址：http://v2.07fly.xyz
+- 访问地址：http://erp.07fly.com/
 - 账号：admin
 - 密码：admin123456
 
