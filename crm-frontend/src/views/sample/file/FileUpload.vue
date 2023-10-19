@@ -25,11 +25,15 @@
       <span style="vertical-align: middle">Stream上传文件</span>
     </el-button>
   </el-upload>
+  <div>
+    <SalesKit/>
+  </div>
 </template>
 
 <script setup>
 import Request from '@/apis/request'
 import { ElMessage } from 'element-plus'
+import SalesKit from '../../../components/chartStatistics/salesManagement/SalesKit.vue';
 
 // 使用FormData的方式上传文件
 function uploadUseFormData(params) {
@@ -76,4 +80,5 @@ function uploadUseStream(params) {
 .wrap-space {
   padding: 5px;
 }
+
 </style>

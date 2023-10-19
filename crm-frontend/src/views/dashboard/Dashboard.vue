@@ -1,7 +1,8 @@
 <template>
   <div class="contain">
-    <div class="code">主面板</div>
+    <div class="code">主页面</div>
     <div class="info">这是主面板</div>
+
   </div>
 </template>
 
