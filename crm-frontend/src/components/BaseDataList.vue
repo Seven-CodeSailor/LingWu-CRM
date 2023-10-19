@@ -3,20 +3,15 @@
     <el-card class="box-card">
       <template #header>
         <div class="card-header">
-          <div class="left">
-            <span style="margin-right: 10px; font-weight: 700">{{
-              props.title
-            }}</span>
-            <!-- 面包屑 -->
-            <el-breadcrumb separator="/">
-              <el-breadcrumb-item
-                v-for="(item, index) in $route.matched"
-                :to="{ path: item.path }"
-                :key="index"
-                >面包屑</el-breadcrumb-item
-              >
-            </el-breadcrumb>
-          </div>
+          <!-- 面包屑 -->
+          <el-breadcrumb separator="/">
+            <el-breadcrumb-item
+              v-for="(item, index) in $route.matched"
+              :to="{ path: item.path }"
+              :key="index"
+              >面包屑</el-breadcrumb-item
+            >
+          </el-breadcrumb>
           <el-button
             class="button"
             @click="operatingInstructionDialogVisible = true"
@@ -155,11 +150,6 @@ defineExpose({
       display: flex;
       justify-content: space-between;
       align-items: center;
-
-      .left {
-        display: flex;
-        align-items: center;
-      }
     }
   }
 }
