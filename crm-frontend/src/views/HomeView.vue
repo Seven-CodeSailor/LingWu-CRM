@@ -14,12 +14,14 @@
               unique-opened
               router
             >
+              <!-- 首页 -->
               <el-menu-item index="/home">
                 <el-icon>
                   <icon-menu />
                 </el-icon>
                 <span>首页</span>
               </el-menu-item>
+              <!-- 一级 -->
               <el-sub-menu
                 v-for="item in menus"
                 :key="item.id"
@@ -31,6 +33,7 @@
                   </el-icon>
                   <span>{{ item.text }}</span>
                 </template>
+                <!-- 二级 -->
                 <el-menu-item-group>
                   <el-menu-item
                     v-for="i in item.children"
