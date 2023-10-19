@@ -23,6 +23,7 @@
     ref="verify"
     @success="handleSuccess"
   ></Verify>
+  <el-button @click="useVerify">测试</el-button>
 </template>
 
 <script setup>
