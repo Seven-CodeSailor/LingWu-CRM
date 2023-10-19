@@ -1,3 +1,13 @@
+/*
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-10-19 22:12:32
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-10-19 22:24:25
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\main.js
+ * @Description:
+ *
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
+ */
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import ElementPlus from 'element-plus'
@@ -7,7 +17,6 @@ import App from './App.vue'
 import router from './router'
 
 import './assets/main.css'
-import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 
 const app = createApp(App)
