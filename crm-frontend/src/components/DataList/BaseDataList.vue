@@ -9,7 +9,7 @@
               v-for="(item, index) in $route.matched"
               :to="{ path: item.path }"
               :key="index"
-              >面包屑</el-breadcrumb-item
+              >{{ item.meta.text }}</el-breadcrumb-item
             >
           </el-breadcrumb>
           <el-button
@@ -25,19 +25,19 @@
       <slot name="menu"></slot>
       <!-- 表格 -->
       <el-table
-        :data="props.tableData"
+        :data="props?.tableData"
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
         <el-table-column
-          v-for="item in props.tableColumnAttribute"
+          v-for="item in props?.tableColumnAttribute"
           :prop="item.prop"
           :label="item.label"
           :key="item"
         >
         </el-table-column>
-        <el-table-column label="操作" v-if="!props.useDropdownMenu">
+        <el-table-column label="操作" v-if="!props?.useDropdownMenu">
           <!-- 带图标的按钮操作 -->
           <template #default="{ row }">
             <el-tooltip content="编辑" placement="top">
@@ -94,34 +94,40 @@
         title="操作说明"
         width="50%"
       >
-        <span>{{ props.msg ? props.msg : '测试测试' }}</span>
+        <span>{{ props.msg }}</span>
       </el-dialog>
     </el-card>
   </div>
 </template>
 
 <script setup>
-import { defineProps, ref, defineExpose } from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps({
-  title: String,
+  // 操作说明的提示
   msg: String,
+  // 表格的列属性
   tableColumnAttribute: Array,
+  // 是否使用下拉菜单的按钮
   useDropdownMenu: Boolean,
   // 下拉菜单
   dropdownMenuActionsInfo: Array,
-  // 编辑和删除
+  // 不启用下拉菜单的时候的编辑和删除按钮的回调函数
   handleDelete: Function,
   handleEdit: Function,
   // 表格数据
-  tableData: Array
+  tableData: Array,
+  // 表格每页的数据容量
+  pageSizes: Array,
+  // 表格的数据数量
+  total: Number
 })
 
 const paginationData = ref({
   currentPage: 1,
-  pageSize: 10,
-  total: 100,
-  pageSizes: [5, 10, 15, 20]
+  pageSize: props.pageSizes[0],
+  total: props.total,
+  pageSizes: props.pageSizes
 })
 
 const rows = ref([])
@@ -137,6 +143,23 @@ const handleCommand = (command, row) => {
 const handleSelectionChange = (newRows) => {
   rows.value = newRows
 }
+// 调用父组件更新表格数据的函数
+const emit = defineEmits(['updateTableData'])
+
+const handleSizeChange = (pageSize) => {
+  // 当前页的数据容量改变，重置页码为1
+  paginationData.value.pageSize = pageSize
+  paginationData.value.currentPage = 1
+  // 传入当前页码容量大小和当前页码
+  emit('updateTableData', pageSize, paginationData.value.currentPage)
+}
+
+const handleCurrentChange = (currentPage) => {
+  paginationData.value.currentPage = currentPage
+  // 传入当前页码容量大小和当前页码
+  emit('updateTableData', paginationData.value.pageSize, currentPage)
+}
+
 // 暴露出被选中的row
 defineExpose({
   rows
