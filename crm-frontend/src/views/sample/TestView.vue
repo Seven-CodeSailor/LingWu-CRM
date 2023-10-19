@@ -32,15 +32,24 @@ const sendData = {
   tableColumnAttribute: [
     {
       prop: 'sex',
-      label: '性别'
+      label: '性别',
+      // 是否使用排序
+      sortable: true
     },
     {
       prop: 'age',
-      label: '年龄'
+      label: '年龄',
+      sortable: true
     },
     {
       prop: 'hoby',
       label: '爱好'
+    },
+    {
+      prop: 'myPic',
+      label: '带图片的列',
+      // 该列数据是否使用了图片
+      usePic: true
     }
   ],
   tableData: [
@@ -51,16 +60,16 @@ const sendData = {
     },
     {
       sex: '女',
-      age: 19,
+      age: 21,
       hoby: 'rap'
     },
     {
       sex: '男',
-      age: 19,
+      age: 22,
       hoby: '篮球'
     }
   ],
-  useDropdownMenu: false,
+  useDropdownMenu: true,
   handleDelete: (row) => {
     console.log('删除', row)
   },

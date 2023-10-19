@@ -35,7 +35,12 @@
           :prop="item.prop"
           :label="item.label"
           :key="item"
+          :sortable="item?.sortable"
         >
+          <template #default="{ row }" v-if="item.usePic"
+            >{{ row[item.prop] }}1111</template
+          >
+          <!-- <template></template> -->
         </el-table-column>
         <el-table-column label="操作" v-if="!props?.useDropdownMenu">
           <!-- 带图标的按钮操作 -->
