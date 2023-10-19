@@ -1,3 +1,13 @@
+/*
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-10-19 22:28:55
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-10-19 22:30:05
+ * @FilePath: \zero-one-crmsys\crm-frontend\.eslintrc.cjs
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
+ */
 /* eslint-env node */
 require('@rushstack/eslint-patch/modern-module-resolution')
 
