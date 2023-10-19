@@ -90,6 +90,10 @@ const menus = reactive([
   {
     path: '/sample/test',
     text: '测试专用1'
+  },
+  {
+    path: '/sample/test1',
+    text: '测试专用2'
   }
 ])
 </script>

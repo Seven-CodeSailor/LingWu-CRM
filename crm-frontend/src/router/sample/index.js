@@ -42,6 +42,13 @@ const routes = [
         meta: {
           text: '测试专用1'
         }
+      },
+      {
+        path: '/sample/test1',
+        component: () => import('@/views/sample/TestView1.vue'),
+        meta: {
+          text: '测试专用2'
+        }
       }
     ]
   }
