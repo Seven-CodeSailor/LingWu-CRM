@@ -46,7 +46,7 @@ const sendData = {
       label: '爱好'
     },
     {
-      prop: 'myPic',
+      prop: 'data',
       label: '带图片的列',
       // 该列数据是否使用了图片
       usePic: true
@@ -56,20 +56,36 @@ const sendData = {
     {
       sex: '男',
       age: 19,
-      hoby: '唱歌'
+      hoby: '唱歌',
+      data: {
+        picUrl: 'https://cdn2.thecatapi.com/images/446.jpg',
+        goodsName: '2',
+        createDate: '2023-1-2'
+      }
     },
     {
       sex: '女',
       age: 21,
-      hoby: 'rap'
+      hoby: 'rap',
+      data: {
+        picUrl: 'https://cdn2.thecatapi.com/images/446.jpg',
+        goodsName: '1',
+        createDate: '2023-1-2'
+      }
     },
     {
       sex: '男',
       age: 22,
-      hoby: '篮球'
+      hoby: '篮球',
+      data: {
+        picUrl: 'https://cdn2.thecatapi.com/images/446.jpg',
+        goodsName: '1222',
+        createDate: '2023-1-2'
+      }
     }
   ],
-  useDropdownMenu: true,
+  useEditButton: true,
+  // 传入删除操作的函数就会显示删除按钮
   handleDelete: (row) => {
     console.log('删除', row)
   },

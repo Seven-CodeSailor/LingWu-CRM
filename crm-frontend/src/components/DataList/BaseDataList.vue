@@ -36,24 +36,49 @@
           :label="item.label"
           :key="item"
           :sortable="item?.sortable"
+          :width="item?.usePic ? 300 : 150"
         >
-          <template #default="{ row }" v-if="item.usePic"
-            >{{ row[item.prop] }}1111</template
-          >
-          <!-- <template></template> -->
+          <!-- 信息包含图片·，使用如下渲染 -->
+          <template #default="{ row }" v-if="item.usePic">
+            <div style="display: flex; align-items: center">
+              <el-image
+                style="
+                  width: 60px;
+                  height: 60px;
+                  border-radius: 30px;
+                  margin-right: 8px;
+                "
+                :src="row[item.prop].picUrl"
+                :fit="fit"
+              />
+              <div>
+                <div>商品名称:{{ row[item.prop].goodsName }}</div>
+                <div>商家创建时间:{{ row[item.prop].createDate }}</div>
+              </div>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column label="操作" v-if="!props?.useDropdownMenu">
           <!-- 带图标的按钮操作 -->
           <template #default="{ row }">
-            <el-tooltip content="编辑" placement="top">
-              <el-button circle type="primary" @click="props.handleEdit(row)">
-                <el-icon> <icon-edit /></el-icon>
-              </el-button>
-            </el-tooltip>
-            <el-tooltip content="删除" placement="top"
-              ><el-button circle type="danger" @click="props.handleDelete(row)">
-                <el-icon> <icon-delete /></el-icon> </el-button></el-tooltip
-          ></template>
+            <!-- 条件渲染按钮 -->
+            <template v-if="props.handleEdit">
+              <el-tooltip content="编辑" placement="top">
+                <el-button circle type="primary" @click="props.handleEdit(row)">
+                  <el-icon> <icon-edit /></el-icon>
+                </el-button> </el-tooltip
+            ></template>
+            <!-- 条件渲染按钮 -->
+            <template v-if="props.handleDelete">
+              <el-tooltip content="删除" placement="top"
+                ><el-button
+                  circle
+                  type="danger"
+                  @click="props.handleDelete(row)"
+                >
+                  <el-icon> <icon-delete /></el-icon> </el-button></el-tooltip
+            ></template>
+          </template>
         </el-table-column>
         <el-table-column label="操作" v-else>
           <!-- 下拉菜单的按钮操作 -->
