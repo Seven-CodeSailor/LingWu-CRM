@@ -49,6 +49,11 @@ const routes = [
         meta: {
           text: '测试专用2'
         }
+      },
+      // 销售图表展示的临时路由，后期会删除
+      {
+        path: '/sample/chartDemo',
+        component: () => import('@/views/sample/chartDemo/ChartDemo.vue')
       }
     ]
   }
