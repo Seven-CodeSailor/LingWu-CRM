@@ -86,6 +86,10 @@ const menus = reactive([
   {
     path: '/sample/editor',
     text: '富文本框演示'
+  },
+  {
+    path: '/sample/chartDemo',
+    text: '销售图表演示(临时)'
   }
 ])
 </script>
