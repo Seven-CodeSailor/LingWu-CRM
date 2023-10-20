@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <el-select v-model="value" class="select" placeholder="请选择时间">
+    <el-select v-model="time" class="select" placeholder="请选择时间">
       <el-option
         v-for="item in options"
         :key="item.value"
@@ -17,30 +17,37 @@ import { ref, onMounted, watch } from 'vue'
 import * as echarts from 'echarts'
 
 let props = defineProps({
-  data: {
-    type: Object,
-    default: () => {
-      return {
-        title: '数据统计',
-        data1: [0, 0, 0],
-        data2: [0, 0, 0]
-      }
+  // 获取图表所需数据
+  getData: {
+    type: Function,
+    require: true,
+    default: (time = 1) => {
+      console.log(time)
     }
   }
+})
+
+// 图表数据
+let data = ref({
+  title: '数据统计',
+  contractsNumber: [0, 0, 0],
+  amount: [0, 0, 0]
 })
 
 let charts = ref()
 
 onMounted(() => {
+  data.value = props.getData()
   initData()
 })
 
+// 初始化数据列表
 let initData = () => {
   let mychart = echarts.init(charts.value)
   //设置配置项
   let option = {
     title: {
-      text: props.data.title,
+      text: data.value.title,
       show: true
     },
     tooltip: {
@@ -59,6 +66,7 @@ let initData = () => {
         type: 'value',
         name: '合同个数',
         position: 'left',
+        minInterval: 1,
         axisLabel: {
           formatter: '{value} 个'
         }
@@ -68,9 +76,9 @@ let initData = () => {
         name: '合同金额/万元(人民币)',
         position: 'right',
         min: '0',
-        max: `${Math.max(...props.data.data2) || 0}`,
+        max: `${Math.max(...data.value.amount) || 0}`,
         axisLabel: {
-          formatter: '{value} 万元'
+          formatter: '{value} 万'
         }
       }
     ],
@@ -79,13 +87,20 @@ let initData = () => {
         name: '合同数',
         type: 'bar',
         yAxisIndex: 0,
-        data: props.data.data1,
+        data: data.value.contractsNumber,
         itemStyle: {
           normal: {
             //这里是重点
             color: function (params) {
               //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
-              var colorList = ['#c23531', '#61a0a8', '#d48265']
+              let colorList = [
+                '#194f97',
+                '#555555',
+                '#bd6b08',
+                '#00686b',
+                '#c82d31',
+                '#625ba1'
+              ]
               return colorList[params.dataIndex]
             }
           }
@@ -96,13 +111,20 @@ let initData = () => {
         type: 'bar',
         smooth: true,
         yAxisIndex: 0,
-        data: props.data.data2,
+        data: data.value.amount,
         itemStyle: {
           normal: {
             //这里是重点
             color: function (params) {
               //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
-              var colorList = ['#749f83', '#91c7ae', '#61a0a8']
+              let colorList = [
+                '#898989',
+                '#9c9800',
+                '#007f54',
+                '#a195c5',
+                '#103667',
+                '#f19272'
+              ]
               return colorList[params.dataIndex]
             }
           }
@@ -113,45 +135,51 @@ let initData = () => {
   mychart.setOption(option)
 }
 
-const value = ref('今日')
+let time = ref('今日')
 
+// 下拉框选项
 const options = [
   {
-    value: 'Option0',
+    value: 1,
     label: '今日'
   },
   {
-    value: 'Option1',
-    label: '明日'
+    value: 2,
+    label: '昨日'
   },
   {
-    value: 'Option2',
-    label: '本周内'
+    value: 7,
+    label: '本周'
   },
   {
-    value: 'Option3',
-    label: '本月内'
+    value: 30,
+    label: '本月'
   },
   {
-    value: 'Option4',
-    label: '本季度内'
+    value: 90,
+    label: '本季度'
   },
   {
-    value: 'Option5',
-    label: '本年内'
+    value: 365,
+    label: '本年'
   }
 ]
 
-// 监听事件变化
-watch(value, (newVal, oldVal) => {
+// 监听数据变化，重绘图表
+watch(data, () => {
   initData()
+})
+// 监听时间变化
+watch(time, () => {
+  // 选择的时间变化，根据时间重新获取数据
+  data.value = props.getData(time.value)
 })
 </script>
 
 <style lang="scss" scoped>
 .box {
   display: inline-block;
-  width: 520px;
+  width: 540px;
   height: 400px;
   .select {
     margin-left: 60%;
