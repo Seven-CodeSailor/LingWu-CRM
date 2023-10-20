@@ -16,7 +16,12 @@
     ref="baseDataListRef"
   >
     <template #menu>
-      <div>插槽区 <el-button @click="getRows">获取被勾选的列</el-button></div>
+      <div>
+        插槽区
+        <el-button @click="getRows"
+          >获取被勾选的列/////off或者open表格加载动画</el-button
+        >
+      </div>
     </template>
   </BaseDataList>
 </template>
@@ -30,6 +35,9 @@ import { ref } from 'vue'
 const sendData = {
   msg: '一些操作说明',
   tableColumnAttribute: [
+    // prop属性和label属性必选
+    // sortable可选
+    // usePic可选
     {
       prop: 'sex',
       label: '性别',
@@ -129,6 +137,8 @@ const get = (pageSize, currentPage) => {
 const getRows = () => {
   // 获取组件暴露出来的rows
   console.log('rows', baseDataListRef.value.rows)
+  // 关闭表格加载动画
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
 </script>
 

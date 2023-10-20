@@ -28,6 +28,7 @@
         :data="props?.tableData"
         style="width: 100%"
         @selection-change="handleSelectionChange"
+        v-loading="openLoading"
       >
         <el-table-column type="selection" width="55" />
         <el-table-column
@@ -162,6 +163,7 @@ const paginationData = ref({
 
 const rows = ref([])
 
+const openLoading = ref(true)
 const operatingInstructionDialogVisible = ref(false)
 
 const handleCommand = (command, row) => {
@@ -180,7 +182,7 @@ const handleSizeChange = (pageSize) => {
   // 当前页的数据容量改变，重置页码为1
   paginationData.value.pageSize = pageSize
   paginationData.value.currentPage = 1
-  // 传入当前页码容量大小和当前页码
+  // 传入当前页面容量大小和当前页码
   emit('updateTableData', pageSize, paginationData.value.currentPage)
 }
 
@@ -190,9 +192,11 @@ const handleCurrentChange = (currentPage) => {
   emit('updateTableData', paginationData.value.pageSize, currentPage)
 }
 
-// 暴露出被选中的row
 defineExpose({
-  rows
+  // 暴露出被选中的row
+  rows,
+  // 暴露出表格的加载
+  openLoading
 })
 </script>
 
