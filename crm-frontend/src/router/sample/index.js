@@ -20,6 +20,13 @@ const routes = [
       {
         path: '/sample/editor',
         component: () => import('@/views/sample/editor/Editor.vue')
+      },
+      {
+        path: '/sample/organizationStructure',
+        component: () =>
+          import(
+            '@/views/sample/organizationStructure/OrganizationStructureView.vue'
+          )
       }
     ]
   }

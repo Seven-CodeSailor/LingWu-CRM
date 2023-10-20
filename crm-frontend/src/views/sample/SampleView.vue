@@ -86,6 +86,10 @@ const menus = reactive([
   {
     path: '/sample/editor',
     text: '富文本框演示'
+  },
+  {
+    path: '/sample/organizationStructure',
+    text: '组织结构演示'
   }
 ])
 </script>
