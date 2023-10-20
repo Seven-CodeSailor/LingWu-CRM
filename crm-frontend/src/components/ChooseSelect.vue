@@ -1,36 +1,36 @@
-<script>
+<script setup>
 // 这是下拉选择框 create by 暮秋pro
 // 更新时间：23/10/19
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
-export default {
-  setup() {
-    const count = ref(10)
-    const value = ref('')
-    const input1 = ref()
-    // 这是发请求拿到的数据
-    const options = ref([
-      {
-        value: 'Option1',
-        label: '选项1'
-      },
-      {
-        value: 'Option2',
-        label: '选项2'
-      }
-    ])
-    return {
-      count,
-      options,
-      value,
-      input1
-    }
+
+const value = ref('')
+const input1 = ref()
+// 这是发请求拿到的数据
+const options = ref([
+  {
+    value: 'Option1',
+    label: '选项1'
+  },
+  {
+    value: 'Option2',
+    label: '选项2'
   }
-}
+])
+// 从父组件接收的数据
+const props = defineProps({
+  cid: {
+    type: [Number, String]
+  }
+})
+// 定义子传父方法
+const emit = defineEmits(['update:cid'])
+onMounted(() => {
+  console.log('父的数据', props.cid)
+})
 </script>
 
 <template>
-  <div>{{ count }}</div>
   <el-select
     v-model="value"
     class="m-2"
@@ -38,6 +38,7 @@ export default {
     size="large"
     clearable
     effect="dark"
+    @change="emit('update:cid', value.label)"
   >
     <!-- 搜索框 -->
     <el-input
@@ -51,9 +52,8 @@ export default {
       v-for="item in options"
       :key="item.value"
       :label="item.label"
-      :value="item.value"
+      :value="item"
     >
-      <template #default> </template>
     </el-option>
   </el-select>
 </template>
