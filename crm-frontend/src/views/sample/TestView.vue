@@ -92,7 +92,6 @@ const sendData = {
       }
     }
   ],
-  useEditButton: true,
   // 传入删除操作的函数就会显示删除按钮
   handleDelete: (row) => {
     console.log('删除', row)
@@ -105,6 +104,7 @@ const sendData = {
   dropdownMenuActionsInfo: [
     {
       command: 'delete',
+      // row为当前行的数据
       handleAction: (row) => {
         console.log('删除的回调函数', row)
       },
