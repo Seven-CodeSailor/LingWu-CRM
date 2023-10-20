@@ -1,5 +1,6 @@
 import http from 'axios'
 
+// 组装参数，组装参数后再发送请求
 /**
  * 封装一个Http请求工具类
  */
@@ -51,6 +52,7 @@ export default class Request {
         config.data = data
         break
     }
+    // 发送真正的请求
     return http.request(config)
   }
 

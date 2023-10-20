@@ -1,0 +1,217 @@
+<template>
+  <div class="base_data_list">
+    <el-card class="box-card">
+      <template #header>
+        <div class="card-header">
+          <!-- 面包屑 -->
+          <el-breadcrumb separator="/">
+            <el-breadcrumb-item
+              v-for="(item, index) in $route.matched"
+              :to="{ path: item.path }"
+              :key="index"
+              >{{ item.meta.text }}</el-breadcrumb-item
+            >
+          </el-breadcrumb>
+          <el-button
+            class="button"
+            @click="operatingInstructionDialogVisible = true"
+          >
+            <el-icon style="margin-right: 4px"> <icon-question /></el-icon
+            >操作说明</el-button
+          >
+        </div>
+      </template>
+      <!-- 表格的menu操作菜单 -->
+      <slot name="menu"></slot>
+      <!-- 表格 -->
+      <el-table
+        :data="props?.tableData"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+        v-loading="openLoading"
+      >
+        <el-table-column type="selection" width="55" />
+        <el-table-column
+          v-for="item in props?.tableColumnAttribute"
+          :prop="item.prop"
+          :label="item.label"
+          :key="item"
+          :sortable="item?.sortable"
+          :width="item?.usePic ? 300 : 150"
+        >
+          <!-- 信息包含图片·，使用如下渲染 -->
+          <template #default="{ row }" v-if="item.usePic">
+            <div style="display: flex; align-items: center">
+              <el-image
+                style="
+                  width: 60px;
+                  height: 60px;
+                  border-radius: 30px;
+                  margin-right: 8px;
+                "
+                :src="row[item.prop].picUrl"
+                :fit="fit"
+              />
+              <div>
+                <div>商品名称:{{ row[item.prop].goodsName }}</div>
+                <div>商家创建时间:{{ row[item.prop].createDate }}</div>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" v-if="!props?.useDropdownMenu">
+          <!-- 带图标的按钮操作 -->
+          <template #default="{ row }">
+            <!-- 条件渲染按钮 -->
+            <template v-if="props.handleEdit">
+              <el-tooltip content="编辑" placement="top">
+                <el-button circle type="primary" @click="props.handleEdit(row)">
+                  <el-icon> <icon-edit /></el-icon>
+                </el-button> </el-tooltip
+            ></template>
+            <!-- 条件渲染按钮 -->
+            <template v-if="props.handleDelete">
+              <el-tooltip content="删除" placement="top"
+                ><el-button
+                  circle
+                  type="danger"
+                  @click="props.handleDelete(row)"
+                >
+                  <el-icon> <icon-delete /></el-icon> </el-button></el-tooltip
+            ></template>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" v-else>
+          <!-- 下拉菜单的按钮操作 -->
+          <template #default="{ row }">
+            <el-dropdown
+              trigger="click"
+              @command="(command) => handleCommand(command, row)"
+            >
+              <el-button>
+                操作
+                <el-icon style="margin-left: 4px"
+                  ><icon-caret-bottom
+                /></el-icon>
+              </el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    v-for="(item, index) in props?.dropdownMenuActionsInfo"
+                    :key="index"
+                    :command="item.command"
+                    >{{ item.actionName }}</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown></template
+          >
+        </el-table-column>
+      </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        v-model:current-page="paginationData.currentPage"
+        v-model:page-size="paginationData.pageSize"
+        :page-sizes="paginationData.pageSizes"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="paginationData.total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        style="margin-top: 30px"
+      />
+      <!-- 操作说明的会话框 -->
+      <el-dialog
+        v-model="operatingInstructionDialogVisible"
+        title="操作说明"
+        width="50%"
+      >
+        <span>{{ props.msg }}</span>
+      </el-dialog>
+    </el-card>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const props = defineProps({
+  // 操作说明的提示
+  msg: String,
+  // 表格的列属性
+  tableColumnAttribute: Array,
+  // 是否使用下拉菜单的按钮
+  useDropdownMenu: Boolean,
+  // 下拉菜单
+  dropdownMenuActionsInfo: Array,
+  // 不启用下拉菜单的时候的编辑和删除按钮的回调函数
+  handleDelete: Function,
+  handleEdit: Function,
+  // 表格数据
+  tableData: Array,
+  // 表格每页的数据容量
+  pageSizes: Array,
+  // 表格的数据数量
+  total: Number
+})
+
+const paginationData = ref({
+  currentPage: 1,
+  pageSize: props.pageSizes[0],
+  total: props.total,
+  pageSizes: props.pageSizes
+})
+
+const rows = ref([])
+
+const openLoading = ref(true)
+const operatingInstructionDialogVisible = ref(false)
+
+const handleCommand = (command, row) => {
+  const item = props.dropdownMenuActionsInfo.find((item) => {
+    return item.command === command
+  })
+  item.handleAction(row)
+}
+const handleSelectionChange = (newRows) => {
+  rows.value = newRows
+}
+// 调用父组件更新表格数据的函数
+const emit = defineEmits(['updateTableData'])
+
+const handleSizeChange = (pageSize) => {
+  // 当前页的数据容量改变，重置页码为1
+  paginationData.value.pageSize = pageSize
+  paginationData.value.currentPage = 1
+  // 传入当前页面容量大小和当前页码
+  emit('updateTableData', pageSize, paginationData.value.currentPage)
+}
+
+const handleCurrentChange = (currentPage) => {
+  paginationData.value.currentPage = currentPage
+  // 传入当前页码容量大小和当前页码
+  emit('updateTableData', paginationData.value.pageSize, currentPage)
+}
+
+defineExpose({
+  // 暴露出被选中的row
+  rows,
+  // 暴露出表格的加载
+  openLoading
+})
+</script>
+
+<style lang="scss" scoped>
+.base_data_list {
+  .box-card {
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+}
+
+:deep(.el-pagination) {
+  justify-content: center;
+}
+</style>

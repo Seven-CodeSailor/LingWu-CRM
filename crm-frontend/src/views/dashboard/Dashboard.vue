@@ -1,7 +1,21 @@
+<!--
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-10-19 22:34:52
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-10-19 22:35:03
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\views\dashboard\Dashboard.vue
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
+-->
+<script setup>
+import ChooseSelect from '../../components/ChooseSelect.vue'
+</script>
 <template>
   <div class="contain">
-    <div class="code">主面板</div>
+    <div class="code">主页面</div>
     <div class="info">这是主面板</div>
+    <ChooseSelect></ChooseSelect>
   </div>
 </template>
 
