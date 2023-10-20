@@ -1,3 +1,13 @@
+/*
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-10-20 17:30:31
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-10-20 18:35:31
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\router\sample\index.js
+ * @Description:
+ *
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
+ */
 const routes = [
   {
     path: '/sample',
@@ -24,9 +34,11 @@ const routes = [
       {
         path: '/sample/organizationStructure',
         component: () =>
-          import(
-            '@/views/sample/organizationStructure/OrganizationStructureView.vue'
-          )
+          import('@/views/sample/orgStructure/OrganizationStructureView.vue')
+      },
+      {
+        path: '/sample/newsCenter',
+        component: () => import('@/views/sample/newsCenter/NewsCenterView.vue')
       }
     ]
   }
