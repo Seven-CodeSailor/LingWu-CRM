@@ -20,14 +20,15 @@ import './assets/main.css'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 
 const app = createApp(App)
-app.use(createPinia())
-app.use(router)
-app.use(ElementPlus)
-app.mount('#app')
 // element plus语言改为中文
 app.use(ElementPlus, {
   locale: zhCn
 })
+app.use(createPinia())
+app.use(router)
+app.use(ElementPlus)
+app.mount('#app')
+
 // 安装HTTP中间件
 import installHttp from './plugins/http'
 installHttp(router)

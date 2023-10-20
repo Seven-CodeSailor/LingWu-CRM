@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <el-select v-model="value" class="select" placeholder="请选择时间">
+    <el-select v-model="time" class="select" placeholder="请选择时间">
       <el-option
         v-for="item in options"
         :key="item.value"
@@ -17,41 +17,49 @@ import { ref, onMounted, watch } from 'vue'
 import * as echarts from 'echarts'
 
 let props = defineProps({
-  data: {
-    type: Object,
-    default: () => {
-      return {
-        title: '数据统计',
-        data1: [''],
-        data2: [0]
-      }
+  // 获取图表所需数据
+  getData: {
+    type: Function,
+    require: true,
+    default: (time = 1) => {
+      console.log(time)
     }
   }
+})
+
+// 图表数据
+let data = ref({
+  title: '数据统计',
+  customers: ['甲', '乙', '丙', '丁', '其他'],
+  amount: [18, 25, 20, 26, 17]
 })
 
 let charts = ref()
 
 onMounted(() => {
   initData()
+  console.log(data.value)
 })
 
+// 初始化数据列表
 let initData = () => {
   let mychart = echarts.init(charts.value)
   //设置配置项
   let option = {
     title: {
-      text: '预计签单客户合同金额',
+      text: data.value.title,
       left: 'center'
     },
     legend: {
       orient: 'vertical',
       x: 'left',
-      data: props.data.data1
+      data: data.value.customers
     },
     series: [
       {
         type: 'pie',
-        radius: ['20%', '40%'],
+        radius: '60%', //大小
+        center: ['50%', '50%'],
         avoidLabelOverlap: false,
         label: {
           show: false,
@@ -68,20 +76,97 @@ let initData = () => {
           }
         },
         data: [
-          { value: props.data.data2[0], name: props.data.data1[0] },
-          { value: props.data.data2[1], name: props.data.data1[1] },
-          { value: props.data.data2[2], name: props.data.data1[2] },
-          { value: props.data.data2[3], name: props.data.data1[3] },
-          { value: props.data.data2[4], name: props.data.data1[4] }
+          { value: data.value.amount[0], name: data.value.customers[0] },
+          { value: data.value.amount[1], name: data.value.customers[1] },
+          { value: data.value.amount[2], name: data.value.customers[2] },
+          { value: data.value.amount[3], name: data.value.customers[3] },
+          { value: data.value.amount[4], name: data.value.customers[4] }
         ],
         itemStyle: {
           normal: {
             label: {
               show: true,
-              formatter: '{b}:{c}元 ({d}%)'
+              formatter: '{b}:{c}元'
             },
             labelLine: {
-              show: true
+              show: true,
+              smooth: 0.2,
+              length: 10,
+              length2: 20
+            },
+            color: function (colors) {
+              var colorList = [
+                '#97BFC4',
+                '#DAC9BD',
+                '#C67D6E',
+                '#93708C',
+                '#BFCFE9',
+                '#F2BB9F',
+                '#EA9761',
+                '#BE6377',
+                '#E0D0C9',
+                '#936260',
+                '#A48398'
+              ]
+              return colorList[colors.dataIndex]
+            }
+          }
+        }
+      },
+      {
+        type: 'pie',
+        radius: '60%', //大小
+        center: ['50%', '50%'],
+        avoidLabelOverlap: false,
+        label: {
+          show: false,
+          position: 'center'
+        },
+        labelLine: {
+          show: false
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: '16',
+            fontWeight: 'bold'
+          }
+        },
+        data: [
+          { value: data.value.amount[0], name: data.value.customers[0] },
+          { value: data.value.amount[1], name: data.value.customers[1] },
+          { value: data.value.amount[2], name: data.value.customers[2] },
+          { value: data.value.amount[3], name: data.value.customers[3] },
+          { value: data.value.amount[4], name: data.value.customers[4] }
+        ],
+        itemStyle: {
+          normal: {
+            label: {
+              show: true,
+              position: 'inner',
+              formatter: '{d}%'
+            },
+            labelLine: {
+              show: true,
+              smooth: 0.2,
+              length: 10,
+              length2: 20
+            },
+            color: function (colors) {
+              var colorList = [
+                '#97BFC4',
+                '#DAC9BD',
+                '#C67D6E',
+                '#93708C',
+                '#BFCFE9',
+                '#F2BB9F',
+                '#EA9761',
+                '#BE6377',
+                '#E0D0C9',
+                '#936260',
+                '#A48398'
+              ]
+              return colorList[colors.dataIndex]
             }
           }
         }
@@ -91,37 +176,45 @@ let initData = () => {
   mychart.setOption(option)
 }
 
-const value = ref('今日')
+const time = ref('今日')
 
+// 下拉框选项
 const options = [
   {
-    value: 'Option0',
+    value: 1,
     label: '今日'
   },
   {
-    value: 'Option1',
-    label: '明日'
+    value: 2,
+    label: '昨日'
   },
   {
-    value: 'Option2',
-    label: '本周内'
+    value: 7,
+    label: '本周'
   },
   {
-    value: 'Option3',
-    label: '本月内'
+    value: 30,
+    label: '本月'
   },
   {
-    value: 'Option4',
-    label: '本季度内'
+    value: 90,
+    label: '本季度'
   },
   {
-    value: 'Option5',
-    label: '本年内'
+    value: 365,
+    label: '本年'
   }
 ]
 
-watch(value, (newVal, oldVal) => {
+// 数据改变，重绘图表
+watch(data, () => {
+  // 初始化图表
   initData()
+})
+// 监听时间变化
+watch(time, () => {
+  // 选择的时间变化，根据时间重新获取数据
+  data.value = props.getData(time.value)
 })
 </script>
 

@@ -141,7 +141,7 @@ export const userStore = defineStore('user', {
     // 保存当前用户
     user: null,
     // 菜单数据
-    menus: []
+    menus: testMenus
   }),
   getters: {
     // 获取token

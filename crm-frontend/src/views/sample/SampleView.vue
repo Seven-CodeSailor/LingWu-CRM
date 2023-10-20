@@ -88,6 +88,15 @@ const menus = reactive([
     text: '富文本框演示'
   },
   {
+    path: '/sample/test',
+    text: '测试专用1'
+  },
+  {
+    path: '/sample/test1',
+    text: '测试专用2'
+  },
+  { path: '/sample/chartDemo', text: '销售图表演示(临时)' },
+  {
     path: '/sample/organizationStructure',
     text: '组织结构演示'
   },
