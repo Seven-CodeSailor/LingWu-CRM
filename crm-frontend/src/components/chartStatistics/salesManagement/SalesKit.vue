@@ -149,35 +149,35 @@ function timeSpan() {
 
 const options = [
   {
-    value: 0,
+    value: '本周',
     label: '本周'
   },
   {
-    value: 1,
+    value: '上周',
     label: '上周'
   },
   {
-    value: 2,
+    value: '本月',
     label: '本月'
   },
   {
-    value: 3,
+    value: '上月',
     label: '上月'
   },
   {
-    value: 4,
+    value: '本季度',
     label: '本季度'
   },
   {
-    value: 5,
+    value: '上季度',
     label: '上季度'
   },
   {
-    value: 6,
+    value: '本年',
     label: '本年'
   },
   {
-    value: 7,
+    value: '上年',
     label: '上年'
   }
 ]
@@ -198,6 +198,7 @@ let timePick = ref()
 
 // 监听用户选择的时间
 watch(timePick, () => {
+  chartData.value = props.getData()
   result.value = timeSpan()
   console.log(result.value)
 })
@@ -221,25 +222,26 @@ let chartData = ref({
   // 合同个数
   contractsNum: [25, 43, 63, 58, 89, 100, 32],
   // 金额
-  amount: [100000, 120000, 430000, 590000, 690000, 280000, 810000]
+  amount: [210000, 120000, 430000, 590000, 690000, 280000, 810000]
 })
 // 获取绑定的dom元素
 let chartRef = ref()
 
 // 挂载时显示图表
 onMounted(() => {
-  console.log(props)
-
-  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 下面这个调用父组件数据的时候出问题了
   // 父组件是同级目录下的ParentData.vue
-  // chartData.value = props.getData()
+  chartData.value = props.getData()
+  console.log(chartData.value)
 
   // 初始化图表
   initChart()
 })
 
+// 监听器 图表数据发生变化时 重新渲染图表
 watch(chartData, () => {
   // 下拉框选项更改时，需要重新初始化图表
+
+  chartData.value = props.getData()
   initChart()
 })
 

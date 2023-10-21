@@ -1,11 +1,11 @@
-/* * @Author: seven * @Date: 2023-10-21 18:54:55 * @Last Modified by: seven *
+<!-- /* * @Author: seven * @Date: 2023-10-21 18:54:55 * @Last Modified by: seven *
 @Last Modified time: 2023-10-21 18:54:55 */
 
 <template>
   <div>
     <SalesKit :getData="getData"></SalesKit>
-    <!-- <SalesBoard :getDatas="getDatas"></SalesBoard> -->
-  </div>
+  <SalesBoard :getDatas="getDatas"></SalesBoard> -->
+<!-- </div>
 </template>
 
 <script setup>
@@ -59,4 +59,4 @@ const getData = (timePick = 0) => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped></style> -->
