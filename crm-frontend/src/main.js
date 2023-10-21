@@ -36,3 +36,32 @@ installHttp(router)
 // 安装ElIcon
 import installElIcon from './plugins/el-icon'
 installElIcon(app)
+
+
+
+/*
+ *element-plus 完整引入
+ *20231021-pipazzi
+*/ 
+
+// import { createApp } from 'vue'
+// import ElementPlus from 'element-plus'
+// import 'element-plus/dist/index.css'
+// import App from './App.vue'
+
+// const app = createApp(App)
+
+// app.use(ElementPlus)
+// app.mount('#app')
+
+
+// 路由配置测试-20231021-pipazi
+// import { CreateApp } from 'vue'
+// import App from './views/HomeView.vue'
+// // import './index.css'
+
+// import router from "./components/TreeMenu/router.js"
+
+// // const app = createApp(App)
+// // app.use(router);
+// // app.mount('#app')

@@ -21,6 +21,33 @@
                 </el-icon>
                 <span>首页</span>
               </el-menu-item>
+
+              <!-- 测试路由代码 -->
+              <router-link to="/home">首页</router-link>
+              <router-link to="/switch-page">跳转页</router-link> 
+              <!-- <router-view></router-view>-->
+              <!-- 测试路由代码 -->
+
+              <!-- 测试菜单模板代码 -->
+              <el-sub-menu index="1">
+                <template #title>
+                  <el-icon><location /></el-icon>
+                  <span>Navigator One</span>
+                </template>
+                <el-menu-item-group title="Group One">
+                  <el-menu-item index="1-1">item one</el-menu-item>
+                  <el-menu-item index="1-2">item two</el-menu-item>
+                </el-menu-item-group>
+                <el-menu-item-group title="Group Two">
+                  <el-menu-item index="1-3">item three</el-menu-item>
+                </el-menu-item-group>
+                <el-sub-menu index="1-4">
+                  <template #title>item four</template>
+                  <el-menu-item index="1-4-1">item one</el-menu-item>
+                </el-sub-menu>
+              </el-sub-menu>
+              <!-- 测试菜单模板代码 -->
+
               <!-- 一级 -->
               <el-sub-menu
                 v-for="item in menus"
