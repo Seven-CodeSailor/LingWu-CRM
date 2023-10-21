@@ -64,6 +64,8 @@
 .el-main {
   padding: 20px;
   background-color: #edecec;
+  overflow: scroll;
+  height: 95vh;
 }
 </style>
 
