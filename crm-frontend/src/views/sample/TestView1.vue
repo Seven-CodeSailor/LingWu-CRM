@@ -14,15 +14,13 @@
     :tag-name="sendData.tagName"
     :tag-type="sendData.tagType"
     :data-list1="sendData.dataList1"
-    ref="contractDetailsRef"
+    :handle-add-attachment="sendData.handleAddAttachment"
   ></ContractDetails>
 </template>
 
 <script setup>
-import { onMounted, provide, ref } from 'vue'
+import { provide } from 'vue'
 import ContractDetails from '@/components/DataList/ContractDetails.vue'
-
-const contractDetailsRef = ref(null)
 
 const sendData = {
   // 合同金额
@@ -45,6 +43,10 @@ const sendData = {
   contractId: '12345678',
   // 合同标签
   tagName: '合同的标签',
+  // 添加附件的逻辑处理函数,
+  handleAddAttachment: () => {
+    console.log('处理一些逻辑')
+  },
   // 标签类型 success danger info warning  el(el为element的主题色,且为默认值)
   tagType: 'danger',
   // refundMoney sellerNote customerName customerRepresent 为一组数据
@@ -68,7 +70,7 @@ const sendData = {
     supplierName: '咩咩咩咩'
   }
 }
-let addAttachment = () => {}
+
 // 四个tab分别对应的表格
 // 传递给ContractDetails组件
 // dataList1 的3个表格的prop  label
@@ -560,15 +562,6 @@ provide('fourthTableInfo', {
       note: '手机'
     }
   ]
-})
-
-onMounted(() => {
-  // 获取添加附件的函数
-  addAttachment = contractDetailsRef.value.addAttachment
-  // 逻辑函数作为参数传给func函数
-  addAttachment(() => {
-    console.log('写添加附件的逻辑')
-  })
 })
 </script>
 

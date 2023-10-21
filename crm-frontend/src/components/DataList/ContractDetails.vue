@@ -197,6 +197,12 @@ import { ref, inject, computed } from 'vue'
 import BaseDataList from './BaseDataList.vue'
 const activeName = ref('first')
 const props = defineProps({
+  handleAddAttachment: {
+    type: Function,
+    default: () => {
+      console.log('添加附件的逻辑处理函数')
+    }
+  },
   contractMoney: {
     type: Number,
     require: true,
@@ -284,8 +290,8 @@ const props = defineProps({
   }
 })
 // 是否点击添加附件的按钮
-const addAttachment = (func) => {
-  func()
+const addAttachment = () => {
+  props.handleAddAttachment()
 }
 
 // 根据四个tab分别对应的表格数据
