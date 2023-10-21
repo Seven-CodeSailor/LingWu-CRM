@@ -13,6 +13,7 @@
     "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^0.27.2",
     "crypto-js": "^4.1.1",
+    "dayjs": "^1.11.10",
     "echarts": "latest",
     "element-plus": "latest",
     "pinia": "^2.0.21",

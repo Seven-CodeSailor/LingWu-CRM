@@ -13,6 +13,7 @@
 <script setup>
 import CustomDataStatistics from '@/components/customDataStatistics/CustomDataStatistics.vue'
 import CustomDataPie from '@/components/customDataPie/CustomDataPie.vue'
+import { getDatas } from './getDatas'
 const getData = (time = 1) => {
   let data = { title: '客户数据统计' }
   switch (time) {
