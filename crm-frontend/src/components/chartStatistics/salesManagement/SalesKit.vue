@@ -186,10 +186,7 @@ let props = defineProps({
   // 获取数据
   getData: {
     type: Function,
-    require: true,
-    default: (timePick = 0) => {
-      console.log(timePick)
-    }
+    require: true
   }
 })
 
@@ -198,9 +195,13 @@ let timePick = ref()
 
 // 监听用户选择的时间
 watch(timePick, () => {
-  chartData.value = props.getData()
+  // 这里需要传入的是timePick.value 因为在定义getDate()这个函数的时候
+  // 里面默认给的就是字符串形式
+  chartData.value = props.getData(timePick.value)
   result.value = timeSpan()
-  console.log(result.value)
+  // console.log(result.value)
+  // 初始化图表
+  initChart()
 })
 
 let result = ref([])
@@ -231,17 +232,9 @@ let chartRef = ref()
 onMounted(() => {
   // 父组件是同级目录下的ParentData.vue
   chartData.value = props.getData()
-  console.log(chartData.value)
+  // console.log(chartData.value)
 
   // 初始化图表
-  initChart()
-})
-
-// 监听器 图表数据发生变化时 重新渲染图表
-watch(chartData, () => {
-  // 下拉框选项更改时，需要重新初始化图表
-
-  chartData.value = props.getData()
   initChart()
 })
 
