@@ -19,21 +19,11 @@
 </template>
 
 <script setup>
-import { provide, ref } from 'vue'
+import { onMounted, provide, ref } from 'vue'
 import ContractDetails from '@/components/DataList/ContractDetails.vue'
 
 const contractDetailsRef = ref(null)
-const get = () => {
-  let bol = contractDetailsRef.value.isClickAddAttachmentButon
-  console.log('按钮', bol)
-  if (bol) {
-    // 处理完相关逻辑后
-    // ....
-    // 重置为false
-    bol = contractDetailsRef.value.isClickAddAttachmentButon = false
-    console.log('处理完相关逻辑，重置为false', bol)
-  }
-}
+
 const sendData = {
   // 合同金额
   contractMoney: 1000,
@@ -78,7 +68,7 @@ const sendData = {
     supplierName: '咩咩咩咩'
   }
 }
-
+let addAttachment = () => {}
 // 四个tab分别对应的表格
 // 传递给ContractDetails组件
 // dataList1 的3个表格的prop  label
@@ -570,6 +560,15 @@ provide('fourthTableInfo', {
       note: '手机'
     }
   ]
+})
+
+onMounted(() => {
+  // 获取添加附件的函数
+  addAttachment = contractDetailsRef.value.addAttachment
+  // 逻辑函数作为参数传给func函数
+  addAttachment(() => {
+    console.log('写添加附件的逻辑')
+  })
 })
 </script>
 
