@@ -95,15 +95,23 @@
           ></BaseDataList>
           <div
             style="
-              text-align: right;
               margin-top: 12px;
-              font-weight: 700;
               font-size: 12px;
+              display: flex;
+              align-items: center;
+              justify-content: right;
             "
           >
-            金额合计：<span style="color: red; font-size: 12px"
-              >￥{{ firstTableTotalMoney }}元</span
-            >
+            <div style="margin: 0 10px; font-weight: 700">
+              数量合计：<span style="font-size: 12px"
+                >{{ firstTableTotalGoodsNumber }}件</span
+              >
+            </div>
+            <div style="font-weight: 700">
+              金额合计：<span style="color: red; font-size: 12px"
+                >￥{{ firstTableTotalMoney }}元</span
+              >
+            </div>
           </div>
         </el-tab-pane>
         <el-tab-pane
@@ -157,17 +165,25 @@
           </div></el-tab-pane
         >
         <el-tab-pane label="合同附件" name="fourth">
-          <BaseDataList
-            :use-select-column="false"
-            :use-header="false"
-            :use-pagination="false"
-            :table-column-attribute="fourthTableInfo.tableColumnAttribute"
-            :table-data="fourthTableInfo.tableData"
-            :use-dropdown-menu="false"
-            :handle-delete="() => {}"
-            :handle-edit="() => {}"
-          ></BaseDataList
-        ></el-tab-pane>
+          <el-table :data="fourthTableInfo.tableData" style="width: 100%">
+            <el-table-column
+              v-for="(item, index) in fourthTableInfo.tableColumnAttribute"
+              :key="index"
+              :prop="item.prop"
+              :label="item.label"
+            >
+              <template #default="{ row }" v-if="item.prop === 'pic'">
+                <el-image
+                  style="width: 100px; height: 100px"
+                  :src="row[item.prop]"
+                />
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button type="primary" style="margin-top: 10px"
+            >添加附件</el-button
+          >
+        </el-tab-pane>
       </el-tabs>
     </el-card>
   </div>
@@ -270,152 +286,25 @@ const handleClick = (tab, event) => {
 
 // 根据四个tab分别对应的表格数据
 // 第一个tab所对应的表格
-const firstTableInfo = {
-  tableColumnAttribute: [
-    {
-      prop: 'goodsNameAndFeature',
-      label: '商品名称/商品规格'
-    },
-    {
-      prop: 'goodsNumber',
-      label: '商品数量'
-    },
-    {
-      prop: 'subtotal',
-      label: '小计'
-    },
-    {
-      prop: 'note',
-      label: '备注'
-    }
-  ],
-  tableData: [
-    {
-      goodsNameAndFeature: 'iPhone15',
-      goodsNumber: 90,
-      subtotal: 10000,
-      note: '手机'
-    },
-    {
-      goodsNameAndFeature: 'iPhone15',
-      goodsNumber: 90,
-      subtotal: 10000,
-      note: '手机'
-    },
-    {
-      goodsNameAndFeature: 'iPhone15',
-      goodsNumber: 90,
-      subtotal: 10000,
-      note: '手机'
-    },
-    {
-      goodsNameAndFeature: 'iPhone15',
-      goodsNumber: 90,
-      subtotal: 10000,
-      note: '手机'
-    },
-    {
-      goodsNameAndFeature: 'iPhone15',
-      goodsNumber: 90,
-      subtotal: 10000,
-      note: '手机'
-    },
-    {
-      goodsNameAndFeature: 'iPhone15',
-      goodsNumber: 90,
-      subtotal: 10000,
-      note: '手机'
-    }
-  ]
-}
+const firstTableInfo = inject('firstTableInfo')
 
 const firstTableTotalMoney = computed(() => {
   let money = 0
   firstTableInfo.tableData.forEach((item) => {
-    money += item.subtotal
+    money += item.price * item.goodsNumber
   })
   return money
 })
+
+const firstTableTotalGoodsNumber = computed(() => {
+  let number = 0
+  firstTableInfo.tableData.forEach((item) => {
+    number += item.goodsNumber
+  })
+  return number
+})
 // 第二个tab
-const secondTableInfo = {
-  tableColumnAttribute: [
-    {
-      prop: 'saleContract',
-      label: '销售合同'
-    },
-    {
-      prop: 'refundDate',
-      label: '回款时间'
-    },
-    {
-      prop: 'frequent',
-      label: '期次'
-    },
-    {
-      prop: 'money',
-      label: '金额'
-    },
-    {
-      prop: 'zeroOutMoney',
-      label: '去零'
-    },
-    {
-      prop: 'creator',
-      label: '创建人'
-    },
-    {
-      prop: 'note',
-      label: '备注'
-    }
-  ],
-  tableData: [
-    {
-      saleContract: 'iPhone15',
-      refundDate: '2023-3-4',
-      frequent: 10000,
-      money: 30000,
-      zeroOutMoney: 70000,
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      saleContract: 'iPhone15',
-      refundDate: '2023-3-4',
-      frequent: 10000,
-      money: 30000,
-      zeroOutMoney: 70000,
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      saleContract: 'iPhone15',
-      refundDate: '2023-3-4',
-      frequent: 10000,
-      money: 30000,
-      zeroOutMoney: 70000,
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      saleContract: 'iPhone15',
-      refundDate: '2023-3-4',
-      frequent: 10000,
-      money: 30000,
-      zeroOutMoney: 70000,
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      saleContract: 'iPhone15',
-      refundDate: '2023-3-4',
-      frequent: 10000,
-      money: 30000,
-      zeroOutMoney: 70000,
-      creator: '蔡徐坤',
-      note: '手机'
-    }
-  ]
-}
+const secondTableInfo = inject('secondTableInfo')
 
 const secondTableTotalMoney = computed(() => {
   let money = 0
@@ -425,107 +314,7 @@ const secondTableTotalMoney = computed(() => {
   return money
 })
 // 第三个tab
-const thirdTableInfo = {
-  tableColumnAttribute: [
-    {
-      prop: 'supplier',
-      label: '供应商'
-    },
-    {
-      prop: 'contractId',
-      label: '合同单号'
-    },
-    {
-      prop: 'invoiceMoneyAndId',
-      label: '发票金额/编号'
-    },
-    {
-      prop: 'collectTicketDate',
-      label: '收票时间',
-      sortable: true
-    },
-    {
-      prop: 'frequent',
-      label: '期次'
-    },
-    {
-      prop: 'creator',
-      label: '创建人'
-    },
-    {
-      prop: 'note',
-      label: '备注'
-    }
-  ],
-  tableData: [
-    {
-      supplier: 'iPhone15',
-      contractId: '123454534',
-      frequent: 10000,
-      invoiceMoney: 30000,
-      invoiceId: '33333',
-      invoiceMoneyAndId: 30000 + '/' + '234234',
-      collectTicketDate: '2030-9-1',
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      supplier: 'iPhone15',
-      contractId: '123454534',
-      frequent: 10000,
-      invoiceMoney: 30000,
-      invoiceId: '33333',
-      invoiceMoneyAndId: 30000 + '/' + '234234',
-      collectTicketDate: '2030-9-1',
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      supplier: 'iPhone15',
-      contractId: '123454534',
-      frequent: 10000,
-      invoiceMoney: 30000,
-      invoiceId: '33333',
-      invoiceMoneyAndId: 30000 + '/' + '234234',
-      collectTicketDate: '2030-9-1',
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      supplier: 'iPhone15',
-      contractId: '123454534',
-      frequent: 10000,
-      invoiceMoney: 30000,
-      invoiceId: '33333',
-      invoiceMoneyAndId: 30000 + '/' + '234234',
-      collectTicketDate: '2030-9-1',
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      supplier: 'iPhone15',
-      contractId: '123454534',
-      frequent: 10000,
-      invoiceMoney: 30000,
-      invoiceId: '33333',
-      invoiceMoneyAndId: 30000 + '/' + '234234',
-      collectTicketDate: '2030-9-1',
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      supplier: 'iPhone15',
-      contractId: '123454534',
-      frequent: 10000,
-      invoiceMoney: 30000,
-      invoiceId: '33333',
-      invoiceMoneyAndId: 30000 + '/' + '234234',
-      collectTicketDate: '2030-9-1',
-      creator: '蔡徐坤',
-      note: '手机'
-    }
-  ]
-}
+const thirdTableInfo = inject('thirdTableInfo')
 
 const thirdTableTotalMoney = computed(() => {
   let money = 0
@@ -536,38 +325,7 @@ const thirdTableTotalMoney = computed(() => {
 })
 
 // 第四个tab
-const fourthTableInfo = {
-  tableColumnAttribute: [
-    {
-      prop: 'name',
-      label: '名称'
-    },
-    {
-      prop: 'pathPic',
-      label: '路径'
-    },
-    {
-      prop: 'pic',
-      label: '图片'
-    },
-    {
-      prop: 'note',
-      label: '备注'
-    }
-  ],
-  tableData: [
-    {
-      name: 'iPhone15',
-      pathPic: '遥远的地方',
-      pic: '哈哈哈哈',
-      invoiceMoney: 30000,
-      note: '手机'
-    }
-  ]
-}
-
-const friut = inject('friut')
-console.log('friut', friut)
+const fourthTableInfo = inject('fourthTableInfo')
 </script>
 
 <style lang="scss" scoped>
