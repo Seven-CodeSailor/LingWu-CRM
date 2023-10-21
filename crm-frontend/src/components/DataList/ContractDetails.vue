@@ -85,30 +85,61 @@
           :label="props.dataList1.customerName ? '合同明细' : '采购明细'"
           name="first"
         >
-          <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="date" label="Date" />
-            <el-table-column prop="name" label="Name" />
-            <el-table-column prop="address" label="Address" />
-          </el-table>
+          <BaseDataList></BaseDataList>
+          <div
+            style="
+              text-align: right;
+              margin-top: 12px;
+              font-weight: 700;
+              font-size: 12px;
+            "
+          >
+            金额合计：<span style="color: red; font-size: 12px">￥111元</span>
+          </div>
         </el-tab-pane>
         <el-tab-pane
           :label="props.dataList1.customerName ? '回款记录' : '付款记录'"
           name="second"
-          >Config</el-tab-pane
+        >
+          <BaseDataList></BaseDataList>
+          <div
+            style="
+              text-align: right;
+              margin-top: 12px;
+              font-weight: 700;
+              font-size: 12px;
+            "
+          >
+            金额合计：<span style="color: red; font-size: 12px">￥111元</span>
+          </div></el-tab-pane
         >
         <el-tab-pane
           :label="props.dataList1.customerName ? '发票记录' : '收票记录'"
           name="third"
-          >Role</el-tab-pane
         >
-        <el-tab-pane label="合同附件" name="fourth">Task</el-tab-pane>
+          <BaseDataList></BaseDataList>
+          <div
+            style="
+              text-align: right;
+              margin-top: 12px;
+              font-weight: 700;
+              font-size: 12px;
+            "
+          >
+            金额合计：<span style="color: red; font-size: 12px">￥111元</span>
+          </div></el-tab-pane
+        >
+        <el-tab-pane label="合同附件" name="fourth">
+          <BaseDataList></BaseDataList
+        ></el-tab-pane>
       </el-tabs>
     </el-card>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
+import BaseDataList from './BaseDataList.vue'
 const activeName = ref('first')
 const props = defineProps({
   contractMoney: {
@@ -223,6 +254,9 @@ const tableData = [
     address: 'No. 189, Grove St, Los Angeles'
   }
 ]
+
+const friut = inject('friut')
+console.log('friut', friut)
 </script>
 
 <style lang="scss" scoped>

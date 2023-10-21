@@ -163,7 +163,7 @@ const props = defineProps({
 
 const paginationData = ref({
   currentPage: 1,
-  pageSize: props.pageSizes[0],
+  pageSize: 5,
   total: props.total,
   pageSizes: props.pageSizes
 })

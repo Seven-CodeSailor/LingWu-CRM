@@ -8,19 +8,16 @@
     :end-date="sendData.endDate"
     :create-date="sendData.startDate"
     :our-represent="sendData.ourRepresent"
-    :refund-money="sendData.refundMoney"
     :contract-title="sendData.contractTitle"
-    :seller-note="sendData.sellerNote"
-    :customer-name="sendData.customerName"
-    :customer-represent="sendData.customerRepresent"
     :contract-id="sendData.contractId"
     :tag-name="sendData.tagName"
     :tag-type="sendData.tagType"
-    :data-list1="sendData.dataList1"
+    :data-list2="sendData.dataList2"
   ></ContractDetails>
 </template>
 
 <script setup>
+import { provide } from 'vue'
 import ContractDetails from '@/components/DataList/ContractDetails.vue'
 
 const sendData = {
@@ -44,11 +41,13 @@ const sendData = {
   contractId: '12345678',
   // 合同标签
   tagName: '合同的标签',
-  // 标签类型 success danger info warning  el(el为element的主题色)
+  // 标签类型 success danger info warning  el(el为element的主题色,且为默认值)
   tagType: 'danger',
   // refundMoney sellerNote customerName customerRepresent 为一组数据
+  // 两者二选一
   // 普通合同独有的字段
   dataList1: {
+    // 字段属性不能更改
     refundMoney: 800,
     sellerNote: '美丽的卖家备注',
     customerName: '哇哈哈',
@@ -58,12 +57,15 @@ const sendData = {
   // paymentMoney purchaseNote contactRepresent  supplierName为一组数据
   // 采购合同独有的字段
   dataList2: {
+    // 字段属性不能更改
     paymentMoney: 333,
     purchaseNote: '采购哈哈哈哈备注',
     contactRepresent: '小黑',
     supplierName: '咩咩咩咩'
   }
 }
+
+provide('friut', 'apple')
 </script>
 
 <style lang="scss" scoped></style>
