@@ -73,6 +73,10 @@ const routes = [
       {
         path: '/sample/newsCenter',
         component: () => import('@/views/sample/newsCenter/NewsCenterView.vue')
+      },
+      {
+        path: '/sample/testTable',
+        component: () => import('@/views/sample/orgStructure/testTable.vue')
       }
     ]
   }
