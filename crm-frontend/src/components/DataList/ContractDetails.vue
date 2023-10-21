@@ -21,23 +21,86 @@
       <div class="data">
         <div class="left">
           <div class="top">
-            <h3 style="font-weight: 700">标题：</h3>
-            <span style="font-weight: 700">1234</span>
+            <h3 style="font-weight: 700">
+              合同标题：{{ props.contractTitle }}
+            </h3>
           </div>
           <el-divider />
+          <div class="content">
+            <div class="item">
+              合同编号：
+              {{ props.contractId }}
+            </div>
+            <div class="item">合同金额：{{ props.contractMoney }}</div>
+            <div class="item">去零金额：{{ props.zeroOutMoney }}</div>
+            <div class="item">
+              {{
+                props.refundMoney
+                  ? `回款金额：${props.refundMoney}`
+                  : `付款金额：${props.paymentMoney}`
+              }}
+            </div>
+            <div class="item">欠款金额：{{ props.dueMoney }}</div>
+            <div class="item">开始时间：{{ props.startDate }}</div>
+            <div class="item">结束时间：{{ props.endDate }}</div>
+            <div class="item">
+              {{
+                props.sellerNote
+                  ? `卖家备注：${props.sellerNote}`
+                  : `采购备注：${props.purchaseNote}`
+              }}
+            </div>
+          </div>
         </div>
         <div class="right">
           <div class="top">
-            <h3 style="font-weight: 700; margin-right: 90px">标签</h3>
+            <h3 style="font-weight: 700; margin-right: 90px">
+              <el-tag :type="props.tagType">{{ props.tagName }}</el-tag>
+            </h3>
           </div>
           <el-divider />
+          <div class="content">
+            <div>创建时间：{{ props.createDate }}</div>
+            <div>
+              {{
+                props.customerName
+                  ? `客户名称：${props.customerName}`
+                  : `供应商名称：${props.supplierName}`
+              }}
+            </div>
+            <div>
+              {{
+                props.customerRepresent
+                  ? `客户代表：${props.customerRepresent}`
+                  : `联系代表：${props.contactRepresent}`
+              }}
+            </div>
+            <div>我方代表：{{ props.ourRepresent }}</div>
+          </div>
         </div>
       </div>
-      <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
-        <el-tab-pane label="User" name="first">User</el-tab-pane>
-        <el-tab-pane label="Config" name="second">Config</el-tab-pane>
-        <el-tab-pane label="Role" name="third">Role</el-tab-pane>
-        <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane
+          :label="props.customerName ? '合同明细' : '采购明细'"
+          name="first"
+        >
+          <el-table :data="tableData" style="width: 100%">
+            <el-table-column prop="date" label="Date" />
+            <el-table-column prop="name" label="Name" />
+            <el-table-column prop="address" label="Address" />
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane
+          :label="props.customerName ? '回款记录' : '付款记录'"
+          name="second"
+          >Config</el-tab-pane
+        >
+        <el-tab-pane
+          :label="props.customerName ? '发票记录' : '收票记录'"
+          name="third"
+          >Role</el-tab-pane
+        >
+        <el-tab-pane label="合同附件" name="fourth">Task</el-tab-pane>
       </el-tabs>
     </el-card>
   </div>
@@ -46,52 +109,196 @@
 <script setup>
 import { ref } from 'vue'
 const activeName = ref('first')
-
+const props = defineProps({
+  contractMoney: {
+    type: Number,
+    require: true,
+    default: -9999
+  },
+  zeroOutMoney: {
+    type: Number,
+    require: true,
+    default: -9999
+  },
+  dueMoney: {
+    type: Number,
+    require: true,
+    default: -9999
+  },
+  startDate: {
+    type: String,
+    require: true,
+    default: '未传数据'
+  },
+  endDate: {
+    type: String,
+    require: true,
+    default: '未传数据'
+  },
+  createDate: {
+    type: String,
+    require: true,
+    default: '未传数据'
+  },
+  ourRepresent: {
+    type: String,
+    require: true,
+    default: '未传数据'
+  },
+  tagName: {
+    type: String,
+    require: true,
+    default: '未传数据'
+  },
+  tagType: {
+    type: String,
+    require: true,
+    default: 'el',
+    // 标签类型校验
+    validator: (tagType) => {
+      return (
+        ['success', 'warning', 'danger', 'info', 'el'].indexOf(tagType) !== -1
+      )
+    }
+  },
+  // 回款金额
+  refundMoney: {
+    type: Number,
+    default: -9999
+  },
+  // 付款金额
+  paymentMoney: {
+    type: Number,
+    default: -9999
+  },
+  // 合同标题
+  contractTitle: {
+    type: String,
+    default: '未传数据'
+  },
+  // 合同编号
+  contractId: {
+    type: String,
+    default: '未传数据'
+  },
+  //卖家备注
+  sellerNote: {
+    type: String,
+    default: '未传数据'
+  },
+  //采购备注
+  purchaseNote: {
+    type: String,
+    default: '未传数据'
+  },
+  // 客户代表
+  customerRepresent: {
+    type: String,
+    default: '未传数据'
+  },
+  // 客户名称
+  customerName: {
+    type: String,
+    default: '未传数据'
+  },
+  // 供应商名称
+  supplierName: {
+    type: String,
+    default: '未传数据'
+  },
+  // 联系代表
+  contactRepresent: {
+    type: String,
+    default: '未传数据'
+  }
+})
 const handleClick = (tab, event) => {
   console.log(tab, event)
 }
+
+const tableData = [
+  {
+    date: '2016-05-03',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles'
+  },
+  {
+    date: '2016-05-02',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles'
+  },
+  {
+    date: '2016-05-04',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles'
+  },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles'
+  }
+]
 </script>
 
 <style lang="scss" scoped>
 .contract_details {
-  height: 100%;
   .box-card {
     height: 100%;
+
     .card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
+
     .data {
       height: 100%;
       display: flex;
       justify-content: space-between;
+
       .left {
         width: 49%;
         height: 100%;
+
         .top {
           height: 12%;
           display: flex;
           align-items: center;
           justify-content: flex-start;
         }
+
+        .content {
+          .item {
+            margin: 10px 0;
+          }
+        }
       }
+
       .right {
         width: 49%;
         height: 100%;
+
         .top {
           height: 12%;
           display: flex;
           align-items: center;
           justify-content: flex-end;
         }
+
+        .content {
+          div {
+            margin: 10px 0;
+          }
+        }
       }
     }
   }
 }
+
 :deep(.el-card__body) {
   height: 60%;
 }
+
 :deep(.el-divider--horizontal) {
   margin: 10px 0;
 }

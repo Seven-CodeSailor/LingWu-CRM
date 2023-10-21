@@ -1,7 +1,7 @@
 <template>
   <div class="base_data_list">
     <el-card class="box-card">
-      <template #header>
+      <template #header v-if="props?.useHeader">
         <div class="card-header">
           <!-- 面包屑 -->
           <el-breadcrumb separator="/">
@@ -109,16 +109,19 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <el-pagination
-        v-model:current-page="paginationData.currentPage"
-        v-model:page-size="paginationData.pageSize"
-        :page-sizes="paginationData.pageSizes"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="paginationData.total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        style="margin-top: 30px"
-      />
+      <template v-if="props?.usePagination">
+        <el-pagination
+          v-model:current-page="paginationData.currentPage"
+          v-model:page-size="paginationData.pageSize"
+          :page-sizes="paginationData.pageSizes"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="paginationData.total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          style="margin-top: 30px"
+        />
+      </template>
+
       <!-- 操作说明的会话框 -->
       <el-dialog
         v-model="operatingInstructionDialogVisible"
@@ -151,7 +154,11 @@ const props = defineProps({
   // 表格每页的数据容量
   pageSizes: Array,
   // 表格的数据数量
-  total: Number
+  total: Number,
+  // 是否使用分页器
+  usePagination: Boolean,
+  // 是否使用el-card的header
+  useHeader: Boolean
 })
 
 const paginationData = ref({
