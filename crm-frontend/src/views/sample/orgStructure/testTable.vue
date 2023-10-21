@@ -9,11 +9,6 @@
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
 -->
 
-<!-- 一些问题：
-1. 不需要操作说明的这个区域
-2. 分页组件不一定需要 
-3. 勾选一个列的时候左上角的是否改变
--->
 
 <template>
   <div style="color: red">测试BaseDataList组件</div>
