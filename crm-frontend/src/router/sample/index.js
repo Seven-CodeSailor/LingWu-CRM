@@ -73,6 +73,11 @@ const routes = [
       {
         path: '/sample/newsCenter',
         component: () => import('@/views/sample/newsCenter/NewsCenterView.vue')
+      },
+      // table 表格组件开发时用例测试路由，后期会删除
+      {
+        path: '/sample/table',
+        component: () => import('@/views/sample/table/TableText.vue')
       }
     ]
   }
