@@ -11,6 +11,7 @@
 <script setup>
 import ChooseSelect from '../../components/ChooseSelect.vue'
 import PopMessage from '../../components/PopMessage.vue'
+import DrawerInfo from '../../components/DrawerInfo.vue'
 import { ref } from 'vue'
 // 这是子组件的选中值
 const sonSelectValue = ref('')
@@ -18,6 +19,11 @@ const getSelect = (value) => {
   console.log('我拿到了你选中的值', value)
   sonSelectValue.value = value
 }
+// 这是控制抽屉打开关闭的数据
+const drawer = ref(false)
+const form = ref({
+  name: ''
+})
 </script>
 <template>
   <div class="contain">
@@ -33,6 +39,22 @@ const getSelect = (value) => {
         @confirm="console.log('父组件监听到子组件点了确认')"
       ></PopMessage>
     </div>
+    <DrawerInfo
+      :visible="drawer"
+      :update:visible="(drawer = false)"
+      title="标题"
+    >
+      <template #default>
+        <el-form :model="form" label-width="120px">
+          <el-form-item label="属性名">
+            <el-input v-model="form.name" placeholder="请输入" />
+          </el-form-item>
+        </el-form>
+      </template>
+    </DrawerInfo>
+    <el-button type="primary" style="margin-left: 16px" @click="drawer = true">
+      open
+    </el-button>
   </div>
 </template>
 

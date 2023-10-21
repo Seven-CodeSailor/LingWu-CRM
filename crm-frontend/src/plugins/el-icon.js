@@ -6,7 +6,7 @@ import { User } from '@element-plus/icons-vue'
 import { Tickets } from '@element-plus/icons-vue'
 import { UploadFilled } from '@element-plus/icons-vue'
 import { QuestionFilled } from '@element-plus/icons-vue'
-import { Delete, Edit, CaretBottom } from '@element-plus/icons-vue'
+import { Delete, Edit, CaretBottom, Back } from '@element-plus/icons-vue'
 import { Search } from '@element-plus/icons-vue'
 import { InfoFilled } from '@element-plus/icons-vue'
 export default (app) => {
@@ -21,4 +21,5 @@ export default (app) => {
   app.component('IconCaretBottom', CaretBottom)
   app.component('IconSearch', Search)
   app.component('IconInfoFilled', InfoFilled)
+  app.component('IconBack', Back)
 }
