@@ -80,7 +80,7 @@
         </div>
       </div>
       <!-- tab切换区 -->
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs v-model="activeName">
         <el-tab-pane
           :label="props.dataList1.customerName ? '合同明细' : '采购明细'"
           name="first"
@@ -180,7 +180,10 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-button type="primary" style="margin-top: 10px"
+          <el-button
+            type="primary"
+            style="margin-top: 10px"
+            @click="isClickAddAttachmentButon = true"
             >添加附件</el-button
           >
         </el-tab-pane>
@@ -280,9 +283,8 @@ const props = defineProps({
     }
   }
 })
-const handleClick = (tab, event) => {
-  console.log(tab, event)
-}
+// 是否点击添加附件的按钮
+const isClickAddAttachmentButon = ref(false)
 
 // 根据四个tab分别对应的表格数据
 // 第一个tab所对应的表格
@@ -326,6 +328,11 @@ const thirdTableTotalMoney = computed(() => {
 
 // 第四个tab
 const fourthTableInfo = inject('fourthTableInfo')
+
+// 暴露出该属性，用于通知父组件添加附件的按钮是否被点击
+defineExpose({
+  isClickAddAttachmentButon
+})
 </script>
 
 <style lang="scss" scoped>

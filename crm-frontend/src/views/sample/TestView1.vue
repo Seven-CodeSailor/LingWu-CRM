@@ -1,5 +1,6 @@
 <template>
   <div style="color: red">测试ContractDetails组件</div>
+  <el-button @click="get">判断添加附件的按钮是否被点击</el-button>
   <ContractDetails
     :contract-money="sendData.contractMoney"
     :zero-out-money="sendData.zeroOutMoney"
@@ -13,13 +14,26 @@
     :tag-name="sendData.tagName"
     :tag-type="sendData.tagType"
     :data-list1="sendData.dataList1"
+    ref="contractDetailsRef"
   ></ContractDetails>
 </template>
 
 <script setup>
-import { provide } from 'vue'
+import { provide, ref } from 'vue'
 import ContractDetails from '@/components/DataList/ContractDetails.vue'
 
+const contractDetailsRef = ref(null)
+const get = () => {
+  let bol = contractDetailsRef.value.isClickAddAttachmentButon
+  console.log('按钮', bol)
+  if (bol) {
+    // 处理完相关逻辑后
+    // ....
+    // 重置为false
+    bol = contractDetailsRef.value.isClickAddAttachmentButon = false
+    console.log('处理完相关逻辑，重置为false', bol)
+  }
+}
 const sendData = {
   // 合同金额
   contractMoney: 1000,
