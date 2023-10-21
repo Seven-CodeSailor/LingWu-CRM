@@ -85,7 +85,14 @@
           :label="props.dataList1.customerName ? '合同明细' : '采购明细'"
           name="first"
         >
-          <BaseDataList></BaseDataList>
+          <BaseDataList
+            :use-operate-column="false"
+            :use-select-column="false"
+            :use-header="false"
+            :use-pagination="false"
+            :table-column-attribute="firstTableInfo.tableColumnAttribute"
+            :table-data="firstTableInfo.tableData"
+          ></BaseDataList>
           <div
             style="
               text-align: right;
@@ -94,14 +101,23 @@
               font-size: 12px;
             "
           >
-            金额合计：<span style="color: red; font-size: 12px">￥111元</span>
+            金额合计：<span style="color: red; font-size: 12px"
+              >￥{{ firstTableTotalMoney }}元</span
+            >
           </div>
         </el-tab-pane>
         <el-tab-pane
           :label="props.dataList1.customerName ? '回款记录' : '付款记录'"
           name="second"
         >
-          <BaseDataList></BaseDataList>
+          <BaseDataList
+            :use-operate-column="false"
+            :use-select-column="false"
+            :use-header="false"
+            :use-pagination="false"
+            :table-column-attribute="secondTableInfo.tableColumnAttribute"
+            :table-data="secondTableInfo.tableData"
+          ></BaseDataList>
           <div
             style="
               text-align: right;
@@ -110,14 +126,23 @@
               font-size: 12px;
             "
           >
-            金额合计：<span style="color: red; font-size: 12px">￥111元</span>
+            金额合计：<span style="color: red; font-size: 12px"
+              >￥{{ secondTableTotalMoney }}元</span
+            >
           </div></el-tab-pane
         >
         <el-tab-pane
           :label="props.dataList1.customerName ? '发票记录' : '收票记录'"
           name="third"
         >
-          <BaseDataList></BaseDataList>
+          <BaseDataList
+            :use-operate-column="false"
+            :use-select-column="false"
+            :use-header="false"
+            :use-pagination="false"
+            :table-column-attribute="thirdTableInfo.tableColumnAttribute"
+            :table-data="thirdTableInfo.tableData"
+          ></BaseDataList>
           <div
             style="
               text-align: right;
@@ -126,11 +151,22 @@
               font-size: 12px;
             "
           >
-            金额合计：<span style="color: red; font-size: 12px">￥111元</span>
+            金额合计：<span style="color: red; font-size: 12px"
+              >￥{{ thirdTableTotalMoney }}元</span
+            >
           </div></el-tab-pane
         >
         <el-tab-pane label="合同附件" name="fourth">
-          <BaseDataList></BaseDataList
+          <BaseDataList
+            :use-select-column="false"
+            :use-header="false"
+            :use-pagination="false"
+            :table-column-attribute="fourthTableInfo.tableColumnAttribute"
+            :table-data="fourthTableInfo.tableData"
+            :use-dropdown-menu="false"
+            :handle-delete="() => {}"
+            :handle-edit="() => {}"
+          ></BaseDataList
         ></el-tab-pane>
       </el-tabs>
     </el-card>
@@ -138,7 +174,7 @@
 </template>
 
 <script setup>
-import { ref, inject } from 'vue'
+import { ref, inject, computed } from 'vue'
 import BaseDataList from './BaseDataList.vue'
 const activeName = ref('first')
 const props = defineProps({
@@ -232,28 +268,303 @@ const handleClick = (tab, event) => {
   console.log(tab, event)
 }
 
-const tableData = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  }
-]
+// 根据四个tab分别对应的表格数据
+// 第一个tab所对应的表格
+const firstTableInfo = {
+  tableColumnAttribute: [
+    {
+      prop: 'goodsNameAndFeature',
+      label: '商品名称/商品规格'
+    },
+    {
+      prop: 'goodsNumber',
+      label: '商品数量'
+    },
+    {
+      prop: 'subtotal',
+      label: '小计'
+    },
+    {
+      prop: 'note',
+      label: '备注'
+    }
+  ],
+  tableData: [
+    {
+      goodsNameAndFeature: 'iPhone15',
+      goodsNumber: 90,
+      subtotal: 10000,
+      note: '手机'
+    },
+    {
+      goodsNameAndFeature: 'iPhone15',
+      goodsNumber: 90,
+      subtotal: 10000,
+      note: '手机'
+    },
+    {
+      goodsNameAndFeature: 'iPhone15',
+      goodsNumber: 90,
+      subtotal: 10000,
+      note: '手机'
+    },
+    {
+      goodsNameAndFeature: 'iPhone15',
+      goodsNumber: 90,
+      subtotal: 10000,
+      note: '手机'
+    },
+    {
+      goodsNameAndFeature: 'iPhone15',
+      goodsNumber: 90,
+      subtotal: 10000,
+      note: '手机'
+    },
+    {
+      goodsNameAndFeature: 'iPhone15',
+      goodsNumber: 90,
+      subtotal: 10000,
+      note: '手机'
+    }
+  ]
+}
+
+const firstTableTotalMoney = computed(() => {
+  let money = 0
+  firstTableInfo.tableData.forEach((item) => {
+    money += item.subtotal
+  })
+  return money
+})
+// 第二个tab
+const secondTableInfo = {
+  tableColumnAttribute: [
+    {
+      prop: 'saleContract',
+      label: '销售合同'
+    },
+    {
+      prop: 'refundDate',
+      label: '回款时间'
+    },
+    {
+      prop: 'frequent',
+      label: '期次'
+    },
+    {
+      prop: 'money',
+      label: '金额'
+    },
+    {
+      prop: 'zeroOutMoney',
+      label: '去零'
+    },
+    {
+      prop: 'creator',
+      label: '创建人'
+    },
+    {
+      prop: 'note',
+      label: '备注'
+    }
+  ],
+  tableData: [
+    {
+      saleContract: 'iPhone15',
+      refundDate: '2023-3-4',
+      frequent: 10000,
+      money: 30000,
+      zeroOutMoney: 70000,
+      creator: '蔡徐坤',
+      note: '手机'
+    },
+    {
+      saleContract: 'iPhone15',
+      refundDate: '2023-3-4',
+      frequent: 10000,
+      money: 30000,
+      zeroOutMoney: 70000,
+      creator: '蔡徐坤',
+      note: '手机'
+    },
+    {
+      saleContract: 'iPhone15',
+      refundDate: '2023-3-4',
+      frequent: 10000,
+      money: 30000,
+      zeroOutMoney: 70000,
+      creator: '蔡徐坤',
+      note: '手机'
+    },
+    {
+      saleContract: 'iPhone15',
+      refundDate: '2023-3-4',
+      frequent: 10000,
+      money: 30000,
+      zeroOutMoney: 70000,
+      creator: '蔡徐坤',
+      note: '手机'
+    },
+    {
+      saleContract: 'iPhone15',
+      refundDate: '2023-3-4',
+      frequent: 10000,
+      money: 30000,
+      zeroOutMoney: 70000,
+      creator: '蔡徐坤',
+      note: '手机'
+    }
+  ]
+}
+
+const secondTableTotalMoney = computed(() => {
+  let money = 0
+  secondTableInfo.tableData.forEach((item) => {
+    money += item.money
+  })
+  return money
+})
+// 第三个tab
+const thirdTableInfo = {
+  tableColumnAttribute: [
+    {
+      prop: 'supplier',
+      label: '供应商'
+    },
+    {
+      prop: 'contractId',
+      label: '合同单号'
+    },
+    {
+      prop: 'invoiceMoneyAndId',
+      label: '发票金额/编号'
+    },
+    {
+      prop: 'collectTicketDate',
+      label: '收票时间',
+      sortable: true
+    },
+    {
+      prop: 'frequent',
+      label: '期次'
+    },
+    {
+      prop: 'creator',
+      label: '创建人'
+    },
+    {
+      prop: 'note',
+      label: '备注'
+    }
+  ],
+  tableData: [
+    {
+      supplier: 'iPhone15',
+      contractId: '123454534',
+      frequent: 10000,
+      invoiceMoney: 30000,
+      invoiceId: '33333',
+      invoiceMoneyAndId: 30000 + '/' + '234234',
+      collectTicketDate: '2030-9-1',
+      creator: '蔡徐坤',
+      note: '手机'
+    },
+    {
+      supplier: 'iPhone15',
+      contractId: '123454534',
+      frequent: 10000,
+      invoiceMoney: 30000,
+      invoiceId: '33333',
+      invoiceMoneyAndId: 30000 + '/' + '234234',
+      collectTicketDate: '2030-9-1',
+      creator: '蔡徐坤',
+      note: '手机'
+    },
+    {
+      supplier: 'iPhone15',
+      contractId: '123454534',
+      frequent: 10000,
+      invoiceMoney: 30000,
+      invoiceId: '33333',
+      invoiceMoneyAndId: 30000 + '/' + '234234',
+      collectTicketDate: '2030-9-1',
+      creator: '蔡徐坤',
+      note: '手机'
+    },
+    {
+      supplier: 'iPhone15',
+      contractId: '123454534',
+      frequent: 10000,
+      invoiceMoney: 30000,
+      invoiceId: '33333',
+      invoiceMoneyAndId: 30000 + '/' + '234234',
+      collectTicketDate: '2030-9-1',
+      creator: '蔡徐坤',
+      note: '手机'
+    },
+    {
+      supplier: 'iPhone15',
+      contractId: '123454534',
+      frequent: 10000,
+      invoiceMoney: 30000,
+      invoiceId: '33333',
+      invoiceMoneyAndId: 30000 + '/' + '234234',
+      collectTicketDate: '2030-9-1',
+      creator: '蔡徐坤',
+      note: '手机'
+    },
+    {
+      supplier: 'iPhone15',
+      contractId: '123454534',
+      frequent: 10000,
+      invoiceMoney: 30000,
+      invoiceId: '33333',
+      invoiceMoneyAndId: 30000 + '/' + '234234',
+      collectTicketDate: '2030-9-1',
+      creator: '蔡徐坤',
+      note: '手机'
+    }
+  ]
+}
+
+const thirdTableTotalMoney = computed(() => {
+  let money = 0
+  thirdTableInfo.tableData.forEach((item) => {
+    money += item.invoiceMoney
+  })
+  return money
+})
+
+// 第四个tab
+const fourthTableInfo = {
+  tableColumnAttribute: [
+    {
+      prop: 'name',
+      label: '名称'
+    },
+    {
+      prop: 'pathPic',
+      label: '路径'
+    },
+    {
+      prop: 'pic',
+      label: '图片'
+    },
+    {
+      prop: 'note',
+      label: '备注'
+    }
+  ],
+  tableData: [
+    {
+      name: 'iPhone15',
+      pathPic: '遥远的地方',
+      pic: '哈哈哈哈',
+      invoiceMoney: 30000,
+      note: '手机'
+    }
+  ]
+}
 
 const friut = inject('friut')
 console.log('friut', friut)
@@ -320,5 +631,8 @@ console.log('friut', friut)
 
 :deep(.el-divider--horizontal) {
   margin: 10px 0;
+}
+:deep(.el-table__header) {
+  width: 100%;
 }
 </style>

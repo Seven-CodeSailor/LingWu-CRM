@@ -30,14 +30,18 @@
         @selection-change="handleSelectionChange"
         v-loading="openLoading"
       >
-        <el-table-column type="selection" width="55" />
+        <el-table-column
+          type="selection"
+          v-if="props.useSelectColumn"
+          width="55"
+        />
         <el-table-column
           v-for="item in props?.tableColumnAttribute"
           :prop="item.prop"
           :label="item.label"
           :key="item"
           :sortable="item?.sortable"
-          :width="item?.usePic ? 300 : 150"
+          :width="item?.usePic ? 300 : ''"
         >
           <!-- 信息包含图片·，使用如下渲染 -->
           <template #default="{ row }" v-if="item.usePic">
@@ -59,7 +63,10 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" v-if="!props?.useDropdownMenu">
+        <el-table-column
+          label="操作"
+          v-if="!props?.useDropdownMenu && props.useOperateColumn"
+        >
           <!-- 带图标的按钮操作 -->
           <template #default="{ row }">
             <!-- 条件渲染按钮 -->
@@ -81,7 +88,10 @@
             ></template>
           </template>
         </el-table-column>
-        <el-table-column label="操作" v-else>
+        <el-table-column
+          label="操作"
+          v-else-if="props.useDropdownMenu && props.useOperateColumn"
+        >
           <!-- 下拉菜单的按钮操作 -->
           <template #default="{ row }">
             <el-dropdown
@@ -139,38 +149,102 @@ import { ref } from 'vue'
 
 const props = defineProps({
   // 操作说明的提示
-  msg: String,
+  msg: {
+    type: String,
+    require: true,
+    default: '操作提示的默认值'
+  },
   // 表格的列属性
-  tableColumnAttribute: Array,
+  tableColumnAttribute: {
+    type: Array,
+    require: true
+  },
   // 是否使用下拉菜单的按钮
-  useDropdownMenu: Boolean,
+  useDropdownMenu: {
+    type: Boolean,
+    default: false
+  },
   // 下拉菜单
-  dropdownMenuActionsInfo: Array,
+  dropdownMenuActionsInfo: {
+    type: Array,
+    default: () => {
+      return [
+        {
+          command: '操作1',
+          // row为当前行的数据
+          handleAction: (row) => {
+            console.log('操作1回调函数', row)
+          },
+          actionName: '操作1的名称'
+        },
+        {
+          command: '操作2',
+          // row为当前行的数据
+          handleAction: (row) => {
+            console.log('操作2回调函数', row)
+          },
+          actionName: '操作2的名称'
+        },
+        {
+          command: '操作3',
+          // row为当前行的数据
+          handleAction: (row) => {
+            console.log('操作3回调函数', row)
+          },
+          actionName: '操作3的名称'
+        }
+      ]
+    }
+  },
   // 不启用下拉菜单的时候的编辑和删除按钮的回调函数
   handleDelete: Function,
   handleEdit: Function,
   // 表格数据
   tableData: Array,
   // 表格每页的数据容量
-  pageSizes: Array,
+  pageSizes: {
+    type: Array,
+    default: () => {
+      return [5, 10, 15, 20]
+    }
+  },
   // 表格的数据数量
-  total: Number,
+  total: {
+    type: Number,
+    require: true
+  },
   // 是否使用分页器
-  usePagination: Boolean,
+  usePagination: {
+    type: Boolean,
+    default: true
+  },
   // 是否使用el-card的header
-  useHeader: Boolean
+  useHeader: {
+    type: Boolean,
+    default: true
+  },
+  // 是否使用使用多选列
+  useSelectColumn: {
+    type: Boolean,
+    default: true
+  },
+  // 是否使用操作列
+  useOperateColumn: {
+    type: Boolean,
+    default: true
+  }
 })
 
 const paginationData = ref({
   currentPage: 1,
-  pageSize: 5,
+  pageSize: props.pageSizes ? props.pageSizes[0] : 5,
   total: props.total,
   pageSizes: props.pageSizes
 })
 
 const rows = ref([])
 
-const openLoading = ref(true)
+const openLoading = ref(false)
 const operatingInstructionDialogVisible = ref(false)
 
 const handleCommand = (command, row) => {

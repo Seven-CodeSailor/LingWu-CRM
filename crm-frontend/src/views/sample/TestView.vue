@@ -14,6 +14,8 @@
     :total="sendData.total"
     :use-pagination="sendData.usePagination"
     :use-header="sendData.useHeader"
+    :use-select-column="sendData.useSelectColumn"
+    :use-operate-column="sendData.useOperateColumn"
     @update-table-data="get"
     ref="baseDataListRef"
   >
@@ -102,7 +104,7 @@ const sendData = {
     console.log('编辑', row)
   },
   // 是否使用下拉菜单
-  useDropdownMenu: false,
+  useDropdownMenu: true,
   // 下拉菜单
   // 更改command  handleAtion  actionName的属性值
   dropdownMenuActionsInfo: [
@@ -134,7 +136,11 @@ const sendData = {
   // 是否使用分页
   usePagination: false,
   // 是否使用el-card的header
-  useHeader: false
+  useHeader: true,
+  // 是否使用使用多选列
+  useSelectColumn: true,
+  // 是否使用操作列
+  useOperateColumn: true
 }
 const baseDataListRef = ref(null)
 const get = (pageSize, currentPage) => {
