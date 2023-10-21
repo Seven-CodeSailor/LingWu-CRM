@@ -35,9 +35,9 @@
             <div class="item">去零金额：{{ props.zeroOutMoney }}</div>
             <div class="item">
               {{
-                props.refundMoney
-                  ? `回款金额：${props.refundMoney}`
-                  : `付款金额：${props.paymentMoney}`
+                props.dataList1.refundMoney
+                  ? `回款金额：${props.dataList1.refundMoney}`
+                  : `付款金额：${props.dataList2.paymentMoney}`
               }}
             </div>
             <div class="item">欠款金额：{{ props.dueMoney }}</div>
@@ -45,9 +45,9 @@
             <div class="item">结束时间：{{ props.endDate }}</div>
             <div class="item">
               {{
-                props.sellerNote
-                  ? `卖家备注：${props.sellerNote}`
-                  : `采购备注：${props.purchaseNote}`
+                props.dataList1.sellerNote
+                  ? `卖家备注：${props.dataList1.sellerNote}`
+                  : `采购备注：${props.dataList2.purchaseNote}`
               }}
             </div>
           </div>
@@ -63,25 +63,26 @@
             <div>创建时间：{{ props.createDate }}</div>
             <div>
               {{
-                props.customerName
-                  ? `客户名称：${props.customerName}`
-                  : `供应商名称：${props.supplierName}`
+                props.dataList1.customerName
+                  ? `客户名称：${props.dataList1.customerName}`
+                  : `供应商名称：${props.dataList2.supplierName}`
               }}
             </div>
             <div>
               {{
-                props.customerRepresent
-                  ? `客户代表：${props.customerRepresent}`
-                  : `联系代表：${props.contactRepresent}`
+                props.dataList1.customerRepresent
+                  ? `客户代表：${props.dataList1.customerRepresent}`
+                  : `联系代表：${props.dataList2.contactRepresent}`
               }}
             </div>
             <div>我方代表：{{ props.ourRepresent }}</div>
           </div>
         </div>
       </div>
+      <!-- tab切换区 -->
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane
-          :label="props.customerName ? '合同明细' : '采购明细'"
+          :label="props.dataList1.customerName ? '合同明细' : '采购明细'"
           name="first"
         >
           <el-table :data="tableData" style="width: 100%">
@@ -91,12 +92,12 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane
-          :label="props.customerName ? '回款记录' : '付款记录'"
+          :label="props.dataList1.customerName ? '回款记录' : '付款记录'"
           name="second"
           >Config</el-tab-pane
         >
         <el-tab-pane
-          :label="props.customerName ? '发票记录' : '收票记录'"
+          :label="props.dataList1.customerName ? '发票记录' : '收票记录'"
           name="third"
           >Role</el-tab-pane
         >
@@ -161,16 +162,6 @@ const props = defineProps({
       )
     }
   },
-  // 回款金额
-  refundMoney: {
-    type: Number,
-    default: -9999
-  },
-  // 付款金额
-  paymentMoney: {
-    type: Number,
-    default: -9999
-  },
   // 合同标题
   contractTitle: {
     type: String,
@@ -181,35 +172,29 @@ const props = defineProps({
     type: String,
     default: '未传数据'
   },
-  //卖家备注
-  sellerNote: {
-    type: String,
-    default: '未传数据'
+  // 普通合同独有的字段
+  dataList1: {
+    type: Object,
+    default: () => {
+      return {
+        refundMoney: '',
+        sellerNote: '',
+        customerName: '',
+        customerRepresent: ''
+      }
+    }
   },
-  //采购备注
-  purchaseNote: {
-    type: String,
-    default: '未传数据'
-  },
-  // 客户代表
-  customerRepresent: {
-    type: String,
-    default: '未传数据'
-  },
-  // 客户名称
-  customerName: {
-    type: String,
-    default: '未传数据'
-  },
-  // 供应商名称
-  supplierName: {
-    type: String,
-    default: '未传数据'
-  },
-  // 联系代表
-  contactRepresent: {
-    type: String,
-    default: '未传数据'
+  // 采购合同独有的字段
+  dataList2: {
+    type: Object,
+    default: () => {
+      return {
+        paymentMoney: '',
+        purchaseNote: '',
+        contactRepresent: '',
+        supplierName: ''
+      }
+    }
   }
 })
 const handleClick = (tab, event) => {

@@ -16,6 +16,7 @@
     :contract-id="sendData.contractId"
     :tag-name="sendData.tagName"
     :tag-type="sendData.tagType"
+    :data-list1="sendData.dataList1"
   ></ContractDetails>
 </template>
 
@@ -45,26 +46,23 @@ const sendData = {
   tagName: '合同的标签',
   // 标签类型 success danger info warning  el(el为element的主题色)
   tagType: 'danger',
-  // refundMoney 和 paymentMoney 二选一传给子组件
-  // 回款金额
-  refundMoney: 800,
-  // 付款金额
-  paymentMoney: 700,
-  // sellerNote  和 purchaseNote 二选一
-  //卖家备注
-  sellerNote: '美丽的卖家备注',
-  //采购备注
-  purchaseNote: '嗡嗡嗡采购备注',
-  // customerRepresent 和  contactRepresent 二选一
-  // 客户代表
-  customerRepresent: '圆神',
-  // 联系代表
-  contactRepresent: '小黑',
-  //  customerName 和  supplierName  二选一
-  // 客户名称
-  customerName: '哇哈哈',
-  // 供应商名称
-  supplierName: '咩咩咩咩'
+  // refundMoney sellerNote customerName customerRepresent 为一组数据
+  // 普通合同独有的字段
+  dataList1: {
+    refundMoney: 800,
+    sellerNote: '美丽的卖家备注',
+    customerName: '哇哈哈',
+    customerRepresent: '圆神'
+  },
+
+  // paymentMoney purchaseNote contactRepresent  supplierName为一组数据
+  // 采购合同独有的字段
+  dataList2: {
+    paymentMoney: 333,
+    purchaseNote: '采购哈哈哈哈备注',
+    contactRepresent: '小黑',
+    supplierName: '咩咩咩咩'
+  }
 }
 </script>
 
