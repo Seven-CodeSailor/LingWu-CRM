@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-20 17:30:31
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-20 18:35:31
+ * @LastEditTime: 2023-10-22 22:04:57
  * @FilePath: \zero-one-crmsys\crm-frontend\src\router\sample\index.js
  * @Description:
  *
@@ -86,6 +86,11 @@ const routes = [
       {
         path: '/sample/testEditor',
         component: () => import('@/components/Editor/index.vue')
+      },
+      // treemenu 菜单组件开发时用例测试路由，后期会删除
+      {
+        path: '/sample/treemenu',
+        component: () => import('@/views/sample/TreeMenu_demo/TreeMenu.vue')
       }
     ]
   }
