@@ -1,6 +1,5 @@
 <template>
   <div style="color: red">测试ContractDetails组件</div>
-  <el-button @click="get">判断添加附件的按钮是否被点击</el-button>
   <ContractDetails
     :contract-money="sendData.contractMoney"
     :zero-out-money="sendData.zeroOutMoney"
