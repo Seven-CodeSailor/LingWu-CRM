@@ -1,3 +1,13 @@
+<!--
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-10-22 22:06:02
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-10-22 22:07:15
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\views\status\403.vue
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
+-->
 <template>
   <div class="contain">
     <div class="code">403</div>
