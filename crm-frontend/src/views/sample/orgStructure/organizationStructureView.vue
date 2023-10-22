@@ -1,15 +1,30 @@
+<!--
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-10-22 18:16:13
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-10-22 19:32:42
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\views\sample\orgStructure\organizationStructureView.vue
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
+-->
 <template>
   <div>
-    测试：组织结构1
+    <div class="header">
+      <div>icon+title</div>
+      <div><el-button>刷新</el-button></div>
+    </div>
     <div>
-      <organization-structure></organization-structure>
+      <organization-structure
+        :sendData="sendData"
+        :treeData="treeData"
+      ></organization-structure>
     </div>
   </div>
 </template>
 
 <script setup>
 import organizationStructure from '@/components/organizationStructure/index.vue'
-import { provide, readonly } from 'vue'
 
 const sendData = {
   tableColumnAttribute: [
@@ -53,9 +68,80 @@ const sendData = {
     console.log('编辑', row)
   },
   pageSizes: [2, 10, 15, 200],
-  total: 100
+  total: 100,
+  usePagination: true
 }
-provide('sendData', readonly(sendData))
+
+const treeData = {
+  treeArr: [
+    {
+      label: 'Level one 1',
+      children: [
+        {
+          label: 'Level two 1-1',
+          children: [
+            {
+              label: 'Level three 1-1-1'
+            }
+          ]
+        }
+      ]
+    },
+    {
+      label: 'Level one 2',
+      children: [
+        {
+          label: 'Level two 2-1',
+          children: [
+            {
+              label: 'Level three 2-1-1'
+            }
+          ]
+        },
+        {
+          label: 'Level two 2-2',
+          children: [
+            {
+              label: 'Level three 2-2-1'
+            }
+          ]
+        }
+      ]
+    },
+    {
+      label: 'Level one 3',
+      children: [
+        {
+          label: 'Level two 3-1',
+          children: [
+            {
+              label: 'Level three 3-1-1'
+            }
+          ]
+        },
+        {
+          label: 'Level two 3-2',
+          children: [
+            {
+              label: 'Level three 3-2-1'
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  defaultProps: {
+    children: 'children',
+    label: 'label'
+  }
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>

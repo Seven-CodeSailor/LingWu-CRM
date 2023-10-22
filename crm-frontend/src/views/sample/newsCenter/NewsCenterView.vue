@@ -2,14 +2,16 @@
   <div class="container">
     <div class="app-container">
       <div class="header">
-        新闻中心
+        <h1>新闻中心</h1>
         <el-button @cilck="goBack">返回</el-button>
       </div>
+      <hr />
       <el-form :model="form" label-width="120px">
         <el-form-item label="标题"> <el-input></el-input></el-form-item>
         <el-form-item label="关键字"> <el-input></el-input></el-form-item>
         <el-form-item label="分类">
-          <el-select> <el-option value="test"></el-option> </el-select
+          <el-select style="width: 100%">
+            <el-option value="test"></el-option> </el-select
         ></el-form-item>
         <el-form-item label="简介">
           <el-input type="textarea"></el-input
@@ -24,7 +26,7 @@
               :mode="mode"
             />
             <Editor
-              style="height: 270px; width: 900px; overflow-y: hidden"
+              style="height: 270px; width: 1100px; overflow-y: hidden"
               v-model="valueHtml"
               :defaultConfig="editorConfig"
               :mode="mode"
@@ -44,7 +46,6 @@
 <script setup>
 import { reactive } from 'vue'
 
-const formHead = ['标题', '关键字', '分类', '简介']
 const props = defineProps({
   //页面标题
   title: {
