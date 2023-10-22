@@ -37,7 +37,6 @@ const emit = defineEmits(['confirm'])
 </script>
 
 <template>
-  <span>气泡组件</span>
   <el-popconfirm
     width="220"
     confirm-button-text="确认"
@@ -48,7 +47,9 @@ const emit = defineEmits(['confirm'])
     @confirm="emit('confirm')"
   >
     <template #reference>
-      <el-button>{{ props.megObj.btn || defaultObj.btn }}</el-button>
+      <el-button type="danger" plain size="small">{{
+        props.megObj.btn || defaultObj.btn
+      }}</el-button>
     </template>
   </el-popconfirm>
 </template>
