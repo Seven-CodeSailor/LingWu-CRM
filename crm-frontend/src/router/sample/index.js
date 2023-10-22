@@ -78,6 +78,10 @@ const routes = [
       {
         path: '/sample/table',
         component: () => import('@/views/sample/table/TableText.vue')
+      },
+      {
+        path: '/sample/testTable',
+        component: () => import('@/views/sample/orgStructure/testTable.vue')
       }
     ]
   }
