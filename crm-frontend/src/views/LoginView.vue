@@ -1,20 +1,30 @@
 <!-- 登录页面 -->
 <template>
-  <el-card class="box-card">
-    <el-form :model="formData" status-icon label-width="60px">
-      <el-form-item label="账号" prop="username">
-        <el-input v-model="formData.username"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input v-model="formData.password" type="password"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm()">登录</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- TODO[TEST_CODE]: 测试代码后期发布需要删除 -->
-    <router-link to="/sample">进入示例演示页面</router-link>
-  </el-card>
+  <el-row class="login-page">
+    <el-col :span="12" class="bgImg"></el-col>
+    <el-col :span="8" :offset="2" class="from">
+      <el-card class="box-card">
+        <div class="title">
+          <h1>登录</h1>
+        </div>
+        <el-form :model="formData" status-icon label-width="60px">
+          <el-form-item label="账号" prop="username">
+            <el-input v-model="formData.username"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input v-model="formData.password" type="password"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm()">登录</el-button>
+            <el-button @click="useVerify">测试</el-button>
+          </el-form-item>
+        </el-form>
+        <!-- TODO[TEST_CODE]: 测试代码后期发布需要删除 -->
+        <router-link to="/sample">进入示例演示页面</router-link>
+      </el-card>
+    </el-col>
+  </el-row>
+
   <!-- 验证码组件 -->
   <Verify
     mode="pop"
@@ -23,12 +33,11 @@
     ref="verify"
     @success="handleSuccess"
   ></Verify>
-  <el-button @click="useVerify">测试</el-button>
 </template>
 
 <script setup>
 import Verify from '@/components/verifition/Verify.vue'
-import Request from '@/apis/request'
+// import Request from '@/apis/request'
 import { ref, reactive } from 'vue'
 import { login } from '@/apis/login'
 import { ElMessage } from 'element-plus'
@@ -126,9 +135,46 @@ function handleSuccess(res) {
 </script>
 
 <style>
+.login-page {
+  height: 100vh;
+  background-color: #fff;
+  /* background: url('../../public/loginImg.webp') no-repeat center/cover; */
+  /* filter: blur(2px); */
+}
+/* 背景的样式 */
+.bgImg {
+  background-color: #a29bfe;
+  border-radius: 0 40px 40px 0;
+  /* background: url('../../../documents/00、preview-pic/architecture.jpg')
+    no-repeat 60% center / 240px auto; */
+  background: url('../../public/loginImg.jpg') no-repeat center/cover;
+}
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+  /* background-color: #ccc; */
+}
+
+.from {
+  /* background-color: #999; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .box-card {
-  width: 480px;
-  margin: 50px auto;
-  padding: 20px;
+  width: 100%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* border-radius: 65% 35% 46% 54% / 40% 55% 45% 60%; */
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  /* color: #fff; */
 }
 </style>
