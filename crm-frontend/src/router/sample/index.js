@@ -82,6 +82,11 @@ const routes = [
       {
         path: '/sample/testTable',
         component: () => import('@/views/sample/orgStructure/testTable.vue')
+      },
+      // treemenu 菜单组件开发时用例测试路由，后期会删除
+      {
+        path: '/sample/treemenu',
+        component: () => import('@/views/sample/TreeMenu_demo/TreeMenu.vue')
       }
     ]
   }
