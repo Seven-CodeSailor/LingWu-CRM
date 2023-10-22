@@ -110,6 +110,10 @@ const menus = reactive([
   {
     path: '/sample/treemenu',
     text: 'treemenu演示界面'
+  },
+  {
+    path: '/sample/customChartTest',
+    text: '测试客户数据展示'
   }
 ])
 </script>

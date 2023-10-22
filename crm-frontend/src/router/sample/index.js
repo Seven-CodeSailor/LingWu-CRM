@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-20 17:30:31
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-22 22:04:57
+ * @LastEditTime: 2023-10-22 22:06:11
  * @FilePath: \zero-one-crmsys\crm-frontend\src\router\sample\index.js
  * @Description:
  *
@@ -91,6 +91,10 @@ const routes = [
       {
         path: '/sample/treemenu',
         component: () => import('@/views/sample/TreeMenu_demo/TreeMenu.vue')
+      },
+      {
+        path: '/sample/customChartTest',
+        component: () => import('@/views/sample/CustomChartTest.vue')
       }
     ]
   }
