@@ -82,6 +82,10 @@ const routes = [
       {
         path: '/sample/testTable',
         component: () => import('@/views/sample/orgStructure/testTable.vue')
+      },
+      {
+        path: '/sample/testEditor',
+        component: () => import('@/components/Editor/index.vue')
       }
     ]
   }
