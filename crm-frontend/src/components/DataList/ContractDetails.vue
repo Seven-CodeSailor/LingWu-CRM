@@ -35,9 +35,9 @@
             <div class="item">去零金额：{{ props.zeroOutMoney }}</div>
             <div class="item">
               {{
-                props.dataList1.refundMoney
-                  ? `回款金额：${props.dataList1.refundMoney}`
-                  : `付款金额：${props.dataList2.paymentMoney}`
+                props.sellContractUniqueField.refundMoney
+                  ? `回款金额：${props.sellContractUniqueField.refundMoney}`
+                  : `付款金额：${props.purchaseContractUniqueField.paymentMoney}`
               }}
             </div>
             <div class="item">欠款金额：{{ props.dueMoney }}</div>
@@ -45,9 +45,9 @@
             <div class="item">结束时间：{{ props.endDate }}</div>
             <div class="item">
               {{
-                props.dataList1.sellerNote
-                  ? `卖家备注：${props.dataList1.sellerNote}`
-                  : `采购备注：${props.dataList2.purchaseNote}`
+                props.sellContractUniqueField.sellerNote
+                  ? `卖家备注：${props.sellContractUniqueField.sellerNote}`
+                  : `采购备注：${props.purchaseContractUniqueField.purchaseNote}`
               }}
             </div>
           </div>
@@ -63,16 +63,16 @@
             <div>创建时间：{{ props.createDate }}</div>
             <div>
               {{
-                props.dataList1.customerName
-                  ? `客户名称：${props.dataList1.customerName}`
-                  : `供应商名称：${props.dataList2.supplierName}`
+                props.sellContractUniqueField.customerName
+                  ? `客户名称：${props.sellContractUniqueField.customerName}`
+                  : `供应商名称：${props.purchaseContractUniqueField.supplierName}`
               }}
             </div>
             <div>
               {{
-                props.dataList1.customerRepresent
-                  ? `客户代表：${props.dataList1.customerRepresent}`
-                  : `联系代表：${props.dataList2.contactRepresent}`
+                props.sellContractUniqueField.customerRepresent
+                  ? `客户代表：${props.sellContractUniqueField.customerRepresent}`
+                  : `联系代表：${props.purchaseContractUniqueField.contactRepresent}`
               }}
             </div>
             <div>我方代表：{{ props.ourRepresent }}</div>
@@ -82,7 +82,9 @@
       <!-- tab切换区 -->
       <el-tabs v-model="activeName">
         <el-tab-pane
-          :label="props.dataList1.customerName ? '合同明细' : '采购明细'"
+          :label="
+            props.sellContractUniqueField.customerName ? '合同明细' : '采购明细'
+          "
           name="first"
         >
           <BaseDataList
@@ -115,7 +117,9 @@
           </div>
         </el-tab-pane>
         <el-tab-pane
-          :label="props.dataList1.customerName ? '回款记录' : '付款记录'"
+          :label="
+            props.sellContractUniqueField.customerName ? '回款记录' : '付款记录'
+          "
           name="second"
         >
           <BaseDataList
@@ -140,7 +144,9 @@
           </div></el-tab-pane
         >
         <el-tab-pane
-          :label="props.dataList1.customerName ? '发票记录' : '收票记录'"
+          :label="
+            props.sellContractUniqueField.customerName ? '发票记录' : '收票记录'
+          "
           name="third"
         >
           <BaseDataList
@@ -183,7 +189,7 @@
           <el-button
             type="primary"
             style="margin-top: 10px"
-            @click="addAttachment"
+            @click="props.handleAddAttachment"
             >添加附件</el-button
           >
         </el-tab-pane>
@@ -193,7 +199,7 @@
 </template>
 
 <script setup>
-import { ref, inject, computed } from 'vue'
+import { ref, computed } from 'vue'
 import BaseDataList from './BaseDataList.vue'
 const activeName = ref('first')
 const props = defineProps({
@@ -265,7 +271,7 @@ const props = defineProps({
     default: '未传数据'
   },
   // 普通合同独有的字段
-  dataList1: {
+  sellContractUniqueField: {
     type: Object,
     default: () => {
       return {
@@ -277,7 +283,7 @@ const props = defineProps({
     }
   },
   // 采购合同独有的字段
-  dataList2: {
+  purchaseContractUniqueField: {
     type: Object,
     default: () => {
       return {
@@ -287,16 +293,80 @@ const props = defineProps({
         supplierName: ''
       }
     }
+  },
+  firstTableData: {
+    type: Array,
+    require: true
+  },
+  secondTableData: {
+    type: Array,
+    require: true
+  },
+  thirdTableData: {
+    type: Array,
+    require: true
+  },
+  fourthTableData: {
+    type: Array,
+    require: true
   }
 })
-// 是否点击添加附件的按钮
-const addAttachment = () => {
-  props.handleAddAttachment()
-}
 
 // 根据四个tab分别对应的表格数据
 // 第一个tab所对应的表格
-const firstTableInfo = inject('firstTableInfo')
+
+const sellContractFirstTableColumnAttribute = [
+  {
+    prop: 'goodsNameAndFeature',
+    label: '商品名称/商品规格'
+  },
+  {
+    prop: 'price',
+    label: '销售价格'
+  },
+  {
+    prop: 'goodsNumber',
+    label: '商品数量'
+  },
+  {
+    prop: 'subtotal',
+    label: '小计'
+  },
+  {
+    prop: 'note',
+    label: '备注'
+  }
+]
+
+const purchaseContractFirstTableColumnAttribute = [
+  {
+    prop: 'goodsNameAndFeature',
+    label: '商品名称/商品规格'
+  },
+  {
+    prop: 'price',
+    label: '进货价格'
+  },
+  {
+    prop: 'goodsNumber',
+    label: '商品数量'
+  },
+  {
+    prop: 'subtotal',
+    label: '小计'
+  },
+  {
+    prop: 'note',
+    label: '备注'
+  }
+]
+
+const firstTableInfo = {
+  tableColumnAttribute: props.sellContractUniqueField.refundMoney
+    ? sellContractFirstTableColumnAttribute
+    : purchaseContractFirstTableColumnAttribute,
+  tableData: props.firstTableData
+}
 
 const firstTableTotalMoney = computed(() => {
   let money = 0
@@ -314,7 +384,81 @@ const firstTableTotalGoodsNumber = computed(() => {
   return number
 })
 // 第二个tab
-const secondTableInfo = inject('secondTableInfo')
+const sellContractSecondTableColumnAttribute = [
+  {
+    prop: 'saleContract',
+    label: '销售合同'
+  },
+  {
+    prop: 'refundDate',
+    label: '回款时间'
+  },
+  {
+    prop: 'frequent',
+    label: '期次'
+  },
+  {
+    prop: 'money',
+    label: '金额'
+  },
+  {
+    prop: 'zeroOutMoney',
+    label: '去零'
+  },
+  {
+    prop: 'creator',
+    label: '创建人'
+  },
+  {
+    prop: 'note',
+    label: '备注'
+  }
+]
+const purchaseContractSecondTableColumnAttribute = [
+  {
+    prop: 'supplier',
+    label: '供应商'
+  },
+  {
+    prop: 'purchaseContract',
+    label: '采购合同'
+  },
+  {
+    prop: 'paymentDate',
+    label: '付款时间'
+  },
+  {
+    prop: 'frequent',
+    label: '期次'
+  },
+  {
+    prop: 'money',
+    label: '金额'
+  },
+  {
+    prop: 'zeroOutMoney',
+    label: '去零'
+  },
+  {
+    prop: 'creator',
+    label: '创建人'
+  },
+  {
+    prop: 'createDate',
+    label: '创建时间'
+  },
+  {
+    prop: 'note',
+    label: '备注'
+  }
+]
+
+const secondTableInfo = {
+  tableColumnAttribute: props.sellContractUniqueField.refundMoney
+    ? sellContractSecondTableColumnAttribute
+    : purchaseContractSecondTableColumnAttribute,
+  tableData: props.secondTableData
+}
 
 const secondTableTotalMoney = computed(() => {
   let money = 0
@@ -324,7 +468,75 @@ const secondTableTotalMoney = computed(() => {
   return money
 })
 // 第三个tab
-const thirdTableInfo = inject('thirdTableInfo')
+const sellContractThirdTableColumnAttribute = [
+  {
+    prop: 'contractId',
+    label: '合同单号'
+  },
+  {
+    prop: 'invoiceId',
+    label: '编号'
+  },
+  {
+    prop: 'invoiceMoney',
+    label: '发票金额'
+  },
+  {
+    prop: 'openTicketDate',
+    label: '开票时间',
+    sortable: true
+  },
+  {
+    prop: 'frequent',
+    label: '期次'
+  },
+  {
+    prop: 'creator',
+    label: '创建人'
+  },
+  {
+    prop: 'note',
+    label: '备注'
+  }
+]
+const purchaseContractThirdTableColumnAttribute = [
+  {
+    prop: 'supplier',
+    label: '供应商'
+  },
+  {
+    prop: 'contractId',
+    label: '合同单号'
+  },
+  {
+    prop: 'invoiceMoneyAndId',
+    label: '发票金额/编号'
+  },
+  {
+    prop: 'collectTicketDate',
+    label: '收票时间',
+    sortable: true
+  },
+  {
+    prop: 'frequent',
+    label: '期次'
+  },
+  {
+    prop: 'creator',
+    label: '创建人'
+  },
+  {
+    prop: 'note',
+    label: '备注'
+  }
+]
+
+const thirdTableInfo = {
+  tableColumnAttribute: props.sellContractUniqueField.refundMoney
+    ? sellContractThirdTableColumnAttribute
+    : purchaseContractThirdTableColumnAttribute,
+  tableData: props.thirdTableData
+}
 
 const thirdTableTotalMoney = computed(() => {
   let money = 0
@@ -335,12 +547,27 @@ const thirdTableTotalMoney = computed(() => {
 })
 
 // 第四个tab
-const fourthTableInfo = inject('fourthTableInfo')
-
-// 暴露出该属性，用于通知父组件添加附件的按钮是否被点击
-defineExpose({
-  addAttachment
-})
+const fourthTableInfo = {
+  tableColumnAttribute: [
+    {
+      prop: 'name',
+      label: '名称'
+    },
+    {
+      prop: 'pathPic',
+      label: '路径'
+    },
+    {
+      prop: 'pic',
+      label: '图片'
+    },
+    {
+      prop: 'note',
+      label: '备注'
+    }
+  ],
+  tableData: props.fourthTableData
+}
 </script>
 
 <style lang="scss" scoped>
