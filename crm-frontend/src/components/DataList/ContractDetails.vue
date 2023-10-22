@@ -35,9 +35,9 @@
             <div class="item">去零金额：{{ props.zeroOutMoney }}</div>
             <div class="item">
               {{
-                props.dataList1.refundMoney
-                  ? `回款金额：${props.dataList1.refundMoney}`
-                  : `付款金额：${props.dataList2.paymentMoney}`
+                props.sellContractUniqueField.refundMoney
+                  ? `回款金额：${props.sellContractUniqueField.refundMoney}`
+                  : `付款金额：${props.purchaseContractUniqueField.paymentMoney}`
               }}
             </div>
             <div class="item">欠款金额：{{ props.dueMoney }}</div>
@@ -45,9 +45,9 @@
             <div class="item">结束时间：{{ props.endDate }}</div>
             <div class="item">
               {{
-                props.dataList1.sellerNote
-                  ? `卖家备注：${props.dataList1.sellerNote}`
-                  : `采购备注：${props.dataList2.purchaseNote}`
+                props.sellContractUniqueField.sellerNote
+                  ? `卖家备注：${props.sellContractUniqueField.sellerNote}`
+                  : `采购备注：${props.purchaseContractUniqueField.purchaseNote}`
               }}
             </div>
           </div>
@@ -63,16 +63,16 @@
             <div>创建时间：{{ props.createDate }}</div>
             <div>
               {{
-                props.dataList1.customerName
-                  ? `客户名称：${props.dataList1.customerName}`
-                  : `供应商名称：${props.dataList2.supplierName}`
+                props.sellContractUniqueField.customerName
+                  ? `客户名称：${props.sellContractUniqueField.customerName}`
+                  : `供应商名称：${props.purchaseContractUniqueField.supplierName}`
               }}
             </div>
             <div>
               {{
-                props.dataList1.customerRepresent
-                  ? `客户代表：${props.dataList1.customerRepresent}`
-                  : `联系代表：${props.dataList2.contactRepresent}`
+                props.sellContractUniqueField.customerRepresent
+                  ? `客户代表：${props.sellContractUniqueField.customerRepresent}`
+                  : `联系代表：${props.purchaseContractUniqueField.contactRepresent}`
               }}
             </div>
             <div>我方代表：{{ props.ourRepresent }}</div>
@@ -80,9 +80,11 @@
         </div>
       </div>
       <!-- tab切换区 -->
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs v-model="activeName">
         <el-tab-pane
-          :label="props.dataList1.customerName ? '合同明细' : '采购明细'"
+          :label="
+            props.sellContractUniqueField.customerName ? '合同明细' : '采购明细'
+          "
           name="first"
         >
           <BaseDataList
@@ -95,19 +97,29 @@
           ></BaseDataList>
           <div
             style="
-              text-align: right;
               margin-top: 12px;
-              font-weight: 700;
               font-size: 12px;
+              display: flex;
+              align-items: center;
+              justify-content: right;
             "
           >
-            金额合计：<span style="color: red; font-size: 12px"
-              >￥{{ firstTableTotalMoney }}元</span
-            >
+            <div style="margin: 0 10px; font-weight: 700">
+              数量合计：<span style="font-size: 12px"
+                >{{ firstTableTotalGoodsNumber }}件</span
+              >
+            </div>
+            <div style="font-weight: 700">
+              金额合计：<span style="color: red; font-size: 12px"
+                >￥{{ firstTableTotalMoney }}元</span
+              >
+            </div>
           </div>
         </el-tab-pane>
         <el-tab-pane
-          :label="props.dataList1.customerName ? '回款记录' : '付款记录'"
+          :label="
+            props.sellContractUniqueField.customerName ? '回款记录' : '付款记录'
+          "
           name="second"
         >
           <BaseDataList
@@ -132,7 +144,9 @@
           </div></el-tab-pane
         >
         <el-tab-pane
-          :label="props.dataList1.customerName ? '发票记录' : '收票记录'"
+          :label="
+            props.sellContractUniqueField.customerName ? '发票记录' : '收票记录'
+          "
           name="third"
         >
           <BaseDataList
@@ -157,27 +171,44 @@
           </div></el-tab-pane
         >
         <el-tab-pane label="合同附件" name="fourth">
-          <BaseDataList
-            :use-select-column="false"
-            :use-header="false"
-            :use-pagination="false"
-            :table-column-attribute="fourthTableInfo.tableColumnAttribute"
-            :table-data="fourthTableInfo.tableData"
-            :use-dropdown-menu="false"
-            :handle-delete="() => {}"
-            :handle-edit="() => {}"
-          ></BaseDataList
-        ></el-tab-pane>
+          <el-table :data="fourthTableInfo.tableData" style="width: 100%">
+            <el-table-column
+              v-for="(item, index) in fourthTableInfo.tableColumnAttribute"
+              :key="index"
+              :prop="item.prop"
+              :label="item.label"
+            >
+              <template #default="{ row }" v-if="item.prop === 'pic'">
+                <el-image
+                  style="width: 100px; height: 100px"
+                  :src="row[item.prop]"
+                />
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button
+            type="primary"
+            style="margin-top: 10px"
+            @click="props.handleAddAttachment"
+            >添加附件</el-button
+          >
+        </el-tab-pane>
       </el-tabs>
     </el-card>
   </div>
 </template>
 
 <script setup>
-import { ref, inject, computed } from 'vue'
+import { ref, computed } from 'vue'
 import BaseDataList from './BaseDataList.vue'
 const activeName = ref('first')
 const props = defineProps({
+  handleAddAttachment: {
+    type: Function,
+    default: () => {
+      console.log('添加附件的逻辑处理函数')
+    }
+  },
   contractMoney: {
     type: Number,
     require: true,
@@ -240,7 +271,7 @@ const props = defineProps({
     default: '未传数据'
   },
   // 普通合同独有的字段
-  dataList1: {
+  sellContractUniqueField: {
     type: Object,
     default: () => {
       return {
@@ -252,7 +283,7 @@ const props = defineProps({
     }
   },
   // 采购合同独有的字段
-  dataList2: {
+  purchaseContractUniqueField: {
     type: Object,
     default: () => {
       return {
@@ -262,159 +293,171 @@ const props = defineProps({
         supplierName: ''
       }
     }
+  },
+  firstTableData: {
+    type: Array,
+    require: true
+  },
+  secondTableData: {
+    type: Array,
+    require: true
+  },
+  thirdTableData: {
+    type: Array,
+    require: true
+  },
+  fourthTableData: {
+    type: Array,
+    require: true
   }
 })
-const handleClick = (tab, event) => {
-  console.log(tab, event)
-}
 
 // 根据四个tab分别对应的表格数据
 // 第一个tab所对应的表格
+
+const sellContractFirstTableColumnAttribute = [
+  {
+    prop: 'goodsNameAndFeature',
+    label: '商品名称/商品规格'
+  },
+  {
+    prop: 'price',
+    label: '销售价格'
+  },
+  {
+    prop: 'goodsNumber',
+    label: '商品数量'
+  },
+  {
+    prop: 'subtotal',
+    label: '小计'
+  },
+  {
+    prop: 'note',
+    label: '备注'
+  }
+]
+
+const purchaseContractFirstTableColumnAttribute = [
+  {
+    prop: 'goodsNameAndFeature',
+    label: '商品名称/商品规格'
+  },
+  {
+    prop: 'price',
+    label: '进货价格'
+  },
+  {
+    prop: 'goodsNumber',
+    label: '商品数量'
+  },
+  {
+    prop: 'subtotal',
+    label: '小计'
+  },
+  {
+    prop: 'note',
+    label: '备注'
+  }
+]
+
 const firstTableInfo = {
-  tableColumnAttribute: [
-    {
-      prop: 'goodsNameAndFeature',
-      label: '商品名称/商品规格'
-    },
-    {
-      prop: 'goodsNumber',
-      label: '商品数量'
-    },
-    {
-      prop: 'subtotal',
-      label: '小计'
-    },
-    {
-      prop: 'note',
-      label: '备注'
-    }
-  ],
-  tableData: [
-    {
-      goodsNameAndFeature: 'iPhone15',
-      goodsNumber: 90,
-      subtotal: 10000,
-      note: '手机'
-    },
-    {
-      goodsNameAndFeature: 'iPhone15',
-      goodsNumber: 90,
-      subtotal: 10000,
-      note: '手机'
-    },
-    {
-      goodsNameAndFeature: 'iPhone15',
-      goodsNumber: 90,
-      subtotal: 10000,
-      note: '手机'
-    },
-    {
-      goodsNameAndFeature: 'iPhone15',
-      goodsNumber: 90,
-      subtotal: 10000,
-      note: '手机'
-    },
-    {
-      goodsNameAndFeature: 'iPhone15',
-      goodsNumber: 90,
-      subtotal: 10000,
-      note: '手机'
-    },
-    {
-      goodsNameAndFeature: 'iPhone15',
-      goodsNumber: 90,
-      subtotal: 10000,
-      note: '手机'
-    }
-  ]
+  tableColumnAttribute: props.sellContractUniqueField.refundMoney
+    ? sellContractFirstTableColumnAttribute
+    : purchaseContractFirstTableColumnAttribute,
+  tableData: props.firstTableData
 }
 
 const firstTableTotalMoney = computed(() => {
   let money = 0
   firstTableInfo.tableData.forEach((item) => {
-    money += item.subtotal
+    money += item.price * item.goodsNumber
   })
   return money
 })
+
+const firstTableTotalGoodsNumber = computed(() => {
+  let number = 0
+  firstTableInfo.tableData.forEach((item) => {
+    number += item.goodsNumber
+  })
+  return number
+})
 // 第二个tab
+const sellContractSecondTableColumnAttribute = [
+  {
+    prop: 'saleContract',
+    label: '销售合同'
+  },
+  {
+    prop: 'refundDate',
+    label: '回款时间'
+  },
+  {
+    prop: 'frequent',
+    label: '期次'
+  },
+  {
+    prop: 'money',
+    label: '金额'
+  },
+  {
+    prop: 'zeroOutMoney',
+    label: '去零'
+  },
+  {
+    prop: 'creator',
+    label: '创建人'
+  },
+  {
+    prop: 'note',
+    label: '备注'
+  }
+]
+const purchaseContractSecondTableColumnAttribute = [
+  {
+    prop: 'supplier',
+    label: '供应商'
+  },
+  {
+    prop: 'purchaseContract',
+    label: '采购合同'
+  },
+  {
+    prop: 'paymentDate',
+    label: '付款时间'
+  },
+  {
+    prop: 'frequent',
+    label: '期次'
+  },
+  {
+    prop: 'money',
+    label: '金额'
+  },
+  {
+    prop: 'zeroOutMoney',
+    label: '去零'
+  },
+  {
+    prop: 'creator',
+    label: '创建人'
+  },
+  {
+    prop: 'createDate',
+    label: '创建时间'
+  },
+  {
+    prop: 'note',
+    label: '备注'
+  }
+]
+
 const secondTableInfo = {
-  tableColumnAttribute: [
-    {
-      prop: 'saleContract',
-      label: '销售合同'
-    },
-    {
-      prop: 'refundDate',
-      label: '回款时间'
-    },
-    {
-      prop: 'frequent',
-      label: '期次'
-    },
-    {
-      prop: 'money',
-      label: '金额'
-    },
-    {
-      prop: 'zeroOutMoney',
-      label: '去零'
-    },
-    {
-      prop: 'creator',
-      label: '创建人'
-    },
-    {
-      prop: 'note',
-      label: '备注'
-    }
-  ],
-  tableData: [
-    {
-      saleContract: 'iPhone15',
-      refundDate: '2023-3-4',
-      frequent: 10000,
-      money: 30000,
-      zeroOutMoney: 70000,
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      saleContract: 'iPhone15',
-      refundDate: '2023-3-4',
-      frequent: 10000,
-      money: 30000,
-      zeroOutMoney: 70000,
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      saleContract: 'iPhone15',
-      refundDate: '2023-3-4',
-      frequent: 10000,
-      money: 30000,
-      zeroOutMoney: 70000,
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      saleContract: 'iPhone15',
-      refundDate: '2023-3-4',
-      frequent: 10000,
-      money: 30000,
-      zeroOutMoney: 70000,
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      saleContract: 'iPhone15',
-      refundDate: '2023-3-4',
-      frequent: 10000,
-      money: 30000,
-      zeroOutMoney: 70000,
-      creator: '蔡徐坤',
-      note: '手机'
-    }
-  ]
+  tableColumnAttribute: props.sellContractUniqueField.refundMoney
+    ? sellContractSecondTableColumnAttribute
+    : purchaseContractSecondTableColumnAttribute,
+  tableData: props.secondTableData
 }
 
 const secondTableTotalMoney = computed(() => {
@@ -425,106 +468,74 @@ const secondTableTotalMoney = computed(() => {
   return money
 })
 // 第三个tab
+const sellContractThirdTableColumnAttribute = [
+  {
+    prop: 'contractId',
+    label: '合同单号'
+  },
+  {
+    prop: 'invoiceId',
+    label: '编号'
+  },
+  {
+    prop: 'invoiceMoney',
+    label: '发票金额'
+  },
+  {
+    prop: 'openTicketDate',
+    label: '开票时间',
+    sortable: true
+  },
+  {
+    prop: 'frequent',
+    label: '期次'
+  },
+  {
+    prop: 'creator',
+    label: '创建人'
+  },
+  {
+    prop: 'note',
+    label: '备注'
+  }
+]
+const purchaseContractThirdTableColumnAttribute = [
+  {
+    prop: 'supplier',
+    label: '供应商'
+  },
+  {
+    prop: 'contractId',
+    label: '合同单号'
+  },
+  {
+    prop: 'invoiceMoneyAndId',
+    label: '发票金额/编号'
+  },
+  {
+    prop: 'collectTicketDate',
+    label: '收票时间',
+    sortable: true
+  },
+  {
+    prop: 'frequent',
+    label: '期次'
+  },
+  {
+    prop: 'creator',
+    label: '创建人'
+  },
+  {
+    prop: 'note',
+    label: '备注'
+  }
+]
+
 const thirdTableInfo = {
-  tableColumnAttribute: [
-    {
-      prop: 'supplier',
-      label: '供应商'
-    },
-    {
-      prop: 'contractId',
-      label: '合同单号'
-    },
-    {
-      prop: 'invoiceMoneyAndId',
-      label: '发票金额/编号'
-    },
-    {
-      prop: 'collectTicketDate',
-      label: '收票时间',
-      sortable: true
-    },
-    {
-      prop: 'frequent',
-      label: '期次'
-    },
-    {
-      prop: 'creator',
-      label: '创建人'
-    },
-    {
-      prop: 'note',
-      label: '备注'
-    }
-  ],
-  tableData: [
-    {
-      supplier: 'iPhone15',
-      contractId: '123454534',
-      frequent: 10000,
-      invoiceMoney: 30000,
-      invoiceId: '33333',
-      invoiceMoneyAndId: 30000 + '/' + '234234',
-      collectTicketDate: '2030-9-1',
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      supplier: 'iPhone15',
-      contractId: '123454534',
-      frequent: 10000,
-      invoiceMoney: 30000,
-      invoiceId: '33333',
-      invoiceMoneyAndId: 30000 + '/' + '234234',
-      collectTicketDate: '2030-9-1',
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      supplier: 'iPhone15',
-      contractId: '123454534',
-      frequent: 10000,
-      invoiceMoney: 30000,
-      invoiceId: '33333',
-      invoiceMoneyAndId: 30000 + '/' + '234234',
-      collectTicketDate: '2030-9-1',
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      supplier: 'iPhone15',
-      contractId: '123454534',
-      frequent: 10000,
-      invoiceMoney: 30000,
-      invoiceId: '33333',
-      invoiceMoneyAndId: 30000 + '/' + '234234',
-      collectTicketDate: '2030-9-1',
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      supplier: 'iPhone15',
-      contractId: '123454534',
-      frequent: 10000,
-      invoiceMoney: 30000,
-      invoiceId: '33333',
-      invoiceMoneyAndId: 30000 + '/' + '234234',
-      collectTicketDate: '2030-9-1',
-      creator: '蔡徐坤',
-      note: '手机'
-    },
-    {
-      supplier: 'iPhone15',
-      contractId: '123454534',
-      frequent: 10000,
-      invoiceMoney: 30000,
-      invoiceId: '33333',
-      invoiceMoneyAndId: 30000 + '/' + '234234',
-      collectTicketDate: '2030-9-1',
-      creator: '蔡徐坤',
-      note: '手机'
-    }
-  ]
+  tableColumnAttribute: props.sellContractUniqueField.refundMoney
+    ? sellContractThirdTableColumnAttribute
+    : purchaseContractThirdTableColumnAttribute,
+  tableData: props.thirdTableData
 }
 
 const thirdTableTotalMoney = computed(() => {
@@ -555,19 +566,8 @@ const fourthTableInfo = {
       label: '备注'
     }
   ],
-  tableData: [
-    {
-      name: 'iPhone15',
-      pathPic: '遥远的地方',
-      pic: '哈哈哈哈',
-      invoiceMoney: 30000,
-      note: '手机'
-    }
-  ]
+  tableData: props.fourthTableData
 }
-
-const friut = inject('friut')
-console.log('friut', friut)
 </script>
 
 <style lang="scss" scoped>
