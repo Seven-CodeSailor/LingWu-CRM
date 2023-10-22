@@ -181,12 +181,12 @@ const options = [
     label: '上年'
   }
 ]
-
+// 父传子的方法
 let props = defineProps({
   // 获取数据
   getData: {
     type: Function,
-    require: true
+    required: true
   }
 })
 
@@ -199,26 +199,50 @@ watch(timePick, () => {
   // 里面默认给的就是字符串形式
   chartData.value = props.getData(timePick.value)
   result.value = timeSpan()
-  // console.log(result.value)
   // 初始化图表
   initChart()
 })
-
+// 用来接收下拉框的选项变更时返回的开始时间和结束时间
 let result = ref([])
 
-// 横坐标时间 展示数据
+// 横坐标时间计算的函数
 function timeSetting() {
   console.log(result.value[0])
   let str = result.value[0]
   var dateList = []
-  for (var i = 0; i < 7; i++) {
-    var d1 = dayjs(str).add(i, 'day').format('MM-DD')
-    dateList.push(d1)
+  if (
+    // 初始化或者本周，上周的时候显示七条数据
+    timePick.value === '本周' ||
+    timePick.value === '上周' ||
+    timePick.value === undefined
+  ) {
+    // 循环遍历 未来七天或者过去七天的日期时间
+    for (let i = 0; i < 7; i++) {
+      let d1 = dayjs(str).add(i, 'day').format('MM-DD')
+      dateList.push(d1)
+    }
+  } else if (timePick.value === '本月' || timePick.value === '上月') {
+    dateList = ['第一周', '第二周', '第三周', '第四周']
+  } else if (timePick.value === '本季度' || timePick.value === '上季度') {
+    // dateList = ['第一周', '第二周', '第三周', '第四周']
+    let start = dayjs(str).add(0, 'day').format('MM-DD').substring(0, 2)
+    if (start === '01') {
+      dateList = ['1月', '2月', '3月']
+    } else if (start === '04') {
+      dateList = ['4月', '5月', '6月']
+    } else if (start === '07') {
+      dateList = ['7月', '8月', '9月']
+    } else if (start === '10') {
+      dateList = ['10月', '11月', '12月']
+    }
+  } else if (timePick.value === '本年' || timePick.value === '上年') {
+    dateList = ['第一季度', '第二季度', '第三季度', '第四季度']
   }
+
   return dateList
 }
 
-// 图表数据 (目前使用的是写死的数据)
+// 图表数据 (目前使用的是写死的数据,监听器检测到选择框变化时，这里的数据会去调用新数据)
 let chartData = ref({
   // 合同个数
   contractsNum: [25, 43, 63, 58, 89, 100, 32],
@@ -232,8 +256,6 @@ let chartRef = ref()
 onMounted(() => {
   // 父组件是同级目录下的ParentData.vue
   chartData.value = props.getData()
-  // console.log(chartData.value)
-
   // 初始化图表
   initChart()
 })
@@ -247,7 +269,11 @@ let initChart = () => {
     // 主标题设置
     title: {
       // 主标题文本
-      text: '销售简报-新增数据统计'
+      text: '销售简报-新增数据统计',
+      textStyle: {
+        fontWeight: 'bolder',
+        fontSize: 20
+      }
     },
     // 图例组件
     legend: {
@@ -255,9 +281,12 @@ let initChart = () => {
     },
     // 修改坐标系显示大小
     grid: {
-      left: '0%',
-      right: '0%',
-      bottom: '0%',
+      top: '13%',
+      left: '3%',
+      right: '3%',
+      bottom: 0,
+      height: 400,
+      width: 700,
       containLabel: true
     },
     tooltip: {
@@ -272,7 +301,11 @@ let initChart = () => {
       },
       axisLabel: {
         showMaxLabel: true,
-        showMinLabel: true
+        showMinLabel: true,
+        margin: 20,
+        fontWeight: 'normal',
+        fontSize: 15,
+        align: 'center'
       },
       axisTick: {
         alignWithLabel: true
@@ -285,6 +318,21 @@ let initChart = () => {
       // 左侧Y轴
       {
         type: 'value',
+        // 最小时间间隔
+        minInterval: 5,
+        // 最大时间间隔
+        maxInterval: 10,
+        // 最小值
+        min: 0,
+        // 通过ceil函数来算得表中数据最大值向上十位取整的值作为刻度的最大值
+        max: function formatRoundNum(num) {
+          let integer = Math.ceil(num.max)
+          let length = String(integer).length
+          return (
+            Math.ceil(integer / Math.pow(10, length - 1)) *
+            Math.pow(10, length - 1)
+          )
+        },
         //
         axisTick: {
           show: true
@@ -293,6 +341,9 @@ let initChart = () => {
           show: true
         },
         name: '个数',
+        nameTextStyle: {
+          fontSize: 15
+        },
         axisLine: {
           show: true
         },
@@ -301,23 +352,44 @@ let initChart = () => {
           show: true,
           // 单位以及刻度位置
           formatter: '{value} 个',
-          align: 'inside',
-          margin: 50
+          align: 'center',
+          margin: 50,
+          showMaxLabel: true,
+          showMinLabel: true,
+          fontWeight: 'normal',
+          fontSize: 15
         }
       },
       // 右侧Y轴
       {
         type: 'value',
-        // 刻度线与两侧的距离
-        boundaryGap: ['20%', '20%'],
-        min: '0',
-        // max: `${Math.max(...data.value.amount) || 0}`,
+        // 设置最小间隔
+        minInterval: 5000,
+        // 最大间隔
+        maxInterval: 100000,
+        min: 0,
+        // 通过ceil函数来算得表中数据最大值向上十位取整的值作为刻度的最大值
+        max: function formatRoundNum(num) {
+          let integer = Math.ceil(num.max)
+          // 这里需要把
+          let length = String(integer).length
+          return (
+            Math.ceil(integer / Math.pow(10, length - 1)) *
+            Math.pow(10, length - 1)
+          )
+        },
 
         // 标签指示器
         axisPointer: {
           show: true
         },
         name: '元(人民币)',
+        nameTextStyle: {
+          fontSize: 15
+        },
+        axisTick: {
+          show: true
+        },
         // 刻度标签
         axisLine: {
           show: true
@@ -326,8 +398,11 @@ let initChart = () => {
           show: true,
           // 单位以及刻度位置
           formatter: '{value} 元',
-          align: 'inside',
-          margin: 10
+          margin: 10,
+          showMaxLabel: true,
+          showMinLabel: true,
+          fontWeight: 'normal',
+          fontSize: 15
         }
       }
     ],
@@ -421,14 +496,13 @@ let initChart = () => {
           // 各个柱形图颜色, 每一行数据的颜色应该相同
           color: function (params) {
             let colorList = [
-              '#2D383A',
-              '#2D383A',
-              '#2D383A',
-              '#2D383A',
-              '#2D383A',
-              '#2D383A',
-              '#2D383A',
-              '#2D383A'
+              '#39A78E',
+              '#39A78E',
+              '#39A78E',
+              '#39A78E',
+              '#39A78E',
+              '#39A78E',
+              '#39A78E'
             ]
             return colorList[params.dataIndex]
           }
@@ -439,8 +513,9 @@ let initChart = () => {
       },
       {
         name: '金额',
-        // bar 表示是柱状图
+        // line 表示是折线图
         type: 'line',
+        // color: '#B57EDC',
         yAxisIndex: 1,
         // 对应轴线的数据
         data: chartData.value.amount
@@ -465,6 +540,6 @@ let initChart = () => {
   height: 600px;
 }
 .chartCheckBox {
-  margin-left: 1100px;
+  margin-left: 900px;
 }
 </style>
