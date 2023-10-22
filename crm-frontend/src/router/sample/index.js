@@ -82,6 +82,10 @@ const routes = [
       {
         path: '/sample/testTable',
         component: () => import('@/views/sample/orgStructure/testTable.vue')
+      },
+      {
+        path: '/sample/customChartTest',
+        component: () => import('@/views/sample/CustomChartTest.vue')
       }
     ]
   }

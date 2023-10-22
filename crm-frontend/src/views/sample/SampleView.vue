@@ -105,6 +105,10 @@ const menus = reactive([
   {
     path: '/sample/newsCenter',
     text: '新闻中心演示'
+  },
+  {
+    path: '/sample/customChartTest',
+    text: '测试客户数据展示'
   }
 ])
 </script>
