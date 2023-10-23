@@ -70,8 +70,9 @@ const importFile = async () => {
       type: 'binary'
     })
     // 下标0 表示 拿到excel文件里的第一张表
+    // wsname 为表名
     const wsname = excelData.SheetNames[0]
-    // 把表里的数据转化为josn
+    console.log('wsname', wsname)
     const content = XLSX.utils.sheet_to_json(excelData.Sheets[wsname])
     console.log(content)
   }
