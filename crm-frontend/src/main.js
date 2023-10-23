@@ -26,7 +26,6 @@ app.use(ElementPlus, {
 })
 app.use(createPinia())
 app.use(router)
-app.use(ElementPlus)
 app.mount('#app')
 
 // 安装HTTP中间件
@@ -36,6 +35,3 @@ installHttp(router)
 // 安装ElIcon
 import installElIcon from './plugins/el-icon'
 installElIcon(app)
-
-
-

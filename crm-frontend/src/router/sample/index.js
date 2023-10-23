@@ -95,6 +95,10 @@ const routes = [
       {
         path: '/sample/customChartTest',
         component: () => import('@/views/sample/CustomChartTest.vue')
+      },
+      {
+        path: '/sample/bulkOpe',
+        component: () => import('@/views/sample/BlukOpeTest.vue')
       }
     ]
   }
