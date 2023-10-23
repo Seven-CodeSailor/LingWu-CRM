@@ -118,6 +118,10 @@ const menus = reactive([
   {
     path: '/sample/customChartTest',
     text: '测试客户数据展示'
+  },
+  {
+    path: '/sample/bulkOpe',
+    text: '测试批量操作'
   }
 ])
 </script>

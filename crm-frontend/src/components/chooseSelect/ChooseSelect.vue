@@ -37,13 +37,12 @@ onMounted(() => {
     placeholder="请选择"
     size="large"
     clearable
-    effect="dark"
     @change="emit('update:cid', value.label)"
   >
     <!-- 搜索框 -->
     <el-input
       v-model="input1"
-      class="w-50 m-2"
+      class="w-50 m-2 search"
       size="default"
       placeholder="请输入"
       :suffix-icon="Search"
@@ -58,4 +57,8 @@ onMounted(() => {
   </el-select>
 </template>
 
-<style></style>
+<style scoped>
+.search {
+  padding: 5% 5%;
+}
+</style>
