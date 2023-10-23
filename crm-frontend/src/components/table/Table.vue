@@ -4,6 +4,26 @@ import { onMounted } from 'vue'
 /**
  * dataArr:这是从后端接口拿到的数组对象
  * isSelect: 这是是否给表格添加多选框
+ * <Table :dataArr="tableData" :isSelect="true">
+      <template #default>
+        <el-table-column label="操作">
+          <template #default>
+            <el-button size="small">编辑</el-button>
+            <!-- <el-button
+              size="small"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+              >删除</el-button
+            > -->
+            <PopMessage
+              :megObj="{ btn: '删除', mes: '你确认要删除吗？' }"
+              @confirm="console.log('父组件监听到子组件点了确认')"
+            ></PopMessage>
+          </template>
+        </el-table-column>
+      </template>
+      <template #footer> <p>这里可以合计表格数据</p> </template>
+    </Table>
  */
 const props = defineProps({
   dataArr: {
@@ -41,4 +61,5 @@ onMounted(() => {
       <el-empty description="没有数据"></el-empty>
     </template>
   </el-table>
+  <slot name="footer"></slot>
 </template>

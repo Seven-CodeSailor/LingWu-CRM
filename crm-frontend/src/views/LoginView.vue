@@ -1,18 +1,67 @@
 <!-- 登录页面 -->
 <template>
   <el-row class="login-page">
-    <el-col :span="12" class="bgImg"></el-col>
+    <el-col :span="12" class="bgImg">
+      <div class="container">
+        <h1 id="title">01星球-大项目</h1>
+        <div class="card" ref="cardElement1">
+          <div class="content">
+            <h2>01</h2>
+            <h3>01星球</h3>
+            <p>
+              使用 element-ui 的 input 输入框时，你可以通过以
+              下几种方式来改变输入框的样式，使用 ::placeholder
+              选择器来改变默认提示文字的样式
+            </p>
+            <a href="#">关注我们</a>
+          </div>
+        </div>
+        <div class="card" ref="cardElement2">
+          <div class="content">
+            <h2>01</h2>
+            <h3>01星球</h3>
+            <p>
+              使用 element-ui 的 input 输入框时，你可以通过以
+              下几种方式来改变输入框的样式，使用 ::placeholder
+              选择器来改变默认提示文字的样式
+            </p>
+            <a href="#">加入我们</a>
+          </div>
+        </div>
+      </div>
+    </el-col>
     <el-col :span="8" :offset="2" class="from">
-      <el-card class="box-card">
+      <div class="box-card">
+        <p class="watter1"></p>
+        <p class="watter2"></p>
         <div class="title">
           <h1>登录</h1>
         </div>
-        <el-form :model="formData" status-icon label-width="60px">
+        <el-form
+          label-position="top"
+          :model="formData"
+          status-icon
+          scroll-to-error
+          style="width: 50%"
+        >
           <el-form-item label="账号" prop="username">
-            <el-input v-model="formData.username"></el-input>
+            <el-input
+              class="theInput"
+              prefix-icon="IconUser"
+              autofocus
+              v-model="formData.username"
+              input-style="color: #a55eea; width: 100%;"
+            ></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input v-model="formData.password" type="password"></el-input>
+            <el-input
+              class="theInput"
+              v-model="formData.password"
+              prefix-icon="IconKey"
+              type="password"
+              show-password
+              input-style="color: #a55eea;"
+            ></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm()">登录</el-button>
@@ -21,7 +70,7 @@
         </el-form>
         <!-- TODO[TEST_CODE]: 测试代码后期发布需要删除 -->
         <router-link to="/sample">进入示例演示页面</router-link>
-      </el-card>
+      </div>
     </el-col>
   </el-row>
 
@@ -38,10 +87,11 @@
 <script setup>
 import Verify from '@/components/verifition/Verify.vue'
 // import Request from '@/apis/request'
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { login } from '@/apis/login'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import VanillaTilt from 'vanilla-tilt'
 
 // 获取router对象
 const $router = useRouter()
@@ -51,7 +101,21 @@ const formData = reactive({
   username: '',
   password: ''
 })
-
+// 卡片添加3d效果的dom元素
+const cardElement1 = ref(null)
+const cardElement2 = ref(null)
+// 引用挂载3d倾斜库Vanilla-tilt.js
+onMounted(() => {
+  const cards = document.querySelectorAll('.card')
+  cards.forEach((card) => {
+    VanillaTilt.init(card, {
+      max: 15,
+      speed: 400,
+      glare: true,
+      'max-glare': 1
+    })
+  })
+})
 /**
  * 执行登录
  * @param code 验证码字符串
@@ -135,20 +199,150 @@ function handleSuccess(res) {
 </script>
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  height: 100vh;
+  overflow: hidden;
+}
 .login-page {
   height: 100vh;
-  background-color: #fff;
+  /* background-color: #5d7fba; */
+  background-color: #161623;
   /* background: url('../../public/loginImg.webp') no-repeat center/cover; */
-  /* filter: blur(2px); */
+}
+#title {
+  font-size: 5em;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  letter-spacing: 4px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateY(200px);
+  opacity: 1;
+  transition: 0.3s 0.1s;
 }
 /* 背景的样式 */
 .bgImg {
   background-color: #a29bfe;
   border-radius: 0 40px 40px 0;
-  /* background: url('../../../documents/00、preview-pic/architecture.jpg')
-    no-repeat 60% center / 240px auto; */
-  background: url('../../public/loginImg.jpg') no-repeat center/cover;
+  /* background: url('../../public/loginImg.jpg') no-repeat center/cover; */
 }
+.bgImg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #161623;
+}
+.bgImg::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#2196f3, #e91e63);
+  clip-path: circle(30% at right 70%);
+}
+.bgImg::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#2196f3, #e91e63);
+  clip-path: circle(20% at 10% 10%);
+}
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 1200px;
+  flex-wrap: wrap;
+  z-index: 1;
+}
+.container .card {
+  position: relative;
+  top: 200px;
+  width: 20%;
+  height: 150px;
+  /* width: 4%;
+  height: 50px; */
+  margin: 30px;
+  box-shadow: 20px 20px 20px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  background-color: rgba(206, 217, 255, 0.2);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  transition: 0.5s 0.2s;
+  opacity: 0;
+}
+.bgImg:hover .card {
+  /* width: 400px; */
+  top: 0;
+  opacity: 1;
+}
+.bgImg:hover #title {
+  transform: translateY(0px);
+  opacity: 0;
+}
+.card:hover {
+  height: 400px;
+}
+.container .card .content {
+  text-align: center;
+  padding: 20px;
+  opacity: 0;
+  transition: 0.5s;
+  transform: translateY(100px);
+  user-select: none;
+}
+.container .card:hover .content {
+  transform: translateY(0px);
+  opacity: 1;
+}
+.container .card h2 {
+  position: absolute;
+  font-size: 8em;
+  left: 140px;
+  top: -40px;
+  color: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+.container .card .content h3 {
+  font-size: 1.8em;
+  color: #fff;
+  z-index: 1;
+}
+.container .card .content p {
+  font-size: 1em;
+  color: #fff;
+  font-weight: 300;
+}
+.container .card .content a {
+  position: relative;
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 20px;
+  color: #000;
+  background: #fff;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 500;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.5);
+}
+
 .title {
   display: flex;
   align-items: center;
@@ -158,23 +352,91 @@ function handleSuccess(res) {
 }
 
 .from {
-  /* background-color: #999; */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  /* background-color: #333; */
+  color: rgb(255, 255, 255);
 }
 .box-card {
+  position: relative;
   width: 100%;
-  height: 50%;
+  height: 80%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* border-radius: 65% 35% 46% 54% / 40% 55% 45% 60%; */
-  border-top: 1px solid rgba(255, 255, 255, 0.5);
-  border-left: 1px solid rgba(255, 255, 255, 0.5);
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  /* background-color: rgba(0, 0, 0, 0.5); */
-  /* color: #fff; */
+  border-radius: 30% 70% 70% 30% / 45% 20% 80% 55%;
+  border-top: 1px solid rgba(144, 154, 215, 0.5);
+  border-left: 1px solid rgba(220, 228, 239, 0.5);
+  border-right: 1px solid rgba(212, 204, 204, 0.2);
+  border-bottom: 1px solid rgba(217, 205, 205, 0.2);
+  background-color: rgba(22, 22, 35, 0.5);
+  /* box-shadow: 6px 10px 10px 8px rgba(12, 16, 49, 0.1); */
+  box-shadow: inset 10px 20px 30px rgba(45, 57, 113, 0.3),
+    10px 10px 20px rgba(34, 60, 123, 0.6), 15px 15px 30px rgba(28, 85, 158, 0.2),
+    inset -10px -10px 15px rgba(195, 235, 255, 0.8);
+  transform: translate(0, 10%);
+  backdrop-filter: blur(10px);
+
+  animation: action 3s linear infinite alternate;
+}
+button {
+  margin-top: 20px;
+  margin-right: 10px;
+}
+.watter1 {
+  position: absolute;
+  left: 70%;
+  top: 16%;
+  width: 20px;
+  height: 20px;
+  background-color: #fffbfb;
+  border-radius: 47% 53% 25% 75% / 36% 66% 34% 64%;
+  animation: watter 3s linear infinite alternate;
+}
+.watter2 {
+  position: absolute;
+  left: 60%;
+  top: 18%;
+  width: 16px;
+  height: 6px;
+  background-color: #fffbfb;
+  border-radius: 47% 53% 25% 75% / 36% 66% 34% 64%;
+  animation: watter2 3s linear infinite alternate;
+}
+
+/* 动画 */
+/* 动画 */
+@keyframes action {
+  25% {
+    border-radius: 30% 70% 68% 32% / 47% 24% 76% 53%;
+  }
+
+  50% {
+    border-radius: 36% 64% 63% 37% / 51% 34% 66% 49%;
+  }
+
+  75% {
+    border-radius: 46% 54% 51% 49% / 57% 38% 62% 43%;
+  }
+
+  100% {
+    border-radius: 31% 69% 64% 36% / 47% 29% 71% 53%;
+  }
+}
+@keyframes watter {
+  50% {
+    left: 72%;
+    top: 18%;
+    border-radius: 31% 69% 64% 36% / 47% 29% 71% 53%;
+    transform: scale(0.8) rotateZ(30deg);
+  }
+}
+@keyframes watter2 {
+  50% {
+    opacity: 0.9;
+    left: 62%;
+    top: 18%;
+    border-radius: 47% 56% 25% 75% / 37% 66% 30% 64%;
+    transform: scale(0.8) rotateZ(30deg);
+  }
 }
 </style>
