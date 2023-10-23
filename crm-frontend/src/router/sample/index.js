@@ -60,6 +60,13 @@ const routes = [
           text: '测试专用2'
         }
       },
+      {
+        path: '/sample/test2',
+        component: () => import('@/views/sample/TestView2.vue'),
+        meta: {
+          text: '测试专用3'
+        }
+      },
       // 销售图表展示的临时路由，后期会删除
       {
         path: '/sample/chartDemo',

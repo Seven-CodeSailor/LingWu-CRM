@@ -97,6 +97,10 @@ const menus = reactive([
     path: '/sample/test1',
     text: '测试专用2'
   },
+  {
+    path: '/sample/test2',
+    text: '测试专用3'
+  },
   { path: '/sample/chartDemo', text: '销售图表演示(临时)' },
   {
     path: '/sample/organizationStructure',
