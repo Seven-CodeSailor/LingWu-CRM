@@ -147,7 +147,7 @@ function handleSuccess(res) {
   border-radius: 0 40px 40px 0;
   /* background: url('../../../documents/00、preview-pic/architecture.jpg')
     no-repeat 60% center / 240px auto; */
-  background: url('../../public/loginImg.jpg') no-repeat center/cover;
+  background: url('/loginImg.jpg');
 }
 .title {
   display: flex;
