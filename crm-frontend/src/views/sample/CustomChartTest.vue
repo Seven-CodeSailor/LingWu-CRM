@@ -10,7 +10,7 @@
 import CustomDataStatistics from '@/components/customDataStatistics/CustomDataStatistics.vue'
 import CustomDataPie from '@/components/customDataPie/CustomDataPie.vue'
 const getData = (time = 1) => {
-  let data = { title: '客户数据统计' }
+  let data = { title: '客户数据统计', x: ['我的客户', '下属客户', '公海客户'] }
   switch (time) {
     case 1:
       data.contractsNumber = [3, 2, 1]
