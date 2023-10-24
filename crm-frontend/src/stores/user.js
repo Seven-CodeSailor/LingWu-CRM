@@ -132,7 +132,15 @@ let testMenus = [
     id: 4,
     text: '库存管理',
     icon: 'IconHouse',
-    children: []
+    children: [
+      {
+        id: 1,
+        text: '出库明细',
+        href: '/outstaregedetail',
+        icon: 'IconTickets',
+        pid: 3
+      }
+    ]
   }
 ]
 
