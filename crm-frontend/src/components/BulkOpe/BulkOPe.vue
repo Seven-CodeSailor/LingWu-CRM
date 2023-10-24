@@ -17,10 +17,20 @@
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <Excel :getData="getData" ref="excel">
+  <Excel
+    :getData="getData"
+    ref="excel"
+    :tableName="tableName"
+    :excelName="excelName"
+  >
     <slot name="excel"></slot>
   </Excel>
-  <FileUpload ref="file">
+  <FileUpload
+    ref="file"
+    :path="path"
+    :StreamPath="StreamPath"
+    :baseURL="baseURL"
+  >
     <slot name="file"></slot>
   </FileUpload>
   <Print ref="print">
@@ -37,7 +47,7 @@ import Print from '@/components/BulkOpe/Print.vue'
 
 /**
  * 组件使用：
- *    <BulkOPe :excelData="excel" :getOpt="() => [0, 1, 2]">
+ *    <BulkOPe :excelData="excel" :getOpt="() => [0, 1, 2]" path="/file/upload" baseURL="http://localhost:8090">
  *      <template #excel>
  *      </template>
  *      <template #file>
@@ -47,6 +57,7 @@ import Print from '@/components/BulkOpe/Print.vue'
  *    </BulkOPe>
  *
  * 传入数据(父向子传递)：
+ *   1 :excelData="excel"
  *    const excel = () => {
  *      // data为数组类型，数组里面存放多个对象，对象内部存放多个键值对，键为属性名，值为具体属性
  *      let data = [
@@ -61,6 +72,12 @@ import Print from '@/components/BulkOpe/Print.vue'
  *      // 从pinia里面拿到数据
  *      return data
  *    }
+ *
+ *   2 :getOpt="() => [0, 1, 2]"
+ *    给getOpt传递一个函数，函数返回值为一个数组，数组取值范围为0，1，2。0表示启用批量导出，1表示启用批量导入，2表示启用打印表格
+ *   3  path    FormData上传文件的路径,为字符串类型，启用批量导入时才需要传该参数，参考'/file/upload'
+ *   4  StreamPath    Stream上传文件的路径,为字符串类型，启用批量导入时才需要传该参数，参考'/user/modify-user?nickname=莉莉丝&age=10'
+ *   5  baseURL    上传文件的主机名+端口，启用批量导入时才需要传该参数，
  *
  * 传出数据(子向父传递)：无
  */
@@ -77,6 +94,24 @@ const props = defineProps({
     default: () => {
       return [0, 1, 2]
     }
+  },
+  // 批量导入操作的 路径 和 主机名+端口
+  path: {
+    type: String
+  },
+  baseURL: {
+    type: String
+  },
+  StreamPath: {
+    type: String
+  },
+  tableName: {
+    type: String,
+    default: 'Data'
+  },
+  excelName: {
+    type: String,
+    default: 'SheetJSVueAoO.xlsx'
   }
 })
 
@@ -105,6 +140,7 @@ const openPrint = () => {
   print.value.showDialog()
 }
 
+// 获取表格所需的数据
 const getData = () => {
   return props.excelData()
 }
