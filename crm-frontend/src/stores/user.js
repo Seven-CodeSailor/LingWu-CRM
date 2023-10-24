@@ -127,6 +127,12 @@ let testMenus = [
         pid: 3
       }
     ]
+  },
+  {
+    id: 4,
+    text: '库存管理',
+    icon: 'IconHouse',
+    children: []
   }
 ]
 
