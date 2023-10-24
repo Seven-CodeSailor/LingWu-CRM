@@ -2,7 +2,6 @@
   <div style="color: red">测试BaseDataList组件</div>
   <!-- 测试 -->
   <BaseDataList
-    :title="sendData.title"
     :msg="sendData.msg"
     :table-column-attribute="sendData.tableColumnAttribute"
     :use-dropdown-menu="sendData.useDropdownMenu"

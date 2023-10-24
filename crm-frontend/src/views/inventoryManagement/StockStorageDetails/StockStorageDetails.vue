@@ -4,12 +4,17 @@
       :table-column-attribute="tableColumnAttribute"
       :use-operate-column="false"
       :page-sizes="[5, 10, 15]"
-      :total="99"
+      :total="total"
+      :table-data="tableData"
+      @update-table-data="updateTableData"
     >
       <template #menu>
         <div class="menu">
           <div class="left">
-            <el-button style="margin-right: 4px">
+            <el-button
+              style="margin-right: 4px"
+              @click="getStockStorageList(1, 5)"
+            >
               <el-icon style="margin-right: 4px"><icon-refresh /></el-icon
               >刷新</el-button
             >
@@ -43,10 +48,12 @@
 
 <script setup>
 // 冰雾
+import { ref, onMounted } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
+import { queryStorageDetails } from '@/apis/inventory-manager/index.js'
 const tableColumnAttribute = [
   {
     prop: 'goodsIdAndSkuId',
@@ -83,6 +90,29 @@ const tableColumnAttribute = [
   }
 ]
 
+const tableData = ref([
+  {
+    goodsIdAndSkuId: '商品：abc\n' + 'SKU：888',
+    goodsNameAndSkuNmae: '商品名：abc\n' + 'SKU名：888',
+    number: '888',
+    categoryName: '车型库',
+    storeName: 'hhhh',
+    intoIntro: '2022-1-2',
+    intoTime: '2021-9-9',
+    remarks: '哇哇哇哇'
+  },
+  {
+    goodsIdAndSkuId: 'abc',
+    goodsNameAndSkuNmae: '哇哈哈哈',
+    number: '888',
+    categoryName: '车型库',
+    storeName: 'hhhh',
+    intoIntro: '2022-1-2',
+    intoTime: '2021-9-9',
+    remarks: '哇哇哇哇'
+  }
+])
+const total = ref(99)
 const excel = () => {
   return [
     {
@@ -109,6 +139,34 @@ const changecid = (value) => {
   //发送网络请求获取数据
   console.log(value)
 }
+
+const getStockStorageList = (pageIndex, pageSize) => {
+  queryStorageDetails({ pageIndex, pageSize }).then((res) => {
+    const { rows, total } = res.data.data
+    console.log('res', res.data)
+    total.value = total
+    tableData.value = rows.map((item) => {
+      return {
+        goodsIdAndSkuId: `商品：${item.goods_id}\n' + 'SKU：${item.sku_id}`,
+        goodsNameAndSkuNmae:
+          `商品名：${item.goods_name}\n' + 'SKU名：${item.sku_name}` + '/',
+        number: item.number,
+        categoryName: item.category_name,
+        storeName: item.store_name,
+        intoIntro: item.into_intro,
+        intoTime: item.into_time,
+        remarks: item.remarks
+      }
+    })
+  })
+}
+
+const updateTableData = (pageSize, currentPage) => {
+  getStockStorageList(currentPage, pageSize)
+}
+onMounted(() => {
+  getStockStorageList(1, 5)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -128,5 +186,8 @@ const changecid = (value) => {
       align-items: center;
     }
   }
+}
+:deep(.el-table .cell) {
+  white-space: pre-wrap;
 }
 </style>
