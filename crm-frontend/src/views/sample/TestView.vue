@@ -132,6 +132,7 @@ const sendData = {
     }
   ],
   pageSizes: [2, 10, 15, 200],
+  // total 表格的总数据量     total传入数据 和 usePagination为true 才能显示分页
   total: 100,
   // 是否使用分页
   usePagination: false,

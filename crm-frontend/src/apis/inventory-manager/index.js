@@ -25,3 +25,13 @@ export const queryStorageDetails = (data, success, fail) => {
       fail()
     })
 }
+
+export const queryInStorage = (data) => {
+  // 获取不到数据，后端只是提供了文档，未实现接口，这里只是一个参考，可在此模拟数据，然后存在pinia里面
+  // 模拟数据不用通过请求，直接写死数据，下面这段可以注释掉
+  return Request.requestJson(Request.GET, currBaseUrl + 'query_instorage', {
+    params: {
+      ...data
+    }
+  })
+}

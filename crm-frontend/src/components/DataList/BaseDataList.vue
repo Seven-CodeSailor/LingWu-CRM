@@ -151,7 +151,7 @@ const props = defineProps({
   // 操作说明的提示
   msg: {
     type: String,
-    require: true,
+    require: false,
     default: '操作提示的默认值'
   },
   // 表格的列属性
