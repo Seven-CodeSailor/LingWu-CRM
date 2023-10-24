@@ -16,3 +16,4 @@ import { Search } from '@element-plus/icons-vue'
 </script>
 
 <style scoped></style>
+<style scoped></style>
