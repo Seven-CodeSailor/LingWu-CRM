@@ -2,7 +2,7 @@
 import Table from '@/components/table/Table.vue'
 // import VueLine from 'v-charts/lib/line.common.js'
 // import { onMounted, toRefs } from 'vue'
-import PopMessage from '@/components/PopMessage.vue'
+import PopMessage from '@/components/PopMessage/PopMessage.vue'
 import { ref } from 'vue'
 const tableData = ref([
   {

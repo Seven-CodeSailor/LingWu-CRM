@@ -8,7 +8,7 @@
 
 <script setup>
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
-import ChooseSelect from '@/components/ChooseSelect.vue'
+import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 const excel = () => {
   return [
     {

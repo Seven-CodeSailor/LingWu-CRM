@@ -63,7 +63,7 @@
               input-style="color: #a55eea;"
             ></el-input>
           </el-form-item>
-          <el-form-item>
+          <el-form-item class="wrap">
             <el-button type="primary" @click="submitForm()">登录</el-button>
             <el-button @click="useVerify">测试</el-button>
           </el-form-item>
@@ -198,7 +198,7 @@ function handleSuccess(res) {
 }
 </script>
 
-<style>
+<style scoped>
 * {
   margin: 0;
   padding: 0;
@@ -352,6 +352,7 @@ body {
 }
 
 .from {
+  margin: 0 auto;
   /* background-color: #333; */
   color: rgb(255, 255, 255);
 }
@@ -402,7 +403,22 @@ button {
   border-radius: 47% 53% 25% 75% / 36% 66% 34% 64%;
   animation: watter2 3s linear infinite alternate;
 }
-
+.wrap {
+  display: flex;
+  width: 100%;
+  /* background-color: #fff; */
+}
+button {
+  padding: 6px 16px;
+  margin: 28px 20px;
+  background-color: rgba(138, 93, 193, 0.8);
+  color: #fff;
+  border: 0px;
+  border-radius: 4px;
+}
+button:hover {
+  box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.4);
+}
 /* 动画 */
 /* 动画 */
 @keyframes action {
