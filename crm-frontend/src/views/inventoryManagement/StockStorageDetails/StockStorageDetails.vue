@@ -7,6 +7,7 @@
       :total="total"
       :table-data="tableData"
       @update-table-data="updateTableData"
+      ref="baseDataListRef"
     >
       <template #menu>
         <div class="menu">
@@ -89,7 +90,7 @@ const tableColumnAttribute = [
     label: '备注'
   }
 ]
-
+const baseDataListRef = ref(null)
 const tableData = ref([
   {
     goodsIdAndSkuId: '商品：abc\n' + 'SKU：888',
@@ -141,6 +142,7 @@ const changecid = (value) => {
 }
 
 const getStockStorageList = (pageIndex, pageSize) => {
+  // baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   queryStorageDetails({ pageIndex, pageSize }).then((res) => {
     const { rows, total } = res.data.data
     console.log('res', res.data)
@@ -158,6 +160,7 @@ const getStockStorageList = (pageIndex, pageSize) => {
         remarks: item.remarks
       }
     })
+    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   })
 }
 
