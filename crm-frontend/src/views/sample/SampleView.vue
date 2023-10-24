@@ -110,7 +110,7 @@ const menus = reactive([
     path: '/sample/newsCenter',
     text: '新闻中心演示'
   },
-  // treemenu测试界面，稍后删除
+  // treemenu测试界面，以后会删除
   {
     path: '/sample/treemenu',
     text: 'treemenu演示界面'

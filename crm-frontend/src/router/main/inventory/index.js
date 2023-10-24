@@ -14,6 +14,15 @@ const routes = [
           import(
             '@/views/inventoryManagement/StorageDetails/StorageDetails.vue'
           )
+      },
+      {
+        // 出库明细
+        path: '/inventory/outstoragedetails',
+        name: 'outstoragedetails',
+        component: () =>
+          import(
+            '@/views/inventoryManagement/outstoragedetails/OutStorageDetails.vue'
+          )
       }
     ]
   }

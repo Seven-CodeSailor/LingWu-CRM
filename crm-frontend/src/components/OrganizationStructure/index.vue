@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-22 18:16:13
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-22 19:32:39
+ * @LastEditTime: 2023-10-24 18:46:42
  * @FilePath: \zero-one-crmsys\crm-frontend\src\components\OrganizationStructure\index.vue
  * @Description: 
  * 
@@ -63,6 +63,16 @@
 </template>
 
 <script setup>
+/*组件使用：
+表格为冰雾的表格组件
+接收两个props，sendData、treeData，分别对应表格区和树形区的数据
+
+sendData里包含表格所有的数据，这里只需要注意:usePagination="sendData.usePagination"，可以指定是否需要分页组件，然后这里是默认不要header的
+
+这里配置的函数也写了对应的注释
+
+treeData里含有树形组件需要的树状数组dataArr和对el-tree的配置对象defaultProps
+*/
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import { ref, reactive } from 'vue'
 const props = defineProps({
@@ -79,15 +89,16 @@ const props = defineProps({
 const sendData = reactive(props.sendData)
 const treeData = reactive(props.treeData)
 const baseDataListRef = ref(null)
+
+//获取被勾选的行的数据（组件暴露出来的rows）
 const getRows = () => {
-  // 获取组件暴露出来的rows
   console.log('rows', baseDataListRef.value.rows)
 }
+// 关闭表格加载动画
 const changeLoadAnimation = () => {
-  // 关闭表格加载动画
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
-
+//树形组件点击事件
 const handleNodeClick = (node) => {
   console.log('node', node)
 }

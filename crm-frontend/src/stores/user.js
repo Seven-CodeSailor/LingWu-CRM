@@ -164,7 +164,7 @@ let testMenus = [
       {
         id: 6,
         text: '出库明细',
-        href: '/un-21',
+        href: '/inventory/outstoragedetails',
         icon: 'IconHouse',
         pid: 4
       }
