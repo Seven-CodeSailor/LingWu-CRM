@@ -1,8 +1,8 @@
 <script setup>
-import Table from '@/components/Table.vue'
+import Table from '@/components/table/Table.vue'
 // import VueLine from 'v-charts/lib/line.common.js'
 // import { onMounted, toRefs } from 'vue'
-import PopMessage from '@/components/PopMessage.vue'
+import PopMessage from '@/components/PopMessage/PopMessage.vue'
 import { ref } from 'vue'
 const tableData = ref([
   {
@@ -85,8 +85,9 @@ const tableData = ref([
           </template>
         </el-table-column>
       </template>
+      <template #footer> <p>这里可以合计表格数据</p> </template>
     </Table>
-    <p>这里可以合计表格数据</p>
+    <!-- <p>这里可以合计表格数据</p> -->
   </el-card>
   <!-- <VueLine :data="chartData"></VueLine> -->
 </template>
