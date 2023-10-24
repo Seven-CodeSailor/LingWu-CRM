@@ -15,6 +15,26 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import * as echarts from 'echarts'
+/**
+ * 组件使用：
+ *    <CustomDataStatistics :getData="getData"></CustomDataStatistics>
+ * 传入数据父向子传递)：
+ *    // time表示时间范围，根据时间范围向后端发送请求获取相应的数据，time默认为1
+ *    const getData = (time = 1) = {
+ *      // data数据样式
+ *      let data = {
+ *        title: '', //图表标题
+ *        x: ['我的客户', '下属客户', '公海客户'] //x轴参数，默认为['我的客户', '下属客户', '公海客户']
+ *        contractsNumber: [] // 合同数
+ *        amount: [] //总金额数
+ *      }
+ *      // 网络请求获取数据
+ *      // 将数据存到pinia
+ *      // 从pinia里面拿到数据
+ *      return data
+ *    }
+ *  传出数据(子向父传递)：无
+ */
 
 let props = defineProps({
   // 获取图表所需数据
@@ -30,6 +50,7 @@ let props = defineProps({
 // 图表数据
 let data = ref({
   title: '数据统计',
+  x: ['我的客户', '下属客户', '公海客户'],
   contractsNumber: [0, 0, 0],
   amount: [0, 0, 0]
 })
@@ -59,7 +80,7 @@ let initData = () => {
       axisTick: {
         alignWithLabel: true
       },
-      data: ['我的客户', '下属客户', '公海客户']
+      data: data.value.x
     },
     yAxis: [
       {
@@ -179,8 +200,8 @@ watch(time, () => {
 <style lang="scss" scoped>
 .box {
   display: inline-block;
-  width: 540px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
   .select {
     margin-left: 60%;
     right: 0;

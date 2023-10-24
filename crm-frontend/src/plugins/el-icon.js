@@ -6,9 +6,11 @@ import { User } from '@element-plus/icons-vue'
 import { Tickets } from '@element-plus/icons-vue'
 import { UploadFilled } from '@element-plus/icons-vue'
 import { QuestionFilled } from '@element-plus/icons-vue'
-import { Delete, Edit, CaretBottom } from '@element-plus/icons-vue'
+import { Delete, Edit, CaretBottom, Back } from '@element-plus/icons-vue'
 import { Search } from '@element-plus/icons-vue'
 import { InfoFilled } from '@element-plus/icons-vue'
+import { Key } from '@element-plus/icons-vue'
+import { House } from '@element-plus/icons-vue'
 export default (app) => {
   app.component('IconMenu', Menu)
   app.component('IconSetting', Setting)
@@ -21,4 +23,7 @@ export default (app) => {
   app.component('IconCaretBottom', CaretBottom)
   app.component('IconSearch', Search)
   app.component('IconInfoFilled', InfoFilled)
+  app.component('IconBack', Back)
+  app.component('IconKey', Key)
+  app.component('IconHouse', House)
 }

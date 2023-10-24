@@ -55,6 +55,12 @@ toolbarConfig.toolbarKeys = [
   // 菜单 key
   'bold',
   'italic',
+  'color',
+  'underline',
+  'fontSize',
+  'fontFamily',
+  'lineHeight',
+  'emotion',
 
   // 菜单组，包含多个菜单
   {
@@ -69,8 +75,7 @@ toolbarConfig.toolbarKeys = [
 toolbarConfig.excludeKeys = [
   'group-more-style' // 排除菜单组，写菜单组 key 的值即可
 ]
-
-//
+//菜单插入的位置
 // toolbarConfig.insertKeys = {
 //   index: 2 // 插入的位置，基于当前的 toolbarKeys
 // }

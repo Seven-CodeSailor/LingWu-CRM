@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { userStore } from '../stores/user'
+// import { ElMessage } from 'element-plus'
+// import { userStore } from '../stores/user'
 const routes = []
 routes.push(
   {

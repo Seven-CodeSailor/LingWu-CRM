@@ -64,6 +64,8 @@
 .el-main {
   padding: 20px;
   background-color: #edecec;
+  overflow: scroll;
+  height: 95vh;
 }
 </style>
 
@@ -103,6 +105,19 @@ const menus = reactive([
   {
     path: '/sample/newsCenter',
     text: '新闻中心演示'
+  },
+  // treemenu测试界面，稍后删除
+  {
+    path: '/sample/treemenu',
+    text: 'treemenu演示界面'
+  },
+  {
+    path: '/sample/customChartTest',
+    text: '测试客户数据展示'
+  },
+  {
+    path: '/sample/bulkOpe',
+    text: '测试批量操作'
   }
 ])
 </script>

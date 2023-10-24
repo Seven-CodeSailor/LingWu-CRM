@@ -26,7 +26,6 @@ app.use(ElementPlus, {
 })
 app.use(createPinia())
 app.use(router)
-app.use(ElementPlus)
 app.mount('#app')
 
 // 安装HTTP中间件

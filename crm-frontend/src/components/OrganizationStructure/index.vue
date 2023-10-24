@@ -1,3 +1,13 @@
+<!--
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-10-22 18:16:13
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-10-22 19:32:39
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\components\OrganizationStructure\index.vue
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
+-->
 <!-- 该组件需要Table、Tree、分页、面包屑组件为子组件 -->
 <template>
   <div class="container">
@@ -5,59 +15,96 @@
       <el-row>
         <!-- 左侧树形菜单 -->
         <el-col :span="6" class="left">
-          <div>树形菜单</div>
+          <el-card>
+            <div class="header">
+              <div>
+                <h1>树形菜单</h1>
+              </div>
+              <el-button>刷新</el-button>
+            </div>
+
+            <el-tree
+              :data="treeData.treeArr"
+              :defaultProps="treeData.defaultProps"
+              @node-click="handleNodeClick"
+            ></el-tree>
+          </el-card>
         </el-col>
         <!-- 右侧表格 -->
-        <el-col :span="18" class="right">
-          <el-row>表格header</el-row>
-          <div>表格body</div>
+        <el-col :span="1"></el-col>
+        <el-col :span="17" class="right">
+          <BaseDataList
+            :useHeader="false"
+            :table-column-attribute="sendData.tableColumnAttribute"
+            :handle-delete="sendData.handleDelete"
+            :handle-edit="sendData.handleEdit"
+            :table-data="sendData.tableData"
+            :page-sizes="sendData.pageSizes"
+            :total="sendData.total"
+            :usePagination="sendData.usePagination"
+            @update-table-data="get"
+            ref="baseDataListRef"
+          >
+            <!-- 插槽区 -->
+            <template #menu>
+              <div>
+                插槽区
+                <el-button>搜索</el-button>
+                <el-button>刷新</el-button>
+                <el-button @click="getRows">获取被勾选的列</el-button>
+                <el-button @click="changeLoadAnimation">加载动画></el-button>
+              </div>
+            </template>
+          </BaseDataList>
         </el-col>
-      </el-row>
-      <!-- 下侧为分页 -->
-      <el-row class="bottom" v-if="usePag">
-        <div>分页组件</div>
       </el-row>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-//暂时不知道大伙封的组件要什么数据，先随便写了点
+<script setup>
+import BaseDataList from '@/components/DataList/BaseDataList.vue'
+import { ref, reactive } from 'vue'
 const props = defineProps({
-  //是否使用分页
-  usePag: {
-    type: Boolean,
-    required: true,
-    //不写的默认值也是false，避免误以为undefind显式指定一个
-    default: false
-  },
-  //分页数据
-  //预期接收一个对象，包含当前页和页面规格，以成功调用分页组件
-  pageParams: {
+  sendData: {
     type: Object,
-    required: false,
-    default: () => {
-      return {
-        //字段根据后端决定
-        currentPage: 1,
-        pageSize: 10
-      }
-    }
-  },
-
-  //调用树形组件所需的树状数组数据
-  treedata: {
-    type: Array,
     required: true
   },
-
-  //表格数据
-  tableData: {
-    type: Array,
+  treeData: {
+    type: Object,
     required: true
   }
 })
-console.log(props)
+
+const sendData = reactive(props.sendData)
+const treeData = reactive(props.treeData)
+const baseDataListRef = ref(null)
+const getRows = () => {
+  // 获取组件暴露出来的rows
+  console.log('rows', baseDataListRef.value.rows)
+}
+const changeLoadAnimation = () => {
+  // 关闭表格加载动画
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+
+const handleNodeClick = (node) => {
+  console.log('node', node)
+}
 </script>
 
-<style scoped></style>
+<style scoped>
+.left {
+  height: 500px;
+}
+
+.right {
+  height: 550px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>
