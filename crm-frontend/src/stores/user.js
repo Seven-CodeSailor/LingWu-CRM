@@ -132,7 +132,43 @@ let testMenus = [
     id: 4,
     text: '库存管理',
     icon: 'IconHouse',
-    children: []
+    children: [
+      {
+        id: 2,
+        text: '库存清单',
+        href: '/un-21',
+        icon: 'IconHouse',
+        pid: 4
+      },
+      {
+        id: 3,
+        text: '入库单',
+        href: '/un-21',
+        icon: 'IconHouse',
+        pid: 4
+      },
+      {
+        id: 4,
+        text: '入库明细',
+        href: '/inventory/WarehousingDetails',
+        icon: 'IconHouse',
+        pid: 4
+      },
+      {
+        id: 5,
+        text: '出库单',
+        href: '/un-21',
+        icon: 'IconHouse',
+        pid: 4
+      },
+      {
+        id: 6,
+        text: '出库明细',
+        href: '/un-21',
+        icon: 'IconHouse',
+        pid: 4
+      }
+    ]
   }
 ]
 
