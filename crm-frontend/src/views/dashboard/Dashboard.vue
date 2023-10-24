@@ -31,7 +31,7 @@ const form = ref({
     <div class="info">
       <!-- vue3中, v-model是 @update 和 :modeValue 的简写 -->
       <!-- v-model:cid="cate_id.value" -->
-      <ChooseSelect @update:cid="getSelect" cid="abc"></ChooseSelect>
+      <ChooseSelect @update:cid="getSelect"></ChooseSelect>
       <div>拿到子组件选中的值:{{ sonSelectValue }}</div>
       <br />
       <PopMessage

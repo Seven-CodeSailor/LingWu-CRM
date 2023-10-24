@@ -36,13 +36,17 @@ const props = defineProps({
   isSelect: {
     type: Boolean,
     default: false
+  },
+  isLoading: {
+    type: Boolean,
+    default: false
   }
 })
 onMounted(() => {
   if (!props.dataArr) {
     ElMessage.error('表格数据渲染失败')
   }
-  console.log('这是父传子拿到的数组:', props.dataArr)
+  console.log('表格父传子拿到的数组:', props.dataArr)
 })
 </script>
 <template>
@@ -51,6 +55,7 @@ onMounted(() => {
     style="width: 100% hight: 100%;"
     stripe
     height="100%"
+    v-loading="props.isLoading"
   >
     <el-table-column v-if="props.isSelect" type="selection" width="55" />
 
