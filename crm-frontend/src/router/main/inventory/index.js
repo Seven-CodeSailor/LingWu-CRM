@@ -1,20 +1,22 @@
 const routes = [
   {
-  path: '/sample',
-  name: 'Sample',
-  meta: {
-    text: '样本'
-  },
-  redirect: { path: '/sample/file' },
-  component: () => import('@/views/sample/SampleView.vue'),
-  children: [
-    {
-      path: '/outstorage',
-      component: () => import('@/views/inventoryManagement/OutStorage.vue')
-    }
-  ]
-}
-  
+    path: '/inventory',
+    name: 'Inventory',
+    // 路由重定向配置暂定=>晚上开会讨论
+    component: () =>
+      import('@/views/inventoryManagement/inventoryManagement.vue'),
+    children: [
+      {
+        // 入库明细
+        path: '/inventory/WarehousingDetails',
+        name: 'WarehousingDetails',
+        component: () =>
+          import(
+            '@/views/inventoryManagement/StorageDetails/StorageDetails.vue'
+          )
+      }
+    ]
+  }
 ]
 
 export default routes

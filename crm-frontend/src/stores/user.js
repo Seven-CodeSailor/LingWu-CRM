@@ -134,11 +134,39 @@ let testMenus = [
     icon: 'IconHouse',
     children: [
       {
-        id: 1,
+        id: 2,
+        text: '库存清单',
+        href: '/un-21',
+        icon: 'IconHouse',
+        pid: 4
+      },
+      {
+        id: 3,
+        text: '入库单',
+        href: '/un-21',
+        icon: 'IconHouse',
+        pid: 4
+      },
+      {
+        id: 4,
+        text: '入库明细',
+        href: '/inventory/WarehousingDetails',
+        icon: 'IconHouse',
+        pid: 4
+      },
+      {
+        id: 5,
+        text: '出库单',
+        href: '/un-21',
+        icon: 'IconHouse',
+        pid: 4
+      },
+      {
+        id: 6,
         text: '出库明细',
-        href: '/outstaregedetail',
-        icon: 'IconTickets',
-        pid: 3
+        href: '/un-21',
+        icon: 'IconHouse',
+        pid: 4
       }
     ]
   }
