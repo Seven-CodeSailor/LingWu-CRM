@@ -9,9 +9,9 @@
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
 -->
 <script setup>
-import ChooseSelect from '../../components/ChooseSelect.vue'
-import PopMessage from '../../components/PopMessage.vue'
-import DrawerInfo from '../../components/DrawerInfo.vue'
+import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
+import PopMessage from '@/components/PopMessage/PopMessage.vue'
+import DrawerInfo from '@/components/drawerInfo/DrawerInfo.vue'
 import { ref } from 'vue'
 // 这是子组件的选中值
 const sonSelectValue = ref('')
