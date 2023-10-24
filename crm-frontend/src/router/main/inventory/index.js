@@ -23,7 +23,16 @@ const routes = [
           import(
             '@/views/inventoryManagement/outstoragedetails/OutStorageDetails.vue'
           )
-      }
+      },
+      {
+        // 库存清单
+        path: '/inventory/InventoryList',
+        name: 'InventoryList',
+        component: () =>
+          import(
+            '@/views/inventoryManagement/InventoryList/InventoryList.vue'
+          )
+      },
     ]
   }
 ]

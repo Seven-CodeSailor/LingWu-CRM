@@ -136,7 +136,7 @@ let testMenus = [
       {
         id: 2,
         text: '库存清单',
-        href: '/un-21',
+        href: '/inventory/InventoryList',
         icon: 'IconHouse',
         pid: 4
       },
