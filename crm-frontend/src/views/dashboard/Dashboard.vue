@@ -11,7 +11,7 @@
 <script setup>
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 import PopMessage from '@/components/PopMessage/PopMessage.vue'
-import DrawerInfo from '@/components/drawerInfo/DrawerInfo.vue'
+import DrawerInfo from '@/components/DrawerInfo/DrawerInfo.vue'
 import { ref } from 'vue'
 // 这是子组件的选中值
 const sonSelectValue = ref('')
@@ -31,7 +31,7 @@ const form = ref({
     <div class="info">
       <!-- vue3中, v-model是 @update 和 :modeValue 的简写 -->
       <!-- v-model:cid="cate_id.value" -->
-      <ChooseSelect @update:cid="getSelect" cid="abc"></ChooseSelect>
+      <ChooseSelect @update:cid="getSelect"></ChooseSelect>
       <div>拿到子组件选中的值:{{ sonSelectValue }}</div>
       <br />
       <PopMessage

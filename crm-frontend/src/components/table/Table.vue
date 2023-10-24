@@ -1,9 +1,12 @@
 <script setup>
+import { ElMessage } from 'element-plus'
 import { onMounted } from 'vue'
 
 /**
  * dataArr:这是从后端接口拿到的数组对象
  * isSelect: 这是是否给表格添加多选框
+ * 组件用法:template #default 这是插槽用法
+ *          tableData: 表格父传子数据(数组对象)
  * <Table :dataArr="tableData" :isSelect="true">
       <template #default>
         <el-table-column label="操作">
@@ -33,10 +36,17 @@ const props = defineProps({
   isSelect: {
     type: Boolean,
     default: false
+  },
+  isLoading: {
+    type: Boolean,
+    default: false
   }
 })
 onMounted(() => {
-  console.log('这是父传子拿到的数组:', props.dataArr)
+  if (!props.dataArr) {
+    ElMessage.error('表格数据渲染失败')
+  }
+  console.log('表格父传子拿到的数组:', props.dataArr)
 })
 </script>
 <template>
@@ -45,6 +55,7 @@ onMounted(() => {
     style="width: 100% hight: 100%;"
     stripe
     height="100%"
+    v-loading="props.isLoading"
   >
     <el-table-column v-if="props.isSelect" type="selection" width="55" />
 
