@@ -3,15 +3,10 @@
     <el-card class="box-card">
       <template #header v-if="props?.useHeader">
         <div class="card-header">
-          <!-- 面包屑 -->
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item
-              v-for="(item, index) in $route.matched"
-              :to="{ path: item.path }"
-              :key="index"
-              >{{ item.meta.text }}</el-breadcrumb-item
-            >
-          </el-breadcrumb>
+          <h3 style="display: flex; align-items: center">
+            <slot name="ico"></slot>
+            <div style="margin-left: 8px">{{ props.title }}</div>
+          </h3>
           <el-button
             class="button"
             @click="operatingInstructionDialogVisible = true"
@@ -109,9 +104,9 @@
         <el-pagination
           v-model:current-page="paginationData.currentPage"
           v-model:page-size="paginationData.pageSize"
-          :page-sizes="paginationData.pageSizes"
+          :page-sizes="props.pageSizes"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="paginationData.total"
+          :total="props.total"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           style="margin-top: 30px"
@@ -134,6 +129,12 @@
 import { ref } from 'vue'
 
 const props = defineProps({
+  // 标题
+  title: {
+    type: String,
+    require: 'true',
+    default: '标题的默认值'
+  },
   // 操作说明的提示
   msg: {
     type: String,
@@ -223,9 +224,7 @@ const props = defineProps({
 
 const paginationData = ref({
   currentPage: 1,
-  pageSize: props.pageSizes ? props.pageSizes[0] : 5,
-  total: props.total,
-  pageSizes: props.pageSizes
+  pageSize: props.pageSizes ? props.pageSizes[0] : 5
 })
 
 const rows = ref([])

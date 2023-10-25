@@ -2,7 +2,6 @@ import Request from '../request'
 
 // 定义一个功能模块基础url，方便替换
 const currBaseUrl = '/inventory-manager/'
-
 /**
  * 获取入库明细项列表
  * @param {*} data 获取入库明细的数据
@@ -10,8 +9,7 @@ const currBaseUrl = '/inventory-manager/'
  * @param {*} fail 获取数据失败的回调
  */
 export const queryStorageDetails = (data) => {
-  // 获取不到数据，后端只是提供了文档，未实现接口，这里只是一个参考，可在此模拟数据，然后存在pinia里面
-  // 模拟数据不用通过请求，直接写死数据，下面这段可以注释掉
+  // 当有接口就直接使用下面的
   // return Request.requestJson(
   //   Request.GET,
   //   currBaseUrl + 'query-storage-details',
@@ -21,11 +19,16 @@ export const queryStorageDetails = (data) => {
   //     }
   //   }
   // )
-  return new Promise((resolve, reject) => {
-    resolve({
-      p: 1
-    })
-  })
+  // 没有接口就使用下面mock模拟的数据
+  return Request.requestJson(
+    Request.GET,
+    'https://mockapi.eolink.com/KnVGhupeb89500c132462100d3745b0046ecd1264eeb224/inventory-manager/query-storage-details1',
+    {
+      params: {
+        ...data
+      }
+    }
+  )
 }
 // 这个是mock测试用例,暂时别删
 export const getInventortOutTableList = (theUrl) => {

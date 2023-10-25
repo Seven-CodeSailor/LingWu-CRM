@@ -1,10 +1,11 @@
 <template>
   <div class="storage_details">
     <BaseDataList
+      title="入库明细"
       :table-column-attribute="tableColumnAttribute"
       :use-operate-column="false"
       :page-sizes="[5, 10, 15]"
-      :total="total"
+      :total="tableTotal"
       :table-data="tableData"
       @update-table-data="
         (pageSize, currentPage) =>
@@ -50,6 +51,9 @@
           </div>
         </div>
       </template>
+      <template #ico
+        ><el-icon><icon-message-box /></el-icon
+      ></template>
     </BaseDataList>
   </div>
 </template>
@@ -97,29 +101,8 @@ const tableColumnAttribute = [
   }
 ]
 const baseDataListRef = ref(null)
-const tableData = ref([
-  {
-    goodsIdAndSkuId: '商品：abc\n' + 'SKU：888',
-    goodsNameAndSkuNmae: '商品名：abc\n' + 'SKU名：888',
-    number: '888',
-    categoryName: '车型库',
-    storeName: 'hhhh',
-    intoIntro: '2022-1-2',
-    intoTime: '2021-9-9',
-    remarks: '哇哇哇哇'
-  },
-  {
-    goodsIdAndSkuId: 'abc',
-    goodsNameAndSkuNmae: '哇哈哈哈',
-    number: '888',
-    categoryName: '车型库',
-    storeName: 'hhhh',
-    intoIntro: '2022-1-2',
-    intoTime: '2021-9-9',
-    remarks: '哇哇哇哇'
-  }
-])
-const total = ref(99)
+const tableData = ref([])
+const tableTotal = ref(99)
 const inputValue = ref('')
 const searchDetails = () => {
   if (!inputValue.value) {
@@ -140,17 +123,16 @@ const searchDetails = () => {
   }
 }
 const getStockStorageList = (params) => {
-  // baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  console.log('p', params)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   queryStorageDetails(params).then((res) => {
-    const { rows, total } = res.data.data
     console.log('res', res)
-    total.value = total
+    const { rows, total } = res.data.data
+    console.log('tt', total)
+    tableTotal.value = total
     tableData.value = rows.map((item) => {
       return {
-        goodsIdAndSkuId: `商品：${item.goods_id}\n' + ' SKU：${item.sku_id}`,
-        goodsNameAndSkuNmae:
-          `商品名：${item.goods_name}\n' + ' SKU名：${item.sku_name}` + '/',
+        goodsIdAndSkuId: `商品：${item.goods_id}\n SKU：${item.sku_id}`,
+        goodsNameAndSkuNmae: `商品名：${item.goods_name}\n SKU名：${item.sku_name}`,
         number: item.number,
         categoryName: item.category_name,
         storeName: item.store_name,

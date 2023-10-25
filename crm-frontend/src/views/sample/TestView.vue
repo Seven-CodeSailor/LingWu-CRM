@@ -18,6 +18,10 @@
     @update-table-data="get"
     ref="baseDataListRef"
   >
+    <!-- 图标插槽 -->
+    <template #ico>
+      <el-icon style="margin-right: 4px"><icon-refresh /></el-icon>
+    </template>
     <template #menu>
       <div>
         插槽区
