@@ -14,12 +14,18 @@
               <el-input v-model="input" placeholder="请输入供应商名称" />
             </div>
           </el-form-item>
-          <el-form-item style="justify-content: flex-end">
-            <div style="padding: 10px">
+          <el-form-item>
+            <div
+              style="
+                padding: 10px;
+                display: flex;
+                justify-content: flex-end;
+                width: 100%;
+              "
+            >
               <el-button type="primary">搜索</el-button>
             </div>
           </el-form-item>
-          <el-form-item></el-form-item>
         </el-form>
       </template>
     </el-dropdown>
@@ -28,7 +34,4 @@
 
 <script setup></script>
 
-<style lang="scss" scoped>
-.drop_down {
-}
-</style>
+<style lang="scss" scoped></style>

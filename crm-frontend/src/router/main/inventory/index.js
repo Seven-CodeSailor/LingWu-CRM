@@ -36,6 +36,15 @@ const routes = [
           import(
             '@/views/inventoryManagement/StorageReceipt/storageReceipt.vue'
           )
+      },
+      {
+        // 出库单
+        path: '/inventory/WarehousingDetails',
+        name: 'WarehousingDetails',
+        component: () =>
+          import(
+            '@/views/inventoryManagement/StorageDetails/StorageDetails.vue'
+          )
       }
     ]
   }
