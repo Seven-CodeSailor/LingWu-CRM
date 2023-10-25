@@ -14,7 +14,7 @@
           <div class="left">
             <el-button
               style="margin-right: 4px"
-              @click="getStockStorageList(1, 5)"
+              @click="() => getStockStorageList({ pageIndex: 1, pageSize: 5 })"
             >
               <el-icon style="margin-right: 4px"><icon-refresh /></el-icon
               >刷新</el-button
@@ -29,12 +29,15 @@
           </div>
           <div class="right">
             <el-input
-              v-model="input"
+              v-model="inputValue"
               placeholder="输入商品名称或者SKU名称"
               style="margin-right: 4px"
             />
-            <DropDown></DropDown>
-            <el-button type="primary" style="margin-left: 4px">
+            <el-button
+              type="primary"
+              style="margin-left: 4px"
+              @click="searchDetails"
+            >
               <el-icon style="margin-right: 4px"><icon-search /></el-icon
               >搜索</el-button
             >
@@ -50,7 +53,7 @@
 import { ref, onMounted } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
-import DropDown from '@/components/DropDown/DropDown.vue'
+
 import { queryStorageDetails } from '@/apis/inventory-manager/index.js'
 const tableColumnAttribute = [
   {
@@ -111,14 +114,33 @@ const tableData = ref([
   }
 ])
 const total = ref(99)
-
+const inputValue = ref('')
+const searchDetails = () => {
+  if (!inputValue.value) {
+    ElMessageBox.alert('输入不能为空', '注意!', {
+      confirmButtonText: '确认'
+    })
+  } else {
+    console.log('pp', baseDataListRef.value.paginationData)
+    baseDataListRef.value.paginationData.pageSize = 5
+    baseDataListRef.value.paginationData.currentPage = 1
+    // 搜索数据的时候就重新初始化页面容量和当前页的页码
+    const params = {
+      pageSize: 5,
+      pageIndex: 1
+      // 如何知道我输入的是sku名称或商品名
+    }
+    getStockStorageList(params)
+  }
+}
 const excel = () => {
   return tableData.value
 }
 
-const getStockStorageList = (pageIndex, pageSize) => {
+const getStockStorageList = (params) => {
   // baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  queryStorageDetails({ pageIndex, pageSize }).then((res) => {
+  console.log('p', params)
+  queryStorageDetails(params).then((res) => {
     const { rows, total } = res.data.data
     console.log('res', res.data)
     total.value = total
@@ -141,10 +163,18 @@ const getStockStorageList = (pageIndex, pageSize) => {
 }
 
 const updateTableData = (pageSize, currentPage) => {
-  getStockStorageList(currentPage, pageSize)
+  const params = {
+    pageSize,
+    pageIndex: currentPage
+  }
+  getStockStorageList(params)
 }
 onMounted(() => {
-  getStockStorageList(1, 5)
+  const params = {
+    pageSize: baseDataListRef.value.paginationData.pageSize,
+    pageIndex: baseDataListRef.value.paginationData.currentPage
+  }
+  getStockStorageList(params)
 })
 </script>
 
@@ -166,6 +196,7 @@ onMounted(() => {
     }
   }
 }
+// 表格里的内容换行用
 :deep(.el-table .cell) {
   white-space: pre-wrap;
 }

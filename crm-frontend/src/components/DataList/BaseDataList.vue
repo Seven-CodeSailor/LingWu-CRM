@@ -263,7 +263,9 @@ defineExpose({
   // 暴露出被选中的row
   rows,
   // 暴露出表格的加载
-  openLoading
+  openLoading,
+  // 暴露出分页数据
+  paginationData
 })
 </script>
 
