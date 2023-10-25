@@ -136,14 +136,14 @@ let testMenus = [
       {
         id: 2,
         text: '库存清单',
-        href: '/un-21',
+        href: '/inventory/inventoryList',
         icon: 'IconHouse',
         pid: 4
       },
       {
         id: 3,
         text: '入库单',
-        href: '/un-21',
+        href: '/inventory/storageReceipt',
         icon: 'IconHouse',
         pid: 4
       },
