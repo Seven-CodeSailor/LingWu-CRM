@@ -25,16 +25,24 @@ function exportFile() {
   // 准备一个数组对象
   const arr = [
     {
-      age: 19,
-      name: 'cxk'
+      goodsIdAndSkuId: '商品：abc\n' + ' SKU：888',
+      goodsNameAndSkuNmae: '商品名：abc\n' + ' SKU名：888',
+      number: '888',
+      categoryName: '车型库',
+      storeName: 'hhhh',
+      intoIntro: '2022-1-2',
+      intoTime: '2021-9-9',
+      remarks: '哇哇哇哇'
     },
     {
-      age: 19,
-      name: 'cxk'
-    },
-    {
-      age: 19,
-      name: 'cxk'
+      goodsIdAndSkuId: 'abc',
+      goodsNameAndSkuNmae: '哇哈哈哈',
+      number: '888',
+      categoryName: '车型库',
+      storeName: 'hhhh',
+      intoIntro: '2022-1-2',
+      intoTime: '2021-9-9',
+      remarks: '哇哇哇哇'
     }
   ]
   // utils.json_to_sheet(参数) 参数为数组对象

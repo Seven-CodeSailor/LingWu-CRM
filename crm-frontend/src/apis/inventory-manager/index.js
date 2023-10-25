@@ -18,3 +18,7 @@ export const queryStorageDetails = (data) => {
     data
   )
 }
+// 这个是mock测试用例,暂时别删
+export const getInventortOutTableList = (theUrl) => {
+  return Request.requestJson(Request.GET, theUrl)
+}
