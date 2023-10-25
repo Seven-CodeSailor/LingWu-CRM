@@ -21,7 +21,7 @@
             >
             <BulkOPe
               :excelData="excel"
-              :getOpt="() => [0, 1, 2]"
+              :getOpt="() => [0]"
               excelName="入库明细.xlsx"
               tableName="入库明细的sheet表"
             >
