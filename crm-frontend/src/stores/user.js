@@ -137,7 +137,7 @@ let testMenus = [
       {
         id: 2,
         text: '库存清单',
-        href: '/inventory/pipazi',
+        href: '/inventory/inventoryList',
         icon: 'IconHouse',
         pid: 4
       },
@@ -145,7 +145,7 @@ let testMenus = [
       {
         id: 3,
         text: '入库单',
-        href: '/inventory/qianmeng',
+        href: '/inventory/storageReceipt',
         icon: 'IconHouse',
         pid: 4
       },
