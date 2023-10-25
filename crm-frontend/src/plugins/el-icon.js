@@ -1,3 +1,13 @@
+/*
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-10-25 21:31:59
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-10-25 21:32:14
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\plugins\el-icon.js
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
+ */
 // 这里导入你要使用的图标
 // 写成多行避免解决冲突麻烦
 import {
