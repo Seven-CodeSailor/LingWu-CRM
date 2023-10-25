@@ -48,6 +48,14 @@ onMounted(() => {
   }
   console.log('表格父传子拿到的数组:', props.dataArr)
 })
+// 准备选中表格行数据
+const handelSelect = (selection, row) => {
+  console.log('表格行数据', row)
+  emit('update:select', selection, row)
+}
+// 定义子传父的方法
+// update:select => 用户点了选中框
+const emit = defineEmits(['update:select'])
 </script>
 <template>
   <el-table
@@ -56,6 +64,7 @@ onMounted(() => {
     stripe
     height="100%"
     v-loading="props.isLoading"
+    @select="handelSelect"
   >
     <el-table-column v-if="props.isSelect" type="selection" width="55" />
 

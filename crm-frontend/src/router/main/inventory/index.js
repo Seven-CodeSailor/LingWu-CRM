@@ -1,6 +1,6 @@
 const routes = [
   {
-    // 入库明细
+    // 出库单
     path: '/inventory/WarehousingDetails',
     name: 'WarehousingDetails',
     component: () =>

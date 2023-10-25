@@ -150,14 +150,14 @@ let testMenus = [
       {
         id: 4,
         text: '入库明细',
-        href: '/inventory/WarehousingDetails',
+        href: '/un-25',
         icon: 'IconHouse',
         pid: 4
       },
       {
         id: 5,
         text: '出库单',
-        href: '/un-21',
+        href: '/inventory/WarehousingDetails',
         icon: 'IconHouse',
         pid: 4
       },
