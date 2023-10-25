@@ -1,6 +1,13 @@
 // 这里导入你要使用的图标
 // 写成多行避免解决冲突麻烦
-import { Menu } from '@element-plus/icons-vue'
+import {
+  Bell,
+  FullScreen,
+  Menu,
+  MoonNight,
+  Refresh,
+  Sunny
+} from '@element-plus/icons-vue'
 import { Setting } from '@element-plus/icons-vue'
 import { User } from '@element-plus/icons-vue'
 import { Tickets } from '@element-plus/icons-vue'
@@ -26,4 +33,9 @@ export default (app) => {
   app.component('IconBack', Back)
   app.component('IconKey', Key)
   app.component('IconHouse', House)
+  app.component('IconRefresh', Refresh)
+  app.component('IconFullScreen', FullScreen)
+  app.component('IconMoonNight', MoonNight)
+  app.component('IconSunny', Sunny)
+  app.component('IconBell', Bell)
 }
