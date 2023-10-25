@@ -135,7 +135,7 @@ const pageSize4 = ref(100)
     </div>
   </el-card>
 </template>
-<style>
+<style scoped>
 .head {
   display: flex;
   align-items: center;
@@ -144,10 +144,10 @@ const pageSize4 = ref(100)
 .head p {
   padding: 0 8px;
 }
-.box-card {
+/* .box-card {
   width: 100vw;
   height: 100vh;
-}
+} */
 .wrap {
   display: flex;
   align-items: center;
