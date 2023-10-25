@@ -40,7 +40,7 @@ const sendData = {
   tableColumnAttribute: [
     // prop属性和label属性必选
     // sortable可选
-    // usePic可选
+    // useTag可选
     {
       prop: 'sex',
       label: '性别',
@@ -58,9 +58,9 @@ const sendData = {
     },
     {
       prop: 'data',
-      label: '带图片的列',
-      // 该列数据是否使用了图片
-      usePic: true
+      label: 'tag列',
+      // 该列数据是否使用tag
+      useTag: true
     }
   ],
   tableData: [
@@ -68,10 +68,16 @@ const sendData = {
       sex: '男',
       age: 19,
       hoby: '唱歌',
+      // tagType 对应的五种类型
+      // success
+      // danger
+      // info
+      // warning
+      // el => 对应主题色
       data: {
-        picUrl: 'https://cdn2.thecatapi.com/images/446.jpg',
-        goodsName: '2',
-        createDate: '2023-1-2'
+        // value 和 tagType字段不能改变
+        value: '已入库',
+        tagType: 'success'
       }
     },
     {
@@ -79,9 +85,8 @@ const sendData = {
       age: 21,
       hoby: 'rap',
       data: {
-        picUrl: 'https://cdn2.thecatapi.com/images/446.jpg',
-        goodsName: '1',
-        createDate: '2023-1-2'
+        value: '未入库',
+        tagType: 'danger'
       }
     },
     {
@@ -89,9 +94,26 @@ const sendData = {
       age: 22,
       hoby: '篮球',
       data: {
-        picUrl: 'https://cdn2.thecatapi.com/images/446.jpg',
-        goodsName: '1222',
-        createDate: '2023-1-2'
+        value: 'Info状态',
+        tagType: 'info'
+      }
+    },
+    {
+      sex: '男',
+      age: 22,
+      hoby: '篮球',
+      data: {
+        value: 'warning状态',
+        tagType: 'warning'
+      }
+    },
+    {
+      sex: '男',
+      age: 22,
+      hoby: '篮球',
+      data: {
+        value: '主题色',
+        tagType: 'el'
       }
     }
   ],

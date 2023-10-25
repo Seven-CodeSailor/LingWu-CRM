@@ -41,26 +41,12 @@
           :label="item.label"
           :key="item"
           :sortable="item?.sortable"
-          :width="item?.usePic ? 300 : ''"
         >
-          <!-- 信息包含图片·，使用如下渲染 -->
-          <template #default="{ row }" v-if="item.usePic">
-            <div style="display: flex; align-items: center">
-              <el-image
-                style="
-                  width: 60px;
-                  height: 60px;
-                  border-radius: 30px;
-                  margin-right: 8px;
-                "
-                :src="row[item.prop].picUrl"
-                :fit="fit"
-              />
-              <div>
-                <div>商品名称:{{ row[item.prop].goodsName }}</div>
-                <div>商家创建时间:{{ row[item.prop].createDate }}</div>
-              </div>
-            </div>
+          <!-- 表格的列内容如果使用tag -->
+          <template #default="{ row }" v-if="item.useTag">
+            <el-tag :type="row[item.prop].tagType">{{
+              row[item.prop].value
+            }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column

@@ -19,14 +19,12 @@
               <el-icon style="margin-right: 4px"><icon-refresh /></el-icon
               >刷新</el-button
             >
-            <BulkOPe :excelData="excel" :getOpt="() => [0, 1, 2]">
-              <template #excel>
-                <div>
-                  下拉选择：<ChooseSelect
-                    @update:cid="changecid"
-                  ></ChooseSelect>
-                </div>
-              </template>
+            <BulkOPe
+              :excelData="excel"
+              :getOpt="() => [0, 1, 2]"
+              excelName="入库明细.xlsx"
+              tableName="入库明细的sheet表"
+            >
             </BulkOPe>
           </div>
           <div class="right">
@@ -51,7 +49,6 @@
 // 冰雾
 import { ref, onMounted } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
 import { queryStorageDetails } from '@/apis/inventory-manager/index.js'
@@ -114,31 +111,9 @@ const tableData = ref([
   }
 ])
 const total = ref(99)
+
 const excel = () => {
-  return [
-    {
-      性别: '男',
-      年龄: '19',
-      爱好: '唱',
-      name: 'a'
-    },
-    {
-      性别: '女',
-      年龄: '21',
-      爱好: 'rap',
-      address: 'b'
-    },
-    {
-      性别: '男',
-      年龄: '22',
-      爱好: '篮球',
-      habb: 'c'
-    }
-  ]
-}
-const changecid = (value) => {
-  //发送网络请求获取数据
-  console.log(value)
+  return tableData.value
 }
 
 const getStockStorageList = (pageIndex, pageSize) => {
@@ -149,15 +124,16 @@ const getStockStorageList = (pageIndex, pageSize) => {
     total.value = total
     tableData.value = rows.map((item) => {
       return {
-        goodsIdAndSkuId: `商品：${item.goods_id}\n' + 'SKU：${item.sku_id}`,
+        goodsIdAndSkuId: `商品：${item.goods_id}\n' + ' SKU：${item.sku_id}`,
         goodsNameAndSkuNmae:
-          `商品名：${item.goods_name}\n' + 'SKU名：${item.sku_name}` + '/',
+          `商品名：${item.goods_name}\n' + ' SKU名：${item.sku_name}` + '/',
         number: item.number,
         categoryName: item.category_name,
         storeName: item.store_name,
         intoIntro: item.into_intro,
         intoTime: item.into_time,
-        remarks: item.remarks
+        remarks: item.remarks,
+        supplierName: item.supplier_name
       }
     })
     baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
