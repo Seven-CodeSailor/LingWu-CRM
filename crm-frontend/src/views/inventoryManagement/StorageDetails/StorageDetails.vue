@@ -3,8 +3,9 @@ import { House, Refresh, Search, QuestionFilled } from '@element-plus/icons-vue'
 import Table from '@/components/table/Table.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOpe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
+import { getInventortOutTableList } from '@/apis/inventory-manager/index.js'
 // import { ElMessage } from 'element-plus'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 // 控制表格是否加载
 const loading = ref(false)
 const update = () => {
@@ -16,39 +17,51 @@ const update = () => {
 // 表格数据
 const tableData = ref([
   {
-    商品ID: '2016-05-03',
-    商品名称: 'Tom',
+    对应单号: '天河项目单号',
+    仓库: '一号仓库12456',
     商品类型: '男装',
     仓库名称: '01仓库',
-    对应入库单: '天河一期',
-    入库时间: '2023-10-24',
+    时间: '2021-06-02 17:58:32',
+    状态: '已出库',
+    出库数量: 2,
+    出库人员时间: '2021-06-02 17:58:45',
+    出库类型: '销售出库',
     备注: ''
   },
   {
-    商品ID: '2016-05-02',
-    商品名称: 'Tom',
+    对应单号: '天河项目单号',
+    仓库: '一号仓库12456',
     商品类型: '男装',
     仓库名称: '01仓库',
-    对应入库单: '天河一期',
-    入库时间: '2023-10-24',
+    时间: '2021-06-02 17:58:32',
+    状态: '已出库',
+    出库数量: 2,
+    出库人员时间: '2021-06-02 17:58:45',
+    出库类型: '销售出库',
     备注: ''
   },
   {
-    商品ID: '2016-05-04',
-    商品名称: 'Tom',
+    对应单号: '天河项目单号',
+    仓库: '一号仓库12456',
     商品类型: '男装',
     仓库名称: '01仓库',
-    对应入库单: '天河一期',
-    入库时间: '2023-10-24',
+    时间: '2021-06-02 17:58:32',
+    状态: '已出库',
+    出库数量: 2,
+    出库人员时间: '2021-06-02 17:58:45',
+    出库类型: '销售出库',
     备注: ''
   },
   {
-    商品ID: '2016-05-01',
-    商品名称: 'Tom',
+    对应单号: '天河项目单号',
+    仓库: '一号仓库12456',
     商品类型: '男装',
     仓库名称: '01仓库',
-    对应入库单: '天河一期',
-    入库时间: '2023-10-24',
+    时间: '2021-06-02 17:58:32',
+    状态: '已出库',
+    出库数量: 2,
+    出库人员时间: '2021-06-02 17:58:45',
+    出库类型: '销售出库',
     备注: ''
   }
 ])
@@ -74,9 +87,20 @@ const options = ref([
 // 分页器
 const currentPage4 = ref(4)
 const pageSize4 = ref(100)
+onMounted(async () => {
+  const res = await getInventortOutTableList(
+    'https://mockapi.eolink.com/mhNuWI1f7e1a72810542d497358154a44cd9d9fb4b39f57/?responseId=1318425'
+  )
+  console.log(res)
+})
+
+// 处理选中表格行
+const handelSelect = (selection) => {
+  console.log(selection)
+}
 </script>
 <template>
-  <!-- <div>这里是入库明细页面</div> -->
+  <!-- <div>这里是出库单页面</div> -->
   <el-card class="box-card">
     <template #header>
       <div class="head">
@@ -84,7 +108,7 @@ const pageSize4 = ref(100)
           <el-icon style="vertical-align: middle" size="16">
             <House />
           </el-icon>
-          <p>入库明细列表</p>
+          <p>出库单列表</p>
         </div>
         <div class="show">
           <el-icon><QuestionFilled /></el-icon>
@@ -117,7 +141,12 @@ const pageSize4 = ref(100)
       </div>
     </div>
     <!-- 表格 -->
-    <Table :dataArr="tableData" :isSelect="true" :isLoading="loading"></Table>
+    <Table
+      :dataArr="tableData"
+      :isSelect="true"
+      :isLoading="loading"
+      @update:select="handelSelect"
+    ></Table>
     <!-- 分页器 -->
     <div class="footer">
       <el-pagination
@@ -135,7 +164,7 @@ const pageSize4 = ref(100)
     </div>
   </el-card>
 </template>
-<style>
+<style scoped>
 .head {
   display: flex;
   align-items: center;
@@ -145,8 +174,8 @@ const pageSize4 = ref(100)
   padding: 0 8px;
 }
 .box-card {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 .wrap {
   display: flex;
