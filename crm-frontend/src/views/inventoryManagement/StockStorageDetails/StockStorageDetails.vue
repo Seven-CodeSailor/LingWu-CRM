@@ -20,7 +20,7 @@
               >刷新</el-button
             >
             <BulkOPe
-              :excelData="excel"
+              :excelData="() => tableData"
               :getOpt="() => [0]"
               excelName="入库明细.xlsx"
               tableName="入库明细的sheet表"
@@ -133,10 +133,6 @@ const searchDetails = () => {
     getStockStorageList(params)
   }
 }
-const excel = () => {
-  return tableData.value
-}
-
 const getStockStorageList = (params) => {
   // baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   console.log('p', params)
