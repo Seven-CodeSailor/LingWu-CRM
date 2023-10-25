@@ -6,8 +6,6 @@ const currBaseUrl = '/inventory-manager/'
 /**
  * 获取入库明细项列表
  * @param {*} data 获取入库明细的数据
- * @param {*} success 成功获取数据后的回调
- * @param {*} fail 获取数据失败的回调
  */
 export const queryStorageDetails = (data) => {
   // 获取不到数据，后端只是提供了文档，未实现接口，这里只是一个参考，可在此模拟数据，然后存在pinia里面
@@ -15,6 +13,10 @@ export const queryStorageDetails = (data) => {
   return Request.requestJson(
     Request.GET,
     currBaseUrl + 'query-storage-details',
-    data
+    {
+      params: {
+        ...data
+      }
+    }
   )
 }
