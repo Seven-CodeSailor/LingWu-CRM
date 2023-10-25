@@ -6,7 +6,13 @@
       :page-sizes="[5, 10, 15]"
       :total="total"
       :table-data="tableData"
-      @update-table-data="updateTableData"
+      @update-table-data="
+        (pageSize, currentPage) =>
+          getStockStorageList({
+            pageSize,
+            pageIndex: currentPage
+          })
+      "
       ref="baseDataListRef"
     >
       <template #menu>
@@ -158,13 +164,6 @@ const getStockStorageList = (params) => {
   })
 }
 
-const updateTableData = (pageSize, currentPage) => {
-  const params = {
-    pageSize,
-    pageIndex: currentPage
-  }
-  getStockStorageList(params)
-}
 onMounted(() => {
   const params = {
     pageSize: baseDataListRef.value.paginationData.pageSize,
