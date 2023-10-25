@@ -144,7 +144,7 @@ const getStockStorageList = (params) => {
   console.log('p', params)
   queryStorageDetails(params).then((res) => {
     const { rows, total } = res.data.data
-    console.log('res', res.data)
+    console.log('res', res)
     total.value = total
     tableData.value = rows.map((item) => {
       return {
