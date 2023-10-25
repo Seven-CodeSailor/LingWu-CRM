@@ -1,10 +1,8 @@
+
 const routes = [
   {
     path: '/inventory',
-    name: 'Inventory',
-    // 路由重定向配置暂定=>晚上开会讨论
-    component: () =>
-      import('@/views/inventoryManagement/inventoryManagement.vue'),
+    redirect: '/inventory/WarehousingDetails',
     children: [
       {
         // 入库明细
@@ -22,6 +20,22 @@ const routes = [
         component: () =>
           import(
             '@/views/inventoryManagement/outstoragedetails/OutStorageDetails.vue'
+          )
+      },
+      {
+        // 库存清单
+        path: '/inventory/inventoryList',
+        name: 'inventoryList',
+        component: () =>
+          import('@/views/inventoryManagement/InventoryList/InventoryList.vue')
+      },
+      {
+        // 入库单
+        path: '/inventory/storageReceipt',
+        name: 'storageReceipt',
+        component: () =>
+          import(
+            '@/views/inventoryManagement/StorageReceipt/storageReceipt.vue'
           )
       }
     ]
