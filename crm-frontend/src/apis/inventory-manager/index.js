@@ -17,4 +17,11 @@ export const queryStorageDetails = (data) => {
     currBaseUrl + 'query-storage-details',
     data
   )
+  // return new Promise((resolve) => {
+  //   resolve(data)
+  // }).then((res) => {
+  //   // 写死数据
+  //   // 将数据存储在pinia
+  //   console.log(res)
+  // })
 }
