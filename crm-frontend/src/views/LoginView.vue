@@ -421,7 +421,7 @@ button:hover {
 }
 /* 动画 */
 /* 动画 */
-@keyframes action {
+/* @keyframes action {
   25% {
     border-radius: 30% 70% 68% 32% / 47% 24% 76% 53%;
   }
@@ -454,5 +454,5 @@ button:hover {
     border-radius: 47% 56% 25% 75% / 37% 66% 30% 64%;
     transform: scale(0.8) rotateZ(30deg);
   }
-}
+} */
 </style>

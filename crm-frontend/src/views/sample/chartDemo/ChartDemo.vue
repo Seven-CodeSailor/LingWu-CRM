@@ -222,7 +222,7 @@ const getDatas = (timePick = '本周') => {
 
     default:
   }
-  console.log(chartData)
+
   return chartData
 }
 </script>

@@ -1,5 +1,13 @@
 <template>
-  <BulkOPe :excelData="excel" :getOpt="() => [0, 1, 2]">
+  <BulkOPe
+    :excelData="excel"
+    tableName="入库表"
+    excelName="入库表格.xlsx"
+    :getOpt="() => [0, 1, 2]"
+    path="/file/upload"
+    baseURL="http://localhost:8090"
+    StreamPath="/user/modify-user?nickname=莉莉丝&age=10"
+  >
     <template #excel>
       <div>下拉选择：<ChooseSelect @update:cid="changecid"></ChooseSelect></div>
     </template>

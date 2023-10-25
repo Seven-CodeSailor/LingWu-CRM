@@ -97,6 +97,10 @@ const menus = reactive([
     path: '/sample/test1',
     text: '测试专用2'
   },
+  {
+    path: '/sample/test2',
+    text: '测试专用3'
+  },
   { path: '/sample/chartDemo', text: '销售图表演示(临时)' },
   {
     path: '/sample/organizationStructure',
@@ -106,7 +110,7 @@ const menus = reactive([
     path: '/sample/newsCenter',
     text: '新闻中心演示'
   },
-  // treemenu测试界面，稍后删除
+  // treemenu测试界面，以后会删除
   {
     path: '/sample/treemenu',
     text: 'treemenu演示界面'

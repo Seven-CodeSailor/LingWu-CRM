@@ -11,7 +11,7 @@ import { utils, writeFileXLSX } from 'xlsx'
 /**
  * 组件使用：
  *    // 内部为弹框，需要父组件定义事件触发弹框
- *    <Excel :getData="getData" ref="excel">
+ *    <Excel :getData="getData" ref="excel" :tableName="tableName" :excelName="excelName">
  *      <template #default>
  *      </template>
  *    </Excel>
@@ -30,6 +30,16 @@ import { utils, writeFileXLSX } from 'xlsx'
  *      // 将数据存到pinia
  *      // 从pinia里面拿到数据
  *      return data;
+ *    }
+ *    // 表名
+ *    tableName: {
+ *      type: String,
+ *      required: true
+ *    },
+ *    //文件名
+ *    excelName: {
+ *      type: String,
+ *      required: true
  *    }
  * 传出数据(子向父传递):
  *    一个默认插槽，为内容区域，可用于进一步确认表格数据
@@ -50,6 +60,16 @@ const props = defineProps({
     default: () => {
       return []
     }
+  },
+  // 表名
+  tableName: {
+    type: String,
+    required: true
+  },
+  //文件名
+  excelName: {
+    type: String,
+    required: true
   }
 })
 // 控制dialog是否显示
@@ -74,9 +94,9 @@ function exportFile() {
   const wb = utils.book_new()
   // 3。创建工作簿
   // 将ws里的json数据放入工作薄里  命名为Data
-  utils.book_append_sheet(wb, ws, 'Data')
+  utils.book_append_sheet(wb, ws, props.tableName) //'Data'
   // 导出xlsx数据表文件
-  writeFileXLSX(wb, 'SheetJSVueAoO.xlsx')
+  writeFileXLSX(wb, props.excelName) //'SheetJSVueAoO.xlsx'
 }
 
 const showDialog = () => {
