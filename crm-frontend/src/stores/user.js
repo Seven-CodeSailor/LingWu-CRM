@@ -133,6 +133,7 @@ let testMenus = [
     text: '库存管理',
     icon: 'IconHouse',
     children: [
+      // pipazi
       {
         id: 2,
         text: '库存清单',
@@ -140,6 +141,7 @@ let testMenus = [
         icon: 'IconHouse',
         pid: 4
       },
+      // qianmeng
       {
         id: 3,
         text: '入库单',
@@ -147,13 +149,15 @@ let testMenus = [
         icon: 'IconHouse',
         pid: 4
       },
+      // 冰雾
       {
         id: 4,
         text: '入库明细',
-        href: '/un-25',
+        href: '/inventory/bingwu',
         icon: 'IconHouse',
         pid: 4
       },
+      // 暮秋
       {
         id: 5,
         text: '出库单',
@@ -161,6 +165,7 @@ let testMenus = [
         icon: 'IconHouse',
         pid: 4
       },
+      // seven
       {
         id: 6,
         text: '出库明细',

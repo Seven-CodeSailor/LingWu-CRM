@@ -164,7 +164,7 @@ const handelSelect = (selection) => {
     </div>
   </el-card>
 </template>
-<style>
+<style scoped>
 .head {
   display: flex;
   align-items: center;
