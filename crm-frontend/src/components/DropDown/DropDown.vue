@@ -10,31 +10,53 @@
           <!-- 顶部输入框 -->
           <el-form-item>
             <div style="padding: 0 10px">
-              <h4 style="font-weight: 700; margin-bottom: 2px; color: #909399;height: 26px;">
+              <h4
+                style="
+                  font-weight: 700;
+                  margin-bottom: 2px;
+                  color: #909399;
+                  height: 26px;
+                "
+              >
                 {{ props.topInputTitle }}
               </h4>
-              <el-input v-model="topInputValue" :placeholder="'搜索' + props.topInputTitle"
-                @input="emits('update:topInputValue', topInputValue)" />
+              <el-input
+                v-model="topInputValue"
+                :placeholder="'搜索' + props.topInputTitle"
+                @input="emits('update:topInputValue', topInputValue)"
+              />
             </div>
           </el-form-item>
           <!-- 底部输入框 -->
           <el-form-item>
             <div style="padding: 0 10px">
-              <h4 style="font-weight: 700; margin-bottom: 2px; color: #909399;height: 26px;">
+              <h4
+                style="
+                  font-weight: 700;
+                  margin-bottom: 2px;
+                  color: #909399;
+                  height: 26px;
+                "
+              >
                 {{ props.bottomInputTitle }}
               </h4>
-              <el-input v-model="bottomInputValue" :placeholder="'搜索' + props.bottomInputTitle"
-                @input="emits('update:bottomInputValue', bottomInputValue)" />
+              <el-input
+                v-model="bottomInputValue"
+                :placeholder="'搜索' + props.bottomInputTitle"
+                @input="emits('update:bottomInputValue', bottomInputValue)"
+              />
             </div>
           </el-form-item>
           <!-- 搜索按钮 -->
           <el-form-item>
-            <div style="
+            <div
+              style="
                 padding: 10px;
                 display: flex;
                 justify-content: flex-end;
                 width: 100%;
-              ">
+              "
+            >
               <el-button type="primary" @click="search">搜索</el-button>
             </div>
           </el-form-item>
@@ -49,10 +71,10 @@
 import { ref } from 'vue'
 const props = defineProps({
   topInputValue: {
-    type: String,
+    type: String
   },
   bottomInputValue: {
-    type: String,
+    type: String
   },
   topInputTitle: {
     type: String,
@@ -70,12 +92,15 @@ const topInputValue = ref('')
 const bottomInputValue = ref('')
 const dropdownRef = ref(null)
 // handleSearch  用于调用父组件的搜索函数
-const emits = defineEmits(['update:topInputValue'], ['update:bottomInputValue'], ['handleSearch'])
+const emits = defineEmits(
+  ['update:topInputValue'],
+  ['update:bottomInputValue'],
+  ['handleSearch']
+)
 const search = () => {
-  if ((!topInputValue.value) && (!bottomInputValue.value)) {
+  if (!topInputValue.value && !bottomInputValue.value) {
     ElMessage.error('输入不能为空')
   } else {
-
     emits('handleSearch')
     // 调用搜索函数后 关闭下拉菜单
     dropdownRef.value.$el.click()
