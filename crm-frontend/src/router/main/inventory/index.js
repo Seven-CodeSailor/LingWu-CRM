@@ -5,11 +5,11 @@ const routes = [
     children: [
       {
         // 入库明细
-        path: '/inventory/WarehousingDetails',
+        path: '/inventory/bingwu',
         name: 'WarehousingDetails',
         component: () =>
           import(
-            '@/views/inventoryManagement/StorageDetails/StorageDetails.vue'
+            '@/views/inventoryManagement/outstoragedetails/OutStorageDetails.vue'
           )
       },
       {
