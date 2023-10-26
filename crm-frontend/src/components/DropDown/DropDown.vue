@@ -21,9 +21,9 @@
                 {{ props.topInputTitle }}
               </h4>
               <el-input
-                v-model="topInputValue"
+                v-model="topInputVal"
                 :placeholder="'搜索' + props.topInputTitle"
-                @input="emits('update:topInputValue', topInputValue)"
+                @input="emits('update:topInputValue', topInputVal)"
               />
             </div>
           </el-form-item>
@@ -41,9 +41,9 @@
                 {{ props.bottomInputTitle }}
               </h4>
               <el-input
-                v-model="bottomInputValue"
+                v-model="bottomInputVal"
                 :placeholder="'搜索' + props.bottomInputTitle"
-                @input="emits('update:bottomInputValue', bottomInputValue)"
+                @input="emits('update:bottomInputValue', bottomInputVal)"
               />
             </div>
           </el-form-item>
@@ -86,10 +86,10 @@ const props = defineProps({
   }
 })
 const clearValue = () => {
-  topInputValue.value = bottomInputValue.value = ''
+  topInputVal.value = bottomInputVal.value = ''
 }
-const topInputValue = ref('')
-const bottomInputValue = ref('')
+const topInputVal = ref('')
+const bottomInputVal = ref('')
 const dropdownRef = ref(null)
 // handleSearch  用于调用父组件的搜索函数
 const emits = defineEmits(
@@ -98,7 +98,7 @@ const emits = defineEmits(
   ['handleSearch']
 )
 const search = () => {
-  if (!topInputValue.value && !bottomInputValue.value) {
+  if (!topInputVal.value && !bottomInputVal.value) {
     ElMessage.error('输入不能为空')
   } else {
     emits('handleSearch')

@@ -48,7 +48,7 @@
         <el-table-column
           label="操作"
           v-if="!props?.useDropdownMenu && props.useOperateColumn"
-          :fixed="props.isFixedRight ? 'right' : ''"
+          fixed="right"
         >
           <!-- 带图标的按钮操作 -->
           <template #default="{ row }">
@@ -74,7 +74,7 @@
         <el-table-column
           label="操作"
           v-else-if="props.useDropdownMenu && props.useOperateColumn"
-          :fixed="props.isFixedRight ? 'right' : ''"
+          fixed="right"
         >
           <!-- 下拉菜单的按钮操作 -->
           <template #default="{ row }">
@@ -222,11 +222,6 @@ const props = defineProps({
   useOperateColumn: {
     type: Boolean,
     default: true
-  },
-  // 是否固定操作列在表格最右端
-  isFixedRight: {
-    type: Boolean,
-    default: false
   }
 })
 

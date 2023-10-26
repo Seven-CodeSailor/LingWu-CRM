@@ -15,7 +15,6 @@
     :use-header="sendData.useHeader"
     :use-select-column="sendData.useSelectColumn"
     :use-operate-column="sendData.useOperateColumn"
-    :is-fixed-right="sendData.isFixedRight"
     @update-table-data="get"
     ref="baseDataListRef"
   >
@@ -168,8 +167,6 @@ const sendData = {
   useSelectColumn: true,
   // 是否使用操作列
   useOperateColumn: true,
-  // 是否固定操作列在表格最右端
-  isFixedRight: true
 }
 const baseDataListRef = ref(null)
 const get = (pageSize, currentPage) => {
