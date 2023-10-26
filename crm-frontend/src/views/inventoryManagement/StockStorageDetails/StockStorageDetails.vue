@@ -65,7 +65,7 @@ import { ref, onMounted } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import DropDown from '../../../components/DropDown/DropDown.vue'
-import { useStockStorageDetailsStore } from '@/stores/stockstoragedetails.js'
+import { useStockStorageDetailsStore } from '@/stores/inventory/stockstoragedetails.js'
 const tableColumnAttribute = [
   {
     prop: 'goodsIdAndSkuId',
