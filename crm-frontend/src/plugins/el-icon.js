@@ -29,6 +29,7 @@ import { InfoFilled } from '@element-plus/icons-vue'
 import { Key } from '@element-plus/icons-vue'
 import { House } from '@element-plus/icons-vue'
 import { ArrowDown } from '@element-plus/icons-vue'
+import { MessageBox } from '@element-plus/icons-vue'
 export default (app) => {
   app.component('IconMenu', Menu)
   app.component('IconSetting', Setting)
@@ -50,4 +51,5 @@ export default (app) => {
   app.component('IconSunny', Sunny)
   app.component('IconBell', Bell)
   app.component('IconArrowDown', ArrowDown)
+  app.component('IconMessageBox', MessageBox)
 }

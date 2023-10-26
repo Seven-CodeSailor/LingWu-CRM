@@ -6,10 +6,10 @@ const routes = [
       {
         // 入库明细
         path: '/inventory/bingwu',
-        name: 'WarehousingDetails',
+        name: 'ru_ku_ming_xi',
         component: () =>
           import(
-            '@/views/inventoryManagement/outstoragedetails/OutStorageDetails.vue'
+            '@/views/inventoryManagement/StockStorageDetails/StockStorageDetails.vue'
           )
       },
       {
