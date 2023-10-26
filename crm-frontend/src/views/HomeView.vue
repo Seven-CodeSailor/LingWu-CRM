@@ -30,32 +30,8 @@
             </el-icon>
             <span>首页</span>
           </el-menu-item>
-          <!-- 一级 -->
-          <el-sub-menu
-            v-for="item in menus"
-            :key="item.id"
-            :index="item.id + ''"
-          >
-            <template #title>
-              <el-icon>
-                <component :is="item.icon" />
-              </el-icon>
-              <span>{{ item.text }}</span>
-            </template>
-            <!-- 二级 -->
-            <el-menu-item-group>
-              <el-menu-item
-                v-for="i in item.children"
-                :key="i.id"
-                :index="i.href"
-              >
-                <el-icon>
-                  <component :is="i.icon" />
-                </el-icon>
-                {{ i.text }}
-              </el-menu-item>
-            </el-menu-item-group>
-          </el-sub-menu>
+          <!-- 多级菜单 -->
+          <Menu :menu-list="menus"></Menu>
         </el-menu>
       </el-scrollbar>
     </div>
@@ -166,6 +142,7 @@ import { userStore } from '@/stores/user'
 import useLayOutSettingStore from '@/stores/setting.js'
 import Setting from './tabbar/setting/Setting.vue'
 import BreadCrumb from './tabbar/bread-crumb/BreadCrumb.vue'
+import Menu from './menu/Menu.vue'
 const store = userStore()
 const layOutSettingStore = useLayOutSettingStore()
 

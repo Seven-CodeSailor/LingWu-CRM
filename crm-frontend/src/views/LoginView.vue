@@ -355,6 +355,7 @@ body {
   margin: 0 auto;
   /* background-color: #333; */
   color: rgb(255, 255, 255);
+  z-index: 20;
 }
 .box-card {
   position: relative;

@@ -1,5 +1,10 @@
 <script setup>
-import { House, Refresh, Search, QuestionFilled } from '@element-plus/icons-vue'
+import {
+  House,
+  Search,
+  QuestionFilled,
+  ArrowDown
+} from '@element-plus/icons-vue'
 import Table from '@/components/table/Table.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOpe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
@@ -8,12 +13,14 @@ import { getInventortOutTableList } from '@/apis/inventory-manager/index.js'
 import { ref, onMounted } from 'vue'
 // 控制表格是否加载
 const loading = ref(false)
-const update = () => {
-  loading.value = true
-  setTimeout(() => {
-    loading.value = false
-  }, 500)
-}
+// 控制操作说明显示隐藏的数据
+const helpPop = ref(false)
+// const update = () => {
+//   loading.value = true
+//   setTimeout(() => {
+//     loading.value = false
+//   }, 500)
+// }
 // 表格数据
 const tableData = ref([
   {
@@ -110,18 +117,30 @@ const handelSelect = (selection) => {
           </el-icon>
           <p>出库单列表</p>
         </div>
-        <div class="show">
+        <!-- <div class="show" @click="helpPop = true">
           <el-icon><QuestionFilled /></el-icon>
           <p>操作说明</p>
-        </div>
+        </div> -->
+        <el-button @click="helpPop = true">
+          <el-icon><QuestionFilled /></el-icon> 操作说明
+        </el-button>
+        <!-- 操作说明的会话框 -->
+        <el-dialog v-model="helpPop" title="操作说明" width="50%">
+          <span>这里是操作说明</span>
+        </el-dialog>
       </div>
     </template>
     <div class="wrap">
       <div class="wrap1">
-        <!-- 刷新 -->
-        <el-button @click="update" type="info" circle>
-          <el-icon><Refresh /></el-icon>
-        </el-button>
+        <!-- 添加 -->
+        <el-tooltip
+          class="box-item"
+          effect="light"
+          content="添加出库单"
+          placement="bottom"
+        >
+          <el-button type="primary">添加</el-button>
+        </el-tooltip>
         <!-- 批量导出 -->
         <BulkOPe :excelData="tableData" :getOpt="() => [0, 1, 2]">
           <template #excel> </template>
@@ -135,6 +154,27 @@ const handelSelect = (selection) => {
           :options="options"
           des="请选择你要查找的内容"
         ></ChooseSelect>
+        <!-- 供应商下拉菜单搜索组件 -->
+        <el-dropdown>
+          <el-button type="default" size="large">
+            <el-icon><ArrowDown /></el-icon>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <!-- <el-dropdown-item>Action 1</el-dropdown-item>
+              <el-dropdown-item>Action 2</el-dropdown-item> -->
+              <el-input
+                placeholder="搜索供应商名称"
+                label="供应商"
+                title="供应商"
+              ></el-input>
+              <el-input placeholder="搜索通信地址" label="通信地址"></el-input>
+              <el-button type="primary" circle color="#626aef">
+                <el-icon><Search /></el-icon>
+              </el-button>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
         <el-button type="primary" circle color="#626aef">
           <el-icon><Search /></el-icon>
         </el-button>

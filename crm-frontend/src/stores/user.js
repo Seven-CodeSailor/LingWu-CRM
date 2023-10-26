@@ -1,180 +1,24 @@
 import { defineStore } from 'pinia'
 import Request from '@/apis/request'
+
+import inventory from './menus/inventory'
+import homepage from './menus/homepage'
+import system from './menus/system'
+import organization from './menus/organization'
+import basicData from './menus/basicData'
+import customer from './menus/customer'
+import sale from './menus/sale'
+import fund from './menus/fund'
 // 测试菜单数据
 let testMenus = [
-  {
-    id: 1,
-    text: '系统管理',
-    icon: 'IconSetting',
-    children: [
-      {
-        id: 2,
-        text: '系统管理1',
-        href: '/un-1',
-        icon: 'IconSetting',
-        pid: 1
-      },
-      {
-        id: 3,
-        text: '系统管理2',
-        href: '/un-2',
-        icon: 'IconSetting',
-        pid: 1
-      },
-      {
-        id: 4,
-        text: '系统管理3',
-        href: '/un-3',
-        icon: 'IconSetting',
-        pid: 1
-      },
-      {
-        id: 5,
-        text: '系统管理4',
-        href: '/un-4',
-        icon: 'IconSetting',
-        pid: 1
-      },
-      {
-        id: 6,
-        text: '系统管理5',
-        href: '/un-5',
-        icon: 'IconSetting',
-        pid: 1
-      }
-    ]
-  },
-  {
-    id: 2,
-    text: '用户管理',
-    icon: 'IconUser',
-    children: [
-      {
-        id: 2,
-        text: '用户管理1',
-        href: '/un-11',
-        icon: 'IconUser',
-        pid: 2
-      },
-      {
-        id: 3,
-        text: '用户管理2',
-        href: '/un-12',
-        icon: 'IconUser',
-        pid: 2
-      },
-      {
-        id: 4,
-        text: '用户管理3',
-        href: '/un-13',
-        icon: 'IconUser',
-        pid: 2
-      },
-      {
-        id: 5,
-        text: '用户管理4',
-        href: '/un-14',
-        icon: 'IconUser',
-        pid: 2
-      },
-      {
-        id: 6,
-        text: '用户管理5',
-        href: '/un-15',
-        icon: 'IconUser',
-        pid: 2
-      }
-    ]
-  },
-  {
-    id: 3,
-    text: '订单管理',
-    icon: 'IconTickets',
-    children: [
-      {
-        id: 2,
-        text: '订单管理1',
-        href: '/un-21',
-        icon: 'IconTickets',
-        pid: 3
-      },
-      {
-        id: 3,
-        text: '订单管理2',
-        href: '/un-22',
-        icon: 'IconTickets',
-        pid: 3
-      },
-      {
-        id: 4,
-        text: '订单管理3',
-        href: '/un-23',
-        icon: 'IconTickets',
-        pid: 3
-      },
-      {
-        id: 5,
-        text: '订单管理4',
-        href: '/un-24',
-        icon: 'IconTickets',
-        pid: 3
-      },
-      {
-        id: 6,
-        text: '订单管理5',
-        href: '/un-25',
-        icon: 'IconTickets',
-        pid: 3
-      }
-    ]
-  },
-  {
-    id: 4,
-    text: '库存管理',
-    icon: 'IconHouse',
-    children: [
-      // pipazi
-      {
-        id: 2,
-        text: '库存清单',
-        href: '/inventory/inventoryList',
-        icon: 'IconHouse',
-        pid: 4
-      },
-      // qianmeng
-      {
-        id: 3,
-        text: '入库单',
-        href: '/inventory/storageReceipt',
-        icon: 'IconHouse',
-        pid: 4
-      },
-      // 冰雾
-      {
-        id: 4,
-        text: '入库明细',
-        href: '/inventory/bingwu',
-        icon: 'IconHouse',
-        pid: 4
-      },
-      // 暮秋
-      {
-        id: 5,
-        text: '出库单',
-        href: '/inventory/WarehousingDetails',
-        icon: 'IconHouse',
-        pid: 4
-      },
-      // seven
-      {
-        id: 6,
-        text: '出库明细',
-        href: '/inventory/outstoragedetails',
-        icon: 'IconHouse',
-        pid: 4
-      }
-    ]
-  }
+  homepage,
+  system,
+  organization,
+  basicData,
+  customer,
+  sale,
+  inventory,
+  fund
 ]
 
 export const userStore = defineStore('user', {

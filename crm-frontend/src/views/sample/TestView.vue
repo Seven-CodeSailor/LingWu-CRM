@@ -18,6 +18,10 @@
     @update-table-data="get"
     ref="baseDataListRef"
   >
+    <!-- 图标插槽 -->
+    <template #ico>
+      <el-icon style="margin-right: 4px"><icon-refresh /></el-icon>
+    </template>
     <template #menu>
       <div>
         插槽区
@@ -162,7 +166,7 @@ const sendData = {
   // 是否使用使用多选列
   useSelectColumn: true,
   // 是否使用操作列
-  useOperateColumn: true
+  useOperateColumn: true,
 }
 const baseDataListRef = ref(null)
 const get = (pageSize, currentPage) => {
