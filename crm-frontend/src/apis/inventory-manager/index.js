@@ -41,4 +41,11 @@ export const queryStorageDetails = async (data, success, fail) => {
 // 这个是mock测试用例,暂时别删
 export const getInventortOutTableList = (theUrl) => {
   return Request.requestJson(Request.GET, theUrl)
+  // return new Promise((resolve) => {
+  //   resolve(data)
+  // }).then((res) => {
+  //   // 写死数据
+  //   // 将数据存储在pinia
+  //   console.log(res)
+  // })
 }
