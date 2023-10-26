@@ -38,10 +38,10 @@
       </div>
       <div class="wrap2">
         <!-- 下拉选择框 -->
-        <ChooseSelect
+        <ChooseSelect 
+          placeholder="请输入商品名称或者SKU名称"
           :options="options"
-          des="请输入商品名称或者SKU名称"
-        >
+          >
         </ChooseSelect>
         <el-button 
         type="primary" 
@@ -54,7 +54,9 @@
     </div>
 
     <!-- 表格内容区 -->
-    <Table :dataArr="tableData" :isSelect="true" :isLoading="loading"></Table>
+    <Table :dataArr="tableData" :isSelect="true" :isLoading="loading">
+      <!-- 内容测试区 -->
+    </Table>
 
     <!-- 分页器 -->
     <div class="footer">
@@ -69,6 +71,7 @@
       :total="400"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
+
     />
     </div>
 
@@ -81,7 +84,8 @@ import { HomeFilled, Refresh, Search, QuestionFilled } from '@element-plus/icons
 import Table from '@/components/table/Table.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOpe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
-import { ref } from 'vue'
+import { ref, toRefs } from 'vue'
+import { getActivePinia } from 'pinia'
 
 // 以下为尝试引用接口数据--------
 // import useInventoryStore from '@/stores/inventory.js'
@@ -195,8 +199,8 @@ const tableData = ref([
     预计利润: '',
     原厂编码: '',
   },
-  
 ])
+
 
 // 选择框数据
 const options = ref([
@@ -210,11 +214,28 @@ const options = ref([
   },
 ])
 
-// 分页器
+// 分页器 footer
 // 定义分页数据----------
 const currentPage = ref(1)
+// 需要接受动态数据的传递
+// const props = defineProps({
+//   pageSize: {
+//     type: Number,
+//     defualt: 1,
+//   },
+//   total: {
+//     type: Number,
+//     defualt: 10,
+//   }
+// })
+// const emit = defineEmits(['getCurrentPage'])
+// const { pageSize, total} = toRefs(props)
+// 定义分页数据
 const pageSize = ref(10)
 const total = ref(400)
+const small = ref(false)
+const background = ref(false)
+const disabled = ref(false)
 
 // 点击分页触发事件-------------------
 const handleSizeChange = (val) => {
@@ -224,10 +245,19 @@ const handleCurrentChange = (val) => {
   // console.log(`current page: ${val}`)
   // emit('getCurrentPage', val)
 }
-
 // 获取页码数--点击---------------
 // const getCurrentPage = (val) => {
 //   getList(val)
+// }
+// 定义请求列表数据
+// const getList = async (pageIndex) => {
+//   let res = await getActivePinia.projectList(pageIndex)
+//   console.log('库存列表', res.data)
+//   if (res.data.status === 200) {
+//     tableData.value = res.data.data
+//     total.value = res.data.total
+//     pageSize.value = res.data.pageSize
+//   }
 // }
 
 
@@ -239,16 +269,13 @@ const handleCurrentChange = (val) => {
   align-items: center;
   justify-content: space-between;
 }
-
 .head .p {
   padding: 0 8px;
 }
-
 .box-card {
-  width: 100%;
-  height: 100%;
+  width: auto;
+  /* height: 100%; */
 }
-
 .wrap {
   display: flex;
   align-items: center;
@@ -262,14 +289,12 @@ const handleCurrentChange = (val) => {
 
 .table {
   width: 100%;
-  display: inline-block;
 }
 
 .footer {
   display: flex;
-  justify-content: right;
-  margin: 26px -12px;
-  width: 100%;
+  justify-content: center;
+  padding: 18px;
   /* height: 20%; 没变化,观望一下*/
 }
 
