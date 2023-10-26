@@ -19,13 +19,6 @@
       <template #menu>
         <div class="menu">
           <div class="left">
-            <el-button
-              style="margin-right: 4px"
-              @click="() => getStockStorageList({ pageIndex: 1, pageSize: 5 })"
-            >
-              <el-icon style="margin-right: 4px"><icon-refresh /></el-icon
-              >刷新</el-button
-            >
             <BulkOPe
               :excelData="() => tableData"
               :getOpt="() => [0]"
@@ -40,6 +33,14 @@
               placeholder="输入商品名称或者SKU名称"
               style="margin-right: 4px"
             />
+            <DropDown
+              v-model:topInputValue="topInputValue"
+              v-model:bottomInputValue="bottomInputValue"
+              topInputTitle="供应商名称"
+              bottomInputTitle="通信地址"
+              @handle-search="handleSearch"
+            ></DropDown>
+
             <el-button
               type="primary"
               style="margin-left: 4px"
@@ -63,7 +64,7 @@
 import { ref, onMounted } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
-
+import DropDown from '../../../components/DropDown/DropDown.vue'
 import { queryStorageDetails } from '@/apis/inventory-manager/index.js'
 const tableColumnAttribute = [
   {
@@ -106,9 +107,7 @@ const tableTotal = ref(99)
 const inputValue = ref('')
 const searchDetails = () => {
   if (!inputValue.value) {
-    ElMessageBox.alert('输入不能为空', '注意!', {
-      confirmButtonText: '确认'
-    })
+    ElMessage.error('输入不能为空')
   } else {
     console.log('pp', baseDataListRef.value.paginationData)
     baseDataListRef.value.paginationData.pageSize = 5
@@ -144,6 +143,12 @@ const getStockStorageList = (params) => {
     })
     baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   })
+}
+
+const topInputValue = ref('')
+const bottomInputValue = ref('')
+const handleSearch = () => {
+  console.log('调用search函数')
 }
 
 onMounted(() => {

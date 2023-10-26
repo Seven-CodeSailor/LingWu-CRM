@@ -29,7 +29,7 @@
         <el-table-column
           type="selection"
           v-if="props.useSelectColumn"
-          width="888"
+          width="55"
         />
         <el-table-column
           v-for="item in props?.tableColumnAttribute"
