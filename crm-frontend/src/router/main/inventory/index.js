@@ -5,11 +5,11 @@ const routes = [
     children: [
       {
         // 入库明细
-        path: '/inventory/WarehousingDetails',
-        name: 'WarehousingDetails',
+        path: '/inventory/bingwu',
+        name: 'ru_ku_ming_xi',
         component: () =>
           import(
-            '@/views/inventoryManagement/StorageDetails/StorageDetails.vue'
+            '@/views/inventoryManagement/StockStorageDetails/StockStorageDetails.vue'
           )
       },
       {
@@ -35,6 +35,15 @@ const routes = [
         component: () =>
           import(
             '@/views/inventoryManagement/StorageReceipt/storageReceipt.vue'
+          )
+      },
+      {
+        // 出库单
+        path: '/inventory/WarehousingDetails',
+        name: 'WarehousingDetails',
+        component: () =>
+          import(
+            '@/views/inventoryManagement/StorageDetails/StorageDetails.vue'
           )
       }
     ]

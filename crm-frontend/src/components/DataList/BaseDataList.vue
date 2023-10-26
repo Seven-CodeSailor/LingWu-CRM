@@ -3,15 +3,10 @@
     <el-card class="box-card">
       <template #header v-if="props?.useHeader">
         <div class="card-header">
-          <!-- 面包屑 -->
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item
-              v-for="(item, index) in $route.matched"
-              :to="{ path: item.path }"
-              :key="index"
-              >{{ item.meta.text }}</el-breadcrumb-item
-            >
-          </el-breadcrumb>
+          <h3 style="display: flex; align-items: center">
+            <slot name="ico"></slot>
+            <div style="margin-left: 8px">{{ props.title }}</div>
+          </h3>
           <el-button
             class="button"
             @click="operatingInstructionDialogVisible = true"
@@ -30,6 +25,7 @@
         @selection-change="handleSelectionChange"
         v-loading="openLoading"
       >
+        <!-- 带有多选功能的列 -->
         <el-table-column
           type="selection"
           v-if="props.useSelectColumn"
@@ -41,31 +37,18 @@
           :label="item.label"
           :key="item"
           :sortable="item?.sortable"
-          :width="item?.usePic ? 300 : ''"
         >
-          <!-- 信息包含图片·，使用如下渲染 -->
-          <template #default="{ row }" v-if="item.usePic">
-            <div style="display: flex; align-items: center">
-              <el-image
-                style="
-                  width: 60px;
-                  height: 60px;
-                  border-radius: 30px;
-                  margin-right: 8px;
-                "
-                :src="row[item.prop].picUrl"
-                :fit="fit"
-              />
-              <div>
-                <div>商品名称:{{ row[item.prop].goodsName }}</div>
-                <div>商家创建时间:{{ row[item.prop].createDate }}</div>
-              </div>
-            </div>
+          <!-- 表格的列内容如果使用tag -->
+          <template #default="{ row }" v-if="item.useTag">
+            <el-tag :type="row[item.prop].tagType">{{
+              row[item.prop].value
+            }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
           label="操作"
           v-if="!props?.useDropdownMenu && props.useOperateColumn"
+          fixed="right"
         >
           <!-- 带图标的按钮操作 -->
           <template #default="{ row }">
@@ -91,6 +74,7 @@
         <el-table-column
           label="操作"
           v-else-if="props.useDropdownMenu && props.useOperateColumn"
+          fixed="right"
         >
           <!-- 下拉菜单的按钮操作 -->
           <template #default="{ row }">
@@ -123,9 +107,9 @@
         <el-pagination
           v-model:current-page="paginationData.currentPage"
           v-model:page-size="paginationData.pageSize"
-          :page-sizes="paginationData.pageSizes"
+          :page-sizes="props.pageSizes"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="paginationData.total"
+          :total="props.total"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           style="margin-top: 30px"
@@ -148,6 +132,12 @@
 import { ref } from 'vue'
 
 const props = defineProps({
+  // 标题
+  title: {
+    type: String,
+    require: 'true',
+    default: '标题的默认值'
+  },
   // 操作说明的提示
   msg: {
     type: String,
@@ -237,9 +227,7 @@ const props = defineProps({
 
 const paginationData = ref({
   currentPage: 1,
-  pageSize: props.pageSizes ? props.pageSizes[0] : 5,
-  total: props.total,
-  pageSizes: props.pageSizes
+  pageSize: props.pageSizes ? props.pageSizes[0] : 5
 })
 
 const rows = ref([])
@@ -277,7 +265,9 @@ defineExpose({
   // 暴露出被选中的row
   rows,
   // 暴露出表格的加载
-  openLoading
+  openLoading,
+  // 暴露出分页数据
+  paginationData
 })
 </script>
 

@@ -2,7 +2,6 @@
   <div style="color: red">测试BaseDataList组件</div>
   <!-- 测试 -->
   <BaseDataList
-    :title="sendData.title"
     :msg="sendData.msg"
     :table-column-attribute="sendData.tableColumnAttribute"
     :use-dropdown-menu="sendData.useDropdownMenu"
@@ -19,6 +18,10 @@
     @update-table-data="get"
     ref="baseDataListRef"
   >
+    <!-- 图标插槽 -->
+    <template #ico>
+      <el-icon style="margin-right: 4px"><icon-refresh /></el-icon>
+    </template>
     <template #menu>
       <div>
         插槽区
@@ -41,7 +44,7 @@ const sendData = {
   tableColumnAttribute: [
     // prop属性和label属性必选
     // sortable可选
-    // usePic可选
+    // useTag可选
     {
       prop: 'sex',
       label: '性别',
@@ -59,9 +62,9 @@ const sendData = {
     },
     {
       prop: 'data',
-      label: '带图片的列',
-      // 该列数据是否使用了图片
-      usePic: true
+      label: 'tag列',
+      // 该列数据是否使用tag
+      useTag: true
     }
   ],
   tableData: [
@@ -69,10 +72,16 @@ const sendData = {
       sex: '男',
       age: 19,
       hoby: '唱歌',
+      // tagType 对应的五种类型
+      // success
+      // danger
+      // info
+      // warning
+      // el => 对应主题色
       data: {
-        picUrl: 'https://cdn2.thecatapi.com/images/446.jpg',
-        goodsName: '2',
-        createDate: '2023-1-2'
+        // value 和 tagType字段不能改变
+        value: '已入库',
+        tagType: 'success'
       }
     },
     {
@@ -80,9 +89,8 @@ const sendData = {
       age: 21,
       hoby: 'rap',
       data: {
-        picUrl: 'https://cdn2.thecatapi.com/images/446.jpg',
-        goodsName: '1',
-        createDate: '2023-1-2'
+        value: '未入库',
+        tagType: 'danger'
       }
     },
     {
@@ -90,9 +98,26 @@ const sendData = {
       age: 22,
       hoby: '篮球',
       data: {
-        picUrl: 'https://cdn2.thecatapi.com/images/446.jpg',
-        goodsName: '1222',
-        createDate: '2023-1-2'
+        value: 'Info状态',
+        tagType: 'info'
+      }
+    },
+    {
+      sex: '男',
+      age: 22,
+      hoby: '篮球',
+      data: {
+        value: 'warning状态',
+        tagType: 'warning'
+      }
+    },
+    {
+      sex: '男',
+      age: 22,
+      hoby: '篮球',
+      data: {
+        value: '主题色',
+        tagType: 'el'
       }
     }
   ],
@@ -132,6 +157,7 @@ const sendData = {
     }
   ],
   pageSizes: [2, 10, 15, 200],
+  // total 表格的总数据量     total传入数据 和 usePagination为true 才能显示分页
   total: 100,
   // 是否使用分页
   usePagination: false,
@@ -140,7 +166,7 @@ const sendData = {
   // 是否使用使用多选列
   useSelectColumn: true,
   // 是否使用操作列
-  useOperateColumn: true
+  useOperateColumn: true,
 }
 const baseDataListRef = ref(null)
 const get = (pageSize, currentPage) => {
