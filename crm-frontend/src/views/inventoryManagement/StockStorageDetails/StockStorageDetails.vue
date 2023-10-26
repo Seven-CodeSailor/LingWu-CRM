@@ -5,8 +5,8 @@
       :table-column-attribute="tableColumnAttribute"
       :use-operate-column="false"
       :page-sizes="[5, 10, 15]"
-      :total="tableTotal"
-      :table-data="tableData"
+      :total="stockStorageDetailsStore.tableTotal"
+      :table-data="stockStorageDetailsStore.tableData"
       @update-table-data="
         (pageSize, currentPage) =>
           getStockStorageList({
@@ -65,7 +65,7 @@ import { ref, onMounted } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import DropDown from '../../../components/DropDown/DropDown.vue'
-import { queryStorageDetails } from '@/apis/inventory-manager/index.js'
+import { useStockStorageDetailsStore } from '@/stores/stockstoragedetails.js'
 const tableColumnAttribute = [
   {
     prop: 'goodsIdAndSkuId',
@@ -102,10 +102,12 @@ const tableColumnAttribute = [
   }
 ]
 const baseDataListRef = ref(null)
-const tableData = ref([])
-const tableTotal = ref(99)
 const inputValue = ref('')
+
+const stockStorageDetailsStore = useStockStorageDetailsStore()
+
 const searchDetails = () => {
+  console.log('t', stockStorageDetailsStore.tableData)
   if (!inputValue.value) {
     ElMessage.error('输入不能为空')
   } else {
@@ -121,28 +123,10 @@ const searchDetails = () => {
     getStockStorageList(params)
   }
 }
-const getStockStorageList = (params) => {
+const getStockStorageList = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  queryStorageDetails(params).then((res) => {
-    console.log('res', res)
-    const { rows, total } = res.data.data
-    console.log('tt', total)
-    tableTotal.value = total
-    tableData.value = rows.map((item) => {
-      return {
-        goodsIdAndSkuId: `商品：${item.goods_id}\n SKU：${item.sku_id}`,
-        goodsNameAndSkuNmae: `商品名：${item.goods_name}\n SKU名：${item.sku_name}`,
-        number: item.number,
-        categoryName: item.category_name,
-        storeName: item.store_name,
-        intoIntro: item.into_intro,
-        intoTime: item.into_time,
-        remarks: item.remarks,
-        supplierName: item.supplier_name
-      }
-    })
-    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  })
+  await stockStorageDetailsStore.getTableData(params)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
 
 const topInputValue = ref('')
@@ -153,8 +137,8 @@ const handleSearch = () => {
 
 onMounted(() => {
   const params = {
-    pageSize: baseDataListRef.value.paginationData.pageSize,
-    pageIndex: baseDataListRef.value.paginationData.currentPage
+    pageIndex: 1,
+    pageSize: 5
   }
   getStockStorageList(params)
 })
@@ -168,6 +152,7 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 10px;
     .left {
       height: 40px;
     }

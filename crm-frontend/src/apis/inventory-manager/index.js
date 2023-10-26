@@ -8,19 +8,21 @@ const currBaseUrl = '/inventory-manager/'
  * @param {*} success 成功获取数据后的回调
  * @param {*} fail 获取数据失败的回调
  */
-export const queryStorageDetails = (data) => {
+export const queryStorageDetails = async (data, success, fail) => {
   // 当有接口就直接使用下面的
-  // return Request.requestJson(
-  //   Request.GET,
-  //   currBaseUrl + 'query-storage-details',
-  //   {
-  //     params: {
-  //       ...data
-  //     }
+  // Request.requestJson(Request.GET, currBaseUrl + 'query-storage-details', {
+  //   params: {
+  //     ...data
   //   }
-  // )
+  // })
+  //   .then((response) => {
+  //      success(response)
+  //   })
+  //   .catch((error) => {
+  //     fail(error)
+  //   })
   // 没有接口就使用下面mock模拟的数据
-  return Request.requestJson(
+  await Request.requestJson(
     Request.GET,
     'https://mockapi.eolink.com/KnVGhupeb89500c132462100d3745b0046ecd1264eeb224/inventory-manager/query-storage-details1',
     {
@@ -29,6 +31,12 @@ export const queryStorageDetails = (data) => {
       }
     }
   )
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
 }
 // 这个是mock测试用例,暂时别删
 export const getInventortOutTableList = (theUrl) => {
