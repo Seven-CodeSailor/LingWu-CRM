@@ -20,7 +20,7 @@
         <div class="menu">
           <div class="left">
             <BulkOPe
-              :excelData="t2"
+              :excelData="t1"
               :getOpt="() => [0]"
               excelName="入库明细.xlsx"
               tableName="入库明细的sheet表"
@@ -141,22 +141,52 @@ const test = () => {
   console.log('v1', baseDataListRef.value)
   console.log('b1', b)
 }
-const t1 = (tableData) => {
-  // console.log('v', baseDataListRef.value)
-  // const Data = baseDataListRef.value.rows
-  // // const b = JSON.parse(JSON.stringify(Data))
-  // console.log('b', Data)
-  return tableData
+
+// const aa = () => {
+//   console.log('aa')
+//   return []
+// }
+
+const t1 = () => {
+  // console.log('t1'.Data)
+  // // console.log('v', baseDataListRef.value)
+
+  // // // const b = JSON.parse(JSON.stringify(Data))
+  // // console.log('b', Data)
+  // console.log('ss')
+  return baseDataListRef.value.rows // 相对于return []
 }
 
-
-
-const t2 = () => {
-  const tableData = baseDataListRef.value.rows
-  t1(JSON.parse(JSON.stringify(tableData)))
-}
+// const t2 = () => {
+//   const tableData = baseDataListRef.value.rows
+//   console.log('tabledata', tableData)
+//   // t1(JSON.parse(JSON.stringify(tableData)))
+//   return [
+//     {
+//       性别: '男',
+//       年龄: '19',
+//       爱好: '唱',
+//       name: 'a'
+//     },
+//     {
+//       性别: '女',
+//       年龄: '21',
+//       爱好: 'rap',
+//       address: 'b'
+//     },
+//     {
+//       性别: '男',
+//       年龄: '22',
+//       爱好: '篮球',
+//       habb: 'c'
+//     }
+//   ]
+// }
 
 onMounted(() => {
+  const Data = baseDataListRef.value.rows
+  const bb = JSON.parse(JSON.stringify(Data))
+  console.log('bb', bb)
   const params = {
     pageIndex: 1,
     pageSize: 5

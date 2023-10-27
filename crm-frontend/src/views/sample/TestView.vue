@@ -166,7 +166,7 @@ const sendData = {
   // 是否使用使用多选列
   useSelectColumn: true,
   // 是否使用操作列
-  useOperateColumn: true,
+  useOperateColumn: true
 }
 const baseDataListRef = ref(null)
 const get = (pageSize, currentPage) => {
@@ -174,6 +174,7 @@ const get = (pageSize, currentPage) => {
   console.log('pageSize', pageSize)
   console.log('currentPage', currentPage)
 }
+
 const getRows = () => {
   // 获取组件暴露出来的rows
   console.log('rows', baseDataListRef.value.rows)
