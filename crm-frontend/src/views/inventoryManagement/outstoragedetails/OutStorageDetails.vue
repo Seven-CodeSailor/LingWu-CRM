@@ -277,6 +277,10 @@ const changeLoadAnimation = () => {
     baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   }, 500)
 }
+
+const excel = () => {
+  // console.log('s', baseDataListRef.value.rows)
+}
 </script>
 
 <style lang="scss" scoped>
