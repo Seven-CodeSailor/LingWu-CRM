@@ -4,9 +4,9 @@
  * @LastEditors: sayoriqwq 2531600563@qq.com
  * @LastEditTime: 2023-10-25 21:32:14
  * @FilePath: \zero-one-crmsys\crm-frontend\src\plugins\el-icon.js
- * @Description: 
- * 
- * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
  */
 // 这里导入你要使用的图标
 // 写成多行避免解决冲突麻烦
@@ -28,6 +28,8 @@ import { Search } from '@element-plus/icons-vue'
 import { InfoFilled } from '@element-plus/icons-vue'
 import { Key } from '@element-plus/icons-vue'
 import { House } from '@element-plus/icons-vue'
+import { ArrowDown } from '@element-plus/icons-vue'
+import { MessageBox } from '@element-plus/icons-vue'
 export default (app) => {
   app.component('IconMenu', Menu)
   app.component('IconSetting', Setting)
@@ -48,4 +50,6 @@ export default (app) => {
   app.component('IconMoonNight', MoonNight)
   app.component('IconSunny', Sunny)
   app.component('IconBell', Bell)
+  app.component('IconArrowDown', ArrowDown)
+  app.component('IconMessageBox', MessageBox)
 }
