@@ -210,6 +210,10 @@ const changeLoadAnimation = () => {
   // 关闭表格加载动画
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
+
+const excel = () => {
+  // console.log('s', baseDataListRef.value.rows)
+}
 </script>
 
 <style lang="scss" scoped>
