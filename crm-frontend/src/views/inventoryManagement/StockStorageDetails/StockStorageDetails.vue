@@ -20,7 +20,7 @@
         <div class="menu">
           <div class="left">
             <BulkOPe
-              :excelData="() => tableData"
+              :excelData="t2"
               :getOpt="() => [0]"
               excelName="入库明细.xlsx"
               tableName="入库明细的sheet表"
@@ -40,7 +40,7 @@
               bottomInputTitle="通信地址"
               @handle-search="handleSearch"
             ></DropDown>
-
+            <el-button @click="test">获取勾选的rows</el-button>
             <el-button
               type="primary"
               style="margin-left: 4px"
@@ -133,6 +133,27 @@ const topInputValue = ref('')
 const bottomInputValue = ref('')
 const handleSearch = () => {
   console.log('调用search函数')
+}
+
+const test = () => {
+  const Data = baseDataListRef.value.rows
+  const b = JSON.parse(JSON.stringify(Data))
+  console.log('v1', baseDataListRef.value)
+  console.log('b1', b)
+}
+const t1 = (tableData) => {
+  // console.log('v', baseDataListRef.value)
+  // const Data = baseDataListRef.value.rows
+  // // const b = JSON.parse(JSON.stringify(Data))
+  // console.log('b', Data)
+  return tableData
+}
+
+
+
+const t2 = () => {
+  const tableData = baseDataListRef.value.rows
+  t1(JSON.parse(JSON.stringify(tableData)))
 }
 
 onMounted(() => {
