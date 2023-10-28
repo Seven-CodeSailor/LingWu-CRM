@@ -18,7 +18,7 @@ const input1 = ref()
     label: '选项2'
   },
   {
-    value: 'Option2',
+    value: 'Option3',
     label: '选项3'
   }
 ])

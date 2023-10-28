@@ -16,94 +16,110 @@
           >
         </div>
       </template>
-      <!-- 表格的menu操作菜单 -->
-      <slot name="menu"></slot>
-      <!-- 表格 -->
-      <el-table
-        :data="props?.tableData"
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-        v-loading="openLoading"
-        table-layout="auto"
-      >
-        <!-- 带有多选功能的列 -->
-        <el-table-column
-          type="selection"
-          v-if="props.useSelectColumn"
-          width="55"
-        />
-        <el-table-column
-          v-for="item in props?.tableColumnAttribute"
-          :prop="item.prop"
-          :label="item.label"
-          :key="item"
-          :sortable="item?.sortable"
-          class-name="class-name"
-        >
-          <!-- 表格的列内容如果使用tag -->
-          <template #default="{ row }" v-if="item.useTag">
-            <el-tag :type="row[item.prop].tagType">{{
-              row[item.prop].value
-            }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          v-if="!props?.useDropdownMenu && props.useOperateColumn"
-          fixed="right"
-        >
-          <!-- 带图标的按钮操作 -->
-          <template #default="{ row }">
-            <!-- 条件渲染按钮 -->
-            <template v-if="props.handleEdit">
-              <el-tooltip content="编辑" placement="top">
-                <el-button circle type="primary" @click="props.handleEdit(row)">
-                  <el-icon> <icon-edit /></el-icon>
-                </el-button> </el-tooltip
-            ></template>
-            <!-- 条件渲染按钮 -->
-            <template v-if="props.handleDelete">
-              <el-tooltip content="删除" placement="top"
-                ><el-button
-                  circle
-                  type="danger"
-                  @click="props.handleDelete(row)"
-                >
-                  <el-icon> <icon-delete /></el-icon> </el-button></el-tooltip
-            ></template>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          v-else-if="props.useDropdownMenu && props.useOperateColumn"
-          fixed="right"
-        >
-          <!-- 下拉菜单的按钮操作 -->
-          <template #default="{ row }">
-            <el-dropdown
-              trigger="click"
-              @command="(command) => handleCommand(command, row)"
-            >
-              <el-button>
-                操作
-                <el-icon style="margin-left: 4px"
-                  ><icon-caret-bottom
-                /></el-icon>
-              </el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item
-                    v-for="(item, index) in props?.dropdownMenuActionsInfo"
-                    :key="index"
-                    :command="item.command"
-                    >{{ item.actionName }}</el-dropdown-item
-                  >
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown></template
+      <div class="main">
+        <!-- 树形菜单插槽 -->
+        <slot name="treeMeau"></slot>
+        <div class="theTable">
+          <!-- 表格的menu操作菜单 -->
+          <slot name="menu"></slot>
+          <!-- 表格 -->
+          <el-table
+            :data="props?.tableData"
+            style="width: 100%"
+            @selection-change="handleSelectionChange"
+            v-loading="openLoading"
+            table-layout="auto"
           >
-        </el-table-column>
-      </el-table>
+            <!-- 带有多选功能的列 -->
+            <el-table-column
+              type="selection"
+              v-if="props.useSelectColumn"
+              width="55"
+            />
+            <el-table-column
+              v-for="item in props?.tableColumnAttribute"
+              :prop="item.prop"
+              :label="item.label"
+              :key="item"
+              :sortable="item?.sortable"
+              class-name="class-name"
+            >
+              <!-- 表格的列内容如果使用tag -->
+              <template #default="{ row }" v-if="item.useTag">
+                <el-tag :type="row[item.prop].tagType">{{
+                  row[item.prop].value
+                }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="操作"
+              v-if="!props?.useDropdownMenu && props.useOperateColumn"
+              fixed="right"
+            >
+              <!-- 带图标的按钮操作 -->
+              <template #default="{ row }">
+                <!-- 条件渲染按钮 -->
+                <template v-if="props.handleEdit">
+                  <el-tooltip content="编辑" placement="top">
+                    <el-button
+                      circle
+                      type="primary"
+                      @click="props.handleEdit(row)"
+                    >
+                      <el-icon> <icon-edit /></el-icon>
+                    </el-button> </el-tooltip
+                ></template>
+                <!-- 条件渲染按钮 -->
+                <template v-if="props.handleDelete">
+                  <el-tooltip content="删除" placement="top"
+                    ><el-button
+                      circle
+                      type="danger"
+                      @click="props.handleDelete(row)"
+                    >
+                      <el-icon>
+                        <icon-delete
+                      /></el-icon> </el-button></el-tooltip
+                ></template>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="操作"
+              v-else-if="props.useDropdownMenu && props.useOperateColumn"
+              fixed="right"
+            >
+              <!-- 下拉菜单的按钮操作 -->
+              <template #default="{ row }">
+                <el-dropdown
+                  trigger="click"
+                  @command="(command) => handleCommand(command, row)"
+                >
+                  <el-button>
+                    操作
+                    <el-icon style="margin-left: 4px"
+                      ><icon-caret-bottom
+                    /></el-icon>
+                  </el-button>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item
+                        v-for="(item, index) in props?.dropdownMenuActionsInfo"
+                        :key="index"
+                        :command="item.command"
+                        >{{ item.actionName }}</el-dropdown-item
+                      >
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown></template
+              >
+            </el-table-column>
+            <!-- 表格没有数据的样式 -->
+            <template #empty>
+              <el-empty class="emptyTable" description="没有数据"></el-empty>
+            </template>
+          </el-table>
+        </div>
+      </div>
       <!-- 分页 -->
       <template v-if="props?.usePagination">
         <el-pagination
@@ -289,5 +305,16 @@ defineExpose({
 
 :deep(.el-pagination) {
   justify-content: center;
+}
+.main {
+  display: flex;
+}
+.theTable {
+  width: 1200px;
+  padding: 20px;
+}
+.emptyTable {
+  min-width: 800px;
+  min-height: 600px;
 }
 </style>

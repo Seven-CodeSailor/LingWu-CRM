@@ -38,7 +38,7 @@ export const queryStorageDetails = async (data, success, fail) => {
       fail(error)
     })
 }
-// 这个是mock测试用例,暂时别删
+// 以下是mock测试用例,暂时别删
 export const getInventortOutTableList = (theUrl) => {
   return Request.requestJson(Request.GET, theUrl)
   // return new Promise((resolve) => {
@@ -65,3 +65,4 @@ export const queryInventoryList = async (data, success, fail) => {
       fail(error)
     })
 }
+export const getOutTableList = () => {}

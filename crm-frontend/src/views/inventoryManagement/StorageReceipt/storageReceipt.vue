@@ -2,8 +2,8 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-24 19:01:46
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-24 21:10:27
- * @FilePath: \zero-one-crmsys\crm-frontend\src\views\inventoryManagement\StorageReceipt\index.vue
+ * @LastEditTime: 2023-10-27 20:04:37
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\views\inventoryManagement\StorageReceipt\storageReceipt.vue
  * @Description: 
  * 
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
@@ -13,6 +13,7 @@
     <div class="app-container">
       <BaseDataList
         :useHeader="true"
+        :title="sendData.title"
         :msg="sendData.msg"
         :table-column-attribute="sendData.tableColumnAttribute"
         :handle-delete="sendData.handleDelete"
@@ -27,13 +28,51 @@
       >
         <!-- 插槽区 -->
         <template #menu>
-          <div>
-            插槽区
-            <el-button>搜索</el-button>
-            <el-button>刷新</el-button>
-            <el-button>批量操作-后续换成组件</el-button>
-            <el-button @click="getRows">获取被勾选的列</el-button>
-            <el-button @click="changeLoadAnimation">加载动画></el-button>
+          <div class="wrap">
+            <div class="wrap1">
+              <!-- 刷新 -->
+              <el-button
+                @click="refresh"
+                type="info"
+                circle
+                style="margin-right: 28px"
+              >
+                <el-button>
+                  <el-icon>
+                    <Refresh />
+                  </el-icon>
+                  刷新
+                </el-button>
+              </el-button>
+              <!-- 批量导出 -->
+              <BulkOPe
+                :excelData="excel"
+                tableName="入库表"
+                excelName="入库表格.xlsx"
+                :getOpt="() => [0, 1, 2]"
+              >
+                <template #excel> </template>
+                <template #file> </template>
+                <template #print> </template>
+              </BulkOPe>
+            </div>
+            <div class="wrap2">
+              <!-- 下拉选择框 -->
+              <ChooseSelect
+                placeholder="请输入商品名称或者SKU名称"
+                :options="options"
+              >
+              </ChooseSelect>
+              <el-button
+                type="primary"
+                :icon="Search"
+                style="margin-left: 10px; padding-left: 10px"
+              >
+                搜索
+              </el-button>
+            </div>
+            <el-button @click="getRows">获取被勾选的行</el-button>
+            <!-- <el-button @click="changeLoadAnimation">加载动画></el-button> -->
           </div>
         </template>
       </BaseDataList>
@@ -42,64 +81,80 @@
 </template>
 
 <script setup>
+import { Refresh, Search } from '@element-plus/icons-vue'
+import BulkOPe from '@/components/BulkOpe/BulkOpe.vue'
+import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 import { ref } from 'vue'
-import BaseDataList from '@/components/DataList/BaseDataList.vue'
+//分页参数：
+//pageIndex & pageSize
+// 获取被勾选的行的数据（组件暴露出来的rows）
+const getRows = () => {
+  console.log('rows', baseDataListRef.value.rows)
+  return baseDataListRef.value.rows
+}
 
 const sendData = {
   tableColumnAttribute: [
     {
-      prop: 'danhao',
+      prop: 'id',
       label: '对应单号',
       sortable: true
     },
     {
-      prop: 'cangku',
+      prop: 'que',
       label: '仓库',
       sortable: true
     },
     {
-      prop: 'chuangjianren',
+      // prop: 'create_user/create_time',
+      prop: 'create_user_time',
       label: '创建人/时间'
     },
     {
-      prop: 'state',
-      label: '状态'
+      prop: 'data',
+      label: '状态',
+      useTag: true
     },
     {
-      prop: 'shuliang',
+      prop: 'number',
       label: '入库数量'
     },
     {
-      prop: 'renyuan',
-      label: '入库人员/时间'
+      // prop: 'into_user/into_time',
+      prop: 'into_time_user',
+      label: '入库(人员)/时间'
     },
     {
-      prop: 'leixing',
+      prop: 'into_type',
       label: '入库类型'
     },
     {
-      prop: 'beizhu',
+      prop: 'intro',
       label: '备注'
     }
   ],
   tableData: [
     {
-      danhao: '天河一期',
-      cangku: '仓库123456',
-      chuangjianren: '张三/2022-10-10',
-      state: '已入库',
-      shuliang: '100',
-      renyuan: '李四/2022-10-10',
-      leixing: '采购入库'
+      id: '天河一期',
+      que: '仓库123456',
+      create_user_time: '张三/2022-10-10',
+      //后端字段为status，后续拿到接口再处理一下
+      data: { value: '已入库', tagType: 'success' },
+      number: '100',
+      into_time_user: '李四/2022-10-10',
+      into_type: '采购入库',
+      intro: '备注'
     },
     {
-      danhao: '天河2期',
-      cangku: '仓库123456',
-      chuangjianren: '张三/2022-10-10',
-      state: '已入库',
-      shuliang: '100',
-      renyuan: '李四/2022-10-10',
-      leixing: '采购入库'
+      id: '天河2期',
+      que: '仓库123456',
+      create_user_time: '张三/2022-10-10',
+      //后端字段为status，后续拿到接口再处理一下
+      data: { value: '已入库', tagType: 'success' },
+      number: '100',
+      into_time_user: '李四/2022-10-10',
+      into_type: '采购入库',
+      intro: '备注'
     }
   ],
   msg: '操作说明',
@@ -137,8 +192,10 @@ const sendData = {
     console.log('删除', row)
   },
   pageSizes: [2, 10, 15, 200],
-  total: 100
+  total: 100,
+  title: '入库单'
 }
+
 const baseDataListRef = ref(null)
 //分页器组件点击调用get
 const get = (pageSize, currentPage) => {
@@ -147,14 +204,17 @@ const get = (pageSize, currentPage) => {
   console.log('currentPage', currentPage)
 }
 
-//获取被勾选的行的数据（组件暴露出来的rows）
-const getRows = () => {
-  console.log('rows', baseDataListRef.value.rows)
-}
-// 关闭表格加载动画
-const changeLoadAnimation = () => {
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-}
+// // 关闭表格加载动画
+// const changeLoadAnimation = () => {
+//   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+// }
 </script>
 
-<style scoped></style>
+<style scoped>
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 20px;
+}
+</style>
