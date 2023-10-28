@@ -31,7 +31,10 @@ import { House } from '@element-plus/icons-vue'
 import { ArrowDown } from '@element-plus/icons-vue'
 import { MessageBox } from '@element-plus/icons-vue'
 import { Operation } from '@element-plus/icons-vue'
-import { Plus } from '@element-plus/icons-vue'
+
+import { HomeFilled } from '@element-plus/icons-vue'
+import { BellFilled } from '@element-plus/icons-vue'
+import { Plus} from '@element-plus/icons-vue'
 export default (app) => {
   app.component('IconMenu', Menu)
   app.component('IconSetting', Setting)
@@ -55,5 +58,7 @@ export default (app) => {
   app.component('IconArrowDown', ArrowDown)
   app.component('IconMessageBox', MessageBox)
   app.component('IconOperation', Operation)
+  app.component('IconHomeFilled', HomeFilled)
+  app.component('IconBellFilled', BellFilled)
   app.component('IconPlus', Plus)
 }
