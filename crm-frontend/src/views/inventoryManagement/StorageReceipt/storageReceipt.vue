@@ -43,6 +43,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import BaseDataList from '@/components/DataList/BaseDataList.vue'
 
 const sendData = {
   tableColumnAttribute: [

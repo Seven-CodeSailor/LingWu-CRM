@@ -20,7 +20,7 @@
         <div class="menu">
           <div class="left">
             <BulkOPe
-              :excelData="() => tableData"
+              :excelData="() => stockStorageDetailsStore.tableData"
               :getOpt="() => [0]"
               excelName="入库明细.xlsx"
               tableName="入库明细的sheet表"
