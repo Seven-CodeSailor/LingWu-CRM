@@ -1,8 +1,8 @@
 /*
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-25 21:31:59
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-25 21:32:14
+ * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
+ * @LastEditTime: 2023-10-28 16:02:26
  * @FilePath: \zero-one-crmsys\crm-frontend\src\plugins\el-icon.js
  * @Description:
  *
@@ -30,6 +30,8 @@ import { Key } from '@element-plus/icons-vue'
 import { House } from '@element-plus/icons-vue'
 import { ArrowDown } from '@element-plus/icons-vue'
 import { MessageBox } from '@element-plus/icons-vue'
+import { Operation } from '@element-plus/icons-vue'
+import { Plus } from '@element-plus/icons-vue'
 export default (app) => {
   app.component('IconMenu', Menu)
   app.component('IconSetting', Setting)
@@ -52,4 +54,6 @@ export default (app) => {
   app.component('IconBell', Bell)
   app.component('IconArrowDown', ArrowDown)
   app.component('IconMessageBox', MessageBox)
+  app.component('IconOperation', Operation)
+  app.component('IconPlus', Plus)
 }
