@@ -53,7 +53,7 @@
               inactive-text="否"
               size="large"
               :loading="openSwitchLoading"
-              @change="(state) => emits('modifyDict', state, row)"
+              @change="(state) => emits('updateSwitchState', state, row)"
             />
           </template>
         </el-table-column>
@@ -262,8 +262,8 @@ const handleSelectionChange = (newRows) => {
   rows.value = newRows
 }
 // 调用父组件更新表格数据的函数
-//  modifyDict 调用父组件的修改开关状态的函数
-const emits = defineEmits(['updateTableData'], ['modifyDict'])
+//  updateSwitchState 调用父组件的修改开关状态的函数
+const emits = defineEmits(['updateTableData'], ['updateSwitchState'])
 
 const handleSizeChange = (pageSize) => {
   // 当前页的数据容量改变，重置页码为1

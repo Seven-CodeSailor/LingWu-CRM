@@ -16,7 +16,7 @@
     :use-select-column="sendData.useSelectColumn"
     :use-operate-column="sendData.useOperateColumn"
     @update-table-data="get"
-    @modify-dict="get1"
+    @update-switch-state="get1"
     ref="baseDataListRef"
   >
     <!-- 图标插槽 -->

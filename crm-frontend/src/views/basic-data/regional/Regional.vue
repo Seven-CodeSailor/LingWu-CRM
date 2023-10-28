@@ -15,35 +15,41 @@ import organizationStructure from '@/components/OrganizationStructure/index.vue'
 const sendData = {
   tableColumnAttribute: [
     {
-      prop: 'sex',
-      label: '性别',
+      prop: 'areaName',
+      label: '地区名称'
+    },
+    {
+      prop: 'areaInfo',
+      label: '地区描述'
+    },
+    {
+      prop: 'sort',
+      label: '排序',
       sortable: true
     },
     {
-      prop: 'age',
-      label: '年龄',
-      sortable: true
-    },
-    {
-      prop: 'hoby',
-      label: '爱好'
+      prop: 'isUse',
+      label: '是否启用'
     }
   ],
   tableData: [
     {
-      sex: '男',
-      age: 19,
-      hoby: '唱歌'
+      areaName: '鸡场',
+      areaInfo: 'ikun集中营',
+      sort: 250,
+      isUse: true
     },
     {
-      sex: '女',
-      age: 21,
-      hoby: 'rap'
+      areaName: '鸡场',
+      areaInfo: 'ikun集中营',
+      sort: 251,
+      isUse: true
     },
     {
-      sex: '男',
-      age: 22,
-      hoby: '篮球'
+      areaName: '鸡场',
+      areaInfo: 'ikun集中营',
+      sort: 252,
+      isUse: true
     }
   ],
   // 传入删除操作的函数就会显示删除按钮
@@ -53,7 +59,7 @@ const sendData = {
   handleEdit: (row) => {
     console.log('编辑', row)
   },
-  pageSizes: [2, 10, 15, 200],
+  pageSizes: [5, 10, 15],
   total: 100,
   usePagination: true
 }

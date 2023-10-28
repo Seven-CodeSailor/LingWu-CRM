@@ -9,7 +9,7 @@
       :page-sizes="[5, 10, 15]"
       :total="999"
       @update-table-data="get"
-      @modify-dict="get1"
+      @update-switch-state="get1"
       ref="baseDataListRef"
     >
       <template #ico>
