@@ -81,6 +81,7 @@ const rows = ref([])
  */
 onMounted(async () => {
   rows.value = props.getData()
+  console.log(rows.value)
 })
 
 /* get state data and export to XLSX */

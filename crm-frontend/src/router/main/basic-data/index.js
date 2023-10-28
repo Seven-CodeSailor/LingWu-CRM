@@ -43,17 +43,21 @@ const routes = [
         children: [
           {
             // 费用收入类型
-            path: '/basicData/financial/income',
-            name: 'income',
+            path: '/basicData/financial/incomeType',
+            name: 'incomeType',
             component: () =>
-              import('@/views/basic-data/financial-type/income/Income.vue')
+              import(
+                '@/views/basic-data/financial-type/incomeType/IncomeType.vue'
+              )
           },
           {
             // 费用开支类型
-            path: '/basicData/financial/expense',
-            name: 'expense',
+            path: '/basicData/financial/expenseType',
+            name: 'expenseType',
             component: () =>
-              import('@/views/basic-data/financial-type/expense/Expense.vue')
+              import(
+                '@/views/basic-data/financial-type/expenseType/ExpenseType.vue'
+              )
           },
           {
             // 银行账号管理

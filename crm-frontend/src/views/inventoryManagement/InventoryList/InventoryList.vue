@@ -1,313 +1,171 @@
-
 <template>
-  <el-card class="box-card">
-    <template #header>
-      <div class="head">
-        <div class="show0">
-          <el-icon style="vertical-align: middle" size="16">
-            <HomeFilled />
-          </el-icon>
-          <p>库存清单列表</p>
+  <!-- 测试 -->
+  <BaseDataList
+    title="库存清单"
+    :tableColumnAttribute="tableColumnAttribute"
+    :use-operate-column="false"
+    :table-data="inventoryList.tableData"
+    :page-sizes="[5, 10, 15]"
+    :total="inventoryList.totalTable"
+    @update-table-data="
+      (pageSize, currentPage) =>
+        getList({
+          pageSize,
+          pageIndex: currentPage
+        })
+    "
+    ref="baseDataListRef"
+  >
+    <template #menu>
+      <div class="menu">
+        <div class="left">
+          <BulkOPe
+            :excelData="() => stockStorageDetailsStore.tableData"
+            :getOpt="() => [0]"
+            excelName="入库明细.xlsx"
+            tableName="入库明细的sheet表"
+          >
+          </BulkOPe>
         </div>
-        <div class="show">
-          <el-button>
-            <el-icon><QuestionFilled /></el-icon>
-            <p>操作说明</p>
-          </el-button>
+        <div class="right">
+          <el-input
+            v-model="name"
+            placeholder="输入商品名称或者SKU名称"
+            style="margin-right: 4px"
+          />
+          <DropDown
+            v-model:topInputValue="supplier_name"
+            v-model:bottomInputValue="mailing_address"
+            topInputTitle="供应商名称"
+            bottomInputTitle="通信地址"
+            @handle-search="handleSearch"
+          ></DropDown>
+          <el-button
+            type="primary"
+            style="margin-left: 4px"
+            @click="searchDetails"
+          >
+            <el-icon style="margin-right: 4px"><icon-search /></el-icon
+            >搜索</el-button
+          >
         </div>
       </div>
     </template>
-    <div class="wrap">
-      <div class="wrap1">
-        <!-- 刷新 -->
-        <el-button @click="refresh" type="info" circle style="margin-right:28px;">
-          <el-button>
-            <el-icon>
-              <Refresh />
-            </el-icon>
-            刷新
-          </el-button>
-        </el-button>
-
-        <!-- 批量导出 -->
-        <BulkOPe :excelData="tableData" :getOpt="() => [0, 1, 2]">
-          <template #excel> </template>
-          <template #file> </template>
-          <template #print> </template>
-        </BulkOPe>
-      </div>
-      <div class="wrap2">
-        <!-- 下拉选择框 -->
-        <ChooseSelect 
-          placeholder="请输入商品名称或者SKU名称"
-          :options="options"
-          >
-        </ChooseSelect>
-        <el-button 
-        type="primary" 
-        :icon="Search" 
-        style="margin-left: 10px; padding-left: 10px"
-        >
-        搜索
-        </el-button>
-      </div>
-    </div>
-
-    <!-- 表格内容区 -->
-    <Table :dataArr="tableData" :isSelect="true" :isLoading="loading">
-      <!-- 内容测试区 -->
-    </Table>
-
-    <!-- 分页器 -->
-    <div class="footer">
-    <el-pagination
-      v-model:current-page="currentPage"
-      v-model:page-size="pageSize"
-      :page-sizes="[10, 20, 30, 40]"
-      :small="small"
-      :disabled="disabled"
-      :background="background"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="400"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-
-    />
-    </div>
-
-  </el-card>
+  </BaseDataList>
 </template>
 
-
 <script setup>
-import { HomeFilled, Refresh, Search, QuestionFilled } from '@element-plus/icons-vue'
-import Table from '@/components/table/Table.vue'
-import BulkOPe from '@/components/BulkOpe/BulkOpe.vue'
-import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
-import { ref, toRefs } from 'vue'
-import { getActivePinia } from 'pinia'
+import BaseDataList from '@/components/DataList/BaseDataList.vue'
+import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
+import DropDown from '@/components/DropDown/DropDown.vue'
+import useInventoryList from '@/stores/inventory/inventoryList.js'
+import { ref, onMounted } from 'vue'
 
-// 以下为尝试引用接口数据--------
-// import useInventoryStore from '@/stores/inventory.js'
-// 以上为尝试引用接口数据--------
+const inventoryList = useInventoryList()
 
-// 控制表格是否加载
-const loading = ref(false)
-// 将update更改为refresh
-const refresh = () => {
-  loading.value = true
-  setTimeout(() => {
-    loading.value = false
-  }, 500)
+// BaseDataList实例，接收返回的数据
+const baseDataListRef = ref(null)
+
+// 分页数据
+let params = ref({
+  pageIndex: 1,
+  pageSize: 5
+})
+// 表头列数据
+const tableColumnAttribute = [
+  {
+    prop: 'goodsIdAndSkuId',
+    label: '商品ID/SKU ID'
+  },
+  {
+    prop: 'goodsNameAndSkuNmae',
+    label: '商品名称/SKU 名称',
+    sortable: true
+  },
+  {
+    prop: 'number',
+    label: '库存数量',
+    sortable: true
+  },
+  {
+    prop: 'categoryName',
+    label: '商品类型'
+  },
+  {
+    prop: 'storeName',
+    label: '仓库名称'
+  },
+  {
+    prop: 'salePrice',
+    label: '销售价格'
+  },
+  {
+    prop: 'costPrice',
+    label: '成本价格'
+  },
+  {
+    prop: 'costAmount',
+    label: '成本金额'
+  },
+  {
+    prop: 'anticipatedProfit',
+    label: '预计利润'
+  },
+  {
+    prop: 'originalCode',
+    label: '原厂编码'
+  }
+]
+
+const getList = async (extra) => {
+  await inventoryList.getTableData({ ...params.value, ...extra })
 }
 
-// 表格数据
-const tableData = ref([
-  {
-    商品ID: '123456',
-    商品名称: '手机',
-    库存数量: '999',
-    商品类型: '',
-    仓库名称: '海外仓1号',
-    销售价格: '999.00',
-    成本价格: '111.00',
-    成本金额: '',
-    预计利润: '',
-    原厂编码: '',
-  },
-  {
-    商品ID: '123456',
-    商品名称: '手机',
-    库存数量: '999',
-    商品类型: '',
-    仓库名称: '海外仓1号',
-    销售价格: '999.00',
-    成本价格: '111.00',
-    成本金额: '',
-    预计利润: '',
-    原厂编码: '',
-  },
-  {
-    商品ID: '123456',
-    商品名称: '手机',
-    库存数量: '999',
-    商品类型: '',
-    仓库名称: '海外仓1号',
-    销售价格: '999.00',
-    成本价格: '111.00',
-    成本金额: '',
-    预计利润: '',
-    原厂编码: '',
-  },
-  {
-    商品ID: '123456',
-    商品名称: '手机',
-    库存数量: '999',
-    商品类型: '',
-    仓库名称: '海外仓1号',
-    销售价格: '999.00',
-    成本价格: '111.00',
-    成本金额: '',
-    预计利润: '',
-    原厂编码: '',
-  },
-  {
-    商品ID: '123456',
-    商品名称: '手机',
-    库存数量: '999',
-    商品类型: '',
-    仓库名称: '海外仓1号',
-    销售价格: '999.00',
-    成本价格: '111.00',
-    成本金额: '',
-    预计利润: '',
-    原厂编码: '',
-  },
-  {
-    商品ID: '123456',
-    商品名称: '手机',
-    库存数量: '999',
-    商品类型: '',
-    仓库名称: '海外仓1号',
-    销售价格: '999.00',
-    成本价格: '111.00',
-    成本金额: '',
-    预计利润: '',
-    原厂编码: '',
-  },
-  {
-    商品ID: '123456',
-    商品名称: '手机',
-    库存数量: '999',
-    商品类型: '',
-    仓库名称: '海外仓1号',
-    销售价格: '999.00',
-    成本价格: '111.00',
-    成本金额: '',
-    预计利润: '',
-    原厂编码: '',
-  },
-  {
-    商品ID: '123456',
-    商品名称: '手机',
-    库存数量: '999',
-    商品类型: '',
-    仓库名称: '海外仓1号',
-    销售价格: '999.00',
-    成本价格: '111.00',
-    成本金额: '',
-    预计利润: '',
-    原厂编码: '',
-  },
-])
+onMounted(async () => {
+  getList()
+})
 
-
-// 选择框数据
-const options = ref([
-  {
-    value: 'Option1',
-    label: '供应商名称',
-  },
-  {
-    value: 'Option2',
-    label: '通讯地址'
-  },
-])
-
-// 分页器 footer
-// 定义分页数据----------
-const currentPage = ref(1)
-// 需要接受动态数据的传递
-// const props = defineProps({
-//   pageSize: {
-//     type: Number,
-//     defualt: 1,
-//   },
-//   total: {
-//     type: Number,
-//     defualt: 10,
-//   }
-// })
-// const emit = defineEmits(['getCurrentPage'])
-// const { pageSize, total} = toRefs(props)
-// 定义分页数据
-const pageSize = ref(10)
-const total = ref(400)
-const small = ref(false)
-const background = ref(false)
-const disabled = ref(false)
-
-// 点击分页触发事件-------------------
-const handleSizeChange = (val) => {
-  // console.log(`${val} items per page`)
+// 按sku名称或商品名搜索
+const name = ref()
+const searchDetails = () => {
+  if (!name.value) {
+    ElMessage.error('输入不能为空')
+  } else {
+    getList({ name: name.value })
+    name.value = ''
+  }
 }
-const handleCurrentChange = (val) => {
-  // console.log(`current page: ${val}`)
-  // emit('getCurrentPage', val)
+
+// 按供应商和通信地址搜索
+const supplier_name = ref()
+const mailing_address = ref()
+const handleSearch = () => {
+  if (!supplier_name.value && !mailing_address.value) {
+    ElMessage.error('至少有一个输入')
+  } else {
+    getList({
+      supplier_name: supplier_name.value,
+      mailing_address: mailing_address.value
+    })
+    supplier_name.value = ''
+    mailing_address.value = ''
+  }
 }
-// 获取页码数--点击---------------
-// const getCurrentPage = (val) => {
-//   getList(val)
-// }
-// 定义请求列表数据
-// const getList = async (pageIndex) => {
-//   let res = await getActivePinia.projectList(pageIndex)
-//   console.log('库存列表', res.data)
-//   if (res.data.status === 200) {
-//     tableData.value = res.data.data
-//     total.value = res.data.total
-//     pageSize.value = res.data.pageSize
-//   }
-// }
-
-
 </script>
 
 <style scoped>
-.head {
+.menu {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 10px;
+  .left {
+    height: 40px;
+  }
+  .right {
+    height: 40px;
+    display: flex;
+    align-items: center;
+  }
 }
-.head .p {
-  padding: 0 8px;
-}
-.box-card {
-  width: auto;
-  /* height: 100%; */
-}
-.wrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10px 20px;
-}
-
-.button {
-  margin: 10px;
-}
-
-.table {
-  width: 100%;
-}
-
-.footer {
-  display: flex;
-  justify-content: center;
-  padding: 18px;
-  /* height: 20%; 没变化,观望一下*/
-}
-
-.show0 {
-  display: flex;
-  align-items: center;
-}
-
-.show {
-  display: flex;
-  align-items: center;
-  user-select: none;
-  cursor: pointer;
-}
-
 </style>

@@ -1,7 +1,7 @@
 import Request from '../request'
 
 // 定义一个功能模块基础url，方便替换
-const currBaseUrl = '/inventory-manager/'
+// const currBaseUrl = '/inventory-manager/'
 /**
  * 获取入库明细项列表
  * @param {*} data 获取入库明细的数据
@@ -48,4 +48,20 @@ export const getInventortOutTableList = (theUrl) => {
   //   // 将数据存储在pinia
   //   console.log(res)
   // })
+}
+
+export const queryInventoryList = async (data, success, fail) => {
+  await Request.requestJson(
+    Request.POST,
+    'https://mock.apifox.cn/m1/3426132-0-default/inventory-manager/query-inventory-list',
+    {
+      params: { ...data }
+    }
+  )
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
 }

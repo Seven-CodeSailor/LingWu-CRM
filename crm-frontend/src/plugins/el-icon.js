@@ -15,6 +15,7 @@ import {
   FullScreen,
   Menu,
   MoonNight,
+  Plus,
   Refresh,
   Sunny
 } from '@element-plus/icons-vue'
@@ -52,4 +53,5 @@ export default (app) => {
   app.component('IconBell', Bell)
   app.component('IconArrowDown', ArrowDown)
   app.component('IconMessageBox', MessageBox)
+  app.component('IconPlus', Plus)
 }

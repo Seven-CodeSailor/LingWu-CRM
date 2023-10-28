@@ -32,12 +32,12 @@ const basicData = {
       children: [
         {
           text: '费用收入类型',
-          href: '/basicData/financial/income',
+          href: '/basicData/financial/incomeType',
           icon: ''
         },
         {
           text: '费用开支类型',
-          href: '/basicData/financial/expense',
+          href: '/basicData/financial/expenseType',
           icon: ''
         },
         {
