@@ -44,6 +44,18 @@
               row[item.prop].value
             }}</el-tag>
           </template>
+          <!-- 是否使用switch开关 -->
+          <template #default="{ row }" v-else-if="item.useSwitch">
+            <el-switch
+              :model-value="row[item.prop]"
+              inline-prompt
+              active-text="是"
+              inactive-text="否"
+              size="large"
+              :loading="openSwitchLoading"
+              @change="(state) => emits('modifyDict', state, row)"
+            />
+          </template>
         </el-table-column>
         <el-table-column
           label="操作"
@@ -223,6 +235,7 @@ const props = defineProps({
     type: Boolean,
     default: true
   }
+  // 处理开关切换函数
 })
 
 const paginationData = ref({
@@ -232,7 +245,11 @@ const paginationData = ref({
 
 const rows = ref([])
 
+// 表格的loading
 const openLoading = ref(false)
+// 开关的loading
+const openSwitchLoading = ref(false)
+// 是否显示操作说明的dialog
 const operatingInstructionDialogVisible = ref(false)
 
 const handleCommand = (command, row) => {
@@ -245,20 +262,21 @@ const handleSelectionChange = (newRows) => {
   rows.value = newRows
 }
 // 调用父组件更新表格数据的函数
-const emit = defineEmits(['updateTableData'])
+//  modifyDict 调用父组件的修改开关状态的函数
+const emits = defineEmits(['updateTableData'], ['modifyDict'])
 
 const handleSizeChange = (pageSize) => {
   // 当前页的数据容量改变，重置页码为1
   paginationData.value.pageSize = pageSize
   paginationData.value.currentPage = 1
   // 传入当前页面容量大小和当前页码
-  emit('updateTableData', pageSize, paginationData.value.currentPage)
+  emits('updateTableData', pageSize, paginationData.value.currentPage)
 }
 
 const handleCurrentChange = (currentPage) => {
   paginationData.value.currentPage = currentPage
   // 传入当前页码容量大小和当前页码
-  emit('updateTableData', paginationData.value.pageSize, currentPage)
+  emits('updateTableData', paginationData.value.pageSize, currentPage)
 }
 
 defineExpose({
@@ -267,7 +285,9 @@ defineExpose({
   // 暴露出表格的加载
   openLoading,
   // 暴露出分页数据
-  paginationData
+  paginationData,
+  // 开关的loading
+  openSwitchLoading
 })
 </script>
 
