@@ -8,15 +8,15 @@
 <template>
   <BaseDataList
     class="card"
-    :title="headTitle"
-    :msg="msg"
+    title="出库明细"
+    msg="'多一眼看一眼就会爆炸'"
     :table-column-attribute="sendData.tableColumnAttribute"
     :table-data="sendData.tableData"
     :page-sizes="sendData.pageSizes"
     :total="sendData.total"
-    :useDropdownMenu="isUseDropdownMenu"
+    useDropdownMenu="true"
     :dropdownMenuActionsInfo="dropdownMenuActionsInfo"
-    :useOperateColumn="useOperateColumn"
+    useOperateColumn="false"
     @update-table-data="get"
     ref="baseDataListRef"
   >
@@ -54,12 +54,15 @@
             style="margin-left: 4px"
             @click="searchDetails"
           >
-            <el-icon style="margin-right: 4px"><icon-search /></el-icon
-            >搜索</el-button
-          >
+            <el-icon style="margin-right: 4px"><icon-search /></el-icon>搜索
+          </el-button>
         </div>
       </div>
     </template>
+    <!-- 插槽显示图标 -->
+    <template #ico
+      ><el-icon><icon-message-box /></el-icon
+    ></template>
   </BaseDataList>
 </template>
 
@@ -67,17 +70,11 @@
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import DropDown from '../../../components/DropDown/DropDown.vue'
 
-// 表头设置
-const headTitle = reactive('出库明细')
-// 操作说明提示
-const msg = reactive('多一眼看一眼就会爆炸')
-//使用下拉菜单
-const isUseDropdownMenu = true
-// 不显示操作列
-const useOperateColumn = false
+const inputValue = ref('')
+
 const dropdownMenuActionsInfo = () => {
   return [
     {
@@ -278,21 +275,18 @@ const changeLoadAnimation = () => {
   }, 500)
 }
 
-const excel = () => {
-  // console.log('s', baseDataListRef.value.rows)
-}
+// const excel = () => {
+//   console.log('s', baseDataListRef.value.rows)
+// }
 </script>
 
 <style lang="scss" scoped>
 .card {
-  margin-top: 0;
   width: 100%;
   height: 100%;
 }
 
 button {
-  margin-top: 0%;
-  margin-bottom: 10px;
   margin-left: 10px;
   margin-right: 10px;
 }
