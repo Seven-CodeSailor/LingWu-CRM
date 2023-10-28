@@ -18,7 +18,7 @@ const inventory = {
     // 冰雾
     {
       text: '入库明细',
-      href: '/inventory/WarehousingDetails',
+      href: '/inventory/bingwu',
       icon: 'IconHouse'
     },
     // 暮秋

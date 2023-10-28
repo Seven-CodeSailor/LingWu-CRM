@@ -1,7 +1,7 @@
 import Request from '../request'
 
 // 定义一个功能模块基础url，方便替换
-const currBaseUrl = '/inventory-manager/'
+// const currBaseUrl = '/inventory-manager/'
 /**
  * 获取入库明细项列表
  * @param {*} data 获取入库明细的数据
@@ -38,7 +38,7 @@ export const queryStorageDetails = async (data, success, fail) => {
       fail(error)
     })
 }
-// 这个是mock测试用例,暂时别删
+// 以下是mock测试用例,暂时别删
 export const getInventortOutTableList = (theUrl) => {
   return Request.requestJson(Request.GET, theUrl)
   // return new Promise((resolve) => {
@@ -49,3 +49,4 @@ export const getInventortOutTableList = (theUrl) => {
   //   console.log(res)
   // })
 }
+export const getOutTableList = () => {}
