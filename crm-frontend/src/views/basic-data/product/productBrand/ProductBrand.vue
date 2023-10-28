@@ -1,5 +1,5 @@
 <template>
-  <div>费用开支类型</div>
+  <div>商品品牌</div>
 </template>
 
 <script setup></script>

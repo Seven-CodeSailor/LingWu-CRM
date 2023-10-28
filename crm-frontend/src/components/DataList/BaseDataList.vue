@@ -28,6 +28,7 @@
             style="width: 100%"
             @selection-change="handleSelectionChange"
             v-loading="openLoading"
+            table-layout="auto"
           >
             <!-- 带有多选功能的列 -->
             <el-table-column
@@ -41,6 +42,7 @@
               :label="item.label"
               :key="item"
               :sortable="item?.sortable"
+              class-name="class-name"
             >
               <!-- 表格的列内容如果使用tag -->
               <template #default="{ row }" v-if="item.useTag">
@@ -124,7 +126,7 @@
           v-model:current-page="paginationData.currentPage"
           v-model:page-size="paginationData.pageSize"
           :page-sizes="props.pageSizes"
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="prev, pager, next, jumper, ->, total, sizes"
           :total="props.total"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -296,6 +298,9 @@ defineExpose({
       align-items: center;
     }
   }
+}
+.class-name {
+  font-size: 18px;
 }
 
 :deep(.el-pagination) {
