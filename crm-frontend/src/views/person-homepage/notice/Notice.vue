@@ -11,7 +11,7 @@
       :page-sizes="[5, 10, 15]"
       :total="stockStorageDetailsStore.tableTotal"
       :table-data="stockStorageDetailsStore.tableData"
-      @update-table-data="
+      @update-table-data="  
         (pageSize, currentPage) =>
           getStockStorageList({
             pageSize,

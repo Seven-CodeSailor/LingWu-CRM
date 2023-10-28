@@ -10,7 +10,7 @@
         @update-table-data="
           (pageSize, currentPage) =>
             getStockStorageList({
-              pageSize,
+              pageSize,  
               pageIndex: currentPage
             })
         "
