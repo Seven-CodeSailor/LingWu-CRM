@@ -19,7 +19,7 @@ const routes = [
               )
           },
           {
-            // 字典分类
+            // 字典管理
             path: '/basicData/dictionary/management',
             name: 'management',
             component: () =>
@@ -57,7 +57,7 @@ const routes = [
           },
           {
             // 银行账号管理
-            path: '/basicData/financial/bankAccount',
+            path: 'bankAccount',
             name: 'bankAccount',
             component: () =>
               import(

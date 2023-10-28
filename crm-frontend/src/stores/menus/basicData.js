@@ -14,7 +14,7 @@ const basicData = {
           icon: ''
         },
         {
-          text: '字典分类',
+          text: '字典管理',
           href: '/basicData/dictionary/management',
           icon: ''
         }
