@@ -1,18 +1,20 @@
 <template>
-  <BaseDataList
-    title="字典分类"
-    :table-column-attribute="tableColumnAttribute"
-    :handle-delete="handleDelete"
-    :handle-edit="handleEdit"
-    :table-data="tableData"
-  >
-    <template #ico>
-      <el-icon><icon-message-box /></el-icon
-    ></template>
-    <template #menu>
-      <el-button type="primary">添加</el-button>
-    </template>
-  </BaseDataList>
+  <div class="classfication">
+    <BaseDataList
+      title="字典分类"
+      :table-column-attribute="tableColumnAttribute"
+      :handle-delete="handleDelete"
+      :handle-edit="handleEdit"
+      :table-data="tableData"
+    >
+      <template #ico>
+        <el-icon><icon-message-box /></el-icon
+      ></template>
+      <template #menu>
+        <el-button type="primary">添加</el-button>
+      </template>
+    </BaseDataList>
+  </div>
 </template>
 
 <script setup>
