@@ -50,3 +50,20 @@ export const getInventortOutTableList = (theUrl) => {
   // })
 }
 export const getOutTableList = () => {}
+
+// 
+export const test = async (data, success, fail) => {
+  await Request.requestJson(
+    Request.GET,
+    'https://mockapi.eolink.com/69jekXFeb89500c132462100d3745b0046ecd1264eeb224/test',
+    {
+      
+    }
+  )
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}

@@ -4,13 +4,16 @@
 
 <template>
   <div class="notice">
+    <div>{{ noticeStore.str }}</div>
     <BaseDataList
       title="公告通知" 
       :table-column-attribute="tableColumnAttribute"
-      :use-operate-column="false"
+      :use-operate-column="true"
       :page-sizes="[5, 10, 15]"
       :total="stockStorageDetailsStore.tableTotal"
-      :table-data="stockStorageDetailsStore.tableData"
+      :table-data="noticeStore.data"
+      :useDropdownMenu="true"
+   
       @update-table-data="  
         (pageSize, currentPage) =>
           getStockStorageList({
@@ -20,13 +23,19 @@
       "
       ref="baseDataListRef"
     >
-    
+    <!-- 测试区域 -->
+    <!-- <template>
+      <el-button text @click="open">Click to open Message Box</el-button>
+    </template> -->
+
+    <!-- 测试区域  -->
       <template #menu>
         <div class="menu">
           <div class="left">
             <el-button 
               type="success" 
               style="margin-right: 10px;"
+              @click="open"
             >
               <el-icon> 
                 <icon-Plus /> 
@@ -71,10 +80,36 @@
 
 <script setup>
 import { ref, onMounted  } from 'vue'
-import BaseDataList from '@/views/notice/BaseDataList_refresh.vue'
+import BaseDataList from '@/views/person-homepage/notice/BaseDataList_refresh.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import { useStockStorageDetailsStore } from '@/stores/inventory/stockstoragedetails.js'
+// --------------测试区域
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { useNotice } from '../../../stores/inventory/notice'
 
+const noticeStore = useNotice()
+const open = () => {
+  ElMessageBox.prompt('Please input your e-mail', 'Tip', {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    inputPattern:
+      /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+    inputErrorMessage: 'Invalid Email',
+  })
+    .then(({value}) => {
+      ElMessage({
+        type: 'success',
+        message: `Your email is: ${value}`,
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: 'Input canceled',
+      })
+    })
+}
+// --------------
 
 
 import useLayOutSettingStore from '@/stores/setting.js'
@@ -105,16 +140,17 @@ const tableColumnAttribute = [
   },
   {
     prop: 'status',
-    label: '状态'
+    label: '状态',
+    useTag:true
   },
   {
     prop: 'recipient',
     label: '接收人'
-  },
-  {
-    prop: 'operate',
-    label: '操作'
   }
+  // {
+  //   prop: 'operate',
+  //   label: '操作'
+  // }
   
 ]
 const baseDataListRef = ref(null)
@@ -157,6 +193,7 @@ onMounted(() => {
     pageSize: 5
   }
   getStockStorageList(params)
+  noticeStore.getData()
 })
 </script>
 
