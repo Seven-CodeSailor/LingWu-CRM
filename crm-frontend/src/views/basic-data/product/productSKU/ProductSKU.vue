@@ -67,36 +67,36 @@ const tableColumnAttribute = ref([
     label: '商品名称'
   },
   {
-    prop: 'goodsFeature',
+    prop: 'goodsSpecifications',
     label: '商品规格'
   },
   {
-    prop: 'number',
+    prop: 'inventory',
     label: '库存',
     sortable: true
   },
   {
-    prop: 'price',
+    prop: 'salePrice',
     label: '销售价格',
     sortable: true
   },
   {
-    prop: 'marketPrice',
+    prop: 'marketsalePrice',
     label: '市场价格',
     sortable: true
   },
   {
-    prop: 'costPrice',
+    prop: 'costUnitPrice',
     label: '成本价格',
     sortable: true
   },
   {
-    prop: 'costTotalMoney',
+    prop: 'totalCostAmount',
     label: '成本总金额',
     sortable: true
   },
   {
-    prop: 'profit',
+    prop: 'estimatedProfit',
     label: '预计利润',
     sortable: true
   }
@@ -107,33 +107,33 @@ const handleEdit = () => {}
 const tableData = [
   {
     goodsName: '鸡蛋🥚',
-    goodsFeature: '2.5公斤',
-    number: 250,
-    price: 1999,
-    marketPrice: 800,
-    costPrice: 10,
-    costTotalMoney: 300,
-    profit: 99999
+    goodsSpecifications: '2.5公斤',
+    inventory: 250,
+    salePrice: 1999,
+    marketsalePrice: 800,
+    costUnitPrice: 10,
+    totalCostAmount: 300,
+    estimatedProfit: 99999
   },
   {
     goodsName: '鸡蛋🥚',
-    goodsFeature: '2.5公斤',
-    number: 250,
-    price: 1999,
-    marketPrice: 800,
-    costPrice: 10,
-    costTotalMoney: 300,
-    profit: 99999
+    goodsSpecifications: '2.5公斤',
+    inventory: 250,
+    salePrice: 1999,
+    marketsalePrice: 800,
+    costUnitPrice: 10,
+    totalCostAmount: 300,
+    estimatedProfit: 99999
   },
   {
     goodsName: '鸡蛋🥚',
-    goodsFeature: '2.5公斤',
-    number: 250,
-    price: 1999,
-    marketPrice: 800,
-    costPrice: 10,
-    costTotalMoney: 300,
-    profit: 99999
+    goodsSpecifications: '2.5公斤',
+    inventory: 250,
+    salePrice: 1999,
+    marketsalePrice: 800,
+    costUnitPrice: 10,
+    totalCostAmount: 300,
+    estimatedProfit: 99999
   }
 ]
 const inputValue = ref('')

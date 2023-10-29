@@ -1,7 +1,11 @@
 <template>
-  <div>商品分类</div>
+  <div class="ProductClassification">
+    <TreeCom></TreeCom>
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import TreeCom from '@/views/basic-data/product/components/TreeCom.vue'
+</script>
 
 <style lang="scss" scoped></style>

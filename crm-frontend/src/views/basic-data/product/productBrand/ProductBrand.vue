@@ -6,6 +6,8 @@
       :table-data="tableData"
       :handle-delete="handleDelete"
       :handle-edit="handleEdit"
+      :total="888"
+      :page-sizes="[5, 10, 15]"
       @update-switch-state="handSwitchState"
       ref="baseDataListRef"
     >
