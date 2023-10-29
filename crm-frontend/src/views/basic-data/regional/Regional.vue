@@ -1,17 +1,62 @@
 <template>
   <div class="Regional">
-    <div>地区管理</div>
-    <div>
-      <organization-structure
-        :sendData="sendData"
-        :treeData="treeData"
-      ></organization-structure>
-    </div>
+    <BaseDataList
+      title="地区管理"
+      :tableColumnAttribute="sendData.tableColumnAttribute"
+      :tableData="sendData.tableData"
+      :handleDelete="sendData.handleDelete"
+      :handleEdit="sendData.handleEdit"
+      :total="sendData.total"
+      :pageSizes="sendData.pageSizes"
+      :usePagination="sendData.usePagination"
+    >
+      <template #ico>
+        <el-icon><icon-message-box /></el-icon>
+      </template>
+      <!-- 左边树形菜单 -->
+      <template #treeMeau>
+        <el-card class="card">
+          <template #header>
+            <div class="card-header">
+              <span>地区管理</span>
+              <el-button>刷新</el-button>
+            </div>
+          </template>
+          <el-tree
+            :data="treeData.treeArr"
+            :props="treeData.defaultProps"
+            highlight-current="true"
+            default-expand-all="true"
+            draggable
+            empty-text="树形菜单内容为空"
+            @node-click="handleNodeClick"
+          />
+        </el-card>
+      </template>
+      <template #menu
+        ><div class="content">
+          <div class="left">
+            <el-button type="primary">添加数据</el-button>
+          </div>
+          <div class="right">
+            <el-input
+              v-model="inputValue"
+              placeholder="请输入搜索名称"
+              style="margin: 0 4px; width: 200px"
+            />
+            <el-button type="primary" style="margin-left: 4px">
+              <el-icon style="margin-right: 4px"><icon-search /></el-icon
+              >搜索</el-button
+            >
+          </div>
+        </div>
+      </template>
+    </BaseDataList>
   </div>
 </template>
 
 <script setup>
-import organizationStructure from '@/components/OrganizationStructure/index.vue'
+import BaseDataList from '@/components/DataList/BaseDataList.vue'
 const sendData = {
   tableColumnAttribute: [
     {
@@ -67,55 +112,13 @@ const sendData = {
 const treeData = {
   treeArr: [
     {
-      label: 'Level one 1',
+      label: '鸡窝',
       children: [
         {
-          label: 'Level two 1-1',
+          label: '🐓公鸡',
           children: [
             {
-              label: 'Level three 1-1-1'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      label: 'Level one 2',
-      children: [
-        {
-          label: 'Level two 2-1',
-          children: [
-            {
-              label: 'Level three 2-1-1'
-            }
-          ]
-        },
-        {
-          label: 'Level two 2-2',
-          children: [
-            {
-              label: 'Level three 2-2-1'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      label: 'Level one 3',
-      children: [
-        {
-          label: 'Level two 3-1',
-          children: [
-            {
-              label: 'Level three 3-1-1'
-            }
-          ]
-        },
-        {
-          label: 'Level two 3-2',
-          children: [
-            {
-              label: 'Level three 3-2-1'
+              label: '鸡蛋'
             }
           ]
         }
@@ -130,4 +133,24 @@ const treeData = {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.Regional {
+  .card {
+    width: 40%;
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+  .content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .right {
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+</style>
