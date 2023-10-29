@@ -158,6 +158,7 @@ const openMsg = () => {
 
 // 获取表格所需的数据
 const getData = () => {
+  console.log(props.excelData())
   return props.excelData()
 }
 </script>

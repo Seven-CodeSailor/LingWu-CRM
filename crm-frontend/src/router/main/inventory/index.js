@@ -1,11 +1,11 @@
 const routes = [
   {
     path: '/inventory',
-    redirect: '/inventory/WarehousingDetails',
+    redirect: '/inventory/inventoryList',
     children: [
       {
         // 入库明细
-        path: '/inventory/bingwu',
+        path: '/inventory/StockStorageDetails',
         name: 'ru_ku_ming_xi',
         component: () =>
           import(
