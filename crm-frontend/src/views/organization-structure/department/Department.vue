@@ -85,10 +85,7 @@
             <el-option label="Area2" value="beijing" />
           </el-select> -->
           <!-- 调用选择框组件 -->
-          <ChooseSelect
-            :options="selOptions"
-            des="请选择你要查找的内容"
-          ></ChooseSelect>
+          <ChooseSelect :options="selOptions" des="选择上级"></ChooseSelect>
         </el-form-item>
         <el-form-item label="排位序号" :label-width="labelWidth">
           <el-input v-model="addForm.name" autocomplete="off" />
@@ -176,43 +173,43 @@ const sendData = {
     {
       Department: '商务部',
       DepartmentDes: '商务洽谈的部门',
-      sort: '',
+      sort: '4',
       Enable: ''
     },
     {
       Department: '零起飞工作室',
       DepartmentDes: '吃苦耐劳部门',
-      sort: '',
+      sort: '6',
       Enable: ''
     },
     {
       Department: '行政部',
       DepartmentDes: '公司政策部门',
-      sort: '',
+      sort: '4',
       Enable: ''
     },
     {
       Department: '技术部',
       DepartmentDes: '技术大佬聚集地',
-      sort: '',
+      sort: '7',
       Enable: ''
     },
     {
       Department: 'yuki部',
       DepartmentDes: '员工保护协会',
-      sort: '',
+      sort: '2',
       Enable: ''
     },
     {
       Department: '财务部',
       DepartmentDes: '财务部门',
-      sort: '',
+      sort: '3',
       Enable: ''
     },
     {
       Department: '商务部',
       DepartmentDes: '吃苦耐劳部门',
-      sort: '',
+      sort: '12',
       Enable: ''
     }
   ],
