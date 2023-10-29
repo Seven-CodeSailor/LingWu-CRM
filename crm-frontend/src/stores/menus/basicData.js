@@ -32,12 +32,12 @@ const basicData = {
       children: [
         {
           text: '费用收入类型',
-          href: '/basicData/financial/income',
+          href: '/basicData/financial/incomeType',
           icon: ''
         },
         {
           text: '费用开支类型',
-          href: '/basicData/financial/expense',
+          href: '/basicData/financial/expenseType',
           icon: ''
         },
         {
@@ -55,7 +55,39 @@ const basicData = {
     {
       text: '商品管理',
       href: '/basicData/product',
-      icon: ''
+      icon: '',
+      children: [
+        {
+          text: '商品品牌',
+          href: '/basicData/product/brand',
+          icon: ''
+        },
+        {
+          text: '商品类型',
+          href: '/basicData/product/type',
+          icon: ''
+        },
+        {
+          text: '商品分类',
+          href: '/basicData/product/classification',
+          icon: ''
+        },
+        {
+          text: '商品规格',
+          href: '/basicData/product/specification',
+          icon: ''
+        },
+        {
+          text: '商品维护',
+          href: '/basicData/product/maintenace',
+          icon: ''
+        },
+        {
+          text: '商品SKU',
+          href: '/basicData/product/SKU',
+          icon: ''
+        }
+      ]
     }
   ]
 }

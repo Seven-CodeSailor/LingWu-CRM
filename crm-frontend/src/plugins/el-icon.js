@@ -15,6 +15,7 @@ import {
   FullScreen,
   Menu,
   MoonNight,
+  Plus,
   Refresh,
   Sunny
 } from '@element-plus/icons-vue'
@@ -34,7 +35,6 @@ import { Operation } from '@element-plus/icons-vue'
 
 import { HomeFilled } from '@element-plus/icons-vue'
 import { BellFilled } from '@element-plus/icons-vue'
-import { Plus} from '@element-plus/icons-vue'
 export default (app) => {
   app.component('IconMenu', Menu)
   app.component('IconSetting', Setting)
