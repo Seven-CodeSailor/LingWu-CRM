@@ -331,6 +331,7 @@ defineExpose({
 .theTable {
   width: 1200px;
   padding: 20px;
+  padding-top: 0;
 }
 .emptyTable {
   min-width: 800px;

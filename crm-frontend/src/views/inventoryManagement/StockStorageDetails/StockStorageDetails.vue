@@ -34,10 +34,10 @@
               style="margin-right: 4px"
             />
             <DropDown
-              v-model:topInputValue="topInputValue"
-              v-model:bottomInputValue="bottomInputValue"
-              topInputTitle="供应商名称"
-              bottomInputTitle="通信地址"
+              v-model:input-value1="topInputValue"
+              v-model:input-value2="bottomInputValue"
+              input-title1="供应商名称"
+              input-title2="通信地址"
               @handle-search="handleSearch"
             ></DropDown>
             <el-button @click="test">获取勾选的rows</el-button>

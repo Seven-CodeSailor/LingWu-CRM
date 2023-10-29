@@ -12,7 +12,7 @@ const routes = [
           {
             // 字典分类
             path: '/basicData/dictionary/classification',
-            name: 'classification',
+            name: 'classification1',
             component: () =>
               import(
                 '@/views/basic-data/data-dictionary/classification/Classification.vue'
