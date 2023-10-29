@@ -57,7 +57,6 @@
         <div>
           <!-- form表单通过slot传递 -->
           <slot name="form1" v-if="isEdit"></slot>
-          <slot name="form2" v-if="!isEdit"></slot>
         </div>
       </template>
       <template #footer>
@@ -148,6 +147,10 @@ const handleClose = (done) => {
   //后续在这里加confim
   done()
 }
+
+defineExpose({
+  isEdit
+})
 </script>
 
 <style scoped></style>

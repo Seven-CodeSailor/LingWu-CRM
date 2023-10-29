@@ -11,42 +11,30 @@
 
 <template>
   <div>
-    <Tree :data="treeData">
+    <TreeDemo :data="treeData" ref="treeDemoRef">
       <template #header>header</template>
       <!-- 这里真的很尬，为了区分状态反而传了两个插槽，我明天优化一下这里 -->
       <template #form1>
-        <el-form :model="data1">
+        <el-form :model="treeDemoRef.isEdit ? data1 : data2">
           <el-form-item label="名字" prop="name"
-            ><el-input v-model="data1.name"></el-input
+            ><el-input v-model="name"></el-input
           ></el-form-item>
           <el-form-item label="年龄" prop="age"
-            ><el-input v-model="data1.age"></el-input
+            ><el-input v-model="age"></el-input
           ></el-form-item>
           <el-form-item label="性别" prop="sex"
-            ><el-input v-model="data1.sex" type="textarea"></el-input
+            ><el-input v-model="sex" type="textarea"></el-input
           ></el-form-item>
         </el-form>
       </template>
-      <template #form2>
-        <el-form :model="data2">
-          <el-form-item label="名字" prop="name"
-            ><el-input v-model="data2.name"></el-input
-          ></el-form-item>
-          <el-form-item label="年龄" prop="age"
-            ><el-input v-model="data2.age"></el-input
-          ></el-form-item>
-          <el-form-item label="性别" prop="sex"
-            ><el-input v-model="data2.sex" type="textarea"></el-input
-          ></el-form-item>
-        </el-form>
-      </template>
-    </Tree>
+    </TreeDemo>
   </div>
 </template>
 
 <script setup>
-import Tree from './Tree.vue'
-
+import TreeDemo from './TreeDemo.vue'
+import { ref, computed } from 'vue'
+const treeDemoRef = ref(null)
 const data1 = {
   name: 'sayoriqwq',
   age: 18,
@@ -58,6 +46,19 @@ const data2 = {
   age: '',
   sex: ''
 }
+
+const name = computed(() => {
+  return treeDemoRef.value.isEdit ? data1.name : data2.name
+})
+
+const age = computed(() => {
+  return treeDemoRef.value.isEdit ? data1.age : data2.age
+})
+
+const sex = computed(() => {
+  return treeDemoRef.value.isEdit ? data1.sex : data2.sex
+})
+
 const treeData = [
   {
     id: 1,
