@@ -79,7 +79,7 @@ const sendData = {
     {
       prop: 'picture',
       label: '图片列',
-      // 该列数据是否使用switch开关
+      // 该列数据是否使用图片
       usePic: true
     }
   ],

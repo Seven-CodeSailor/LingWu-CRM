@@ -60,7 +60,7 @@
 <script setup>
 import { ref } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-
+import DropDown from '@/components/DropDown/DropDown.vue'
 const tableColumnAttribute = ref([
   {
     prop: 'goodsName',
