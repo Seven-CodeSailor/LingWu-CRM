@@ -1,5 +1,5 @@
 <template>
-  <div>费用收入类型</div>
+  <div>商品维护</div>
 </template>
 
 <script setup></script>
