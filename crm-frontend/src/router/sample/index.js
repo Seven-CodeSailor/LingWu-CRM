@@ -106,6 +106,10 @@ const routes = [
       {
         path: '/sample/bulkOpe',
         component: () => import('@/views/sample/BlukOpeTest.vue')
+      },
+      {
+        path: '/sample/TreeTest',
+        component: () => import('@/components/Tree/TreeTestView.vue')
       }
     ]
   }
