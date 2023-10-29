@@ -18,7 +18,7 @@ const input1 = ref()
     label: '选项2'
   },
   {
-    value: 'Option2',
+    value: 'Option3',
     label: '选项3'
   }
 ])
@@ -39,6 +39,10 @@ const props = defineProps({
   des: {
     type: String,
     default: '请选择'
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 })
 // 定义子传父方法
@@ -53,9 +57,11 @@ onMounted(() => {
     v-model="value"
     class="m-2"
     :placeholder="props.des"
-    size="large"
+    size="default"
+    style="width: 150px"
     clearable
     @change="emit('update:cid', value.label)"
+    :disabled="props.disabled"
   >
     <!-- 搜索框 -->
     <el-input
@@ -77,6 +83,7 @@ onMounted(() => {
 
 <style scoped>
 .search {
+  width: 100%;
   padding: 5% 5%;
 }
 </style>

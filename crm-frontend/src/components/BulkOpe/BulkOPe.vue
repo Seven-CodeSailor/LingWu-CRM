@@ -14,6 +14,12 @@
         <el-dropdown-item @click="openPrint" v-if="opt.includes(2)"
           >打印表格</el-dropdown-item
         >
+        <el-dropdown-item @click="openMsg" v-if="opt.includes(3)"
+          >批量发短信</el-dropdown-item
+        >
+        <el-dropdown-item @click="openMsg" v-if="opt.includes(4)"
+          >批量发邮件</el-dropdown-item
+        >
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -36,6 +42,9 @@
   <Print ref="print">
     <slot name="print"></slot>
   </Print>
+  <Message ref="message">
+    <slot name="message"></slot>
+  </Message>
 </template>
 
 <script setup>
@@ -44,6 +53,7 @@ import { ref, onMounted } from 'vue'
 import Excel from '@/components/BulkOpe/Excel.vue'
 import FileUpload from '@/components/BulkOpe/FileUpload.vue'
 import Print from '@/components/BulkOpe/Print.vue'
+import Message from '@/components/Bulkope/Message.vue'
 
 /**
  * 组件使用：
@@ -121,6 +131,8 @@ const file = ref()
 
 const print = ref()
 
+const message = ref()
+
 let opt = ref([])
 
 onMounted(() => {
@@ -139,9 +151,14 @@ const openFileUpload = () => {
 const openPrint = () => {
   print.value.showDialog()
 }
+// 打开发送邮件或者发送短信弹窗
+const openMsg = () => {
+  message.value.showDialog()
+}
 
 // 获取表格所需的数据
 const getData = () => {
+  console.log(props.excelData())
   return props.excelData()
 }
 </script>

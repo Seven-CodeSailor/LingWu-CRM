@@ -49,4 +49,20 @@ export const getInventortOutTableList = (theUrl) => {
   //   console.log(res)
   // })
 }
+
+export const queryInventoryList = async (data, success, fail) => {
+  await Request.requestJson(
+    Request.POST,
+    'https://mock.apifox.cn/m1/3426132-0-default/inventory-manager/query-inventory-list',
+    {
+      params: { ...data }
+    }
+  )
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
 export const getOutTableList = () => {}
