@@ -62,6 +62,14 @@
                   @change="(state) => emits('updateSwitchState', state, row)"
                 />
               </template>
+              <!-- 表格数据包含图片 -->
+              <template #default="{ row }" v-else-if="item.usePic">
+                <el-image
+                  style="width: 60px; height: 60px"
+                  :src="row[item.prop]"
+                  fit="fit"
+                />
+              </template>
             </el-table-column>
             <el-table-column
               label="操作"

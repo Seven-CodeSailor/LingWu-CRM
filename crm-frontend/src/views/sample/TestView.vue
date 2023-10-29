@@ -74,6 +74,13 @@ const sendData = {
       label: '开关列',
       // 该列数据是否使用switch开关
       useSwitch: true
+    },
+    // 图片列
+    {
+      prop: 'picture',
+      label: '图片列',
+      // 该列数据是否使用switch开关
+      usePic: true
     }
   ],
   tableData: [
@@ -92,7 +99,9 @@ const sendData = {
         value: '已入库',
         tagType: 'success'
       },
-      isUse: true
+      isUse: true,
+      picture:
+        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
     },
     {
       sex: '女',
@@ -102,7 +111,9 @@ const sendData = {
         value: '未入库',
         tagType: 'danger'
       },
-      isUse: true
+      isUse: true,
+      picture:
+        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
     },
     {
       sex: '男',
@@ -112,7 +123,9 @@ const sendData = {
         value: 'Info状态',
         tagType: 'info'
       },
-      isUse: true
+      isUse: true,
+      picture:
+        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
     },
     {
       sex: '男',
@@ -122,7 +135,9 @@ const sendData = {
         value: 'warning状态',
         tagType: 'warning'
       },
-      isUse: true
+      isUse: true,
+      picture:
+        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
     },
     {
       sex: '男',
@@ -132,7 +147,9 @@ const sendData = {
         value: '主题色',
         tagType: 'el'
       },
-      isUse: false
+      isUse: false,
+      picture:
+        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
     }
   ],
   // 传入删除操作的函数就会显示删除按钮
