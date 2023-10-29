@@ -43,17 +43,21 @@ const routes = [
         children: [
           {
             // 费用收入类型
-            path: '/basicData/financial/income',
-            name: 'income',
+            path: '/basicData/financial/incomeType',
+            name: 'incomeType',
             component: () =>
-              import('@/views/basic-data/financial-type/income/Income.vue')
+              import(
+                '@/views/basic-data/financial-type/incomeType/IncomeType.vue'
+              )
           },
           {
             // 费用开支类型
-            path: '/basicData/financial/expense',
-            name: 'expense',
+            path: '/basicData/financial/expenseType',
+            name: 'expenseType',
             component: () =>
-              import('@/views/basic-data/financial-type/expense/Expense.vue')
+              import(
+                '@/views/basic-data/financial-type/expenseType/ExpenseType.vue'
+              )
           },
           {
             // 银行账号管理
@@ -76,7 +80,57 @@ const routes = [
         // 商品管理
         path: '/basicData/product',
         name: 'product',
-        component: () => import('@/views/basic-data/product/Product.vue')
+        redirect: '/basicData/product/brand',
+        children: [
+          {
+            // 商品品牌
+            path: '/basicData/product/brand',
+            name: 'produbrandct',
+            component: () =>
+              import('@/views/basic-data/product/productBrand/ProductBrand.vue')
+          },
+          {
+            // 商品类型
+            path: '/basicData/product/type',
+            name: 'type',
+            component: () =>
+              import('@/views/basic-data/product/productType/ProductType.vue')
+          },
+          {
+            // 商品分类
+            path: '/basicData/product/classification',
+            name: 'classification',
+            component: () =>
+              import(
+                '@/views/basic-data/product/productClassification/ProductClassification.vue'
+              )
+          },
+          {
+            // 商品规格
+            path: '/basicData/product/specification',
+            name: 'specification',
+            component: () =>
+              import(
+                '@/views/basic-data/product/productSpecification/ProductSpecification.vue'
+              )
+          },
+          {
+            // 商品维护
+            path: '/basicData/product/maintenace',
+            name: 'maintenace',
+            component: () =>
+              import(
+                '@/views/basic-data/product/productMaintenace/ProductMaintenace.vue'
+              )
+          },
+          {
+            // 商品SKU
+            path: '/basicData/product/SKU',
+            name: 'SKU',
+            component: () =>
+              import('@/views/basic-data/product/productSKU/ProductSKU.vue')
+          }
+        ]
       }
     ]
   }
