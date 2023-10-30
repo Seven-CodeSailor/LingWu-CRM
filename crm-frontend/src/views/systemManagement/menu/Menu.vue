@@ -28,23 +28,27 @@
             ref="baseDataListRef"
           >
             <template #menu>
-              <el-button>
-                <el-icon>
-                  <Refresh />
-                </el-icon>
-                刷新
-              </el-button>
-
-              <el-button @click="handleAdd">添加</el-button>
-              <div>
-                <el-input></el-input>
-                <el-button
-                  type="primary"
-                  :icon="Search"
-                  style="margin-left: 10px; padding-left: 10px"
-                >
-                  搜索
-                </el-button>
+              <div class="space-between">
+                <div>
+                  <el-button @click="handleRefresh">
+                    <el-icon>
+                      <Refresh />
+                    </el-icon>
+                    刷新
+                  </el-button>
+                  <el-button @click="handleAdd">添加</el-button>
+                </div>
+                <div class="search">
+                  <el-input v-model="searchData" placeholder="搜索"></el-input>
+                  <el-button
+                    type="primary"
+                    :icon="Search"
+                    style="margin-left: 10px; padding-left: 10px"
+                    @click="handleSearch"
+                  >
+                    搜索
+                  </el-button>
+                </div>
               </div>
             </template>
 
@@ -207,6 +211,8 @@ const editFormData = reactive({
   shifouqiyong: false
 })
 
+const searchData = ref('')
+
 const sendData = reactive($store.sendData)
 const sendTreeData = $store.sendTreeData
 const showAddDrawer = ref(false)
@@ -232,6 +238,15 @@ const handleEdit = (row) => {
 const handleDelete = (row) => {
   console.log('删除', row)
 }
+
+const handleSearch = () => {
+  console.log('搜索', searchData.value)
+}
+
+const handleRefresh = () => {
+  console.log('发请求刷新页面')
+  // $store.loadTableData()
+}
 const saveAddData = () => {
   console.log('带着data', addFormData, '发add请求')
   showAddDrawer.value = false
@@ -252,6 +267,7 @@ const handleClose = (done) => {
 
 const handleNodeClick = (data) => {
   console.log('带着data的id发请求reload列表', data.id)
+  // $store.loadTableData()
 }
 const handleCancel = () => {
   showAddDrawer.value = false
@@ -270,5 +286,10 @@ const get = (pageSize, currentPage) => {
   justify-content: space-between;
   align-items: center;
   padding: 0 10px 20px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
 }
 </style>
