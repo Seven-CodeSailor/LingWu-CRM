@@ -17,18 +17,24 @@
       <template #menu>
         <div class="menu">
           <div class="left">
-            <el-button type="primary" style="margin-right: 8px">添加</el-button>
+            <el-button
+              type="primary"
+              style="margin-right: 8px"
+              @click="addProductBrand"
+              >添加</el-button
+            >
           </div>
         </div>
       </template>
     </BaseDataList>
+    <ProductBrandForm ref="productBrandFormRef"></ProductBrandForm>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-
+import ProductBrandForm from '../components/FormCom/ProductBrandForm.vue'
 const tableColumnAttribute = ref([
   {
     prop: 'brandName',
@@ -55,8 +61,10 @@ const tableColumnAttribute = ref([
   }
 ])
 const handleDelete = () => {}
-const handleEdit = () => {}
-
+const handleEdit = () => {
+  productBrandFormRef.value.visible = true
+}
+const productBrandFormRef = ref(null)
 const tableData = [
   {
     brandName: '鸡蛋🥚',
@@ -96,6 +104,10 @@ const handSwitchState = (state, row) => {
     baseDataListRef.value.openSwitchLoading =
       !baseDataListRef.value.openSwitchLoading
   }, 1000)
+}
+
+const addProductBrand = () => {
+  productBrandFormRef.value.visible = true
 }
 </script>
 
