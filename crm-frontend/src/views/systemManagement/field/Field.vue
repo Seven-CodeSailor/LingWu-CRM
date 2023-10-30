@@ -138,7 +138,7 @@
       </template>
       <template #default>
         <div>
-          <el-form v-model="addFormData">
+          <el-form v-model="addFormData" ref="addDrawerRef">
             <el-form-item label="表单提示文字" prop="tishiwenzi"
               ><el-input v-model="addFormData.tishiwenzi"></el-input
             ></el-form-item>
@@ -198,6 +198,7 @@
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import useSysField from '@/stores/sysManage/field.js'
 import { Search, Plus } from '@element-plus/icons-vue'
+import { ElMessage } from 'element-plus'
 import { onMounted, ref, reactive } from 'vue'
 const $store = useSysField()
 
@@ -238,8 +239,13 @@ const sendSelectData = reactive($store.sendSelectData)
 const showAddDrawer = ref(false)
 const showEditDrawer = ref(false)
 
+const addLinkData = ref('')
 const addDrawerRef = ref()
 const handleAdd = () => {
+  if (!addLinkData.value) {
+    ElMessage.error('请点击左侧需要操作的表单，再添加字段')
+    return
+  }
   showAddDrawer.value = true
 }
 
@@ -270,11 +276,16 @@ const handleSearch = () => {
 }
 
 const saveAddData = () => {
-  console.log('带着data', addFormData, '发add请求')
+  console.log(
+    '带着data',
+    addFormData,
+    '和linkData',
+    addLinkData.value,
+    '发add请求'
+  )
   showAddDrawer.value = false
   //解promise之后:
   ElMessage.success('添加成功')
-  console.log('addDrawerRef', addDrawerRef.value)
   addDrawerRef.value.resetFields()
 }
 
@@ -289,6 +300,8 @@ const handleClose = (done) => {
 
 const handleLinkClick = (link) => {
   console.log('handleLinkClick,带这个发请求', link)
+  //把这个data存下来，add的时候带上
+  addLinkData.value = link
   // $store.loadTableData()
 }
 const handleCancel = () => {
@@ -319,6 +332,4 @@ const get = (pageSize, currentPage) => {
   padding-bottom: 20px;
   border-bottom: 1px solid lightgrey;
 }
-
-
 </style>
