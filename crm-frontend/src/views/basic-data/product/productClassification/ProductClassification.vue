@@ -36,9 +36,16 @@
           <el-form-item label="分类简称" prop="typeAbbreviation"
             ><el-input v-model="data.typeAbbreviation"></el-input
           ></el-form-item>
-          <el-form-item label="上级分类" prop="upTypeName"
-            ><el-input v-model="data.upTypeName"></el-input
-          ></el-form-item>
+          <el-form-item label="上级分类" prop="upTypeName">
+            <el-select v-model="data.upTypeName" placeholder="选择分类">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
 
           <el-form-item label="排序" prop="sort"
             ><el-input v-model="data.sort"></el-input
@@ -53,7 +60,7 @@
           ></el-form-item>
 
           <el-form-item label="描述" prop="intro"
-            ><el-input v-model="data.intro"></el-input
+            ><el-input v-model="data.intro" type="textarea"></el-input
           ></el-form-item>
         </el-form>
       </template>
@@ -108,7 +115,7 @@ const handleEdit = (node) => {
   data.value = data1.value
   treeRef.value.isEdit = true
   treeRef.value.showDrawer = true
-  console.log('edit', node)
+  console.log('node', node)
 }
 
 const handleSubmit = () => {
@@ -135,6 +142,29 @@ const treeData = [
         ]
       }
     ]
+  }
+]
+
+const options = [
+  {
+    value: 'Option1',
+    label: 'Option1'
+  },
+  {
+    value: 'Option2',
+    label: 'Option2'
+  },
+  {
+    value: 'Option3',
+    label: 'Option3'
+  },
+  {
+    value: 'Option4',
+    label: 'Option4'
+  },
+  {
+    value: 'Option5',
+    label: 'Option5'
   }
 ]
 </script>

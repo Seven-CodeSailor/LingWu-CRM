@@ -39,8 +39,9 @@
                     >编辑</a
                   >
                   <a
+                    v-if="node.childNodes.length === 0"
                     style="margin-left: 8px; color: #f56c6c"
-                    @click="emits('remove', node, data)"
+                    @click="emits('remove', data)"
                   >
                     删除
                   </a>
