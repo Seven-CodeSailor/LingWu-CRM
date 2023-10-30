@@ -15,13 +15,14 @@
         ><el-icon><icon-message-box /></el-icon
       ></template>
     </BaseDataList>
+    <ProductTypeForm></ProductTypeForm>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-
+import ProductTypeForm from '../components/FormCom/ProductTypeForm.vue'
 const tableColumnAttribute = ref([
   {
     prop: 'attrName',
