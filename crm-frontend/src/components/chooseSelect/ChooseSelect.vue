@@ -50,6 +50,9 @@ const emit = defineEmits(['update:cid'])
 onMounted(() => {
   console.log('多选框父的数据', props.options)
 })
+defineExpose({
+  value
+})
 </script>
 
 <template>
