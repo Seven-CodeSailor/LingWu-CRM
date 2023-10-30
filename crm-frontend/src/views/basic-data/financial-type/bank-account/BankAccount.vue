@@ -18,7 +18,9 @@
       <template #menu>
         <div class="content">
           <div class="left">
-            <el-button type="primary">添加数据</el-button>
+            <el-button type="primary" @click="addBankAccount"
+              >添加数据</el-button
+            >
             <el-button type="danger">批量删除</el-button>
           </div>
           <div class="right">
@@ -35,13 +37,18 @@
         </div>
       </template></BaseDataList
     >
+    <BankAccountForm
+      :title="title"
+      ref="bankAccountFormRef"
+      :handle-submit="submit"
+    ></BankAccountForm>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-
+import BankAccountForm from './BankAccountForm.vue'
 const baseDataListRef = ref(null)
 const tableColumnAttribute = ref([
   {
@@ -71,7 +78,7 @@ const tableColumnAttribute = ref([
     useSwitch: true
   }
 ])
-
+const bankAccountFormRef = ref(null)
 const tableData = ref([
   {
     name: '小黑子',
@@ -106,7 +113,7 @@ const tableData = ref([
     sort: 99
   }
 ])
-
+const title = ref('')
 const dropdownMenuActionsInfo = [
   {
     command: 'delete',
@@ -119,11 +126,19 @@ const dropdownMenuActionsInfo = [
   {
     command: 'edit',
     handleAction: (row) => {
+      title.value = '修改'
+      bankAccountFormRef.value.visible = true
       console.log('修改的回调函数', row)
+      bankAccountFormRef.value.form = { ...row }
     },
     actionName: '修改'
   }
 ]
+
+const addBankAccount = () => {
+  title.value = '添加'
+  bankAccountFormRef.value.visible = true
+}
 
 const inputValue = ref('')
 
@@ -144,6 +159,19 @@ const get1 = (state, row) => {
     baseDataListRef.value.openSwitchLoading =
       !baseDataListRef.value.openSwitchLoading
   }, 1000)
+}
+
+const submit = () => {
+  bankAccountFormRef.value.form = {
+    name: '',
+    card: '',
+    holders: '',
+    address: '',
+    visible: true,
+    info: '',
+    sort: 0
+  }
+  bankAccountFormRef.value.visible = false
 }
 </script>
 
