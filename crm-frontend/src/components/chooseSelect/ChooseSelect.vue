@@ -1,3 +1,13 @@
+<!--
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-10-30 21:35:22
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-10-30 21:36:32
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\components\chooseSelect\ChooseSelect.vue
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
+-->
 <script setup>
 // 这是下拉选择框 create by 暮秋pro
 // 更新时间：23/10/19
