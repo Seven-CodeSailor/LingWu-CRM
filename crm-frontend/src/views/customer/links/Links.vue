@@ -4,7 +4,7 @@
     <header>
       <h3>
         <slot name="ico"></slot>
-        <div style="margin-left: 8px">服务记录</div>
+        <div style="margin-left: 8px">联系人</div>
       </h3>
       <el-button
         class="button"
@@ -70,7 +70,7 @@
     <el-table
       style="width: 100%; margin-bottom: 20px"
       table-layout="auto"
-      :data="serviceRecord.tableData"
+      :data="myclient.linksTableData"
       @selection-change="selectChange"
     >
       <el-table-column type="selection" width="55" />
@@ -79,11 +79,12 @@
         prop="customerName"
         sortable
       ></el-table-column>
-      <el-table-column label="服务类型" prop="services"></el-table-column>
-      <el-table-column label="服务方式" prop="servicesmodel"></el-table-column>
-      <el-table-column label="服务日期" prop="serviceTime"></el-table-column>
-      <el-table-column label="花费时间" prop="tlen" sortable></el-table-column>
-      <el-table-column label="服务内容" prop="content"></el-table-column>
+      <el-table-column label="姓名" prop="linkName"></el-table-column>
+      <el-table-column label="性别" prop="gender"></el-table-column>
+      <el-table-column label="职位" prop="position"></el-table-column>
+      <el-table-column label="手机" prop="mobile"></el-table-column>
+      <el-table-column label="座机" prop="tel"></el-table-column>
+      <el-table-column label="QQ" prop="qicq"></el-table-column>
       <el-table-column label="操作" fixed="right">
         <template #default="{ row }">
           <el-dropdown>
@@ -105,7 +106,7 @@
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
       :page-sizes="[5, 10, 20, 50]"
-      :total="serviceRecord.tableData.length"
+      :total="myclient.linksTableData.length"
       layout="prev, pager, next, jumper, ->, total, sizes"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -114,51 +115,56 @@
   <!-- 添加或修改客户信息 -->
   <el-drawer
     v-model="dialogVisible"
-    :title="
-      serviceRecord.temp.linkmanId === -1 ? '添加服务记录' : '修改服务记录'
-    "
+    :title="tempLinkData.linkmanId === -1 ? '添加联系人' : '修改联系人'"
     size="50%"
   >
-    <el-form
-      :model="serviceRecord.temp"
-      label-width="120px"
-      label-position="right"
-    >
-      <el-form-item label="服务类型">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择服务类型"
-          :options="select.type"
-          @update:cid="serviceGettype()"
-          ref="serviceType"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="服务方式">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择服务方式"
-          :options="select.way"
-          @update:cid="serviceGetWay()"
-          ref="serviceWay"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="服务日期">
-        <el-col :span="11">
-          <el-date-picker
-            v-model="serviceRecord.temp.linkName"
-            type="date"
-            placeholder="请选择服务日期"
-          />
-        </el-col>
-      </el-form-item>
-      <el-form-item label="花费时间(分钟)">
-        <el-input-number v-model="serviceRecord.temp.tlen" min="0" />
-      </el-form-item>
-      <el-form-item label="服务内容">
+    <el-form :model="tempLinkData" label-width="120px" label-position="right">
+      <el-form-item label="姓名">
         <el-input
-          v-model="serviceRecord.temp.content"
-          type="textarea"
-          style="width: 650px"
+          v-model="tempLinkData.linkName"
+          placeholder="请输入姓名"
+          style="width: 500px"
+        />
+      </el-form-item>
+      <el-form-item label="性别">
+        <el-radio-group v-model="tempLinkData.gender">
+          <el-radio label="男" />
+          <el-radio label="女" />
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="座机">
+        <el-input
+          v-model="tempLinkData.tel"
+          placeholder="请输入座机"
+          style="width: 500px"
+        />
+      </el-form-item>
+      <el-form-item label="职位">
+        <el-input
+          v-model="tempLinkData.position"
+          placeholder="请输入职位"
+          style="width: 500px"
+        />
+      </el-form-item>
+      <el-form-item label="手机号">
+        <el-input
+          v-model="tempLinkData.mobile"
+          placeholder="请输入手机号"
+          style="width: 500px"
+        />
+      </el-form-item>
+      <el-form-item label="邮箱">
+        <el-input
+          v-model="tempLinkData.email"
+          placeholder="请输入邮箱"
+          style="width: 500px"
+        />
+      </el-form-item>
+      <el-form-item label="通信地址">
+        <el-input
+          v-model="tempLinkData.address"
+          placeholder="请输入通信地址"
+          style="width: 500px"
         />
       </el-form-item>
       <el-form-item label="客户名称">
@@ -199,18 +205,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import useServiceRecord from '@/stores/customer/servicerecord.js'
+import useMyClient from '@/stores/customer/myclient.js'
 import useSelect from '@/stores/customer/select.js'
 import { getCustomerName } from '@/apis/publicInterface.js'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
 import { ArrowDown } from '@element-plus/icons-vue'
-import {
-  queryServiceNote,
-  getCustomerServiceType,
-  getCustomerServiceWay
-} from '@/apis/customer/index.js'
+import { queryContactList } from '@/apis/customer/index.js'
 
 // 初始化数据
 const initLinks = async (
@@ -220,13 +222,13 @@ const initLinks = async (
   linkName,
   address
 ) => {
-  await queryServiceNote(currentPage, pageSize, customerName, linkName, address)
+  await queryContactList(currentPage, pageSize, customerName, linkName, address)
 }
 onMounted(() => {
   initLinks()
 })
 // 我的客户store仓库
-const serviceRecord = useServiceRecord()
+const myclient = useMyClient()
 // 下拉列表仓库
 const select = useSelect()
 // 控制添加或修改客户信息对话框的显示与隐藏
@@ -278,29 +280,13 @@ const tempLinkDataReset = () => {
   }
 }
 const customerName = ref()
-const serviceWay = ref()
-const serviceType = ref()
-// 获取客户名称下拉列表
 const contractGetName = async () => {
   await getCustomerName()
-  serviceRecord.temp.customerName = customerName.value.value.label
-}
-// 获取服务类型下拉列表
-const serviceGettype = async () => {
-  await getCustomerServiceType()
-  serviceRecord.temp.services = serviceType.value.value.label
-}
-// 获取服务方式下拉列表
-const serviceGetWay = async () => {
-  await getCustomerServiceWay()
-  serviceRecord.temp.servicesmodel = serviceWay.value.value.label
+  tempLinkData.value.customerName = customerName.value.value.label
 }
 // 点击添加按钮的回调
 const addMyClinet = async () => {
   await getCustomerName()
-  await getCustomerServiceType()
-  await getCustomerServiceWay()
-  serviceRecord.tempReset()
   dialogVisible.value = true
 }
 // 添加按钮确定回调
@@ -312,8 +298,6 @@ const save = () => {
 // 修改按钮回调
 const modify = async (row) => {
   await getCustomerName()
-  await getCustomerServiceType()
-  await getCustomerServiceWay()
   tempLinkData.value.linkmanId = row.linkmanId
   dialogVisible.value = true
 }
