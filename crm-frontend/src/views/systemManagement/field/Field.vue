@@ -98,7 +98,10 @@
               </el-select>
             </el-form-item>
             <el-form-item label="默认值" prop="morenzhi">
-              <el-input v-model="editFormData.morenzhi"></el-input>
+              <el-input
+                v-model="editFormData.morenzhi"
+                type="textarea"
+              ></el-input>
             </el-form-item>
             <el-form-item label="最大值" prop="zuidazhi">
               <el-input v-model="editFormData.zuidazhi"></el-input>
@@ -135,47 +138,46 @@
       </template>
       <template #default>
         <div>
-          <el-form
-            v-model="addFormData"
-            ref="addDrawerRef"
-            :model="addFormData"
-          >
-            <el-form-item label="中文栏目名称" prop="zhongwen"
-              ><el-input
-                placeholder="请输入中文栏目名称"
-                v-model="addFormData.zhongwen"
-              ></el-input
+          <el-form v-model="addFormData">
+            <el-form-item label="表单提示文字" prop="tishiwenzi"
+              ><el-input v-model="addFormData.tishiwenzi"></el-input
             ></el-form-item>
-            <el-form-item label="英文栏目名称" prop="yingwen"
-              ><el-input
-                placeholder="请输入英文栏目名称"
-                v-model="addFormData.yingwen"
-              ></el-input
+            <el-form-item label="字段名称" prop="ziduanmingcheng"
+              ><el-input v-model="addFormData.ziduanmingcheng"></el-input
             ></el-form-item>
-            <el-form-item label="超链接地址" prop="lianjie"
-              ><el-input
-                placeholder="请输入超链接地址"
-                v-model="addFormData.lianjie"
-              ></el-input
-            ></el-form-item>
-            <el-form-item label="父级栏目" prop="fuji">
+            <el-form-item label="数据类型" prop="leixing">
               <el-select
-                v-model="addFormData.fuji"
+                v-model="addFormData.leixing"
                 class="m-2"
                 placeholder="Select"
                 size="large"
               >
                 <el-option
-                  v-for="item in sendTreeData"
-                  :key="item.id"
-                  :label="item.label"
-                  :value="item.id"
+                  v-for="item in sendSelectData"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 ></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="默认值" prop="morenzhi">
+              <el-input
+                v-model="addFormData.morenzhi"
+                type="textarea"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="最大值" prop="zuidazhi">
+              <el-input v-model="addFormData.zuidazhi"></el-input>
             </el-form-item>
             <el-form-item label="是否启用" prop="shifouqiyong">
               <el-checkbox
                 v-model="addFormData.shifouqiyong"
+                size="large"
+              ></el-checkbox>
+            </el-form-item>
+            <el-form-item label="是否验证">
+              <el-checkbox
+                v-model="addFormData.data.value"
                 size="large"
               ></el-checkbox>
             </el-form-item>
@@ -195,33 +197,44 @@
 <script setup>
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import useSysField from '@/stores/sysManage/field.js'
-import { Refresh, Search, Plus } from '@element-plus/icons-vue'
+import { Search, Plus } from '@element-plus/icons-vue'
 import { onMounted, ref, reactive } from 'vue'
 const $store = useSysField()
 
 onMounted(() => {
   $store.init()
 })
+
 const addFormData = reactive({
-  zhongwen: '',
-  yingwen: '',
-  lianjie: '',
-  fuji: '',
-  shifouqiyong: false
+  tishiwenzi: '',
+  ziduanmingcheng: '',
+  leixing: '',
+  morenzhi: '',
+  zuidazhi: '',
+  shifouqiyong: '',
+  data: {
+    value: '',
+    tagType: 'success'
+  }
 })
 
 const editFormData = ref({
-  zhongwen: '',
-  yingwen: '',
-  lianjie: '',
-  fuji: '',
-  shifouqiyong: false
+  tishiwenzi: '',
+  ziduanmingcheng: '',
+  leixing: '',
+  morenzhi: '',
+  zuidazhi: '',
+  shifouqiyong: '',
+  data: {
+    value: '',
+    tagType: 'success'
+  }
 })
 
 const searchData = ref('')
 
 const sendData = reactive($store.sendData)
-const sendTreeData = $store.sendTreeData
+const sendSelectData = reactive($store.sendSelectData)
 const showAddDrawer = ref(false)
 const showEditDrawer = ref(false)
 
@@ -306,4 +319,6 @@ const get = (pageSize, currentPage) => {
   padding-bottom: 20px;
   border-bottom: 1px solid lightgrey;
 }
+
+
 </style>

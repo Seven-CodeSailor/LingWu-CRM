@@ -1,64 +1,57 @@
 import { defineStore } from 'pinia'
 
-const useSysRights = defineStore('sysrights', {
+const useSysPower = defineStore('syspower', {
   state: () => ({
     sendData: {
-      msg: '一些操作说明',
       tableColumnAttribute: [
         {
-          prop: 'caidanmingcheng',
-          label: '销售管理'
+          prop: 'mingcheng',
+          label: '权限名称'
         },
         {
-          prop: 'caidanmiaoshu',
-          label: '菜单描述'
-        },
-        {
-          prop: 'shifouqiyong',
-          label: '启用'
+          prop: 'miaoshu',
+          label: '权限描述'
         }
       ],
       tableData: [
         {
-          caidanmingcheng: '销售管理',
-          caidanmiaoshu: '菜单描述',
-          shifouqiyong: '启用'
+          mingcheng: '系统管理',
+          miaoshu: '系统描述'
         },
         {
-          caidanmingcheng: '我的客户',
-          caidanmiaoshu: '菜单描述',
-          shifouqiyong: '启用'
+          mingcheng: '权限1',
+          miaoshu: 'qwq'
         },
         {
-          caidanmingcheng: '服务记录',
-          caidanmiaoshu: '菜单描述',
-          shifouqiyong: '启用'
+          mingcheng: '权限2',
+          miaoshu: 'qwq'
         }
       ],
       useDropdownMenu: false,
       useSelectColumn: false,
-      useHeader: true,
+      useHeader: false,
       usePagination: true,
       pageSizes: [2, 10, 15, 200],
       total: 100,
-      title: '菜单管理'
+      //在树形菜单里显示
+      title: ''
     },
     sendTreeData: [
       {
         id: 1,
-        label: '客户管理',
+        label: '管理员',
         children: [
           {
             id: 4,
-            label: '销售管理',
+            label: '系统管理',
             children: [
               {
                 id: 9,
-                label: '我的客户'
+                label: '权限1'
               },
               {
                 id: 10,
-                label: '下属客户'
+                label: '权限2'
               }
             ]
           }
@@ -107,4 +100,4 @@ const useSysRights = defineStore('sysrights', {
   }
 })
 
-export default useSysRights
+export default useSysPower
