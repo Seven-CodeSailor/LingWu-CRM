@@ -272,21 +272,22 @@ let initChart = () => {
       text: '销售简报-新增数据统计',
       textStyle: {
         fontWeight: 'bolder',
-        fontSize: 20
+        fontSize: 15
       }
     },
     // 图例组件
     legend: {
-      show: true
+      show: true,
+      top: 30
     },
     // 修改坐标系显示大小
     grid: {
-      top: '13%',
+      top: '18%',
       left: '3%',
       right: '3%',
       bottom: 0,
-      height: 400,
-      width: 700,
+      height: 350,
+      width: 480,
       containLabel: true
     },
     tooltip: {
@@ -302,9 +303,9 @@ let initChart = () => {
       axisLabel: {
         showMaxLabel: true,
         showMinLabel: true,
-        margin: 20,
+        margin: 10,
         fontWeight: 'normal',
-        fontSize: 15,
+        fontSize: 12,
         align: 'center'
       },
       axisTick: {
@@ -529,17 +530,17 @@ let initChart = () => {
 
 <style scoped>
 .salesKit {
-  width: 1300px;
-  height: 600px;
+  width: 480;
+  height: 500px;
 }
 /* 图表样式 */
 .chart {
   margin-left: 2%;
   margin-right: 2%;
-  width: 1000px;
-  height: 600px;
+  width: 480;
+  height: 500px;
 }
 .chartCheckBox {
-  margin-left: 900px;
+  margin-left: 300px;
 }
 </style>
