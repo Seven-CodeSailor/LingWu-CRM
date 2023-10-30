@@ -20,7 +20,7 @@
         <div class="menu">
           <div class="left">
             <BulkOPe
-              :excelData="() => stockStorageDetailsStore.tableData"
+              :excelData="t1"
               :getOpt="() => [0]"
               excelName="入库明细.xlsx"
               tableName="入库明细的sheet表"
@@ -34,13 +34,13 @@
               style="margin-right: 4px"
             />
             <DropDown
-              v-model:topInputValue="topInputValue"
-              v-model:bottomInputValue="bottomInputValue"
-              topInputTitle="供应商名称"
-              bottomInputTitle="通信地址"
+              v-model:input-value1="topInputValue"
+              v-model:input-value2="bottomInputValue"
+              input-title1="供应商名称"
+              input-title2="通信地址"
               @handle-search="handleSearch"
             ></DropDown>
-
+            <el-button @click="test">获取勾选的rows</el-button>
             <el-button
               type="primary"
               style="margin-left: 4px"
@@ -64,7 +64,7 @@
 import { ref, onMounted } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
-import DropDown from '../../../components/DropDown/DropDown.vue'
+import DropDown from '@/components/DropDown/DropDown.vue'
 import { useStockStorageDetailsStore } from '@/stores/inventory/stockstoragedetails.js'
 const tableColumnAttribute = [
   {
@@ -135,7 +135,58 @@ const handleSearch = () => {
   console.log('调用search函数')
 }
 
+const test = () => {
+  const Data = baseDataListRef.value.rows
+  const b = JSON.parse(JSON.stringify(Data))
+  console.log('v1', baseDataListRef.value)
+  console.log('b1', b)
+}
+
+// const aa = () => {
+//   console.log('aa')
+//   return []
+// }
+
+const t1 = () => {
+  // console.log('t1'.Data)
+  // // console.log('v', baseDataListRef.value)
+
+  // // // const b = JSON.parse(JSON.stringify(Data))
+  // // console.log('b', Data)
+  // console.log('ss')
+  return baseDataListRef.value.rows // 相对于return []
+}
+
+// const t2 = () => {
+//   const tableData = baseDataListRef.value.rows
+//   console.log('tabledata', tableData)
+//   // t1(JSON.parse(JSON.stringify(tableData)))
+//   return [
+//     {
+//       性别: '男',
+//       年龄: '19',
+//       爱好: '唱',
+//       name: 'a'
+//     },
+//     {
+//       性别: '女',
+//       年龄: '21',
+//       爱好: 'rap',
+//       address: 'b'
+//     },
+//     {
+//       性别: '男',
+//       年龄: '22',
+//       爱好: '篮球',
+//       habb: 'c'
+//     }
+//   ]
+// }
+
 onMounted(() => {
+  const Data = baseDataListRef.value.rows
+  const bb = JSON.parse(JSON.stringify(Data))
+  console.log('bb', bb)
   const params = {
     pageIndex: 1,
     pageSize: 5
