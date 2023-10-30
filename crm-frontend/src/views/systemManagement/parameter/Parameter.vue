@@ -12,7 +12,7 @@
   <div class="container">
     <div class="app-container">
       <el-card>
-        <div class="header">
+        <div class="space-between">
           <h3>系统参数</h3>
           <div>设置</div>
         </div>
@@ -43,9 +43,10 @@
             <el-form-item label="联系地址"
               ><el-input v-model="formData.dizhi"></el-input
             ></el-form-item>
-            <el-button type="primary" @click="saveData">保存数据</el-button>
-            <el-button type="primary" @click="handleCancel">取消</el-button>
-            <el-button :plain="true" @click="open2">success</el-button>
+            <div class="space-between">
+              <el-button type="primary" @click="saveData">保存数据</el-button>
+              <el-button type="primary" @click="handleCancel">取消</el-button>
+            </div>
           </el-form>
         </div>
       </el-card>
@@ -61,12 +62,7 @@ import { ElMessage } from 'element-plus'
 const $store = useSysParams()
 
 let formData = reactive({})
-const open2 = () => {
-  ElMessage({
-    message: 'Congrats, this is a success message.',
-    type: 'success'
-  })
-}
+
 onMounted(() => {
   //发请求，初始化数据
   $store.init()
@@ -77,10 +73,7 @@ onMounted(() => {
 const saveData = () => {
   console.log('saveData')
   $store.setSysParams(formData)
-  ElMessage({
-    message: 'Congrats, this is a success message.',
-    type: 'success'
-  })
+  ElMessage.success('保存成功')
 }
 
 const handleCancel = () => {
@@ -89,7 +82,7 @@ const handleCancel = () => {
 </script>
 
 <style lang="scss" scoped>
-.header {
+.space-between {
   display: flex;
   justify-content: space-between;
   align-items: center;

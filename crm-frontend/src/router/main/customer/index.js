@@ -24,9 +24,9 @@ const routes = [
       },
       {
         // 联系人
-        path: '/customer/contacts',
-        name: 'contacts',
-        component: () => import('@/views/customer/contacts/Contacts.vue')
+        path: '/customer/links',
+        name: 'links',
+        component: () => import('@/views/customer/links/Links.vue')
       },
       {
         // 服务记录

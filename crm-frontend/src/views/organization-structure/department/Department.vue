@@ -37,15 +37,20 @@
     <template #menu>
       <div class="meau">
         <!-- 这里是表格头部的控件 -->
-        <el-button @click="theDrawer = true">
+        <el-button @click="handelAddFn">
           <el-icon type="success" circle>
             <el-icon><Plus /></el-icon
           ></el-icon>
           添加
         </el-button>
         <div class="search">
-          <el-input placeholder="请输入关键字搜索"></el-input>
-          <el-button type="primary" :icon="Search">搜索</el-button>
+          <el-input
+            placeholder="请输入关键字搜索"
+            v-model="searchKey"
+          ></el-input>
+          <el-button type="primary" :icon="Search" @click="handelSearch"
+            >搜索</el-button
+          >
         </div>
       </div>
     </template>
@@ -60,23 +65,28 @@
       </span>
     </template>
   </el-dialog>
-  <!-- 添加业务=>抽屉 -->
+  <!-- 添加业务=> 抽屉 -->
   <el-drawer
     size="45%"
-    v-model="theDrawer"
+    v-model="addDrawer"
     title="添加部门"
     direction="rtl"
     open-delay="100"
   >
     <div class="demo-drawer__content">
-      <el-form :model="addForm" label-width="120px" :rules="addRules">
-        <el-form-item label="部门名称" :label-width="labelWidth">
+      <el-form
+        ref="theAddForm"
+        :model="addForm"
+        label-width="120px"
+        :rules="formRule"
+      >
+        <el-form-item label="部门名称" :label-width="labelWidth" prop="name">
           <el-input v-model="addForm.name" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="部门电话" :label-width="labelWidth">
+        <el-form-item label="部门电话" :label-width="labelWidth" prop="phone">
           <el-input v-model="addForm.phone" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="部门传真" :label-width="labelWidth">
+        <el-form-item label="部门传真" :label-width="labelWidth" prop="fax">
           <el-input v-model="addForm.fax" autocomplete="off" />
         </el-form-item>
         <el-form-item label="父级栏目" :label-width="labelWidth">
@@ -85,13 +95,10 @@
             <el-option label="Area2" value="beijing" />
           </el-select> -->
           <!-- 调用选择框组件 -->
-          <ChooseSelect
-            :options="selOptions"
-            des="请选择你要查找的内容"
-          ></ChooseSelect>
+          <ChooseSelect :options="selOptions" des="选择上级"></ChooseSelect>
         </el-form-item>
-        <el-form-item label="排位序号" :label-width="labelWidth">
-          <el-input v-model="addForm.name" autocomplete="off" />
+        <el-form-item label="排位序号" :label-width="labelWidth" prop="sort">
+          <el-input v-model="addForm.sort" autocomplete="off" />
         </el-form-item>
         <el-form-item label="是否启用" :label-width="labelWidth">
           <el-switch v-model="addForm.delivery" />
@@ -101,9 +108,62 @@
         </el-form-item>
       </el-form>
       <div class="drawerFooter">
-        <el-button @click="cancelForm">取消</el-button>
+        <el-button @click="addDrawer = false">取消</el-button>
         <el-button type="primary" :loading="btnLoading" @click="handelAddSubmit"
           >提交</el-button
+        >
+      </div>
+    </div>
+  </el-drawer>
+  <!-- 修改业务 => 抽屉 -->
+  <el-drawer
+    size="45%"
+    v-model="editDrawer"
+    title="修改部门"
+    direction="rtl"
+    open-delay="100"
+  >
+    <div class="demo-drawer__content">
+      <el-form
+        ref="editForm"
+        :model="addForm"
+        label-width="120px"
+        :rules="formRule"
+      >
+        <el-form-item label="部门名称" :label-width="labelWidth" prop="name">
+          <el-input v-model="addForm.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="部门电话" :label-width="labelWidth" prop="phone">
+          <el-input v-model="addForm.phone" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="部门传真" :label-width="labelWidth" prop="fax">
+          <el-input v-model="addForm.fax" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="父级栏目" :label-width="labelWidth">
+          <!-- <el-select v-model="addForm.region" placeholder="请选择上级">
+            <el-option label="Area1" value="shanghai" />
+            <el-option label="Area2" value="beijing" />
+          </el-select> -->
+          <!-- 调用选择框组件 -->
+          <ChooseSelect :options="selOptions" des="选择上级"></ChooseSelect>
+        </el-form-item>
+        <el-form-item label="排位序号" :label-width="labelWidth" prop="sort">
+          <el-input v-model="addForm.sort" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="是否启用" :label-width="labelWidth">
+          <el-switch v-model="addForm.delivery" />
+        </el-form-item>
+        <el-form-item label="部门介绍" :label-width="labelWidth">
+          <el-input v-model="addForm.desc" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <div class="drawerFooter">
+        <el-button @click="editDrawer = false">取消</el-button>
+        <el-button
+          type="primary"
+          :loading="btnLoading"
+          @click="handelEditSubmit"
+          >保存数据</el-button
         >
       </div>
     </div>
@@ -165,54 +225,56 @@ const sendData = {
     },
     {
       prop: 'sort',
-      label: '排序'
+      label: '排序',
+      sortable: true
     },
     {
       prop: 'Enable',
-      label: '启用'
+      label: '启用',
+      useSwitch: true
     }
   ],
   tableData: [
     {
       Department: '商务部',
       DepartmentDes: '商务洽谈的部门',
-      sort: '',
+      sort: '4',
       Enable: ''
     },
     {
       Department: '零起飞工作室',
       DepartmentDes: '吃苦耐劳部门',
-      sort: '',
+      sort: '6',
       Enable: ''
     },
     {
       Department: '行政部',
       DepartmentDes: '公司政策部门',
-      sort: '',
+      sort: '4',
       Enable: ''
     },
     {
       Department: '技术部',
       DepartmentDes: '技术大佬聚集地',
-      sort: '',
+      sort: '7',
       Enable: ''
     },
     {
       Department: 'yuki部',
       DepartmentDes: '员工保护协会',
-      sort: '',
+      sort: '2',
       Enable: ''
     },
     {
       Department: '财务部',
       DepartmentDes: '财务部门',
-      sort: '',
+      sort: '3',
       Enable: ''
     },
     {
       Department: '商务部',
       DepartmentDes: '吃苦耐劳部门',
-      sort: '',
+      sort: '12',
       Enable: ''
     }
   ],
@@ -229,7 +291,13 @@ const dropdownMenuActionsInfo = ref([
     command: '修改',
     // row为当前行的数据
     handleAction: (row) => {
+      editDrawer.value = true
       console.log('修改回调函数', row)
+      // 需要发请求获取没有的数据
+      addForm.value.name = row.Department
+      addForm.value.desc = row.DepartmentDes
+      addForm.value.sort = row.sort
+      console.log(row.Department)
     },
     actionName: '修改'
   },
@@ -247,24 +315,76 @@ const dropdownMenuActionsInfo = ref([
 // 删除消息提示
 const isDelete = ref(false)
 // 控制抽屉打开关闭的数据
-const theDrawer = ref(false)
+const addDrawer = ref(false)
 // 抽屉表单数据
 const addForm = ref({
   name: '',
   phone: '',
   fax: '',
   region: '选择上级',
+  // 排位序号
+  sort: '',
   delivery: false,
   desc: ''
 })
 // 表单元素宽度
 const labelWidth = ref('100px')
+// ref绑定表单
+const theAddForm = ref()
+const editForm = ref()
 //表单校验规则
-const addRules = ref({})
+const formRule = ref({
+  // 部门名称
+  name: [
+    { required: true, message: '请输入部门名称', trigger: 'blur' },
+    { min: 1, max: 10, message: '用户名必须是1-10位的字符', trigger: 'blur' }
+  ],
+  // 部门电话
+  phone: [
+    { required: true, message: '请输入部门电话', trigger: 'blur' },
+    {
+      pattern: /^1[3-9]\d{9}$/,
+      message: '请输入正确的电话格式',
+      trigger: 'blur'
+    }
+  ],
+  // 部门传真
+  //国际区号+区号 示例: +86-1234-567890
+  fax: [
+    { required: true, message: '请输入部门传真', trigger: 'blur' },
+    {
+      pattern: /^\+?\d{1,3}-?\d{1,4}-?\d{4,}$/,
+      message: '请输入正确的传真格式',
+      trigger: 'blur'
+    }
+  ],
+  // 父级栏目需要用数据判断用户是否选中
+  // 排位序号
+  sort: [
+    { required: true, message: '请输入排位序号', trigger: 'blur' },
+    {
+      pattern: /^\d+$/,
+      message: '输入格式是任意长度数字',
+      trigger: 'blur'
+    }
+  ]
+})
+// 点击添加打开抽屉,置空数据
+const handelAddFn = () => {
+  // 置空表单数据
+  let obj = addForm.value
+  for (let key in obj) {
+    obj[key] = ''
+  }
+  addDrawer.value = true
+}
 
 // 按钮提交加载的数据和方法
 const btnLoading = ref(false)
-const handelAddSubmit = () => {
+const handelAddSubmit = async () => {
+  // 添加表单的校验,通过了才能发送添加请求
+  await theAddForm.value.validate()
+  // 这里要处理添加接口的逻辑
   btnLoading.value = true
   setTimeout(() => {
     ElMessage({
@@ -272,6 +392,7 @@ const handelAddSubmit = () => {
       type: 'success'
     })
     btnLoading.value = false
+    addDrawer.value = false
   }, 1000)
 }
 
@@ -302,6 +423,43 @@ const selOptions = ref([
     label: '财务部'
   }
 ])
+
+// 编辑业务
+// 操作 => 修改抽屉
+// 保存数据 按钮
+const handelEditSubmit = async () => {
+  // 修改的表单校验,通过才能发送put更新数据请求
+  await editForm.value.validate()
+  // 在这里处理更新修改的接口
+  setTimeout(() => {
+    ElMessage({
+      message: '修改成功',
+      type: 'success'
+    })
+    editDrawer.value = false
+  }, 1000)
+}
+// 控制编辑抽屉打开/关闭的数据
+const editDrawer = ref(false)
+
+// 搜索业务
+// 输入框绑定的数据
+const searchKey = ref('')
+// 搜索方法
+const handelSearch = () => {
+  if (searchKey.value === '') {
+    ElMessage('搜索关键词不能为空')
+    return false
+  }
+  btnLoading.value = true
+  setTimeout(() => {
+    btnLoading.value = false
+    ElMessage({
+      message: '搜索执行!调接口发请求',
+      type: 'success'
+    })
+  }, 1000)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -328,8 +486,13 @@ const selOptions = ref([
 }
 // 抽屉底部按钮样式
 .drawerFooter {
-  width: 100%;
+  // width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.drawerFooter button {
+  margin: 0 40px;
 }
 </style>
