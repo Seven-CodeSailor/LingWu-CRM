@@ -36,7 +36,7 @@
       <template #menu
         ><div class="content">
           <div class="left">
-            <el-button type="primary">添加数据</el-button>
+            <el-button type="primary" @click="addArea">添加数据</el-button>
           </div>
           <div class="right">
             <el-input
@@ -52,11 +52,19 @@
         </div>
       </template>
     </BaseDataList>
+    <RegionalForm
+      ref="regionalFormRef"
+      :title="title"
+      :options="options"
+    ></RegionalForm>
   </div>
 </template>
 
 <script setup>
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
+import RegionalForm from './RegionalForm.vue'
+import { ref } from 'vue'
+const regionalFormRef = ref(null)
 const sendData = {
   tableColumnAttribute: [
     {
@@ -73,8 +81,9 @@ const sendData = {
       sortable: true
     },
     {
-      prop: 'isUse',
-      label: '是否启用'
+      prop: 'visible',
+      label: '是否启用',
+      useSwitch: true
     }
   ],
   tableData: [
@@ -82,19 +91,19 @@ const sendData = {
       areaName: '鸡场',
       areaInfo: 'ikun集中营',
       sort: 250,
-      isUse: true
+      visible: false
     },
     {
       areaName: '鸡场',
       areaInfo: 'ikun集中营',
       sort: 251,
-      isUse: true
+      visible: true
     },
     {
       areaName: '鸡场',
       areaInfo: 'ikun集中营',
       sort: 252,
-      isUse: true
+      visible: true
     }
   ],
   // 传入删除操作的函数就会显示删除按钮
@@ -103,6 +112,12 @@ const sendData = {
   },
   handleEdit: (row) => {
     console.log('编辑', row)
+    regionalFormRef.value.visible = true
+    title.value = '修改'
+    regionalFormRef.value.form = { ...row }
+    // setTimeout(() => {
+    //   regionalFormRef.value.chooseSelectRef.selectValue =
+    // })
   },
   pageSizes: [5, 10, 15],
   total: 100,
@@ -131,6 +146,28 @@ const treeData = {
     label: 'label'
   }
 }
+
+const title = ref('')
+
+const addArea = () => {
+  title.value = '添加'
+  regionalFormRef.value.visible = true
+}
+
+const options = ref([
+  {
+    value: 'Option1',
+    label: '选项1'
+  },
+  {
+    value: 'Option2',
+    label: '选项2'
+  },
+  {
+    value: 'Option2',
+    label: '选项3'
+  }
+])
 </script>
 
 <style lang="scss" scoped>

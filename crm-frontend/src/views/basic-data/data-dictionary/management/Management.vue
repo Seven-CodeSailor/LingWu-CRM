@@ -18,7 +18,7 @@
       <template #menu>
         <div class="content">
           <div class="left">
-            <el-button type="primary">添加数据</el-button>
+            <el-button type="primary" @click="addType">添加数据</el-button>
             <el-button type="danger">批量删除</el-button>
           </div>
           <div class="right">
@@ -38,8 +38,14 @@
             >
           </div>
         </div>
-      </template></BaseDataList
-    >
+      </template>
+    </BaseDataList>
+    <DictionaryManageFormCom
+      :title="title"
+      :options="options"
+      :handle-submit="submit"
+      ref="dictionaryManageFormRef"
+    ></DictionaryManageFormCom>
   </div>
 </template>
 
@@ -47,6 +53,7 @@
 import { ref } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components//ChooseSelect/ChooseSelect.vue'
+import DictionaryManageFormCom from '../components/FormCom/DictionaryManageFormCom.vue'
 const baseDataListRef = ref(null)
 const tableColumnAttribute = ref([
   {
@@ -76,6 +83,8 @@ const tableColumnAttribute = ref([
     useSwitch: true
   }
 ])
+const dictionaryManageFormRef = ref(null)
+const title = ref('')
 
 const tableData = ref([
   {
@@ -117,6 +126,17 @@ const dropdownMenuActionsInfo = [
     command: 'edit',
     handleAction: (row) => {
       console.log('修改的回调函数', row)
+      title.value = '字典修改'
+      dictionaryManageFormRef.value.visible = true
+      // 简单处理  后续细处理
+      dictionaryManageFormRef.value.form = {
+        ...row
+      }
+      // 更改下拉框的value
+      setTimeout(() => {
+        console.log('s', dictionaryManageFormRef.value.chooseSelectRef)
+        dictionaryManageFormRef.value.chooseSelectRef.selectValue = row.typeTag
+      })
     },
     actionName: '修改'
   }
@@ -147,6 +167,11 @@ const test = (v) => {
   console.log('v', v)
 }
 
+const addType = () => {
+  title.value = '字典添加'
+  dictionaryManageFormRef.value.visible = true
+}
+
 const options = ref([
   {
     value: 'Option1',
@@ -161,6 +186,10 @@ const options = ref([
     label: '选项3'
   }
 ])
+
+const submit = () => {
+  dictionaryManageFormRef.value.visible = false
+}
 </script>
 
 <style lang="scss" scoped>

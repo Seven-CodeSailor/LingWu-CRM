@@ -1,5 +1,5 @@
 <template>
-  <div class="DictionaryManageForm">
+  <div class="RegionalForm">
     <el-drawer v-model="visible" @close="handleClear">
       <template #header>
         <h4>{{ props.title }}</h4>
@@ -9,10 +9,10 @@
           <el-form-item label="名称" prop="typeName">
             <el-input
               placeholder="请输入名称"
-              v-model="form.typeName"
+              v-model="form.areaName"
             ></el-input>
           </el-form-item>
-          <el-form-item label="分类字典" prop="typeTag">
+          <el-form-item label="父级栏目" prop="typeTag">
             <ChooseSelect
               :options="props.options"
               ref="chooseSelectRef"
@@ -27,6 +27,13 @@
           </el-form-item>
           <el-form-item label="启用">
             <el-switch v-model="form.visible" />
+          </el-form-item>
+          <el-form-item label="介绍">
+            <el-input
+              placeholder="请输入介绍"
+              v-model="form.areaInfo"
+              type="textarea"
+            ></el-input>
           </el-form-item>
         </el-form>
       </template>
@@ -46,9 +53,10 @@ import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 const visible = ref(false)
 const chooseSelectRef = ref(null)
 const form = ref({
-  typeName: '',
+  areaName: '',
   sort: 0,
-  visible: false
+  visible: false,
+  areaInfo: ''
 })
 
 const props = defineProps({
@@ -70,16 +78,17 @@ const props = defineProps({
 const formRef = ref(null)
 
 const rules = ref({
-  typeName: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
-  sort: [{ required: true, message: '', trigger: 'blur' }]
+  // typeName: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
+  // sort: [{ required: true, message: '', trigger: 'blur' }]
 })
 
 const handleClear = () => {
-  if (props.title === '字典修改') {
+  if (props.title === '修改') {
     form.value = {
-      typeName: '',
+      areaName: '',
       sort: 0,
-      visible: false
+      visible: false,
+      areaInfo: ''
     }
     // typeTag = ''
     setTimeout(() => {
