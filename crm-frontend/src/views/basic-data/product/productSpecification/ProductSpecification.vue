@@ -17,18 +17,30 @@
       <template #menu>
         <div class="menu">
           <div class="left">
-            <el-button type="primary" style="margin-right: 8px">添加</el-button>
+            <el-button
+              type="primary"
+              style="margin-right: 8px"
+              @click="addSpecifications"
+              >添加</el-button
+            >
           </div>
         </div>
       </template>
     </BaseDataList>
+    <ProductSpecificationFrom
+      ref="productSpecificationFromRef"
+      :title="title"
+      :handle-submit="submit"
+    ></ProductSpecificationFrom>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import ProductSpecificationFrom from '../components/FormCom/ProductSpecificationFrom.vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-
+const productSpecificationFromRef = ref(null)
+const title = ref('')
 const tableColumnAttribute = ref([
   {
     prop: 'specificationsName',
@@ -51,7 +63,13 @@ const tableColumnAttribute = ref([
   }
 ])
 const handleDelete = () => {}
-const handleEdit = () => {}
+const handleEdit = (row) => {
+  title.value = '修改'
+  productSpecificationFromRef.value.visible = true
+  productSpecificationFromRef.value.form = {
+    ...row
+  }
+}
 
 const tableData = [
   {
@@ -86,6 +104,21 @@ const handSwitchState = (state, row) => {
     baseDataListRef.value.openSwitchLoading =
       !baseDataListRef.value.openSwitchLoading
   }, 1000)
+}
+
+const submit = () => {
+  productSpecificationFromRef.value.form = {
+    specificationsName: '',
+    specificationsValue: '',
+    visible: true,
+    sort: 0
+  }
+  productSpecificationFromRef.value.visible = false
+}
+
+const addSpecifications = () => {
+  title.value = '添加'
+  productSpecificationFromRef.value.visible = true
 }
 </script>
 
