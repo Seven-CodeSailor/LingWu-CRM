@@ -18,7 +18,7 @@
       <template #menu>
         <div class="content">
           <div class="left">
-            <el-button type="primary">添加数据</el-button>
+            <el-button type="primary" @click="addWarehouse">添加数据</el-button>
             <el-button type="danger">批量删除</el-button>
           </div>
           <div class="right">
@@ -35,14 +35,20 @@
         </div>
       </template></BaseDataList
     >
+    <WarehouseFrom
+      ref="warehouseFromRef"
+      :title="title"
+      :handle-submit="submit"
+    ></WarehouseFrom>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-
+import WarehouseFrom from './WarehouseFrom.vue'
 const baseDataListRef = ref(null)
+const warehouseFromRef = ref(null)
 const tableColumnAttribute = ref([
   {
     prop: 'name',
@@ -63,7 +69,7 @@ const tableColumnAttribute = ref([
     useSwitch: true
   }
 ])
-
+const title = ref('')
 const tableData = ref([
   {
     name: '小黑子',
@@ -97,13 +103,31 @@ const dropdownMenuActionsInfo = [
   {
     command: 'edit',
     handleAction: (row) => {
+      warehouseFromRef.value.visible = true
+      title.value = '修改'
       console.log('修改的回调函数', row)
+      warehouseFromRef.value.form = { ...row }
     },
     actionName: '修改'
   }
 ]
 
+const addWarehouse = () => {
+  title.value = '添加'
+  warehouseFromRef.value.visible = true
+}
+
 const inputValue = ref('')
+
+const submit = () => {
+  warehouseFromRef.value.form = {
+    name: '',
+    visible: true,
+    sort: 0,
+    intro: ''
+  }
+  warehouseFromRef.value.visible = false
+}
 
 const get = (pageSize, currentPage) => {
   console.log('调用父组件的更新数据的函数')
