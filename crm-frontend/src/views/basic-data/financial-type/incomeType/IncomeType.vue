@@ -1,5 +1,5 @@
 <template>
-  <div class="ProductClassification">
+  <div class="IncomeType">
     <Tree
       :data="treeData"
       @append="handleAdd"
@@ -157,7 +157,7 @@ const options = [
 </script>
 
 <style lang="scss" scoped>
-.ProductClassification {
+.IncomeType {
   .content {
     width: 100%;
     display: flex;
