@@ -32,7 +32,7 @@
                 <span>
                   <a @click="append(data)"> 增加 </a>
                   <a style="margin-left: 8px" @click="edit(data)">编辑</a>
-                  <a style="margin-left: 8px" @click="remove(node, data)">
+                  <a style="margin-left: 8px" @click="remove(node, data)" v-if="!data.children">
                     删除
                   </a>
                 </span>
