@@ -1,18 +1,9 @@
-/*
- * @Author: sayoriqwq 2531600563@qq.com
- * @Date: 2023-10-29 13:05:59
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-30 17:27:25
- * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\sysManage\menu.js
- * @Description:
- *
- * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
- */
 import { defineStore } from 'pinia'
 
-const useSysMenu = defineStore('sysmenu', {
+const useSysRights = defineStore('sysrights', {
   state: () => ({
     sendData: {
+      msg: '一些操作说明',
       tableColumnAttribute: [
         {
           prop: 'caidanmingcheng',
@@ -46,12 +37,11 @@ const useSysMenu = defineStore('sysmenu', {
       ],
       useDropdownMenu: false,
       useSelectColumn: false,
-      useHeader: false,
+      useHeader: true,
       usePagination: true,
       pageSizes: [2, 10, 15, 200],
       total: 100,
-      //在树形菜单里显示
-      title: ''
+      title: '菜单管理'
     },
     sendTreeData: [
       {
@@ -117,4 +107,4 @@ const useSysMenu = defineStore('sysmenu', {
   }
 })
 
-export default useSysMenu
+export default useSysRights

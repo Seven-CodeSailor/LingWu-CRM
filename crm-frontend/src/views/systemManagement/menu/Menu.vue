@@ -4,7 +4,14 @@
       <el-row>
         <el-col :span="5">
           <el-card>
-            <div><h3>菜单管理</h3></div>
+            <div class="space-between">
+              <div><h3>菜单管理</h3></div>
+              <el-button @click="handleRefresh">
+                <el-icon>
+                  <Refresh />
+                </el-icon>
+              </el-button>
+            </div>
             <el-tree
               :data="sendTreeData"
               @node-click="handleNodeClick"
@@ -14,7 +21,6 @@
         <el-col :span="1"></el-col>
         <el-col :span="18">
           <BaseDataList
-            :msg="sendData.msg"
             :table-column-attribute="sendData.tableColumnAttribute"
             :table-data="sendData.tableData"
             :handle-delete="handleDelete"
@@ -36,7 +42,10 @@
                     </el-icon>
                     刷新
                   </el-button>
-                  <el-button @click="handleAdd">添加</el-button>
+                  <el-button @click="handleAdd">
+                    <el-icon><Plus /></el-icon>
+                    添加
+                  </el-button>
                 </div>
                 <div class="search">
                   <el-input v-model="searchData" placeholder="搜索"></el-input>
@@ -188,7 +197,7 @@
 <script setup>
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import useSysMenu from '@/stores/sysManage/menu.js'
-import { Refresh, Search } from '@element-plus/icons-vue'
+import { Refresh, Search, Plus } from '@element-plus/icons-vue'
 import { onMounted, ref, reactive } from 'vue'
 const $store = useSysMenu()
 
