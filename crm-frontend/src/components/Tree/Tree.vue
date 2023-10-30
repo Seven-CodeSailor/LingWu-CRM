@@ -30,9 +30,18 @@
               <el-row type="flex" justify="space-between" style="width: 100%">
                 <span>{{ node.label }}</span>
                 <span>
-                  <a @click="append(data)"> 增加 </a>
-                  <a style="margin-left: 8px" @click="edit(data)">编辑</a>
-                  <a style="margin-left: 8px" @click="remove(node, data)">
+                  <a @click="emits('append', data)" style="color: #409eff">
+                    增加
+                  </a>
+                  <a
+                    style="margin-left: 8px; color: #909399"
+                    @click="emits('edit', data)"
+                    >编辑</a
+                  >
+                  <a
+                    style="margin-left: 8px; color: #f56c6c"
+                    @click="emits('remove', node, data)"
+                  >
                     删除
                   </a>
                 </span>
@@ -56,13 +65,21 @@
       <template #default>
         <div>
           <!-- form表单通过slot传递 -->
-          <slot name="form1" v-if="isEdit"></slot>
+          <slot name="form1"></slot>
         </div>
       </template>
       <template #footer>
         <div style="display: flex; justify-content: space-between">
           <el-button @click="cancel">取消</el-button>
-          <el-button type="primary" @click="submit">确认</el-button>
+          <el-button
+            type="primary"
+            @click="
+              () => {
+                emits('submit')
+              }
+            "
+            >确认</el-button
+          >
         </div>
       </template>
     </el-drawer>
@@ -142,6 +159,8 @@ const remove = (node, data) => {
   data.value = [...data.value]
 }
 
+const emits = defineEmits(['append'], ['submit', ['remove'], ['edit']])
+
 const handleClose = (done) => {
   //取消的钩子函数
   //后续在这里加confim
@@ -149,7 +168,8 @@ const handleClose = (done) => {
 }
 
 defineExpose({
-  isEdit
+  isEdit,
+  showDrawer
 })
 </script>
 
