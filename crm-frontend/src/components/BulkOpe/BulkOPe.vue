@@ -154,16 +154,11 @@ const openDelete = () => {
 const confirmsDelete = () => {
   props.confirmsDelete()
   confirmDelete.value = false
+}
 // 批量删除的方法
 const openDes = () => {
   // 发送请求
   console.log('批量删除')
-}
-
-// 获取表格所需的数据
-const getData = () => {
-  console.log(props.excelData())
-  return props.excelData()
 }
 </script>
 
