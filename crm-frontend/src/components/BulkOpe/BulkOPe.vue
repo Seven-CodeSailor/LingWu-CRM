@@ -160,12 +160,6 @@ const openDes = () => {
   // 发送请求
   console.log('批量删除')
 }
-
-// 获取表格所需的数据
-const getData = () => {
-  console.log(props.excelData())
-  return props.excelData()
-}
 </script>
 
 <style lang="scss" scoped>
