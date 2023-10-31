@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-31 15:56:56
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-31 16:37:12
+ * @LastEditTime: 2023-10-31 21:26:45
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\fund\collection\collectionPlan.js
  * @Description:
  *
@@ -62,7 +62,8 @@ export const useCollectionPlan = defineStore('collectionPlan', {
           pageSize
         },
         null
-      )
+      ).catch((e) => e)
+      if (!data.data) return
       this.sendData.tableData = data.data.rows
       //处理tag列数据
       this.sendData.tableData.map((item) => {
