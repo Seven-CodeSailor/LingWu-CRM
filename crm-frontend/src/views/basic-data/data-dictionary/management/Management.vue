@@ -2,13 +2,13 @@
   <div class="management">
     <BaseDataList
       title="字典管理"
-      :table-data="tableData"
+      :table-data="classificationStore.tableData"
       :table-column-attribute="tableColumnAttribute"
       :use-dropdown-menu="true"
       :dropdown-menu-actions-info="dropdownMenuActionsInfo"
       :page-sizes="[5, 10, 15]"
       :total="999"
-      @update-table-data="get"
+      @update-table-data="updateTableData"
       @update-switch-state="get1"
       ref="baseDataListRef"
     >
@@ -18,21 +18,22 @@
       <template #menu>
         <div class="content">
           <div class="left">
-            <el-button type="primary" @click="addType">添加数据</el-button>
-            <el-button type="danger">批量删除</el-button>
+            <el-button type="primary" @click="add">添加数据</el-button>
+            <el-button type="danger" @click="deleteBatches">批量删除</el-button>
           </div>
           <div class="right">
             <ChooseSelect
               des="请选择字典分类"
-              :options="options"
-              @update:cid="test"
+              :options="classificationStore.options"
+              @update:cid="queryTableData"
+              ref="chooseSelectRef"
             ></ChooseSelect>
             <el-input
               v-model="inputValue"
               placeholder="请输入搜索名称"
               style="margin: 0 4px; width: 200px"
             />
-            <el-button type="primary" style="margin-left: 4px">
+            <el-button type="primary" style="margin-left: 4px" @click="search">
               <el-icon style="margin-right: 4px"><icon-search /></el-icon
               >搜索</el-button
             >
@@ -42,7 +43,7 @@
     </BaseDataList>
     <DictionaryManageFormCom
       :title="title"
-      :options="options"
+      :options="classificationStore.options"
       :handle-submit="submit"
       ref="dictionaryManageFormRef"
     ></DictionaryManageFormCom>
@@ -50,14 +51,81 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components//ChooseSelect/ChooseSelect.vue'
 import DictionaryManageFormCom from '../components/FormCom/DictionaryManageFormCom.vue'
+import { useClassificationStore } from '@/stores/basic-data/data-dictionary/classification'
 const baseDataListRef = ref(null)
+const chooseSelectRef = ref(null)
+const classificationStore = useClassificationStore()
+const getOptions = async () => {
+  await classificationStore.getOptions()
+}
+// 分类名称
+const name = ref('')
+// 调用标识
+const typeTag = ref('')
+
+const queryTableData = async (label) => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  name.value = label
+  typeTag.value = label
+  await classificationStore.queryDictList({
+    pageSize: 5,
+    parseInt: 1,
+    name: name.value,
+    typeTag: typeTag.value
+  })
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+
+const getTableData = async (params) => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  await classificationStore.getDictList(params)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+
+const updateTableData = async (pageSize, currentPage) => {
+  const params = {
+    pageSize,
+    pageIndex: currentPage
+  }
+
+  if (!chooseSelectRef.value.selectValue) {
+    getTableData(params)
+  } else {
+    params.name = name.value
+    params.typeTag = typeTag.value
+    console.log('p', params)
+    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+    // 如果用户选择了分类 更新表格数据的函数如下
+    await classificationStore.queryDictList(params)
+    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  }
+}
+
+const deleteBatches = () => {
+  if (!baseDataListRef.value.rows.length) {
+    ElMessage.error('请先选择')
+  } else {
+    // 删除的逻辑
+    console.log('1')
+  }
+}
+
+const search = () => {
+  if (!inputValue.value.length) {
+    ElMessage.error('输入不能为空')
+  } else {
+    // 搜索的逻辑
+    console.log('1')
+  }
+}
+
 const tableColumnAttribute = ref([
   {
-    prop: 'numberId',
+    prop: 'id',
     label: '编号'
   },
   {
@@ -86,33 +154,6 @@ const tableColumnAttribute = ref([
 const dictionaryManageFormRef = ref(null)
 const title = ref('')
 
-const tableData = ref([
-  {
-    numberId: '123',
-    name: '小黑子',
-    typeName: 'cxk',
-    typeTag: '鸡',
-    visible: true,
-    sort: 99
-  },
-  {
-    numberId: '123',
-    name: '小黑子',
-    typeName: 'cxk',
-    typeTag: '鸡',
-    visible: true,
-    sort: 99
-  },
-  {
-    numberId: '123',
-    name: '小黑子',
-    typeName: 'cxk',
-    typeTag: '鸡',
-    visible: false,
-    sort: 99
-  }
-])
-
 const dropdownMenuActionsInfo = [
   {
     command: 'delete',
@@ -135,7 +176,7 @@ const dropdownMenuActionsInfo = [
       // 更改下拉框的value
       setTimeout(() => {
         console.log('s', dictionaryManageFormRef.value.chooseSelectRef)
-        dictionaryManageFormRef.value.chooseSelectRef.selectValue = row.typeTag
+        dictionaryManageFormRef.value.chooseSelectRef.selectValue = row.typeName
       })
     },
     actionName: '修改'
@@ -144,11 +185,6 @@ const dropdownMenuActionsInfo = [
 
 const inputValue = ref('')
 
-const get = (pageSize, currentPage) => {
-  console.log('调用父组件的更新数据的函数')
-  console.log('pageSize', pageSize)
-  console.log('currentPage', currentPage)
-}
 const get1 = (state, row) => {
   console.log('调用后端的接口发请求修改开关的state后才能真正改变开关的状态')
   console.log('开关的状态已被修改，为：', state)
@@ -163,33 +199,19 @@ const get1 = (state, row) => {
   }, 1000)
 }
 
-const test = (v) => {
-  console.log('v', v)
-}
-
-const addType = () => {
+const add = () => {
   title.value = '字典添加'
   dictionaryManageFormRef.value.visible = true
 }
 
-const options = ref([
-  {
-    value: 'Option1',
-    label: '选项1'
-  },
-  {
-    value: 'Option2',
-    label: '选项2'
-  },
-  {
-    value: 'Option2',
-    label: '选项3'
-  }
-])
-
 const submit = () => {
   dictionaryManageFormRef.value.visible = false
 }
+
+onMounted(async () => {
+  await getTableData({ pageIndex: 1, pageSize: 5 })
+  await getOptions({ pageIndex: 1, pageSize: 5 })
+})
 </script>
 
 <style lang="scss" scoped>

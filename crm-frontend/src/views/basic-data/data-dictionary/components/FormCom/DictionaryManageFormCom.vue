@@ -6,10 +6,10 @@
       </template>
       <template #default>
         <el-form :model="form" :rules="rules" ref="formRef">
-          <el-form-item label="名称" prop="typeName">
+          <el-form-item label="名称" prop="name">
             <el-input
               placeholder="请输入名称"
-              v-model="form.typeName"
+              v-model="form.name"
             ></el-input>
           </el-form-item>
           <el-form-item label="分类字典" prop="typeTag">
@@ -46,7 +46,7 @@ import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 const visible = ref(false)
 const chooseSelectRef = ref(null)
 const form = ref({
-  typeName: '',
+  name: '',
   sort: 0,
   visible: false
 })
@@ -70,14 +70,14 @@ const props = defineProps({
 const formRef = ref(null)
 
 const rules = ref({
-  typeName: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
   sort: [{ required: true, message: '', trigger: 'blur' }]
 })
 
 const handleClear = () => {
   if (props.title === '字典修改') {
     form.value = {
-      typeName: '',
+      name: '',
       sort: 0,
       visible: false
     }
