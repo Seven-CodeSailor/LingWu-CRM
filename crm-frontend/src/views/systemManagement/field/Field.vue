@@ -1,66 +1,61 @@
 <template>
   <div class="container">
     <div class="app-container">
-      <el-card>
-        <el-row>
-          <el-col :span="4">
-            <div class="side">
-              <h3>表单管理</h3>
+      <BaseDataList
+        :table-column-attribute="sendData.tableColumnAttribute"
+        :table-data="sendData.tableData"
+        :handle-delete="handleDelete"
+        :handle-edit="handleEdit"
+        :use-pagination="sendData.usePagination"
+        :page-sizes="sendData.pageSizes"
+        :total="sendData.total"
+        :use-header="sendData.useHeader"
+        :title="sendData.title"
+        @update-table-data="get"
+        @updateSwitchState="handleSwitch"
+        ref="baseDataListRef"
+      >
+        <template #treeMeau>
+          <el-card class="tree-card">
+            <div class="space-between">
+              <div><h3>表单管理</h3></div>
             </div>
             <div v-for="item in $store.sendSideData" :key="item">
               <el-link type="primary" @click="handleLinkClick(item)">{{
                 item
               }}</el-link>
             </div>
-          </el-col>
-          <el-col :span="1"></el-col>
-          <el-col :span="18">
-            <BaseDataList
-              :table-column-attribute="sendData.tableColumnAttribute"
-              :table-data="sendData.tableData"
-              :handle-delete="handleDelete"
-              :handle-edit="handleEdit"
-              :use-pagination="sendData.usePagination"
-              :page-sizes="sendData.pageSizes"
-              :total="sendData.total"
-              :use-header="sendData.useHeader"
-              :title="sendData.title"
-              @update-table-data="get"
-              ref="baseDataListRef"
-            >
-              <template #menu>
-                <div class="space-between">
-                  <div>
-                    <el-button @click="handleAdd" type="primary">
-                      <el-icon><Plus /></el-icon>
-                      添加
-                    </el-button>
-                    <el-button type="danger" @click="handleBatchDelete"
-                      >批量删除</el-button
-                    >
-                  </div>
-                  <div class="search">
-                    <el-input
-                      v-model="searchData"
-                      placeholder="搜索"
-                    ></el-input>
-                    <el-button
-                      type="primary"
-                      :icon="Search"
-                      style="margin-left: 10px; padding-left: 10px"
-                      @click="handleSearch"
-                    >
-                      搜索
-                    </el-button>
-                  </div>
-                </div>
-              </template>
+          </el-card>
+        </template>
+        <template #menu>
+          <div class="space-between">
+            <div>
+              <el-button @click="handleAdd" type="primary">
+                <el-icon><Plus /></el-icon>
+                添加
+              </el-button>
+              <el-button type="danger" @click="handleBatchDelete"
+                >批量删除</el-button
+              >
+            </div>
+            <div class="search">
+              <el-input v-model="searchData" placeholder="搜索"></el-input>
+              <el-button
+                type="primary"
+                :icon="Search"
+                style="margin-left: 10px; padding-left: 10px"
+                @click="handleSearch"
+              >
+                搜索
+              </el-button>
+            </div>
+          </div>
+        </template>
 
-              <template #empty>
-                <el-empty class="emptyTable" description="没有数据"></el-empty>
-              </template> </BaseDataList
-          ></el-col> </el-row
-      ></el-card>
+        <template #empty>
+          <el-empty class="emptyTable" description="没有数据"></el-empty>
+        </template>
+      </BaseDataList>
     </div>
     <el-drawer
       v-model="showEditDrawer"
@@ -203,7 +198,7 @@ import { onMounted, ref, reactive } from 'vue'
 const $store = useSysField()
 
 onMounted(() => {
-  $store.init()
+  $store.getTableData(1, 10)
 })
 
 const addFormData = reactive({
@@ -308,6 +303,11 @@ const handleCancel = () => {
   showAddDrawer.value = false
   console.log('取消')
 }
+
+const handleSwitch = () => {
+  console.log('发请求改变状态')
+}
+
 const get = (pageSize, currentPage) => {
   console.log('调用父组件的更新数据的函数')
   console.log('pageSize', pageSize)
@@ -331,5 +331,17 @@ const get = (pageSize, currentPage) => {
 .side {
   padding-bottom: 20px;
   border-bottom: 1px solid lightgrey;
+}
+
+.tree-card {
+  min-width: 200px;
+  min-height: 500px;
+  width: 300px;
+  height: 600px;
+  margin-right: 50px;
+}
+
+:deep(.el-link__inner) {
+  margin-left: 10px;
 }
 </style>

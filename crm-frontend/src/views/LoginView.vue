@@ -65,7 +65,7 @@
           </el-form-item>
           <el-form-item class="wrap">
             <el-button type="primary" @click="submitForm()">登录</el-button>
-            <el-button @click="useVerify">测试</el-button>
+            <el-button @click="submitForm2">测试</el-button>
           </el-form-item>
         </el-form>
         <!-- TODO[TEST_CODE]: 测试代码后期发布需要删除 -->
@@ -146,10 +146,21 @@ function submitForm() {
   //$router.push('/home')
 
   // 弹出验证码框
-  //useVerify('clickWord')
+  // useVerify('clickWord')
 
   doLogin('ccc')
 }
+
+function submitForm2() {
+  //TODO[TEST_CODE]:测试直接进入主界面
+  //$router.push('/home')
+
+  // 弹出验证码框
+  useVerify('clickWord')
+
+  doLogin('dddd')
+}
+
 
 // 验证码组件引用
 const verify = ref(null)

@@ -1,9 +1,26 @@
 <template>
   <div class="container">
     <div class="app-container">
-      <el-row>
-        <el-col :span="5">
-          <el-card>
+      <BaseDataList
+        :table-column-attribute="sendData.tableColumnAttribute"
+        :table-data="sendData.tableData"
+        :handle-delete="handleDelete"
+        :handle-edit="handleEdit"
+        :use-pagination="sendData.usePagination"
+        :page-sizes="sendData.pageSizes"
+        :total="sendData.total"
+        :use-header="sendData.useHeader"
+        :title="sendData.title"
+        @update-table-data="get"
+        @updateSwitchState="handleSwitch"
+        ref="baseDataListRef"
+      >
+        <template #ico>
+          <el-icon><Operation /></el-icon>
+        </template>
+
+        <template #treeMeau>
+          <el-card class="tree-card">
             <div class="space-between">
               <div><h3>菜单管理</h3></div>
               <el-button @click="handleRefresh">
@@ -17,55 +34,39 @@
               @node-click="handleNodeClick"
             ></el-tree>
           </el-card>
-        </el-col>
-        <el-col :span="1"></el-col>
-        <el-col :span="18">
-          <BaseDataList
-            :table-column-attribute="sendData.tableColumnAttribute"
-            :table-data="sendData.tableData"
-            :handle-delete="handleDelete"
-            :handle-edit="handleEdit"
-            :use-pagination="sendData.usePagination"
-            :page-sizes="sendData.pageSizes"
-            :total="sendData.total"
-            :use-header="sendData.useHeader"
-            :title="sendData.title"
-            @update-table-data="get"
-            ref="baseDataListRef"
-          >
-            <template #menu>
-              <div class="space-between">
-                <div>
-                  <el-button @click="handleRefresh">
-                    <el-icon>
-                      <Refresh />
-                    </el-icon>
-                    刷新
-                  </el-button>
-                  <el-button @click="handleAdd">
-                    <el-icon><Plus /></el-icon>
-                    添加
-                  </el-button>
-                </div>
-                <div class="search">
-                  <el-input v-model="searchData" placeholder="搜索"></el-input>
-                  <el-button
-                    type="primary"
-                    :icon="Search"
-                    style="margin-left: 10px; padding-left: 10px"
-                    @click="handleSearch"
-                  >
-                    搜索
-                  </el-button>
-                </div>
-              </div>
-            </template>
+        </template>
+        <template #menu>
+          <div class="space-between">
+            <div>
+              <el-button @click="handleRefresh">
+                <el-icon>
+                  <Refresh />
+                </el-icon>
+                刷新
+              </el-button>
+              <el-button @click="handleAdd">
+                <el-icon><Plus /></el-icon>
+                添加
+              </el-button>
+            </div>
+            <div class="search">
+              <el-input v-model="searchData" placeholder="搜索"></el-input>
+              <el-button
+                type="primary"
+                :icon="Search"
+                style="margin-left: 10px; padding-left: 10px"
+                @click="handleSearch"
+              >
+                搜索
+              </el-button>
+            </div>
+          </div>
+        </template>
 
-            <template #empty>
-              <el-empty class="emptyTable" description="没有数据"></el-empty>
-            </template> </BaseDataList
-        ></el-col>
-      </el-row>
+        <template #empty>
+          <el-empty class="emptyTable" description="没有数据"></el-empty>
+        </template>
+      </BaseDataList>
     </div>
     <el-drawer
       v-model="showEditDrawer"
@@ -197,7 +198,7 @@
 <script setup>
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import useSysMenu from '@/stores/sysManage/menu.js'
-import { Refresh, Search, Plus } from '@element-plus/icons-vue'
+import { Refresh, Search, Plus, Operation } from '@element-plus/icons-vue'
 import { onMounted, ref, reactive } from 'vue'
 const $store = useSysMenu()
 
@@ -256,6 +257,10 @@ const handleRefresh = () => {
   console.log('发请求刷新页面')
   // $store.loadTableData()
 }
+
+const handleSwitch = () => {
+  console.log('发请求改变状态')
+}
 const saveAddData = () => {
   console.log('带着data', addFormData, '发add请求')
   showAddDrawer.value = false
@@ -300,5 +305,13 @@ const get = (pageSize, currentPage) => {
 .search {
   display: flex;
   align-items: center;
+}
+
+.tree-card {
+  min-width: 200px;
+  min-height: 500px;
+  width: 300px;
+  height: 600px;
+  margin-right: 50px;
 }
 </style>
