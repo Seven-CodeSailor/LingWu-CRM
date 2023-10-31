@@ -154,6 +154,7 @@ const openDelete = () => {
 const confirmsDelete = () => {
   props.confirmsDelete()
   confirmDelete.value = false
+}
 // 批量删除的方法
 const openDes = () => {
   // 发送请求
