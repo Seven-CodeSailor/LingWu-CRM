@@ -51,7 +51,22 @@
     </template>
   </el-popover>
   <!-- 消息通知 -->
-  <el-button small="small" icon="IconBell" circle></el-button>
+
+  <el-popover
+    placement="bottom"
+    title="消息提醒"
+    :width="400"
+    trigger="hover"
+    content=""
+  >
+    <!-- 表单元素 -->
+    <el-form>
+      <el-form-item label="消息"> </el-form-item>
+    </el-form>
+    <template #reference>
+      <el-button small="small" icon="IconBell" circle></el-button>
+    </template>
+  </el-popover>
   <el-dropdown style="margin-left: 20px">
     <span>
       {{ userInfo }}

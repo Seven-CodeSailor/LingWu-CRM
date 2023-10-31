@@ -36,27 +36,12 @@
             >
           </template>
         </el-popconfirm>
-        <BulkOPe :getOpt="() => [0, 1, 3, 4]" :exportFile="exportFile">
-          <template #excel>
-            <el-form>
-              <el-form-item label="创建人">
-                <ChooseSelect
-                  :options="createUser"
-                  des="选择创建人"
-                  ref="op1"
-                  @update:cid="value1 = op1.value.label"
-                ></ChooseSelect>
-              </el-form-item>
-              <el-form-item label="归属人">
-                <ChooseSelect
-                  :options="belongUser"
-                  des="选择归属人"
-                  ref="op2"
-                  @update:cid="value2 = op2.value.label"
-                ></ChooseSelect>
-              </el-form-item>
-            </el-form>
-          </template>
+        <BulkOPe
+          :getOpt="() => [0, 1]"
+          :exportFile="exportFile()"
+          :action="action"
+          :importExcel="importExcel(fileList)"
+        >
         </BulkOPe>
       </div>
       <div class="right" style="display: flex">
@@ -819,42 +804,16 @@ const handleCurrentChange = (val) => {
   currentPage.value = val
   initCustomer(currentPage, pageSize)
 }
-
-// 创建人
-let op1 = ref()
-let value1 = ref('')
-// 归属人
-let op2 = ref()
-let value2 = ref('')
-let createUser = ref([
-  {
-    value: 'Option1',
-    label: 'test'
-  },
-  {
-    value: 'Option2',
-    label: '管理员'
-  },
-  {
-    value: 'Option3',
-    label: 'cw'
-  }
-])
-let belongUser = ref([
-  {
-    value: 'Option1',
-    label: 'test'
-  },
-  {
-    value: 'Option2',
-    label: '管理员'
-  },
-  {
-    value: 'Option3',
-    label: 'cw'
-  }
-])
+// 导出文件的按钮回调
 const exportFile = () => {}
+
+// 导入文件-文件上传的全地址
+const action = ref('')
+
+//导入文件的按钮回调
+const importExcel = (fileList) => {
+  console.log(fileList)
+}
 
 // 最近联系时间的选项
 const options = ref([
@@ -912,17 +871,17 @@ const industry = ref()
 // 获取客户归属的值
 const customerGetBelong = async () => {
   await getCustomerBelong()
-  myclient.customerInfo.belong = belong.value.value.label
+  myclient.customerInfo.belong = belong.value.selectValue.label
 }
 // 获取客户等级的值
 const customerGetLevel = async () => {
   await getCustomerLevel()
-  myclient.customerInfo.level = level.value.value.label
+  myclient.customerInfo.level = level.value.selectValue.label
 }
 //获取客户行业的值
 const customerGetIndusty = async () => {
   await getCustomerIndusty()
-  myclient.customerInfo.industry = industry.value.value.label
+  myclient.customerInfo.industry = industry.value.selectValue.label
 }
 const getSelect = async () => {
   await getCustomerBelong()
@@ -987,7 +946,7 @@ const saveContact = () => {
 // 获取客户名称下拉列表
 const contactGetName = async () => {
   await getCustomerName()
-  myclient.contactInfo.customerName = customerName.value.value.label
+  myclient.contactInfo.customerName = customerName.value.selectValue.label
 }
 
 /**
@@ -1003,27 +962,28 @@ const communicateWay = ref()
 // 获取客户名称下拉列表
 const communicateGetName = async () => {
   await getCustomerName()
-  myclient.communicateInfo.customerName = customerName0.value.value.label
+  myclient.communicateInfo.customerName = customerName0.value.selectValue.label
 }
 // 获取客户联系人下拉列表
 const communicateGetContacts = async () => {
   await getCustomerConcats()
-  myclient.communicateInfo.contact = customerContact.value.value.label
+  myclient.communicateInfo.contact = customerContact.value.selectValue.label
 }
 // 获取客户销售机会下拉列表
 const communicateGetOpportunity = async () => {
   await getCustomerOpportnity()
-  myclient.communicateInfo.opportnity = customerOpportunity.value.value.label
+  myclient.communicateInfo.opportnity =
+    customerOpportunity.value.selectValue.label
 }
 // 获取当前阶段下拉列表
 const communicateGetStage = async () => {
   await getCustomerStage()
-  myclient.communicateInfo.stage = customerStage.value.value.label
+  myclient.communicateInfo.stage = customerStage.value.selectValue.label
 }
 // 获取沟通方式下拉列表
 const communicateGetWay = async () => {
   await getCustomerWay()
-  myclient.communicateInfo.way = communicateWay.value.value.label
+  myclient.communicateInfo.way = communicateWay.value.selectValue.label
 }
 // 添加沟通记录按钮回调
 const addCommunicate = async (row) => {
@@ -1054,17 +1014,17 @@ const serviceType = ref()
 // 获取客户名称下拉列表
 const serviceGetName = async () => {
   await getCustomerName()
-  myclient.serviceInfo.customerName = customerName1.value.value.label
+  myclient.serviceInfo.customerName = customerName1.value.selectValue.label
 }
 // 获取服务类型下拉列表
 const serviceGettype = async () => {
   await getCustomerServiceType()
-  myclient.serviceInfo.type = serviceType.value.value.label
+  myclient.serviceInfo.type = serviceType.value.selectValue.label
 }
 // 获取服务方式下拉列表
 const serviceGetWay = async () => {
   await getCustomerServiceWay()
-  myclient.serviceInfo.way = serviceWay.value.value.label
+  myclient.serviceInfo.way = serviceWay.value.selectValue.label
 }
 // 添加服务记录按钮回调
 const addService = async (row) => {
@@ -1093,17 +1053,17 @@ const customerStage1 = ref()
 // 获取客户名称下拉列表
 const customerGetName = async () => {
   await getCustomerName()
-  myclient.opportunityInfo.customerName = customerName2.value.value.label
+  myclient.opportunityInfo.customerName = customerName2.value.selectValue.label
 }
 // 获取客户联系人下拉列表
 const customerGetContacts = async () => {
   await getCustomerConcats()
-  myclient.opportunityInfo.contact = customerContacts1.value.value.label
+  myclient.opportunityInfo.contact = customerContacts1.value.selectValue.label
 }
 // 获取当前阶段下拉列表
 const customerGetStage = async () => {
   await getCustomerStage()
-  myclient.opportunityInfo.stage = customerStage1.value.value.label
+  myclient.opportunityInfo.stage = customerStage1.value.selectValue.label
 }
 // 添加销售机会按钮回调
 const addOpportunity = async (row) => {
@@ -1133,22 +1093,23 @@ const myRepresent = ref()
 // 获取客户名称下拉列表
 const contractGetName = async () => {
   await getCustomerName()
-  myclient.contractInfo.customerName = customerName3.value.value.label
+  myclient.contractInfo.customerName = customerName3.value.selectValue.label
 }
 // 获取客户联系人下拉列表
 const contractGetContacts = async () => {
   await getCustomerConcats()
-  myclient.contractInfo.contact = customerContacts2.value.value.label
+  myclient.contractInfo.contact = customerContacts2.value.selectValue.label
 }
 // 获取客户销售机会下拉列表
 const contractGetOpportunity = async () => {
   await getCustomerOpportnity()
-  myclient.contractInfo.opportnity = customerOpportunity1.value.value.label
+  myclient.contractInfo.opportnity =
+    customerOpportunity1.value.selectValue.label
 }
 // 获取我方代表下拉列表
 const contractGetRepresent = async () => {
   await getCustomerRepresent()
-  myclient.contractInfo.represent = myRepresent.value.value.label
+  myclient.contractInfo.represent = myRepresent.value.selectValue.label
 }
 // 添加合同按钮回调
 const addContract = async (row) => {

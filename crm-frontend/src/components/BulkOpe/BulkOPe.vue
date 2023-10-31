@@ -5,46 +5,56 @@
     </el-button>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item @click="openExcle" v-if="opt.includes(0)"
-          >批量导出</el-dropdown-item
-        >
-        <el-dropdown-item @click="openFileUpload" v-if="opt.includes(1)"
-          >批量导入</el-dropdown-item
-        >
-        <el-dropdown-item @click="openPrint" v-if="opt.includes(2)"
-          >打印表格</el-dropdown-item
-        >
-        <el-dropdown-item @click="openMsg" v-if="opt.includes(3)"
-          >批量发短信</el-dropdown-item
-        >
-        <el-dropdown-item @click="openMsg" v-if="opt.includes(4)"
-          >批量发邮件</el-dropdown-item
-        >
+        <el-dropdown-item @click="openExcle" v-if="opt.includes(0)">
+          批量导出
+        </el-dropdown-item>
+        <el-dropdown-item @click="openFileUpload" v-if="opt.includes(1)">
+          批量导入
+        </el-dropdown-item>
+        <el-dropdown-item @click="openMsg" v-if="opt.includes(2)">
+          批量发短信
+        </el-dropdown-item>
+        <el-dropdown-item @click="openEmail" v-if="opt.includes(3)">
+          批量发邮件
+        </el-dropdown-item>
+        <el-dropdown-item @click="openDelete" v-if="opt.includes(4)" divided>
+          批量删除
+        </el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <Excel
-    :getData="getData"
-    ref="excel"
-    :tableName="tableName"
-    :excelName="excelName"
-  >
+  <!-- 批量导出 -->
+  <Excel :exportExcel="props.exportExcel" ref="excel">
     <slot name="excel"></slot>
   </Excel>
   <FileUpload
     ref="file"
-    :path="path"
-    :StreamPath="StreamPath"
-    :baseURL="baseURL"
+    :action="props.action"
+    :importExcel="props.importExcel"
   >
     <slot name="file"></slot>
   </FileUpload>
-  <Print ref="print">
-    <slot name="print"></slot>
-  </Print>
-  <Message ref="message">
-    <slot name="message"></slot>
-  </Message>
+  <!-- 批量发送短信 -->
+  <Message ref="message" title="发送短信" :send="msgSend"> </Message>
+  <!-- 批量发送邮件 -->
+  <Message ref="email" title="发送邮件" :send="emailSend"> </Message>
+  <!-- 删除确认 -->
+  <el-dialog
+    v-model="confirmDelete"
+    title="删除"
+    width="30%"
+    :before-close="(deleteId = null)"
+  >
+    <span style="color: red; margin-left: 33%; font-size: 24px"
+      >是否确认删除</span
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="confirmDelete = false">取消</el-button>
+        <el-button type="danger" @click="confirmsDelete"> 确定 </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -52,76 +62,53 @@ import { ArrowDown } from '@element-plus/icons-vue'
 import { ref, onMounted } from 'vue'
 import Excel from '@/components/BulkOpe/Excel.vue'
 import FileUpload from '@/components/BulkOpe/FileUpload.vue'
-import Print from '@/components/BulkOpe/Print.vue'
 import Message from '@/components/Bulkope/Message.vue'
 
-/**
- * 组件使用：
- *    <BulkOPe :excelData="excel" :getOpt="() => [0, 1, 2]" path="/file/upload" baseURL="http://localhost:8090">
- *      <template #excel>
- *      </template>
- *      <template #file>
- *      </template>
- *      <template #print>
- *      </template>
- *    </BulkOPe>
- *
- * 传入数据(父向子传递)：
- *   1 :excelData="excel"
- *    const excel = () => {
- *      // data为数组类型，数组里面存放多个对象，对象内部存放多个键值对，键为属性名，值为具体属性
- *      let data = [
- *        {
- *          key: value,
- *          ......
- *        },
- *        ......
- *      ]
- *      // 网络请求获取数据
- *      // 将数据存到pinia
- *      // 从pinia里面拿到数据
- *      return data
- *    }
- *
- *   2 :getOpt="() => [0, 1, 2]"
- *    给getOpt传递一个函数，函数返回值为一个数组，数组取值范围为0，1，2。0表示启用批量导出，1表示启用批量导入，2表示启用打印表格
- *   3  path    FormData上传文件的路径,为字符串类型，启用批量导入时才需要传该参数，参考'/file/upload'
- *   4  StreamPath    Stream上传文件的路径,为字符串类型，启用批量导入时才需要传该参数，参考'/user/modify-user?nickname=莉莉丝&age=10'
- *   5  baseURL    上传文件的主机名+端口，启用批量导入时才需要传该参数，
- *
- * 传出数据(子向父传递)：无
- */
-
 const props = defineProps({
-  excelData: {
-    type: Function,
-    default: () => {
-      return []
-    }
-  },
+  // 定义该批量操作需要几个功能，0为批量导出，1为批量导入，2为批量发短信，3为批量发邮件，4为批量删除
   getOpt: {
     type: Function,
     default: () => {
-      return [0, 1, 2]
+      return [0, 1, 2, 3, 4]
     }
   },
-  // 批量导入操作的 路径 和 主机名+端口
-  path: {
-    type: String
+  // 弹窗点击导出按钮的回调，用于向后端发送导出请求，获取下载链接
+  exportExcel: {
+    type: Function,
+    default: () => {}
   },
-  baseURL: {
-    type: String
-  },
-  StreamPath: {
-    type: String
-  },
-  tableName: {
+  // 导入弹窗，上传文件的全路径
+  action: {
     type: String,
-    default: 'Data'
+    default: 'https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15'
   },
-  excelName: {
-    type: String,
-    default: 'SheetJSVueAoO.xlsx'
+  // 点击导入按钮回调，FileUpload组件会传过来一个fileList数组，存放的是文件对象，对象格式{name: '', url: ''}
+  importExcel: {
+    type: Function,
+    default: (fileList) => {
+      console.log(fileList)
+    }
+  },
+  // 弹窗发送消息按钮回到，改函数必须传入参数必须定义title（消息标题）、desc（简单描述）
+  // 点击按钮，这两个值会由Message组件传递过来，该函数内部只需要调接口就行，接口所需数据即为title和desc
+  msgSend: {
+    type: Function,
+    default: (title, desc) => {
+      console.log(title, desc)
+    }
+  },
+  // 弹窗发送邮件按钮回到，改函数必须传入参数必须定义title（消息标题）、desc（简单描述）
+  // 点击按钮，这两个值会由Message组件传递过来，该函数内部只需要调接口就行，接口所需数据即为title和desc
+  emailSend: {
+    type: Function,
+    default: (title, desc) => {
+      console.log(title, desc)
+    }
+  },
+  // 弹窗批量删除操作回调
+  confirmsDelete: {
+    type: Function,
+    default: () => {}
   }
 })
 
@@ -129,9 +116,11 @@ const excel = ref()
 
 const file = ref()
 
-const print = ref()
-
 const message = ref()
+
+const email = ref()
+
+const confirmDelete = ref(false)
 
 let opt = ref([])
 
@@ -147,19 +136,21 @@ const openExcle = () => {
 const openFileUpload = () => {
   file.value.showDialog()
 }
-// 打开打印弹窗
-const openPrint = () => {
-  print.value.showDialog()
-}
 // 打开发送邮件或者发送短信弹窗
 const openMsg = () => {
   message.value.showDialog()
 }
-
-// 获取表格所需的数据
-const getData = () => {
-  console.log(props.excelData())
-  return props.excelData()
+// 打开发送邮件或者发送短信弹窗
+const openEmail = () => {
+  email.value.showDialog()
+}
+// 打开批量删除按钮的弹窗
+const openDelete = () => {
+  confirmDelete.value = true
+}
+const confirmsDelete = () => {
+  props.confirmsDelete()
+  confirmDelete.value = false
 }
 </script>
 
@@ -170,7 +161,8 @@ const getData = () => {
   display: flex;
   align-items: center;
 }
-.dialog-footer button:first-child {
-  margin-right: 10px;
+.dialog-footer {
+  display: flex;
+  justify-content: space-around;
 }
 </style>
