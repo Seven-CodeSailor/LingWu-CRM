@@ -22,7 +22,8 @@ export const useClassificationStore = defineStore('classification', () => {
         options.value = response.data.rows.map((row) => {
           return {
             value: row.typeName,
-            label: row.typeName
+            label: row.typeName,
+            typeTag: row.typeTag
           }
         })
       },

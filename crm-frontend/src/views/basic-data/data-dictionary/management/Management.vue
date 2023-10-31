@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components//ChooseSelect/ChooseSelect.vue'
 import DictionaryManageFormCom from '../components/FormCom/DictionaryManageFormCom.vue'
@@ -67,10 +67,14 @@ const name = ref('')
 // 调用标识
 const typeTag = ref('')
 
-const queryTableData = async (label) => {
+// 列的数据id
+const rowId = ref('')
+
+const queryTableData = async (selectValue) => {
+  console.log('qqq')
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  name.value = label
-  typeTag.value = label
+  name.value = selectValue.value
+  typeTag.value = selectValue.typeTag
   await classificationStore.queryDictList({
     pageSize: 5,
     parseInt: 1,
@@ -169,14 +173,21 @@ const dropdownMenuActionsInfo = [
       console.log('修改的回调函数', row)
       title.value = '字典修改'
       dictionaryManageFormRef.value.visible = true
-      // 简单处理  后续细处理
+      const { name, sort, visible, id, typeTag, typeName } = row
+      rowId.value = id
+      //  数据回显
       dictionaryManageFormRef.value.form = {
-        ...row
+        name,
+        sort,
+        visible
       }
-      // 更改下拉框的value
-      setTimeout(() => {
-        console.log('s', dictionaryManageFormRef.value.chooseSelectRef)
-        dictionaryManageFormRef.value.chooseSelectRef.selectValue = row.typeName
+      // 等待dom加载完毕后再回显下拉框数据
+      nextTick(() => {
+        dictionaryManageFormRef.value.chooseSelectRef.selectValue = {
+          label: typeName,
+          value: typeName,
+          typeTag
+        }
       })
     },
     actionName: '修改'
