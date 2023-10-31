@@ -140,6 +140,10 @@
           </el-table>
         </div>
       </div>
+      <template v-if="props?.useCalculate">
+        <div>商品金额：{{}}</div>
+      </template>
+
       <!-- 分页 -->
       <template v-if="props?.usePagination">
         <el-pagination
@@ -245,6 +249,11 @@ const props = defineProps({
   usePagination: {
     type: Boolean,
     default: true
+  },
+  //是否使用表格最下面的计算总金额
+  useCalculate: {
+    type: Boolean,
+    default: false
   },
   // 是否使用el-card的header
   useHeader: {
