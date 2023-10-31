@@ -5,21 +5,24 @@
     </el-button>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item @click="openExcle" v-if="opt.includes(0)">
-          批量导出
-        </el-dropdown-item>
-        <el-dropdown-item @click="openFileUpload" v-if="opt.includes(1)">
-          批量导入
-        </el-dropdown-item>
-        <el-dropdown-item @click="openMsg" v-if="opt.includes(2)">
-          批量发短信
-        </el-dropdown-item>
-        <el-dropdown-item @click="openEmail" v-if="opt.includes(3)">
-          批量发邮件
-        </el-dropdown-item>
-        <el-dropdown-item @click="openDelete" v-if="opt.includes(4)" divided>
-          批量删除
-        </el-dropdown-item>
+        <el-dropdown-item @click="openExcle" v-if="opt.includes(0)"
+          >批量导出</el-dropdown-item
+        >
+        <el-dropdown-item @click="openFileUpload" v-if="opt.includes(1)"
+          >批量导入</el-dropdown-item
+        >
+        <el-dropdown-item @click="openPrint" v-if="opt.includes(2)"
+          >打印表格</el-dropdown-item
+        >
+        <el-dropdown-item @click="openMsg" v-if="opt.includes(3)"
+          >批量发短信</el-dropdown-item
+        >
+        <el-dropdown-item @click="openMsg" v-if="opt.includes(4)"
+          >批量发邮件</el-dropdown-item
+        >
+        <el-dropdown-item @click="openDes" v-if="opt.includes(5)"
+          >批量删除</el-dropdown-item
+        >
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -151,6 +154,16 @@ const openDelete = () => {
 const confirmsDelete = () => {
   props.confirmsDelete()
   confirmDelete.value = false
+// 批量删除的方法
+const openDes = () => {
+  // 发送请求
+  console.log('批量删除')
+}
+
+// 获取表格所需的数据
+const getData = () => {
+  console.log(props.excelData())
+  return props.excelData()
 }
 </script>
 
