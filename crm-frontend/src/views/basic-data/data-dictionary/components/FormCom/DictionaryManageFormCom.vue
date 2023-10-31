@@ -7,10 +7,7 @@
       <template #default>
         <el-form :model="form" :rules="rules" ref="formRef">
           <el-form-item label="名称" prop="name">
-            <el-input
-              placeholder="请输入名称"
-              v-model="form.name"
-            ></el-input>
+            <el-input placeholder="请输入名称" v-model="form.name"></el-input>
           </el-form-item>
           <el-form-item label="分类字典" prop="typeTag">
             <ChooseSelect
