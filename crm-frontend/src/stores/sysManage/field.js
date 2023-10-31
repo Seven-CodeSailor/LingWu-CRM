@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-29 13:05:59
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-31 10:57:26
+ * @LastEditTime: 2023-10-31 14:21:09
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\sysManage\field.js
  * @Description:
  *
@@ -37,7 +37,8 @@ const useSysField = defineStore('sysfield', {
         },
         {
           prop: 'shifouqiyong',
-          label: '是否启用'
+          label: '是否启用',
+          useSwitch: true
         },
         {
           prop: 'data',

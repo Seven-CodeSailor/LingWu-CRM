@@ -12,6 +12,7 @@
         :use-header="sendData.useHeader"
         :title="sendData.title"
         @update-table-data="get"
+        @updateSwitchState="handleSwitch"
         ref="baseDataListRef"
       >
         <template #treeMeau>
@@ -302,6 +303,11 @@ const handleCancel = () => {
   showAddDrawer.value = false
   console.log('取消')
 }
+
+const handleSwitch = () => {
+  console.log('发请求改变状态')
+}
+
 const get = (pageSize, currentPage) => {
   console.log('调用父组件的更新数据的函数')
   console.log('pageSize', pageSize)
