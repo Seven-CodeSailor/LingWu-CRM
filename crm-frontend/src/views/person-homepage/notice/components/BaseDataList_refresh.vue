@@ -7,7 +7,7 @@
               <slot name="ico"></slot>
               <div style="margin-left: 8px">{{ props.title }}</div>
             </h3>
-            <!-- 操作说明按钮改为刷新按钮-pipazi -->
+            <!-- 操作说明按钮改为刷新按钮 -->
             <el-button
               class="button"
               @click="updateRefsh = true"
@@ -18,7 +18,7 @@
               >
               刷新
             </el-button>
-            <!-- 操作说明按钮改为刷新按钮-pipazi -->
+            <!-- 操作说明按钮改为刷新按钮 -->
           </div>
         </template>
         <!-- 表格的menu操作菜单 -->

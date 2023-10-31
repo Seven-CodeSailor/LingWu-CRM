@@ -12,6 +12,7 @@
 // 写成多行避免解决冲突麻烦
 import {
   Bell,
+  ChatDotRound,
   FullScreen,
   Menu,
   MoonNight,
@@ -32,7 +33,6 @@ import { House } from '@element-plus/icons-vue'
 import { ArrowDown } from '@element-plus/icons-vue'
 import { MessageBox } from '@element-plus/icons-vue'
 import { Operation } from '@element-plus/icons-vue'
-
 import { HomeFilled } from '@element-plus/icons-vue'
 import { BellFilled } from '@element-plus/icons-vue'
 export default (app) => {
@@ -61,4 +61,5 @@ export default (app) => {
   app.component('IconHomeFilled', HomeFilled)
   app.component('IconBellFilled', BellFilled)
   app.component('IconPlus', Plus)
+  app.component('IconChatDotRound', ChatDotRound)
 }

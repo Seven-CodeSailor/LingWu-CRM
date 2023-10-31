@@ -135,14 +135,13 @@ const inputVal2 = ref('')
 const inputVal3 = ref('')
 const dropdownRef = ref(null)
 
-const emits = defineEmits(
-  ['update:topInputValue'],
-  ['update:bottomInputValue'],
-  ['handleSearch']
-)
+const emits = defineEmits(['handleSearch'])
 // handleSearch  用于调用父组件的搜索函数
 const search = () => {
-  if (!inputVal1.value && !inputVal2.value && !inputVal3.value) {
+  if (
+    (!inputVal1.value && !inputVal2.value && !inputVal3.value) ||
+    (!inputVal1.value && !inputVal2.value)
+  ) {
     ElMessage.error('输入不能为空')
   } else {
     emits('handleSearch')

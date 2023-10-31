@@ -20,7 +20,7 @@ const customer = {
     },
     {
       text: '联系人',
-      href: '/customer/contacts',
+      href: '/customer/links',
       icon: 'IconHouse'
     },
     {

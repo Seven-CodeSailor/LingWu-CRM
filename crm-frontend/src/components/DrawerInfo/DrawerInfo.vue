@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps } from 'vue'
 // import { ref, toRef } from 'vue'
 
 /**
@@ -54,11 +53,10 @@ const emit = defineEmits(['update:visible', 'update:submit'])
   <el-drawer
     :model-value="props.visible"
     :title="props.title"
-    :direction="direction"
     size="40%"
     open-delay="100"
     close-delay="100"
-    @handleClose="emit('update:visible', false)"
+    @close="emit('update:visible', false)"
   >
     <slot></slot>
     <el-button @click="emit('update:submit')" type="primary">提交</el-button>
