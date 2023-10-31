@@ -12,14 +12,14 @@ const routes = [
           {
             // 字典分类
             path: '/basicData/dictionary/classification',
-            name: 'classification',
+            name: 'classification1',
             component: () =>
               import(
                 '@/views/basic-data/data-dictionary/classification/Classification.vue'
               )
           },
           {
-            // 字典分类
+            // 字典管理
             path: '/basicData/dictionary/management',
             name: 'management',
             component: () =>
@@ -61,7 +61,7 @@ const routes = [
           },
           {
             // 银行账号管理
-            path: '/basicData/financial/bankAccount',
+            path: 'bankAccount',
             name: 'bankAccount',
             component: () =>
               import(

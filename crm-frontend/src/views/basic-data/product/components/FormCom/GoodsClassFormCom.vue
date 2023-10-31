@@ -1,5 +1,5 @@
 <template>
-  <div>销售机会</div>
+  <div></div>
 </template>
 
 <script setup></script>

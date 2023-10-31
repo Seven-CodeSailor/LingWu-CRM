@@ -1,192 +1,107 @@
 <!-- <template>
   <div>公告通知</div>
 </template> -->
-
-<template>
-  <div class="notice">
-    <BaseDataList
-      title="公告通知" 
-      :table-column-attribute="tableColumnAttribute"
-      :use-operate-column="false"
-      :page-sizes="[5, 10, 15]"
-      :total="stockStorageDetailsStore.tableTotal"
-      :table-data="stockStorageDetailsStore.tableData"
-      @update-table-data="  
-        (pageSize, currentPage) =>
-          getStockStorageList({
-            pageSize,
-            pageIndex: currentPage
-          })
-      "
-      ref="baseDataListRef"
-    >
-    
-      <template #menu>
-        <div class="menu">
-          <div class="left">
-            <el-button 
-              type="success" 
-              style="margin-right: 10px;"
-            >
-              <el-icon> 
-                <icon-Plus /> 
-              </el-icon>
-              添加
-            </el-button>
-            <BulkOPe
-              :excelData="() => tableData"
-              :getOpt="() => [0]"
-              excelName="库存清单.xlsx"
-              tableName="库存清单的sheet表"
-            >
-            </BulkOPe>
-          </div>
-          <div class="right">
-            <el-input
-              v-model="inputValue"
-              placeholder="输入关键字搜索"
-              style="margin-right: 4px; width: auto;"
-              
-            />
-            <el-button
-              type="primary"
-              style="margin-left: 4px"
-              @click="searchDetails"
-            >
-              <el-icon style="margin-right: 4px"> <icon-search /> </el-icon>
-              搜索
-            </el-button>
-          </div>
-        </div>
-      </template>
-      <template #ico>
-        <el-icon> 
-          <icon-BellFilled /> 
-        </el-icon>
-      </template>
-    </BaseDataList>
-  </div>
-</template>
-
-
+ 
+  <!-- 以下是测试代码的页面 -->
 <script setup>
-import { ref, onMounted  } from 'vue'
-import BaseDataList from '@/views/notice/BaseDataList_refresh.vue'
-import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
-import { useStockStorageDetailsStore } from '@/stores/inventory/stockstoragedetails.js'
+import { ref,onMounted } from  'vue'
+import { Edit, Delete} from '@element-plus/icons-vue'
+import notGetChannelsService from '@/api/utils/notice'
+import {useNotice} from '@/stores/person-homepage/notice.js'
+import ChannelEdit from '@/components/ChannelEdit'
+
+// import test from '@/api/utils/notice'
+// const test = ref([])
+const noticeStore = useNotice()
+const channelList = ref([])
+
+const loading = red(false)
+const dialog = ref()
+
+// const getChannelList = async () => {
+//   loading.value = true
+//   const res = await notGetChannelsService()
+//   channelList.value = res.data.data
+//   // channelList.value = ref[]
+//   console.log(channelList.value)
+//   loading.value = false
+// }
+// getChannelList()
 
 
-
-import useLayOutSettingStore from '@/stores/setting.js'
-const layOutSettingStore = useLayOutSettingStore()
-// 刷新按钮回调
-const updateRefsh = () => {
-  window.location.reload();
-  // layOutSettingStore.refsh = !layOutSettingStore.refsh
+const onDeleteChannel = (row, $index) => {
+  console.log(row, $index)
+}
+const onEditChannel = (row) => {
+  dialog.value.open({})
 }
 
-
-const tableColumnAttribute = [
-  {
-    prop: 'headline',
-    label: '标题'
-  },
-  {
-    prop: 'publishing_content',
-    label: '发布内容',
-  },
-  {
-    prop: 'publisher',
-    label: '发布人'
-  },
-  {
-    prop: 'release_time',
-    label: '发布时间'
-  },
-  {
-    prop: 'status',
-    label: '状态'
-  },
-  {
-    prop: 'recipient',
-    label: '接收人'
-  },
-  {
-    prop: 'operate',
-    label: '操作'
-  }
-  
-]
-const baseDataListRef = ref(null)
-const inputValue = ref('')
-
-const stockStorageDetailsStore = useStockStorageDetailsStore()
-
-const searchDetails = () => {
-  console.log('t', stockStorageDetailsStore.tableData)
-  if (!inputValue.value) {
-    ElMessage.error('输入不能为空')
-  } else {
-    console.log('pp', baseDataListRef.value.paginationData)
-    baseDataListRef.value.paginationData.pageSize = 5
-    baseDataListRef.value.paginationData.currentPage = 1
-    // 搜索数据的时候就重新初始化页面容量和当前页的页码
-    const params = {
-      pageSize: 5,
-      pageIndex: 1
-      // 如何知道我输入的是sku名称或商品名
-    }
-    getStockStorageList(params)
-  }
+const onAddChannel = () => {
+  dialog.value.open({})
 }
-const getStockStorageList = async (params) => {
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  await stockStorageDetailsStore.getTableData(params)
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+const onSuccess = () => {
+  getChannelList()
 }
-
-const topInputValue = ref('')
-const bottomInputValue = ref('')
-const handleSearch = () => {
-  console.log('调用search函数')
-}
-
-onMounted(() => {
-  const params = {
-    pageIndex: 1,
-    pageSize: 5
-  }
-  getStockStorageList(params)
+onMounted(()=>{
+  noticeStore.getD1()
 })
 </script>
 
 
+<template>
+  <page-container title="公告通知">
+    <template #icon>
+      <el-icon> 
+        <icon-BellFilled /> 
+      </el-icon>
+    </template>
+    <template #extra>
+      <el-button>刷新</el-button>
+      <el-button @click="onAddChannel">添加分类</el-button>
+    </template>
+
+    <!-- 中间第二行部分 -->
+    <template #button>
+      <el-button style="margin-bottom: 15px;">
+        添加
+      </el-button>
+      <el-button style="margin-bottom: 15px;" type="primary">
+        批量操作
+      </el-button>
+    </template>
+    
+    <!-- 表格部分 -->
+    <el-table v-loading="loading" :data="channelList" style="width: 100%;" >
+      <el-table-column type="index" label="序号" style="width: 100;"></el-table-column>
+      <el-table-column prop="cate_name" label="分类名称"></el-table-column>
+      <el-table-column prop="cate_alias" label="分类别名"></el-table-column>
+      <el-table-column label="操作" style="width: 150;">
+        <!-- row是channelList的一项， $index是下标 -->
+        <template #default="{ row ,$index }" >
+          <el-button 
+          circle 
+          type="primary" 
+          :icon="Edit"
+           @click="onEditChannel(row, $index)"
+           >编辑</el-button>
+          <el-button 
+          circle 
+          type="danger" 
+          :icon="Delete" 
+          @click="onDeleteChannel(row, $index)"
+          >删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <channel-edit ref="dialog" @success="onSuccess"></channel-edit>
+
+
+  </page-container>
+</template> 
+
 <style lang="scss" scoped>
-.notice {
-  width: 100%;
-  height: 100%;
-  .menu {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    .left {
-      height: 40px;
-    }
-    .right {
-      height: 40px;
-      display: flex;
-      align-items: center;
-    }
-    .el-button {
-      margin-left: 10px;
-    }
-  }
-}
-// 表格里的内容换行用
-:deep(.el-table .cell) {
-  white-space: pre-wrap;
-}
 </style>
+
 
 

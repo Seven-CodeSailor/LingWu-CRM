@@ -1,10 +1,20 @@
+<!--
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-10-30 21:35:22
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-10-30 21:36:32
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\components\chooseSelect\ChooseSelect.vue
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
+-->
 <script setup>
 // 这是下拉选择框 create by 暮秋pro
 // 更新时间：23/10/19
 import { onMounted, ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 
-const value = ref('')
+const selectValue = ref('')
 const input1 = ref()
 /**
  * 使用示例:
@@ -50,17 +60,21 @@ const emit = defineEmits(['update:cid'])
 onMounted(() => {
   console.log('多选框父的数据', props.options)
 })
+// 微调  冰雾
+defineExpose({
+  selectValue
+})
 </script>
 
 <template>
   <el-select
-    v-model="value"
+    v-model="selectValue"
     class="m-2"
     :placeholder="props.des"
     size="default"
     style="width: 150px"
     clearable
-    @change="emit('update:cid', value.label)"
+    @change="emit('update:cid', selectValue.label)"
     :disabled="props.disabled"
   >
     <!-- 搜索框 -->

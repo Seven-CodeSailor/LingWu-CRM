@@ -16,6 +16,7 @@
     :use-select-column="sendData.useSelectColumn"
     :use-operate-column="sendData.useOperateColumn"
     @update-table-data="get"
+    @update-switch-state="get1"
     ref="baseDataListRef"
   >
     <!-- 图标插槽 -->
@@ -60,11 +61,26 @@ const sendData = {
       prop: 'hoby',
       label: '爱好'
     },
+    // tag列
     {
       prop: 'data',
       label: 'tag列',
       // 该列数据是否使用tag
       useTag: true
+    },
+    // 开关列
+    {
+      prop: 'isUse',
+      label: '开关列',
+      // 该列数据是否使用switch开关
+      useSwitch: true
+    },
+    // 图片列
+    {
+      prop: 'picture',
+      label: '图片列',
+      // 该列数据是否使用图片
+      usePic: true
     }
   ],
   tableData: [
@@ -82,7 +98,10 @@ const sendData = {
         // value 和 tagType字段不能改变
         value: '已入库',
         tagType: 'success'
-      }
+      },
+      isUse: true,
+      picture:
+        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
     },
     {
       sex: '女',
@@ -91,7 +110,10 @@ const sendData = {
       data: {
         value: '未入库',
         tagType: 'danger'
-      }
+      },
+      isUse: true,
+      picture:
+        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
     },
     {
       sex: '男',
@@ -100,7 +122,10 @@ const sendData = {
       data: {
         value: 'Info状态',
         tagType: 'info'
-      }
+      },
+      isUse: true,
+      picture:
+        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
     },
     {
       sex: '男',
@@ -109,7 +134,10 @@ const sendData = {
       data: {
         value: 'warning状态',
         tagType: 'warning'
-      }
+      },
+      isUse: true,
+      picture:
+        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
     },
     {
       sex: '男',
@@ -118,7 +146,10 @@ const sendData = {
       data: {
         value: '主题色',
         tagType: 'el'
-      }
+      },
+      isUse: false,
+      picture:
+        'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
     }
   ],
   // 传入删除操作的函数就会显示删除按钮
@@ -166,13 +197,26 @@ const sendData = {
   // 是否使用使用多选列
   useSelectColumn: true,
   // 是否使用操作列
-  useOperateColumn: true,
+  useOperateColumn: true
 }
 const baseDataListRef = ref(null)
 const get = (pageSize, currentPage) => {
   console.log('调用父组件的更新数据的函数')
   console.log('pageSize', pageSize)
   console.log('currentPage', currentPage)
+}
+const get1 = (state, row) => {
+  console.log('调用后端的接口发请求修改开关的state后才能真正改变开关的状态')
+  console.log('开关的状态已被修改，为：', state)
+  console.log('当前行的数据', row)
+  // 开启loading
+  baseDataListRef.value.openSwitchLoading =
+    !baseDataListRef.value.openSwitchLoading
+  // 关闭loading  模拟异步请求
+  setTimeout(() => {
+    baseDataListRef.value.openSwitchLoading =
+      !baseDataListRef.value.openSwitchLoading
+  }, 1000)
 }
 const getRows = () => {
   // 获取组件暴露出来的rows
