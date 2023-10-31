@@ -2,13 +2,14 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-29 13:05:59
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-30 18:39:39
+ * @LastEditTime: 2023-10-31 10:57:26
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\sysManage\field.js
  * @Description:
  *
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
  */
 import { defineStore } from 'pinia'
+import Request from '../../apis/request'
 
 const useSysField = defineStore('sysfield', {
   state: () => ({
@@ -76,8 +77,17 @@ const useSysField = defineStore('sysfield', {
     setSysTable(data) {
       console.log('data-in-pinia', data)
     },
-    init() {
-      console.log('发请求拿数据')
+    async getTableData(pageSize, pageIndex) {
+      const data = await Request.requestForm(
+        Request.GET,
+        'https://www.fastmock.site/mock/8e32bb7d22d2160aa723642e11594457/api/systemmanagement/cst-field-ext',
+        {
+          pageIndex: pageIndex,
+          pageSize: pageSize
+        },
+        null
+      )
+      console.log('data', data)
     }
   }
 })

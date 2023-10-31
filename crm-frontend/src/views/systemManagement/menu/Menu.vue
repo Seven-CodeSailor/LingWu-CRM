@@ -12,6 +12,7 @@
         :use-header="sendData.useHeader"
         :title="sendData.title"
         @update-table-data="get"
+        @updateSwitchState="handleSwitch"
         ref="baseDataListRef"
       >
         <template #ico>
@@ -255,6 +256,10 @@ const handleSearch = () => {
 const handleRefresh = () => {
   console.log('发请求刷新页面')
   // $store.loadTableData()
+}
+
+const handleSwitch = () => {
+  console.log('发请求改变状态')
 }
 const saveAddData = () => {
   console.log('带着data', addFormData, '发add请求')

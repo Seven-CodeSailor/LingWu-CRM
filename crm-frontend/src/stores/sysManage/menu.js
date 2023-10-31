@@ -24,24 +24,25 @@ const useSysMenu = defineStore('sysmenu', {
         },
         {
           prop: 'shifouqiyong',
-          label: '启用'
+          label: '启用',
+          useSwitch: true
         }
       ],
       tableData: [
         {
           caidanmingcheng: '销售管理',
           caidanmiaoshu: '菜单描述',
-          shifouqiyong: '启用'
+          shifouqiyong: ''
         },
         {
           caidanmingcheng: '我的客户',
           caidanmiaoshu: '菜单描述',
-          shifouqiyong: '启用'
+          shifouqiyong: ''
         },
         {
           caidanmingcheng: '服务记录',
           caidanmiaoshu: '菜单描述',
-          shifouqiyong: '启用'
+          shifouqiyong: ''
         }
       ],
       useDropdownMenu: false,

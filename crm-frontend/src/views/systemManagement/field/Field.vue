@@ -203,7 +203,7 @@ import { onMounted, ref, reactive } from 'vue'
 const $store = useSysField()
 
 onMounted(() => {
-  $store.init()
+  $store.getTableData(1, 10)
 })
 
 const addFormData = reactive({
@@ -231,6 +231,7 @@ const editFormData = ref({
     tagType: 'success'
   }
 })
+
 
 const searchData = ref('')
 
