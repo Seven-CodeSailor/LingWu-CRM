@@ -20,6 +20,9 @@
         <el-dropdown-item @click="openMsg" v-if="opt.includes(4)"
           >批量发邮件</el-dropdown-item
         >
+        <el-dropdown-item @click="openDes" v-if="opt.includes(5)"
+          >批量删除</el-dropdown-item
+        >
       </el-dropdown-menu>
     </template>
   </el-dropdown>
@@ -154,6 +157,11 @@ const openPrint = () => {
 // 打开发送邮件或者发送短信弹窗
 const openMsg = () => {
   message.value.showDialog()
+}
+// 批量删除的方法
+const openDes = () => {
+  // 发送请求
+  console.log('批量删除')
 }
 
 // 获取表格所需的数据

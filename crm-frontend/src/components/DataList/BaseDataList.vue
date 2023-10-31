@@ -82,6 +82,7 @@
                 <template v-if="props.handleEdit">
                   <el-tooltip content="编辑" placement="top">
                     <el-button
+                      plain
                       circle
                       type="primary"
                       @click="props.handleEdit(row)"
@@ -93,6 +94,7 @@
                 <template v-if="props.handleDelete">
                   <el-tooltip content="删除" placement="top"
                     ><el-button
+                      plain
                       circle
                       type="danger"
                       @click="props.handleDelete(row)"
