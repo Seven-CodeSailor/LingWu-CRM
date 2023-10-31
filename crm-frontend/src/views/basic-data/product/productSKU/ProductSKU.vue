@@ -54,6 +54,7 @@
         </div>
       </template>
     </BaseDataList>
+    <ProductForm></ProductForm>
   </div>
 </template>
 
@@ -61,6 +62,7 @@
 import { ref } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
+import ProductForm from '../components/FormCom/ProductForm.vue'
 const tableColumnAttribute = ref([
   {
     prop: 'goodsName',
