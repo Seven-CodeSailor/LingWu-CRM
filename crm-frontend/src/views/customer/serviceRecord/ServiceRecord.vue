@@ -213,14 +213,8 @@ import {
 } from '@/apis/customer/index.js'
 
 // 初始化数据
-const initLinks = async (
-  currentPage,
-  pageSize,
-  customerName,
-  linkName,
-  address
-) => {
-  await queryServiceNote(currentPage, pageSize, customerName, linkName, address)
+const initLinks = async (currentPage, pageSize, customerName) => {
+  await queryServiceNote(currentPage, pageSize, customerName)
 }
 onMounted(() => {
   initLinks()

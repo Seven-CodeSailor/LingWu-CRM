@@ -13,7 +13,9 @@
 import {
   Bell,
   ChatDotRound,
+  Check,
   FullScreen,
+  Histogram,
   Menu,
   MoonNight,
   Plus,
@@ -64,4 +66,6 @@ export default (app) => {
   app.component('IconPlus', Plus)
   app.component('IconChatDotRound', ChatDotRound)
   app.component('IconCreditCard', CreditCard)
+  app.component('IconCheck', Check)
+  app.component('IconHistogram', Histogram)
 }

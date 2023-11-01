@@ -52,21 +52,35 @@
   </el-popover>
   <!-- 消息通知 -->
 
-  <el-popover
-    placement="bottom"
-    title="消息提醒"
-    :width="400"
-    trigger="hover"
-    content=""
+  <el-button
+    small="small"
+    icon="IconBell"
+    circle
+    @click="message = true"
+  ></el-button>
+  <el-drawer v-model="message" title="消息提醒" append-to-body="true">
+    <MessageInfo></MessageInfo>
+  </el-drawer>
+
+  <!-- 客户和商机统计信息 -->
+  <el-button
+    small="small"
+    icon="IconHistogram"
+    circle
+    @click="business = true"
+  ></el-button>
+  <el-drawer
+    v-model="business"
+    title="商机统计"
+    append-to-body="true"
+    size="50%"
   >
-    <!-- 表单元素 -->
-    <el-form>
-      <el-form-item label="消息"> </el-form-item>
-    </el-form>
-    <template #reference>
-      <el-button small="small" icon="IconBell" circle></el-button>
-    </template>
-  </el-popover>
+    <div style="width: 100%; height: 100%">
+      <Statistics></Statistics>
+    </div>
+  </el-drawer>
+
+  <!-- 用户昵称 -->
   <el-dropdown style="margin-left: 20px">
     <span>
       {{ userInfo }}
@@ -88,6 +102,8 @@ import { ref } from 'vue'
 import { userStore } from '@/stores/user'
 import useLayOutSettingStore from '@/stores/setting.js'
 import { useRouter } from 'vue-router'
+import MessageInfo from './components/MessageInfo.vue'
+import Statistics from './components/Statistics.vue'
 
 const $router = useRouter()
 const user = userStore()
@@ -131,6 +147,11 @@ const changeDark = () => {
   //判断HTML标签是否有类名dark
   dark.value ? (html.className = 'dark') : (html.className = '')
 }
+// 消息提醒
+const message = ref(false)
+
+// 商机统计
+const business = ref(false)
 </script>
 
 <style lang="scss" scoped></style>
