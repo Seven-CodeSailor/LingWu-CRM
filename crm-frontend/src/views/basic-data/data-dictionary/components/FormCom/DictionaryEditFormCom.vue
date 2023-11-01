@@ -94,7 +94,13 @@ const initForm = ref({
 })
 
 const form = ref({
-  ...initForm.value
+  typeName: '',
+  typeTag: '',
+  intro: '',
+  sort: 0,
+  visible: false,
+  seotitle: 0,
+  keywords: 0
 })
 
 const props = defineProps({
