@@ -25,38 +25,36 @@
         </el-icon>
       </template>
 
-      <!-- 中部内容区 -->
+      <!-- 中间搜索栏 -->
       <template #menu>
         <div class="menu">
           <div class="left">
-            <!-- 添加按钮需要抽屉功能 -->
-            <el-button
-              type="success"
-              style="margin-right: 10px"
-              @click="addEvent"
-            >
-              <el-icon>
+            <!-- 左侧按钮区域 -->
+            <el-button type="success" @click="addEvent">
+              <el-icon style="padding-right: 5px">
                 <icon-Plus />
               </el-icon>
               添加
             </el-button>
-
-            <!-- 批量导入 -->
-            <BulkOPe
-              :excelData="() => tableData"
-              :getOpt="() => [0]"
-              excelName="库存清单.xlsx"
-              tableName="库存清单的sheet表"
+            <el-button
+              type="primary"
+              icon="IconChatDotRound"
+              @click="readBatches"
+              >批量已读</el-button
             >
-            </BulkOPe>
-            <!-- 搜索栏 -->
+
+            <el-button type="danger" icon="IconDelete" @click="deleteBatches"
+              >批量删除</el-button
+            >
           </div>
+          <!-- 右侧搜索栏 -->
           <div class="right">
             <el-input
               v-model="inputValue"
               placeholder="输入关键字搜索"
               style="margin-right: 4px; width: auto"
             />
+            <!-- 搜索按钮还差数据读取逻辑和加载loading动画 -->
             <el-button
               type="primary"
               style="margin-left: 4px"
@@ -70,26 +68,19 @@
       </template>
     </BaseDataList>
 
-    <!-- 弹出抽屉内容 -->
-    <el-drawer 
-      v-model="addFrawer" 
-      title="添加通知" 
-      direction="rtl"
-      placeholder="Activity zone"
-    >
-      <el-form 
+    <!-- 添加的抽屉内容 -->
+    <el-drawer v-model="addDrawer" title="添加通知" direction="rtl">
+      <el-form
         ref="ruleFormRef"
-        :model="ruleForm" 
+        :model="ruleForm"
         :rules="rules"
         label-width="120px"
         class="demo-ruleForm"
       >
-        <el-form-item label="通知标题"  prop="toTitle">
+        <el-form-item label="通知标题" prop="toTitle">
           <el-input v-model="ruleForm.name" placeholder="输入标题" />
         </el-form-item>
-        <!-- 输入规则还没改，需要添加 -->
         <el-form-item label="通知对象" prop="toDepartment">
-          <!-- 下拉选择框 -->
           <ChooseSelect
             :options="options"
             des="请选通知部门"
@@ -107,11 +98,13 @@
           <el-input v-model="textarea" :rows="2" type="textarea" />
         </el-form-item>
         <el-form-item margin-top="20px">
-          <el-button type="primary"  @click="submitForm(ruleFormRef)">确定</el-button>
           <el-button>取消</el-button>
+          <el-button type="primary" @click="handleSubmit">提交</el-button>
         </el-form-item>
       </el-form>
     </el-drawer>
+
+    <!-- 查看公告的抽屉 -->
   </div>
 </template>
 
@@ -120,11 +113,27 @@ import { ref, onMounted } from 'vue'
 import { useStockStorageDetailsStore } from '@/stores/inventory/stockstoragedetails.js'
 import { ElMessage } from 'element-plus'
 import { useNotice } from '../../../stores/inventory/notice'
-import BaseDataList from '@/views/person-homepage/notice/components/BaseDataList_refresh.vue'
-import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
+import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
 
-// 数据引入
+// 批量删除的逻辑
+const deleteBatches = () => {
+  if (!baseDataListRef.value.rows.length) {
+    ElMessage.error('请先选择')
+  } else {
+    console.log('1')
+  }
+}
+// 批量已读的逻辑(批量已读的逻辑未定)
+const readBatches = () => {
+  if (!baseDataListRef.value.rows.length) {
+    ElMessage.success('全部已读')
+  } else {
+    console.log('1')
+  }
+}
+
+// 表格数据引入
 const noticeStore = useNotice()
 
 // 表格标题栏
@@ -155,12 +164,12 @@ const tableColumnAttribute = [
     label: '接收人'
   }
 ]
+// 批量删除和已读的逻辑需要
 const baseDataListRef = ref(null)
 const inputValue = ref('')
 
-const stockStorageDetailsStore = useStockStorageDetailsStore()
-
 // 搜索框条件
+const stockStorageDetailsStore = useStockStorageDetailsStore()
 const searchDetails = () => {
   console.log('t', stockStorageDetailsStore.tableData)
   if (!inputValue.value) {
@@ -173,7 +182,6 @@ const searchDetails = () => {
     const params = {
       pageSize: 5,
       pageIndex: 1
-      // 如何知道我输入的是sku名称或商品名
     }
     getStockStorageList(params)
   }
@@ -184,6 +192,7 @@ const getStockStorageList = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
 
+// 分页逻辑
 onMounted(() => {
   const params = {
     pageIndex: 1,
@@ -199,6 +208,7 @@ const operateData = ref([
     command: '查看',
     // row为当前行的数据
     handleAction: (row) => {
+      addDrawer.value = true
       console.log('查看回调函数', row)
     },
     actionName: '查看'
@@ -213,10 +223,11 @@ const operateData = ref([
   }
 ])
 
-// 添加抽屜
-const addFrawer = ref(false)
+// 添加抽屜表单
+const addDrawer = ref(false)
+// 添加公告逻辑
 const addEvent = () => {
-  addFrawer.value = true
+  addDrawer.value = true
 }
 const ruleForm = ref({
   name: '',
@@ -228,6 +239,7 @@ const ruleForm = ref({
   resource: '',
   desc: ''
 })
+// 通知中的部门选项
 const options = ref([
   {
     value: 'Option1',
@@ -243,11 +255,10 @@ const options = ref([
   }
 ])
 
-// 提交表单校验规则(暂时还没改对应名称)
-
+// 提交表单校验规则逻辑（未完待研究
 const rules = {
   toTitle: [
-    { required: true, message: '请输入标题',  trigger: 'blur' },
+    { required: true, message: '请输入标题', trigger: 'blur' },
     {
       pattern: /^\S{1,10}$/,
       message: '分类名必须是1-10位非空字符',
@@ -255,7 +266,11 @@ const rules = {
     }
   ],
   toDepartment: [
-    { required: true, message: '通知需要下发的团队员及成员，默认为当前用户及下级成员', trigger: 'blur' },
+    {
+      required: true,
+      message: '通知需要下发的团队员及成员，默认为当前用户及下级成员',
+      trigger: 'blur'
+    },
     {
       pattern: /^\S{1,10}$/,
       message: '部门名必须是1-10位非空字符',
@@ -263,7 +278,11 @@ const rules = {
     }
   ],
   toPerson: [
-    { required: true, message: '请输入分此功能针对单独一个用户通知类别名', trigger: 'blur' },
+    {
+      required: true,
+      message: '请输入分此功能针对单独一个用户通知类别名',
+      trigger: 'blur'
+    },
     {
       pattern: /^\S{1,10}$/,
       message: '用户名必须是1-10位的非空字符',
@@ -271,7 +290,15 @@ const rules = {
     }
   ]
 }
-
+//表单提交逻辑
+const props = defineProps({
+  handleSubmit: {
+    type: Function,
+    default: () => {
+      console.log('sumbit')
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -299,5 +326,10 @@ const rules = {
 // 表格里的内容换行用
 :deep(.el-table .cell) {
   white-space: pre-wrap;
+}
+//
+.dialog-footer {
+  display: flex;
+  justify-content: space-around;
 }
 </style>

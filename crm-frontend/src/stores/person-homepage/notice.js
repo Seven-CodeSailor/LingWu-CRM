@@ -14,7 +14,6 @@ state
         publisher:'小明',
         release_time:'2023-01-01 22:32:19',
         status:{
-            
             value:'未读',
             tagType:'danger'
         },
