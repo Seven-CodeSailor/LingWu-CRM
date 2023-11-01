@@ -49,6 +49,28 @@
           <el-form-item label="简介" prop="intro">
             <el-input type="textarea" v-model="form.intro"></el-input>
           </el-form-item>
+          <el-form-item
+            label="下级层数设置"
+            prop="sort"
+            v-if="!(props.title === '编辑分类')"
+          >
+            <el-input-number
+              v-model="form.sort"
+              :min="0"
+              @change="handleChange"
+            />
+          </el-form-item>
+          <el-form-item
+            label="层数提成比例"
+            prop="sort"
+            v-if="!(props.title === '编辑分类')"
+          >
+            <el-input-number
+              v-model="form.sort"
+              :min="0"
+              @change="handleChange"
+            />
+          </el-form-item>
         </el-form>
       </template>
       <template #footer>
@@ -70,7 +92,9 @@ const form = ref({
   typeName: '',
   intro: '',
   sort: 0,
-  visible: false
+  visible: false,
+  seotitle: 0,
+  keywords: 0
 })
 
 const props = defineProps({

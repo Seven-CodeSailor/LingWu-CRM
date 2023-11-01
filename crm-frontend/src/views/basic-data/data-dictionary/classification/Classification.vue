@@ -91,21 +91,27 @@ const tableData = ref([
     typeTag: '鸡',
     intro: '只因你太美',
     sort: 99,
-    visible: false
+    visible: false,
+    seotitle: 99,
+    keywords: 888
   },
   {
     typeName: 'cxk',
     typeTag: '鸡',
     intro: '只因你太美',
     sort: 90,
-    visible: false
+    visible: false,
+    seotitle: 99,
+    keywords: 888
   },
   {
     typeName: 'cxk',
     typeTag: '鸡',
     intro: '只因你太美',
     sort: 91,
-    visible: true
+    visible: true,
+    seotitle: 99,
+    keywords: 888
   }
 ])
 

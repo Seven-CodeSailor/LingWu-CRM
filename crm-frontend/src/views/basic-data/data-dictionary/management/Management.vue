@@ -2,7 +2,7 @@
   <div class="management">
     <BaseDataList
       title="字典管理"
-      :table-data="classificationStore.tableData"
+      :table-data="managementStore.tableData"
       :table-column-attribute="tableColumnAttribute"
       :use-dropdown-menu="true"
       :dropdown-menu-actions-info="dropdownMenuActionsInfo"
@@ -24,7 +24,7 @@
           <div class="right">
             <ChooseSelect
               des="请选择字典分类"
-              :options="classificationStore.options"
+              :options="managementStore.options"
               @update:cid="queryTableData"
               ref="chooseSelectRef"
             ></ChooseSelect>
@@ -43,7 +43,7 @@
     </BaseDataList>
     <DictionaryManageFormCom
       :title="title"
-      :options="classificationStore.options"
+      :options="managementStore.options"
       :handle-submit="submit"
       ref="dictionaryManageFormRef"
     ></DictionaryManageFormCom>
@@ -55,12 +55,12 @@ import { ref, onMounted, nextTick } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components//ChooseSelect/ChooseSelect.vue'
 import DictionaryManageFormCom from '../components/FormCom/DictionaryManageFormCom.vue'
-import { useClassificationStore } from '@/stores/basic-data/data-dictionary/classification'
+import { useManagementStore } from '@/stores/basic-data/data-dictionary/management'
 const baseDataListRef = ref(null)
 const chooseSelectRef = ref(null)
-const classificationStore = useClassificationStore()
+const managementStore = useManagementStore()
 const getOptions = async () => {
-  await classificationStore.getOptions()
+  await managementStore.getOptions()
 }
 // 分类名称
 const name = ref('')
@@ -75,7 +75,7 @@ const queryTableData = async (selectValue) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   name.value = selectValue.value
   typeTag.value = selectValue.typeTag
-  await classificationStore.queryDictList({
+  await managementStore.queryDictList({
     pageSize: 5,
     parseInt: 1,
     name: name.value,
@@ -86,7 +86,7 @@ const queryTableData = async (selectValue) => {
 
 const getTableData = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  await classificationStore.getDictList(params)
+  await managementStore.getDictList(params)
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
 
@@ -104,7 +104,7 @@ const updateTableData = async (pageSize, currentPage) => {
     console.log('p', params)
     baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
     // 如果用户选择了分类 更新表格数据的函数如下
-    await classificationStore.queryDictList(params)
+    await managementStore.queryDictList(params)
     baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   }
 }

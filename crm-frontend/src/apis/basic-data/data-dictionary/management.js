@@ -2,8 +2,8 @@
  * @Author: BINGWU HuJiaCheng2003@163.com
  * @Date: 2023-10-31 16:45:52
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-10-31 17:47:30
- * @FilePath: \crm-frontend\src\apis\basic-data\data-dictionary\classification.js
+ * @LastEditTime: 2023-11-01 14:47:40
+ * @FilePath: \crm-frontend\src\apis\basic-data\data-dictionary\management.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import Request from '@/apis/request.js'
