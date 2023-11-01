@@ -79,7 +79,7 @@
       v-model:page-size="pageSize"
       :page-sizes="[5, 10, 20, 50]"
       :total="dashBoard.announcement.length"
-      layout="prev, pager, next, jumper, ->, total, sizes"
+      layout="prev, pager, next, jumper, total, sizes"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
