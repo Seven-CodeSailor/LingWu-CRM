@@ -14,6 +14,7 @@
       :handle-delete="handleDelete"
       :handle-edit="handleEdit"
       :table-data="classficationStore.tableData"
+      ref="baseDataListRef"
     >
       <template #ico>
         <el-icon><icon-message-box /></el-icon
@@ -56,6 +57,15 @@ const tableColumnAttribute = ref([
     sortable: true
   }
 ])
+const baseDataListRef = ref(null)
+const getTableData = async () => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  await classficationStore.getDictclassify()
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+const addTableData = async (params) => {
+  await classficationStore.addDictclassifyItem(params)
+}
 
 const handleDelete = (row) => {
   console.log('删除', row)
@@ -74,6 +84,8 @@ const handleEdit = (row) => {
 const addType = () => {
   DictionaryEditFormRef.value.visible = true
   title.value = '添加分类'
+  // 接口函数
+  addTableData()
 }
 
 const submitType = () => {
@@ -103,7 +115,8 @@ const DictionaryEditFormRef = ref(null)
 const title = ref('')
 
 onMounted(() => {
-  classficationStore.getDictclassify()
+  getTableData()
+  addTableData()
 })
 </script>
 
