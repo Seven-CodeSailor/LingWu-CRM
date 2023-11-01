@@ -18,7 +18,6 @@
     useDropdownMenu="true"
     :dropdownMenuActionsInfo="sendData.dropdownMenuActionsInfo"
     useOperateColumn="true"
-    rows="baseDataListRef.rows"
     :paginationData="paginationData"
     useCalculate="true"
     @update-table-data="get"
@@ -94,7 +93,7 @@
             type="primary"
             style="margin-left: 4px"
             @click="changeLoadAnimation"
-            :disabled="searchSaleName ? false : true"
+            :disabled="searchContractName ? false : true"
           >
             <el-icon style="margin-right: 4px"><icon-search /></el-icon>搜索
           </el-button>
@@ -123,7 +122,7 @@
   <!-- 添加或修改销售机会信息 -->
   <el-drawer
     v-model="dialogVisible"
-    :title="saleContractData.title === '' ? '添加合同' : '修改合同'"
+    :title="saleContractData.id === '' ? '添加合同' : '修改合同'"
     size="50%"
   >
     <el-form
@@ -248,9 +247,33 @@
       </span>
     </template>
   </el-drawer>
+  <!-- 详情界面 -->
+  <el-drawer v-model="dialogVisible2" title="合同详细" icon="Home" size="70%">
+    <ContractDetails
+      :contract-money="item.contract_no"
+      :zero-out-money="sendData.zeroOutMoney"
+      :due-money="sendData.dueMoney"
+      :start-date="sendData.startDate"
+      :end-date="sendData.endDate"
+      :create-date="sendData.startDate"
+      :our-represent="sendData.ourRepresent"
+      :contract-title="sendData.contractTitle"
+      :contract-id="sendData.contractId"
+      :tag-name="sendData.tagName"
+      :tag-type="sendData.tagType"
+      :first-table-data="sendData.firstTableData"
+      :second-table-data="sendData.secondTableData"
+      :third-table-data="sendData.thirdTableData"
+      :fourth-table-data="sendData.fourthTableData"
+      :purchaseContractUniqueField="sendData.purchaseContractUniqueField"
+      :handle-add-attachment="sendData.handleAddAttachment"
+    >
+    </ContractDetails>
+  </el-drawer>
 </template>
 
 <script setup>
+import ContractDetails from '@/components/DataList/ContractDetails.vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
@@ -309,6 +332,7 @@ let dialogVisible = ref(false)
 //添加销售机会
 // 新增销售机会的数据
 let saleContractData = ref({
+  id: '',
   contract_no: 0,
   title: '',
   start_date: '',
@@ -316,6 +340,18 @@ let saleContractData = ref({
   money: 0,
   intro: ''
 })
+
+// 添加或者修改后的重置数据
+const resetData = ref({
+  id: '',
+  contract_no: 0,
+  title: '',
+  start_date: '',
+  end_date: '',
+  money: 0,
+  intro: ''
+})
+
 // 添加按钮的回调函数
 let addData = () => {
   dialogVisible.value = true
@@ -333,7 +369,14 @@ const saveData = () => {
   saleContractData.value.intro = ''
   dialogVisible.value = false
   // 这里还需要对表单数据进行判断的 还需完善
-  ElMessage.success('添加成功')
+  if (saleContractData.value.id === '') {
+    console.log('新增数据成功')
+    ElMessage.success('添加成功')
+  }
+  // 还需完善
+  ElMessage.success('修改成功')
+  console.log('修改或者新增的合同数据：', saleContractData.value)
+  saleContractData.value = resetData.value
 }
 
 // 搜索的销售合同主题名称
@@ -350,6 +393,7 @@ const deliver_money_status = {
   invoice_money: 1200,
   invoive_status: '需要'
 }
+const item = ref({})
 // 数据传递
 const sendData = {
   tableColumnAttribute: [
@@ -499,32 +543,45 @@ const sendData = {
   msg: '多一眼看一眼就会爆炸12313123我哈哈哈',
   dropdownMenuActionsInfo: [
     {
-      command: '修改',
+      command: 'update',
       // row为当前行的数据
       handleAction: (row) => {
         dialogVisible.value = 'ture'
-        console.log('带着row的数据,拿id发请求拿到入库单明细', row)
+
+        console.log('修改当前行的数据', row)
       },
       actionName: '修改'
     },
 
     // 操作列表的删除操作 还需完善
     {
-      command: '删除',
+      command: 'delete',
       // row为当前行的数据
       handleAction: (row) => {
         alert('确认删除吗')
-        console.log('带着row的数据,拿id发请求拿到入库单明细', row)
+        console.log('删除当前行数据', row)
       },
       actionName: '删除'
     },
     {
-      command: '录入明细',
+      command: 'details',
       handleAction: (row) => {
         dialogVisible1.value = 'false'
         console.log('录入明细', row)
       },
       actionName: '录入明细'
+    },
+    {
+      command: 'showDetails',
+      handleAction: (row) => {
+        dialogVisible2.value = 'true'
+        item.value = {
+          ...row
+        }
+        console.log('1', item)
+        console.log('详细界面')
+      },
+      actionName: '详细'
     }
   ],
 
@@ -559,6 +616,9 @@ const deleteData = (row) => {
 const saveDetailsData = () => {
   ElMessage('保存录入明细成功')
 }
+
+// 处理详细的抽屉显示
+let dialogVisible2 = ref(false)
 
 // 处理请求提交的方法 修改数据
 const handleCommand = (command, row) => {

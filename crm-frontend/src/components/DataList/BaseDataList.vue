@@ -143,7 +143,9 @@
         </div>
       </div>
       <template v-if="props?.useCalculate">
-        <div>商品金额：{{}}</div>
+        <div>
+          合同金额统计：￥{{}} 回款金额统计：￥{{}} 欠款金额统计：￥{{}}
+        </div>
       </template>
 
       <!-- 分页 -->
