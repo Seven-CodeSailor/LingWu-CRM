@@ -13,7 +13,9 @@
 import {
   Bell,
   ChatDotRound,
+  Check,
   FullScreen,
+  Histogram,
   Menu,
   MoonNight,
   Plus,
@@ -72,4 +74,6 @@ export default (app) => {
   app.component('IconComment', Comment)
   app.component('IconView', View)
   app.component('IconFolderChecked', FolderChecked)
+  app.component('IconCheck', Check)
+  app.component('IconHistogram', Histogram)
 }

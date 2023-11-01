@@ -462,50 +462,6 @@ export const getCustomerRepresent = (
 }
 
 /**
- * 添加新的客户
- * @param {*} success 成功的回调
- * @param {*} fail 失败的回调
- * @returns
- */
-export const postCustomer = (param, success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(param)
-    }, 0)
-  })
-    .then(() => {
-      myclient.tableData.unshift(param)
-      success()
-    })
-    .catch((err) => {
-      fail(err)
-    })
-}
-
-/**
- * 修改客户基础信息
- * @param {*} success 成功的回调
- * @param {*} fail 失败的回调
- * @returns
- */
-export const putCustomer = (param, success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      setTimeout(() => {
-        resolve(param)
-      }, 0)
-    }, 0)
-  })
-    .then(() => {
-      myclient.tableData.unshift(param)
-      success()
-    })
-    .catch((err) => {
-      fail(err)
-    })
-}
-
-/**
  * 获取客户列表
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调
@@ -601,6 +557,106 @@ export const getCustomer = (param, success = () => {}, fail = () => {}) => {
 }
 
 /**
+ * 获取客户详细信息
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const queryCustomerDetails = (
+  id,
+  success = () => {},
+  fail = () => {}
+) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(id)
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        myclient.gettableData(data)
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 获取客户基础信息表单数据项
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const getBaseCustomerInfo = (success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        myclient.gettableData(data)
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 添加新的客户
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const postCustomer = (param, success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(param)
+    }, 0)
+  })
+    .then(() => {
+      myclient.tableData.unshift(param)
+      success()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 修改客户基础信息
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const putCustomer = (param, success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      setTimeout(() => {
+        resolve(param)
+      }, 0)
+    }, 0)
+  })
+    .then(() => {
+      myclient.tableData.unshift(param)
+      success()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
  * 删除客户，可批量
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调
@@ -621,6 +677,136 @@ export const deleteCustomer = (
         return !param.includes(item.id)
       })
       success()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 批量投入公海
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const invesHightSea = (list, success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ list })
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 导出客户
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const exportCustomer = (
+  createId,
+  ownerID,
+  success = () => {},
+  fail = () => {}
+) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ createId, ownerID })
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 上传导入文件
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const uploadCustomerFile = (success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 导入客户
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const importCustomer = (str, success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(str)
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 获取联系人名称
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const queryContactName = (success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
     })
     .catch((err) => {
       fail(err)
@@ -720,6 +906,198 @@ export const queryContactList = (
 }
 
 /**
+ * 获取联系人表单数据项
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const getContactField = (success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 添加联系人
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const addContact = (param, success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(param)
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 修改联系人
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const modifyContact = (param, success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(param)
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 删除联系人
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const removeContact = (id, success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(id)
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 导出联系人
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const queryContactFile = (
+  ownerId,
+  createId,
+  success = () => {},
+  fail = () => {}
+) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(ownerId, createId)
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 发送短信
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const sendsms = (
+  customerId,
+  ctype,
+  message,
+  success = () => {},
+  fail = () => {}
+) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(customerId, ctype, message)
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 发送邮件
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const sendEmail = (
+  customerId,
+  ctype,
+  message,
+  success = () => {},
+  fail = () => {}
+) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(customerId, ctype, message)
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
  * 获取服务记录列表
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调
@@ -729,8 +1107,6 @@ export const queryServiceNote = (
   currentPage,
   pageSize,
   customerName,
-  linkName,
-  address,
   success = () => {},
   fail = () => {}
 ) => {
@@ -739,9 +1115,7 @@ export const queryServiceNote = (
       resolve({
         pageIndex: currentPage,
         pageSize,
-        name: linkName,
-        customer_name: customerName,
-        address
+        customer_name: customerName
       })
     }, 0)
   })
@@ -792,6 +1166,168 @@ export const queryServiceNote = (
       ]
       if (data) {
         serviceRecord.setTableData(data)
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 添加服务记录
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const addService = (param, success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ param })
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 修改服务记录
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const modifyService = (param, success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ param })
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 删除服务记录，批量
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const removeService = (list, success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(list)
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 导出服务记录
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const exportService = (id, success = () => {}, fail = () => {}) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(id)
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 发送短信
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const sendsmsService = (
+  customerId,
+  ctype,
+  message,
+  success = () => {},
+  fail = () => {}
+) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(customerId, ctype, message)
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
+        success()
+        return
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
+    })
+}
+
+/**
+ * 发送邮件
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const sendEmailService = (
+  customerId,
+  ctype,
+  message,
+  success = () => {},
+  fail = () => {}
+) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(customerId, ctype, message)
+    }, 0)
+  })
+    .then(() => {
+      let data = []
+      if (data) {
         success()
         return
       }
