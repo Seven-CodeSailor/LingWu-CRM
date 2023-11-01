@@ -80,6 +80,8 @@ export const deleteDictclassify = (params) => {
   return Request.requestJson(
     Request.DELETE,
     'https://mockapi.eolink.com/KnVGhupeb89500c132462100d3745b0046ecd1264eeb224/delete-dictclassify',
-    params
+    {
+      params
+    }
   )
 }
