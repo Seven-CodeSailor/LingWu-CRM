@@ -6,11 +6,7 @@
         () => {
           if (props.title === '编辑分类') {
             form = {
-              name: '',
-              typeName: '',
-              intro: '',
-              sort: 0,
-              visible: false
+              ...initForm
             }
           }
           visible = false
@@ -23,10 +19,10 @@
       </template>
       <template #default>
         <el-form :model="form" :rules="rules" ref="formRef">
-          <el-form-item label="分类名称" prop="name">
+          <el-form-item label="分类名称" prop="typeName">
             <el-input
               placeholder="请输入分类名称"
-              v-model="form.name"
+              v-model="form.typeName"
             ></el-input>
           </el-form-item>
           <el-form-item label="调用标识" prop="typeTag">
@@ -55,7 +51,7 @@
             v-if="!(props.title === '编辑分类')"
           >
             <el-input-number
-              v-model="form.sort"
+              v-model="form.seotitle"
               :min="0"
               @change="handleChange"
             />
@@ -66,7 +62,7 @@
             v-if="!(props.title === '编辑分类')"
           >
             <el-input-number
-              v-model="form.sort"
+              v-model="form.keywords"
               :min="0"
               @change="handleChange"
             />
@@ -87,14 +83,18 @@
 import { ref } from 'vue'
 const visible = ref(false)
 
-const form = ref({
-  name: '',
+const initForm = ref({
   typeName: '',
+  typeTag: '',
   intro: '',
   sort: 0,
   visible: false,
   seotitle: 0,
   keywords: 0
+})
+
+const form = ref({
+  ...initForm.value
 })
 
 const props = defineProps({
