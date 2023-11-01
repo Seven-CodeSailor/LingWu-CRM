@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-31 15:56:56
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-31 21:26:45
+ * @LastEditTime: 2023-11-01 16:44:48
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\fund\collection\collectionPlan.js
  * @Description:
  *
@@ -13,6 +13,9 @@ import { defineStore } from 'pinia'
 import Request from '@/apis/request.js'
 export const useCollectionPlan = defineStore('collectionPlan', {
   state: () => ({
+    clientNameList: ['sayoriqwq', 'sayori'],
+    saleContractList: ['合同1', '合同2'],
+    payAccountList: ['账户1', '账户2'],
     sendData: {
       tableColumnAttribute: [
         {
@@ -47,7 +50,10 @@ export const useCollectionPlan = defineStore('collectionPlan', {
       ],
       tableData: [],
       useHeader: false,
-      usePagination: true
+      usePagination: true,
+      pageSizes: [2, 4, 6, 10],
+      total: 10,
+      useDropdownMenu: true
     }
   }),
   getters: {},
