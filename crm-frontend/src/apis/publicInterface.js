@@ -113,5 +113,51 @@ export const getDictclassifylist = async (params, success, fail) => {
     })
     .catch((error) => {
       fail(error)
+    }
+  )}
+// 导入 资金管理/资金注入抽取 仓库
+import useFundInjectionStore from '@/stores/fundManagement/fundInjection.js'
+const fundInjection = useFundInjectionStore()
+/**
+ * 获取银行账户列表数据(用于输入表单下拉列表)
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const getBankAccountList = (
+  param,
+  success = () => {},
+  fail = () => {}
+) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(param)
+    }, 0)
+  })
+    .then(() => {
+      let bankSelectList = [
+        {
+          value: 'Option1',
+          label: '所有回款账户'
+        },
+        {
+          value: 'Option2',
+          label: '工商银行982731237861283'
+        },
+        {
+          value: 'Option3',
+          label: '农业银行982731237861283'
+        }
+      ]
+      if (bankSelectList) {
+        // fundInjection是仓库名,把这个数据存到仓库
+        fundInjection.setBankSelectList(bankSelectList)
+        success()
+        return true
+      }
+      fail()
+    })
+    .catch((err) => {
+      fail(err)
     })
 }
