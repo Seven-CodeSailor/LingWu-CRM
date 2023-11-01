@@ -53,7 +53,7 @@
               <!-- 表格列使用switch开关 -->
               <template #default="{ row }" v-else-if="item.useSwitch">
                 <el-switch
-                  :model-value="row[item.prop]"
+                  :model-value="row[item.prop] ? true : false"
                   inline-prompt
                   active-text="是"
                   inactive-text="否"
