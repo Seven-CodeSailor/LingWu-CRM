@@ -3,7 +3,7 @@
     <el-card>
       修改密码
       <el-form 
-        :model="ruleForm" 
+        :model="form" 
         label-width="120px" 
         style="margin-top: 50px"
         ref="ruleFormRef"
@@ -12,7 +12,7 @@
         :size="formSize"
         status-icon
       >
-        <el-form-item label="旧密码" style="margin-top: 30px" prop="oldPassword">
+        <el-form-item label="旧密码"  prop="oldPassword">
           <el-input
             v-model="form.oldPassword"
             placeholder="请输入之前登录密码"
@@ -54,6 +54,7 @@ const form = ref({
 const rules = {
   oldPassword: [
     {
+      required: true,
       pattern: /^\[a-zA-Z0-9]{8,15}$/,
       message: '密码必须是8-15位字母或数字',
       trigger: 'blur'
@@ -61,6 +62,7 @@ const rules = {
   ],
   newPassword: [
     {
+      required: true,
       pattern: /^\[a-zA-Z0-9]{8,15}$/,
       message: '密码必须是8-15位字母或数字',
       trigger: 'blur'
@@ -83,7 +85,7 @@ const submitForm = () => {
   })
 }
 
-//密码提交校验
+//两次密码需要相同的校验
 
 
 </script>
