@@ -113,8 +113,8 @@ export const getDictclassifylist = async (params, success, fail) => {
     })
     .catch((error) => {
       fail(error)
-    }
-  )}
+    })
+}
 // 导入 资金管理/资金注入抽取 仓库
 import useFundInjectionStore from '@/stores/fundManagement/fundInjection.js'
 const fundInjection = useFundInjectionStore()
