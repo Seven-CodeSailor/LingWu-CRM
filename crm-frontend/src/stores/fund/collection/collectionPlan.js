@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-31 15:56:56
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-01 16:44:48
+ * @LastEditTime: 2023-11-02 11:43:16
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\fund\collection\collectionPlan.js
  * @Description:
  *
@@ -10,7 +10,7 @@
  */
 
 import { defineStore } from 'pinia'
-import Request from '@/apis/request.js'
+import { getCollectionPlanList } from '@/apis/fund/collectionPlan/index.js'
 export const useCollectionPlan = defineStore('collectionPlan', {
   state: () => ({
     clientNameList: ['sayoriqwq', 'sayori'],
@@ -59,16 +59,8 @@ export const useCollectionPlan = defineStore('collectionPlan', {
   getters: {},
   actions: {
     //发请求拿table表的数据
-    async getCollectionPlanList(pageSize, pageIndex) {
-      const data = await Request.requestJson(
-        Request.GET,
-        'https://www.fastmock.site/mock/8e32bb7d22d2160aa723642e11594457/api/collectionplans/get-collectionplans',
-        {
-          pageIndex,
-          pageSize
-        },
-        null
-      ).catch((e) => e)
+    async getCollectionPlanList(pageParams) {
+      const data = await getCollectionPlanList(pageParams).catch((e) => e)
       if (!data.data) return
       this.sendData.tableData = data.data.rows
       //处理tag列数据

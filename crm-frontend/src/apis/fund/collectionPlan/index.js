@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-31 16:01:04
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-01 11:06:54
+ * @LastEditTime: 2023-11-02 11:22:09
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\fund\collectionPlan\index.js
  * @Description:
  *
@@ -10,10 +10,25 @@
  */
 import Request from '@/apis/request'
 
-const baseUrl = '/collectionplans'
+const baseUrl = ''
 
+const getCollectionPlanList = (pageParams) => {
+  return Request.requestJson(
+    Request.GET,
+    'https://www.fastmock.site/mock/8e32bb7d22d2160aa723642e11594457/api/collectionplans/get-collectionplans',
+    {
+      ...pageParams
+    },
+    null
+  )
+}
+//添加回款计划
 const addCollectionPlan = (data, success, fail) => {
-  Request.requestForm(Request.POST, baseUrl + '/add-collection', data)
+  Request.requestJson(
+    Request.POST,
+    baseUrl + '/collectionplans/add-collection',
+    data
+  )
     .then((data) => {
       if (data.data) {
         success()
@@ -27,8 +42,13 @@ const addCollectionPlan = (data, success, fail) => {
     })
 }
 
+//修改回款计划
 const updateCollectionPlan = (data, success, fail) => {
-  Request.requestForm(Request.PUT, baseUrl + '/update-pay-plan', data)
+  Request.requestForm(
+    Request.PUT,
+    baseUrl + '/collectionplans/update-pay-plan',
+    data
+  )
     .then((data) => {
       if (data.data) {
         success()
@@ -42,8 +62,13 @@ const updateCollectionPlan = (data, success, fail) => {
     })
 }
 
+//确认回款计划
 const updateConfirmCollectionPlan = (data, success, fail) => {
-  Request.requestJson(Request.PUT, baseUrl + '/update-confirm-plan', data)
+  Request.requestJson(
+    Request.POST,
+    baseUrl + '/collection-plan/update-confirm-plan',
+    data
+  )
     .then((data) => {
       if (data.data) {
         success()
@@ -56,4 +81,10 @@ const updateConfirmCollectionPlan = (data, success, fail) => {
       fail()
     })
 }
-export { addCollectionPlan, updateCollectionPlan, updateConfirmCollectionPlan }
+
+export {
+  getCollectionPlanList,
+  addCollectionPlan,
+  updateCollectionPlan,
+  updateConfirmCollectionPlan
+}

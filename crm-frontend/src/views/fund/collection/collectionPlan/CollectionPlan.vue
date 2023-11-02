@@ -289,7 +289,7 @@ const $store = useCollectionPlan()
 
 onMounted(() => {
   //页面初始化，加载数据
-  $store.getCollectionPlanList(1, 10)
+  $store.getCollectionPlanList({ pageIndex: 1, pageSize: 10 })
 })
 
 const dropdownMenuActionsInfo = [
