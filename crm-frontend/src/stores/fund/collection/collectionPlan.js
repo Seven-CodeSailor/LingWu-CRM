@@ -60,7 +60,9 @@ export const useCollectionPlan = defineStore('collectionPlan', {
   actions: {
     //发请求拿table表的数据
     async getCollectionPlanList(pageParams) {
-      const data = await getCollectionPlanList(pageParams).catch((e) => e)
+      const data = await getCollectionPlanList(pageParams).catch((e) => {
+        ElMessage.warn(e.message)
+      })
       if (!data.data) return
       this.sendData.tableData = data.data.rows
       //处理tag列数据
