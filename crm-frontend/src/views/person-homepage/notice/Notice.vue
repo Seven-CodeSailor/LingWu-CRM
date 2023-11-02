@@ -7,8 +7,8 @@
       :page-sizes="[5, 10, 15]"
       :total="stockStorageDetailsStore.tableTotal"
       :table-data="noticeStore.data"
+      :dropdown-menu-actions-info="dropdownMenuActionsInfo"
       :useDropdownMenu="true"
-      :dropdownMenuActionsInfo="operateData"
       @update-table-data="
         (pageSize, currentPage) =>
           getStockStorageList({
@@ -54,7 +54,7 @@
               placeholder="输入关键字搜索"
               style="margin-right: 4px; width: auto"
             />
-            <!-- 搜索按钮还差数据读取逻辑和加载loading动画 -->
+            <!-- 搜索按钮：还差数据读取逻辑和加载loading动画 -->
             <el-button
               type="primary"
               style="margin-left: 4px"
@@ -104,7 +104,23 @@
       </el-form>
     </el-drawer>
 
-    <!-- 查看公告的抽屉 -->
+    <!-- 查看公告的抽屉内容 -->
+    <el-drawer v-model="dialogVisible1" title="查看通知" size="40%">
+      <el-card>
+        <template #header>
+          <div class="card-header" style="text-align: center">
+            <span style="font-size: 24px; font-weight: 700">{{ detail.title }}</span>
+          </div>
+        </template>
+        <section style="margin-top: 20px">{{ detail.content }}</section>
+      </el-card>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="dialogVisible1 = false">确定</el-button>
+        </span>
+      </template>
+    </el-drawer>
+
   </div>
 </template>
 
@@ -115,6 +131,7 @@ import { ElMessage } from 'element-plus'
 import { useNotice } from '../../../stores/inventory/notice'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
+
 
 // 批量删除的逻辑
 const deleteBatches = () => {
@@ -135,6 +152,33 @@ const readBatches = () => {
 
 // 表格数据引入
 const noticeStore = useNotice()
+
+// 
+const dropdownMenuActionsInfo = [
+    {
+      command: 'delete',
+      // row为当前行的数据
+      handleAction: (row) => {
+        dialogVisible1.value = true
+        console.log('删除的回调函数', row)
+      },
+      actionName: '查看'
+    },
+    {
+      command: 'edit',
+      handleAction: (row) => {
+        console.log('修改的回调函数', row)
+      },
+      actionName: '修改'
+    },
+    {
+      command: 'add',
+      handleAction: (row) => {
+        console.log('添加的回调函数', row)
+      },
+      actionName: '添加'
+    }
+  ]
 
 // 表格标题栏
 const tableColumnAttribute = [
@@ -164,64 +208,10 @@ const tableColumnAttribute = [
     label: '接收人'
   }
 ]
-// 批量删除和已读的逻辑需要
+
+// 批量删除和批量已读的逻辑
 const baseDataListRef = ref(null)
 const inputValue = ref('')
-
-// 搜索框条件
-const stockStorageDetailsStore = useStockStorageDetailsStore()
-const searchDetails = () => {
-  console.log('t', stockStorageDetailsStore.tableData)
-  if (!inputValue.value) {
-    ElMessage.error('输入不能为空')
-  } else {
-    console.log('pp', baseDataListRef.value.paginationData)
-    baseDataListRef.value.paginationData.pageSize = 5
-    baseDataListRef.value.paginationData.currentPage = 1
-    // 搜索数据的时候就重新初始化页面容量和当前页的页码
-    const params = {
-      pageSize: 5,
-      pageIndex: 1
-    }
-    getStockStorageList(params)
-  }
-}
-const getStockStorageList = async (params) => {
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  await stockStorageDetailsStore.getTableData(params)
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-}
-
-// 分页逻辑
-onMounted(() => {
-  const params = {
-    pageIndex: 1,
-    pageSize: 5
-  }
-  getStockStorageList(params)
-  noticeStore.getData()
-})
-
-// 操作下拉菜单的数据
-const operateData = ref([
-  {
-    command: '查看',
-    // row为当前行的数据
-    handleAction: (row) => {
-      addDrawer.value = true
-      console.log('查看回调函数', row)
-    },
-    actionName: '查看'
-  },
-  {
-    command: '刪除',
-    // row为当前行的数据
-    handleAction: (row) => {
-      console.log('刪除回调函数', row)
-    },
-    actionName: '刪除'
-  }
-])
 
 // 添加抽屜表单
 const addDrawer = ref(false)
@@ -230,14 +220,9 @@ const addEvent = () => {
   addDrawer.value = true
 }
 const ruleForm = ref({
-  name: '',
-  region: '',
-  date1: '',
-  date2: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: ''
+  toTitle: '',
+  toDepartment: '',
+  toPerson: ''
 })
 // 通知中的部门选项
 const options = ref([
@@ -290,6 +275,83 @@ const rules = {
     }
   ]
 }
+
+// 搜索框条件
+const stockStorageDetailsStore = useStockStorageDetailsStore()
+const searchDetails = () => {
+  console.log('t', stockStorageDetailsStore.tableData)
+  if (!inputValue.value) {
+    ElMessage.error('输入不能为空')
+  } else {
+    console.log('pp', baseDataListRef.value.paginationData)
+    baseDataListRef.value.paginationData.pageSize = 5
+    baseDataListRef.value.paginationData.currentPage = 1
+    // 搜索数据的时候就重新初始化页面容量和当前页的页码
+    const params = {
+      pageSize: 5,
+      pageIndex: 1
+    }
+    getStockStorageList(params)
+  }
+}
+const getStockStorageList = async (params) => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  await stockStorageDetailsStore.getTableData(params)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+
+//删除单条数据
+const handleDelete = (row) => {
+  console.log('删除', row)
+  ElMessageBox.confirm('你确定要删除这条数据吗?', '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      ElMessage({
+        type: 'success',
+        message: '删除成功'
+      })
+    })
+}
+
+// 查看公告
+const detail = ref({
+  id: '',
+  title: '',
+  content: ''
+})
+const dialogVisible1 = ref(false)
+const look = (row) => {
+  ;(detail.value.id = row.id),
+    (detail.value.title = row.title),
+    (detail.value.content = row.content),
+    (dialogVisible1.value = true)
+}
+
+// 操作下拉菜单的数据
+const operateData = ref([
+  {
+    command: '查看',
+    // row为当前行的数据
+    handleAction: (row) => {
+      addDrawer.value = true
+      console.log('查看回调函数', row)
+    },
+    actionName: '查看'
+  },
+  {
+    command: '刪除',
+    // row为当前行的数据
+    handleAction: (row) => {
+      console.log('刪除回调函数', row)
+    },
+    actionName: '刪除'
+  }
+])
+
+
 //表单提交逻辑
 const props = defineProps({
   handleSubmit: {
@@ -299,6 +361,17 @@ const props = defineProps({
     }
   }
 })
+
+// 分页逻辑
+onMounted(() => {
+  const params = {
+    pageIndex: 1,
+    pageSize: 5
+  }
+  getStockStorageList(params)
+  noticeStore.getData()
+})
+
 </script>
 
 <style lang="scss" scoped>
@@ -323,11 +396,10 @@ const props = defineProps({
     }
   }
 }
-// 表格里的内容换行用
-:deep(.el-table .cell) {
-  white-space: pre-wrap;
-}
-//
+// // 表格里的内容换行用(暂无引用)
+// :deep(.el-table .cell) {
+//   white-space: pre-wrap;
+// }
 .dialog-footer {
   display: flex;
   justify-content: space-around;
