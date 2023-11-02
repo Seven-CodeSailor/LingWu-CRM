@@ -1,8 +1,8 @@
 /*
  * @Author: BINGWU HuJiaCheng2003@163.com
  * @Date: 2023-10-28 22:16:05
- * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-10-31 15:25:58
+ * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
+ * @LastEditTime: 2023-11-02 13:39:59
  * @FilePath: \crm-frontend\src\apis\publicInterface.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -113,8 +113,8 @@ export const getDictclassifylist = async (params, success, fail) => {
     })
     .catch((error) => {
       fail(error)
-    }
-  )}
+    })
+}
 // 导入 资金管理/资金注入抽取 仓库
 import useFundInjectionStore from '@/stores/fundManagement/fundInjection.js'
 const fundInjection = useFundInjectionStore()
@@ -159,5 +159,30 @@ export const getBankAccountList = (
     })
     .catch((err) => {
       fail(err)
+    })
+}
+
+/**
+ * @description: 获取系统用户名称列表数据
+ * @param {*} params 请求参数:{name(String)}
+ * @param {*} success 成功回调
+ * @param {*} fail 失败回调
+ * @Author{*} 暮秋(有问题找我)
+ * @return {*}
+ */
+export const getUserNameList = async (params, success, fail) => {
+  await Request.requestJson(
+    Request.GET,
+    'http://101.34.252.80:10110/orgstructure/user/user/get-userName-list',
+    {
+      params
+    }
+  )
+    .then((response) => {
+      // 请求返回的数据就是response,在成功回调函数可以拿到
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
     })
 }

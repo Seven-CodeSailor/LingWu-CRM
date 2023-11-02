@@ -24,7 +24,7 @@
         </template>
         <!-- 树形菜单标签结构 -->
         <el-tree
-          :data="treeData"
+          :data="departmentManage.DepartmentTree"
           :props="defaultProps"
           highlight-current="true"
           default-expand-all="true"
@@ -126,7 +126,7 @@
         <el-form-item label="角色" :label-width="labelWidth">
           <el-tree-select
             v-model="selectRole"
-            :data="treeDataRole"
+            :data="userManage.userNameList"
             check-strictly
             default-expand-all
             :render-after-expand="false"
@@ -253,30 +253,93 @@ import BaseDataList from '@/components/DataList/BaseDataList.vue'
 // import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
 import { Operation, Plus, Search } from '@element-plus/icons-vue'
 // import { ElMessage } from 'element-plus'
-import { ref } from 'vue'
-// 树形菜单的数据
-const treeData = ref([
-  {
-    label: '零起飞工作室',
-    children: [
-      {
-        label: '商务部'
-      },
-      {
-        label: '行政部'
-      },
-      {
-        label: '技术部'
-      },
-      {
-        label: '篮球部'
-      },
-      {
-        label: '财务部'
+import { onMounted, ref } from 'vue'
+import { getUserNameList } from '@/apis/publicInterface.js'
+import { getDepartmentTree } from '@/apis/organizationStructure/department.js'
+import { getUserTableList } from '@/apis/organizationStructure/user.js'
+// 导入 组织结构/用户管理 仓库
+import useUserManageStore from '@/stores/organizationStructure/usermanage.js'
+const userManage = useUserManageStore()
+// 导入 组织结构/部门管理 仓库
+import useDepartmentManageStore from '@/stores/organizationStructure/departmentManage.js'
+const departmentManage = useDepartmentManageStore()
+onMounted(async () => {
+  // 获取系统用户名称列表数据
+  await getUserNameList(
+    { name: 'name' },
+    (res) => {
+      const { data } = res
+      console.log('获取系统用户名称列表数据', data)
+      // 把数据存到 组织结构/用户管理仓库
+      userManage.setUserNameList(data)
+    },
+    (error) => {
+      if (error) {
+        console.log(error)
       }
-    ]
-  }
-])
+    }
+  )
+  // 获取部门名称结构树
+  await getDepartmentTree(
+    {
+      depth: 0,
+      pid: 0
+    },
+    (res) => {
+      const { data } = res
+      console.log('获取部门名称结构树', data)
+      // 把数据存到 组织结构/部门管理 仓库
+      departmentManage.setDepartmentTree(data)
+      // console.log(departmentManage.DepartmentTree)
+    },
+    (error) => {
+      if (error) {
+        console.log(error)
+      }
+    }
+  )
+  // 获取用户列表数据
+  await getUserTableList(
+    {
+      deptId: 1,
+      name: 'test',
+      pageIndex: 1,
+      pageSize: 10
+    },
+    (res) => {
+      const { data } = res
+      console.log('获取用户列表数据', data)
+    },
+    (error) => {
+      if (error) {
+        console.log(error)
+      }
+    }
+  )
+})
+// 树形菜单的数据
+// const treeData = ref([
+//   {
+//     label: '零起飞工作室',
+//     children: [
+//       {
+//         label: '商务部'
+//       },
+//       {
+//         label: '行政部'
+//       },
+//       {
+//         label: '技术部'
+//       },
+//       {
+//         label: '篮球部'
+//       },
+//       {
+//         label: '财务部'
+//       }
+//     ]
+//   }
+// ])
 const treeDataPos = ref([
   {
     value: '1',
@@ -332,15 +395,17 @@ const treeDataRole = ref([
     children: [
       {
         value: '1-1',
-        label: '主管'
-      },
-      {
-        value: '1-2',
-        label: '组员'
-      },
-      {
-        value: '1-3',
-        label: '总经理'
+        label: '总经理',
+        children: [
+          {
+            value: '1-1-1',
+            label: '财务总监'
+          },
+          {
+            value: ' 1-1-2',
+            label: '人事总监'
+          }
+        ]
       }
     ]
   }
@@ -361,8 +426,8 @@ const handelSelectRole = (value) => {
 }
 
 const defaultProps = ref({
-  children: 'children',
-  label: 'label'
+  children: 'nodes',
+  label: 'name'
 })
 // 点击树节点的事件
 const handleNodeClick = (data) => {
