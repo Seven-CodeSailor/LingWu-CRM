@@ -18,9 +18,17 @@
                 <el-icon><Plus /></el-icon>
                 添加
               </el-button>
-              <el-button type="danger" @click="handleBatchDelete"
+              <el-button
+                type="danger"
+                @click="handleBatchDelete"
+                style="margin-right: 10px"
                 >批量删除</el-button
               >
+              <BulkOPe
+                :getOpt="() => [3, 4]"
+                :msgSend="handleMsgSend"
+                :emailSend="handleEmailSend"
+              ></BulkOPe>
             </div>
             <div class="right">
               <div class="search">
@@ -285,12 +293,21 @@ import { useCollectionPlan } from '@/stores/fund/collection/collectionPlan.js'
 import { onMounted, ref } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import { Plus, Search } from '@element-plus/icons-vue'
+import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 const $store = useCollectionPlan()
 
 onMounted(() => {
   //页面初始化，加载数据
-  $store.getCollectionPlanList(1, 10)
+  $store.getCollectionPlanList({ pageIndex: 1, pageSize: 10 })
 })
+
+const handleMsgSend = (title, desc) => {
+  console.log(title, desc)
+}
+
+const handleEmailSend = (title, desc) => {
+  console.log(title, desc)
+}
 
 const dropdownMenuActionsInfo = [
   {
