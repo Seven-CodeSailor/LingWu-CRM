@@ -53,7 +53,7 @@
               <!-- 表格列使用switch开关 -->
               <template #default="{ row }" v-else-if="item.useSwitch">
                 <el-switch
-                  :model-value="row[item.prop]"
+                  :model-value="row[item.prop] ? true : false"
                   inline-prompt
                   active-text="是"
                   inactive-text="否"
@@ -82,6 +82,7 @@
                 <template v-if="props.handleEdit">
                   <el-tooltip content="编辑" placement="top">
                     <el-button
+                      plain
                       circle
                       type="primary"
                       @click="props.handleEdit(row)"
@@ -93,6 +94,7 @@
                 <template v-if="props.handleDelete">
                   <el-tooltip content="删除" placement="top"
                     ><el-button
+                      plain
                       circle
                       type="danger"
                       @click="props.handleDelete(row)"
@@ -140,6 +142,12 @@
           </el-table>
         </div>
       </div>
+      <template v-if="props?.useCalculate">
+        <div>
+          合同金额统计：￥{{}} 回款金额统计：￥{{}} 欠款金额统计：￥{{}}
+        </div>
+      </template>
+
       <!-- 分页 -->
       <template v-if="props?.usePagination">
         <el-pagination
@@ -246,6 +254,11 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  //是否使用表格最下面的计算总金额
+  useCalculate: {
+    type: Boolean,
+    default: false
+  },
   // 是否使用el-card的header
   useHeader: {
     type: Boolean,
@@ -344,5 +357,8 @@ defineExpose({
 .emptyTable {
   min-width: 800px;
   min-height: 600px;
+}
+:deep(.el-pagination__rightwrapper) {
+  flex: 0;
 }
 </style>

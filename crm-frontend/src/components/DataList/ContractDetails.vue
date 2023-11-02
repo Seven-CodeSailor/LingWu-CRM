@@ -368,21 +368,21 @@ const firstTableInfo = {
   tableData: props.firstTableData
 }
 
-const firstTableTotalMoney = computed(() => {
-  let money = 0
-  firstTableInfo.tableData.forEach((item) => {
-    money += item.price * item.goodsNumber
-  })
-  return money
-})
+// const firstTableTotalMoney = computed(() => {
+//   let money = 0
+//   firstTableInfo.tableData.forEach((item) => {
+//     money += item.price * item.goodsNumber
+//   })
+//   return money
+// })
 
-const firstTableTotalGoodsNumber = computed(() => {
-  let number = 0
-  firstTableInfo.tableData.forEach((item) => {
-    number += item.goodsNumber
-  })
-  return number
-})
+// const firstTableTotalGoodsNumber = computed(() => {
+//   let number = 0
+//   firstTableInfo.tableData.forEach((item) => {
+//     number += item.goodsNumber
+//   })
+//   return number
+// })
 // 第二个tab
 const sellContractSecondTableColumnAttribute = [
   {
@@ -460,13 +460,13 @@ const secondTableInfo = {
   tableData: props.secondTableData
 }
 
-const secondTableTotalMoney = computed(() => {
-  let money = 0
-  secondTableInfo.tableData.forEach((item) => {
-    money += item.money
-  })
-  return money
-})
+// const secondTableTotalMoney = computed(() => {
+//   let money = 0
+//   secondTableInfo.tableData.forEach((item) => {
+//     money += item.money
+//   })
+//   return money
+// })
 // 第三个tab
 const sellContractThirdTableColumnAttribute = [
   {
@@ -538,13 +538,13 @@ const thirdTableInfo = {
   tableData: props.thirdTableData
 }
 
-const thirdTableTotalMoney = computed(() => {
-  let money = 0
-  thirdTableInfo.tableData.forEach((item) => {
-    money += item.invoiceMoney
-  })
-  return money
-})
+// const thirdTableTotalMoney = computed(() => {
+//   let money = 0
+//   thirdTableInfo.tableData.forEach((item) => {
+//     money += item.invoiceMoney
+//   })
+//   return money
+// })
 
 // 第四个tab
 const fourthTableInfo = {

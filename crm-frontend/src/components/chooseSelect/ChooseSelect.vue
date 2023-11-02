@@ -74,7 +74,7 @@ defineExpose({
     size="default"
     style="width: 150px"
     clearable
-    @change="emit('update:cid', selectValue.label)"
+    @change="emit('update:cid', selectValue)"
     :disabled="props.disabled"
   >
     <!-- 搜索框 -->

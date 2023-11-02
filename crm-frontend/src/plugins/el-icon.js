@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-25 21:31:59
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-10-28 16:02:26
+ * @LastEditTime: 2023-10-31 21:39:55
  * @FilePath: \zero-one-crmsys\crm-frontend\src\plugins\el-icon.js
  * @Description:
  *
@@ -12,7 +12,10 @@
 // 写成多行避免解决冲突麻烦
 import {
   Bell,
+  ChatDotRound,
+  Check,
   FullScreen,
+  Histogram,
   Menu,
   MoonNight,
   Plus,
@@ -34,6 +37,12 @@ import { MessageBox } from '@element-plus/icons-vue'
 import { Operation } from '@element-plus/icons-vue'
 import { HomeFilled } from '@element-plus/icons-vue'
 import { BellFilled } from '@element-plus/icons-vue'
+import { CreditCard } from '@element-plus/icons-vue'
+import { Comment } from '@element-plus/icons-vue'
+import { View } from '@element-plus/icons-vue'
+import { FolderChecked } from '@element-plus/icons-vue'
+
+
 export default (app) => {
   app.component('IconMenu', Menu)
   app.component('IconSetting', Setting)
@@ -60,4 +69,11 @@ export default (app) => {
   app.component('IconHomeFilled', HomeFilled)
   app.component('IconBellFilled', BellFilled)
   app.component('IconPlus', Plus)
+  app.component('IconChatDotRound', ChatDotRound)
+  app.component('IconCreditCard', CreditCard)
+  app.component('IconComment', Comment)
+  app.component('IconView', View)
+  app.component('IconFolderChecked', FolderChecked)
+  app.component('IconCheck', Check)
+  app.component('IconHistogram', Histogram)
 }

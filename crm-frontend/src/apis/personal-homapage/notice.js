@@ -1,11 +1,4 @@
-import request from '@/apis/request.js'
-// 获取 文章分类
-export const notGetChannelsService = () => request.get('/my/cate/list_test')
-//添加 文章分类
-export const notAddChannelsService = (data) => request.get('/my/cate/add', data)
-//编辑 文章分类
-export const notEditChannelsService = (data) => 
-    request.put('/my/cate/info', data)
+import Request from "../request";
 
 //请求接口的模板
 // export const test = async (data, success, fail) => {
@@ -24,19 +17,20 @@ export const notEditChannelsService = (data) =>
 //       })
 //   }
 
-
 export const list_test = async (data, success, fail) => {
         await Request.requestJson(
           Request.GET,
-          'http://127.0.0.1:4523/m1/3492155-0-default/my/cate/list_test',
+          'https://mock.apifox.cn/m1/3500676-0-default/getdata',
           {
-            ...data
+            
           }
         )
           .then((response) => {
+            console.log(1);
             success(response)
           })
           .catch((error) => {
+            console.log(2);
             fail(error)
           })
       }

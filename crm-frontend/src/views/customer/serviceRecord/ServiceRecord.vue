@@ -36,9 +36,9 @@
           </template>
         </el-popconfirm>
         <BulkOPe
-          :getOpt="() => [0, 1]"
-          excelName="入库明细.xlsx"
-          tableName="入库明细的sheet表"
+          :getOpt="() => [2, 3]"
+          :msgSend="msgSend()"
+          :emailSend="emailSend()"
         >
         </BulkOPe>
       </div>
@@ -213,14 +213,8 @@ import {
 } from '@/apis/customer/index.js'
 
 // 初始化数据
-const initLinks = async (
-  currentPage,
-  pageSize,
-  customerName,
-  linkName,
-  address
-) => {
-  await queryServiceNote(currentPage, pageSize, customerName, linkName, address)
+const initLinks = async (currentPage, pageSize, customerName) => {
+  await queryServiceNote(currentPage, pageSize, customerName)
 }
 onMounted(() => {
   initLinks()
@@ -242,6 +236,14 @@ const handleSizeChange = (val) => {
 const handleCurrentChange = (val) => {
   currentPage.value = val
   initLinks(currentPage, pageSize)
+}
+// 发送消息按钮回调
+const msgSend = (title, desc) => {
+  console.log(title, desc)
+}
+// 发送邮件按钮回调
+const emailSend = (title, desc) => {
+  console.log(title, desc)
 }
 
 let tempLinkData = ref({

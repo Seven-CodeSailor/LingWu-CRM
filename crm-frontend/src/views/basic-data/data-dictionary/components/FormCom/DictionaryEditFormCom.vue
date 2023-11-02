@@ -6,11 +6,7 @@
         () => {
           if (props.title === '编辑分类') {
             form = {
-              typeName: '',
-              typeTag: '',
-              intro: '',
-              sort: 0,
-              visible: false
+              ...initForm
             }
           }
           visible = false
@@ -49,6 +45,28 @@
           <el-form-item label="简介" prop="intro">
             <el-input type="textarea" v-model="form.intro"></el-input>
           </el-form-item>
+          <el-form-item
+            label="下级层数设置"
+            prop="sort"
+            v-if="!(props.title === '编辑分类')"
+          >
+            <el-input-number
+              v-model="form.seotitle"
+              :min="0"
+              @change="handleChange"
+            />
+          </el-form-item>
+          <el-form-item
+            label="层数提成比例"
+            prop="sort"
+            v-if="!(props.title === '编辑分类')"
+          >
+            <el-input-number
+              v-model="form.keywords"
+              :min="0"
+              @change="handleChange"
+            />
+          </el-form-item>
         </el-form>
       </template>
       <template #footer>
@@ -65,12 +83,24 @@
 import { ref } from 'vue'
 const visible = ref(false)
 
+const initForm = ref({
+  typeName: '',
+  typeTag: '',
+  intro: '',
+  sort: 0,
+  visible: false,
+  seotitle: 0,
+  keywords: 0
+})
+
 const form = ref({
   typeName: '',
   typeTag: '',
   intro: '',
   sort: 0,
-  visible: false
+  visible: false,
+  seotitle: 0,
+  keywords: 0
 })
 
 const props = defineProps({
@@ -89,10 +119,10 @@ const props = defineProps({
 const formRef = ref(null)
 
 const rules = ref({
-  typeName: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
-  typeTag: [{ required: true, message: '请输入调用标识', trigger: 'blur' }],
-  intro: [{ required: true, message: '请输入简介', trigger: 'blur' }],
-  sort: [{ required: true, message: '', trigger: 'blur' }]
+  // name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
+  // typeName: [{ required: true, message: '请输入调用标识', trigger: 'blur' }],
+  // intro: [{ required: true, message: '请输入简介', trigger: 'blur' }],
+  // sort: [{ required: true, message: '', trigger: 'blur' }]
 })
 
 defineExpose({

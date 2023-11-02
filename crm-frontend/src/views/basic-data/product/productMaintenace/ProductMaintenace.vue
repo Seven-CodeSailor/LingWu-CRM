@@ -141,11 +141,13 @@
         </div>
       </div>
     </el-card>
+    <ProductForm></ProductForm>
   </div>
 </template>
 
 <script setup>
 import DropDown from '@/components/DropDown/DropDown.vue'
+import ProductForm from '../components/FormCom/ProductForm.vue'
 import { ref } from 'vue'
 const value = ref('出售中')
 
