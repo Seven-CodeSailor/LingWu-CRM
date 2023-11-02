@@ -21,15 +21,13 @@
       <div class="data">
         <div class="left">
           <div class="top">
-            <h3 style="font-weight: 700">
-              合同标题：{{ props.contractTitle }}
-            </h3>
+            <h3 style="font-weight: 700">合同编号：{{ props.contractId }}</h3>
           </div>
           <el-divider />
           <div class="content">
             <div class="item">
-              合同编号：
-              {{ props.contractId }}
+              合同标题：
+              {{ props.contractTitle }}
             </div>
             <div class="item">合同金额：{{ props.contractMoney }}</div>
             <div class="item">去零金额：{{ props.zeroOutMoney }}</div>
