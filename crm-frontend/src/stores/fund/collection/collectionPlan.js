@@ -2,13 +2,13 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-31 15:56:56
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-02 11:43:16
+ * @LastEditTime: 2023-11-02 21:34:36
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\fund\collection\collectionPlan.js
  * @Description:
  *
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
  */
-
+//1
 import { defineStore } from 'pinia'
 import { getCollectionPlanList } from '@/apis/fund/collectionPlan/index.js'
 export const useCollectionPlan = defineStore('collectionPlan', {
