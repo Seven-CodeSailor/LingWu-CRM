@@ -10,9 +10,11 @@
  */
 import Request from '@/apis/request'
 
+//获取回款列表
 const getCollectionPlanList = (pageParams) => {
   return Request.requestJson(
     Request.GET,
+    // '/collectionplans/get-collectionplans',
     'https://www.fastmock.site/mock/8e32bb7d22d2160aa723642e11594457/api/collectionplans/get-collectionplans',
     {
       ...pageParams

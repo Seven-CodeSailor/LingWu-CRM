@@ -9,7 +9,7 @@
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
  */
 import { defineStore } from 'pinia'
-import Request from '@/apis/request.js'
+
 export const useCollectionRecord = defineStore('collectionRecord', {
   state: () => ({
     clientNameList: ['sayoriqwq', 'sayori'],
