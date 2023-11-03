@@ -74,7 +74,7 @@ export const modifyDictclassify = (params) => {
  * @description: 删除字典分类数据
  * @param {*} params
  * id
- * @return {*}
+ * @return {Promise}
  */
 export const deleteDictclassify = (params) => {
   return Request.requestJson(
