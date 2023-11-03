@@ -2,7 +2,7 @@
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-03 16:57:19
+ * @LastEditTime: 2023-11-03 17:54:53
  * @FilePath: \crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -95,7 +95,7 @@ export const queryContactName = (
 
 /**
  * @description: 获取字典分类下拉列表
- * @param {*} params // pageSize pageIndex name(非必选)
+ * @param {*} params // name 分类名称
  * @param {*} success
  * @param {*} fail
  * @return {*}
