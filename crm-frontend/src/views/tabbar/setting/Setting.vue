@@ -36,8 +36,8 @@
     <el-form>
       <el-form-item label="暗黑模式">
         <el-switch
-          @change="changeDark"
-          v-model="dark"
+          @change="setTheme(activeThemeName)"
+          v-model="isDark"
           class="mt-2"
           style="margin-left: 24px"
           inline-prompt
@@ -98,7 +98,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { userStore } from '@/stores/user'
 import useLayOutSettingStore from '@/stores/setting.js'
 import { useRouter } from 'vue-router'
@@ -147,11 +147,18 @@ const changeDark = () => {
   //判断HTML标签是否有类名dark
   dark.value ? (html.className = 'dark') : (html.className = '')
 }
+
+const isDark = computed(() => {
+  return activeThemeName.value === 'dark'
+})
 // 消息提醒
 const message = ref(false)
 
 // 商机统计
 const business = ref(false)
+
+import { useTheme } from '@/hooks/useTheme'
+const { activeThemeName, setTheme } = useTheme()
 </script>
 
 <style lang="scss" scoped></style>
