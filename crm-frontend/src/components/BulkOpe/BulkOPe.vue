@@ -17,10 +17,10 @@
         <el-dropdown-item @click="openMsg" v-if="opt.includes(3)"
           >批量发短信</el-dropdown-item
         >
-        <el-dropdown-item @click="openMsg" v-if="opt.includes(4)"
+        <el-dropdown-item @click="openEmail" v-if="opt.includes(4)"
           >批量发邮件</el-dropdown-item
         >
-        <el-dropdown-item @click="openDes" v-if="opt.includes(5)"
+        <el-dropdown-item @click="openDelete" v-if="opt.includes(5)"
           >批量删除</el-dropdown-item
         >
       </el-dropdown-menu>
@@ -38,9 +38,9 @@
     <slot name="file"></slot>
   </FileUpload>
   <!-- 批量发送短信 -->
-  <Message ref="message" title="发送短信" :send="msgSend"> </Message>
+  <Message ref="message" title="发送短信" :send="props.msgSend"> </Message>
   <!-- 批量发送邮件 -->
-  <Message ref="email" title="发送邮件" :send="emailSend"> </Message>
+  <Message ref="email" title="发送邮件" :send="props.emailSend"> </Message>
   <!-- 删除确认 -->
   <el-dialog
     v-model="confirmDelete"
@@ -154,11 +154,6 @@ const openDelete = () => {
 const confirmsDelete = () => {
   props.confirmsDelete()
   confirmDelete.value = false
-}
-// 批量删除的方法
-const openDes = () => {
-  // 发送请求
-  console.log('批量删除')
 }
 </script>
 

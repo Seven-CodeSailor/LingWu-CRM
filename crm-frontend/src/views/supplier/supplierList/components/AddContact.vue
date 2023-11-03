@@ -1,61 +1,61 @@
 <template>
   <el-drawer v-model="dialogVisible1" title="添加联系人" size="50%">
     <el-form
-      :model="myclient.contactInfo"
+      :model="supplierList.contactInfo"
       label-width="120px"
       label-position="right"
     >
       <el-form-item label="姓名">
         <el-input
-          v-model="myclient.contactInfo.name"
+          v-model="supplierList.contactInfo.name"
           placeholder="请输入联系人姓名"
           style="width: 500px"
         />
       </el-form-item>
       <el-form-item label="性别">
-        <el-radio-group v-model="myclient.contactInfo.gender">
+        <el-radio-group v-model="supplierList.contactInfo.gender">
           <el-radio label="男" />
           <el-radio label="女" />
         </el-radio-group>
       </el-form-item>
       <el-form-item label="手机">
         <el-input
-          v-model="myclient.contactInfo.mobile"
+          v-model="supplierList.contactInfo.mobile"
           placeholder="请输入联系人手机"
           style="width: 500px"
         />
       </el-form-item>
       <el-form-item label="职位">
         <el-input
-          v-model="myclient.contactInfo.position"
+          v-model="supplierList.contactInfo.position"
           placeholder="请输入联系人职位"
           style="width: 500px"
         />
       </el-form-item>
       <el-form-item label="电话">
         <el-input
-          v-model="myclient.contactInfo.tel"
+          v-model="supplierList.contactInfo.tel"
           placeholder="请输入联系人电话"
           style="width: 500px"
         />
       </el-form-item>
       <el-form-item label="QQ">
         <el-input
-          v-model="myclient.contactInfo.qq"
+          v-model="supplierList.contactInfo.qq"
           placeholder="请输入联系人QQ"
           style="width: 500px"
         />
       </el-form-item>
       <el-form-item label="邮箱">
         <el-input
-          v-model="myclient.contactInfo.email"
+          v-model="supplierList.contactInfo.email"
           placeholder="请输入联系人邮箱"
           style="width: 500px"
         />
       </el-form-item>
       <el-form-item label="通信地址">
         <el-input
-          v-model="myclient.contactInfo.address"
+          v-model="supplierList.contactInfo.address"
           placeholder="请输入联系人通信地址"
           style="width: 500px"
         />
@@ -81,14 +81,15 @@
 
 <script setup>
 import { ref } from 'vue'
-import useMyClient from '@/stores/customer/myclient.js'
 import useSelect from '@/stores/customer/select.js'
-import { addNewContact } from '@/apis/customer/index.js'
 import { getCustomerName } from '@/apis/publicInterface.js'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
+import { addlinkman } from '@/apis/supplier/supplierContact.js'
 
-// 我的客户store仓库
-const myclient = useMyClient()
+import useSupplierList from '@/stores/supplier/list/list.js'
+
+const supplierList = useSupplierList()
+
 // 下拉列表仓库
 const select = useSelect()
 
@@ -102,13 +103,14 @@ const addContact = async (row) => {
   await getCustomerName()
   // 根据传入id获取数据
   dialogVisible1.value = true
-  myclient.contactInfo.id = row.id
+  supplierList.contactInfo.id = row.supplierId
+  console.log(row)
 }
 const customerName = ref()
 // 添加联系人保存数据按钮回调
 const saveContact = async () => {
-  await addNewContact(
-    myclient.contactInfo,
+  await addlinkman(
+    supplierList.contactInfo,
     () => {
       ElMessage.success('添加成功')
     },
@@ -117,14 +119,14 @@ const saveContact = async () => {
     }
   )
   dialogVisible1.value = false
-  myclient.contactReset()
+  supplierList.contactReset()
   select.resetData()
   //   initCustomer()
 }
 // 获取客户名称下拉列表
 const contactGetName = async () => {
   await getCustomerName()
-  myclient.contactInfo.customerName = customerName.value.selectValue.label
+  supplierList.contactInfo.customerName = customerName.value.selectValue.label
 }
 defineExpose({
   addContact

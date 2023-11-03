@@ -96,7 +96,7 @@ const setValue2 = () => {
 let dialogVisible = ref(false)
 
 /* get state data and export to XLSX */
-function exportFile() {
+const exportFile = () => {
   // // 1.创建工作表
   // // 将json数据转化为sheet单元格
   // const ws = utils.json_to_sheet(rows.value)
@@ -108,9 +108,10 @@ function exportFile() {
   // utils.book_append_sheet(wb, ws, props.tableName) //'Data'
   // // 导出xlsx数据表文件
   // writeFileXLSX(wb, props.excelName) //'SheetJSVueAoO.xlsx'
-  props.exportExcel()
-
+  props.exportExcel(value1.value, value2.value)
   dialogVisible.value = false
+  op1.value.reset()
+  op2.value.reset()
 }
 
 const showDialog = () => {

@@ -1,8 +1,8 @@
 /*
  * @Author: BINGWU HuJiaCheng2003@163.com
  * @Date: 2023-10-28 22:16:05
- * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-03 19:22:09
+ * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
+ * @LastEditTime: 2023-11-03 21:22:46
  * @FilePath: \crm-frontend\src\apis\publicInterface.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -197,12 +197,59 @@ export const getUserNameList = async (params, success, fail) => {
  * @Author{*} seven(有问题找我)
  * @return {*}
  */
-export const querySalesContractList = async(data) => {
-    return Request.requestJson(
+export const querySalesContractList = async (data) => {
+  return Request.requestJson(
     Request.GET,
     'https://mockapi.eolink.com/fhdz9TQ7632232d76db4f62838f5c8793d22b77760ead7b/get-sales-contract-list',
     {
-    data
+      data
     }
   )
+}
+/*
+ * 获取供应商名称列表
+ * @param {*} name 名称关键字
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ */
+export const querySupplierName = (
+  name,
+  success = () => {},
+  fail = () => {}
+) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(name)
+    }, 0)
+  })
+    .then(() => {
+      success()
+    })
+    .catch(() => {
+      fail()
+    })
+}
+
+/**
+ * 获取供应商联系人名称下拉列表
+ * @param {*} name 名称关键字
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ */
+export const queryNamePullList = (
+  keywords,
+  success = () => {},
+  fail = () => {}
+) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(keywords)
+    }, 0)
+  })
+    .then(() => {
+      success()
+    })
+    .catch(() => {
+      fail()
+    })
 }

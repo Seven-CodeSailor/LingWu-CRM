@@ -88,7 +88,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import useMyClient from '@/stores/customer/myclient.js'
+import useSeasClient from '@/stores/customer/seasclient.js'
 import useSelect from '@/stores/customer/select.js'
 import {
   getCustomerBelong,
@@ -102,7 +102,7 @@ import {
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 
 // 我的客户store仓库
-const myclient = useMyClient()
+const myclient = useSeasClient()
 // 下拉列表仓库
 const select = useSelect()
 

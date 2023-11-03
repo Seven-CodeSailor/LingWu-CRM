@@ -88,7 +88,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import useMyClient from '@/stores/customer/myclient.js'
+import useMyClient from '@/stores/customer/subclient.js'
 import useSelect from '@/stores/customer/select.js'
 import {
   getCustomerBelong,
