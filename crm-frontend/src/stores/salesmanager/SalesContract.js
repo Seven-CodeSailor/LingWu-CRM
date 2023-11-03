@@ -9,7 +9,7 @@
 
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { querySalesContractList } from '@/apis/sales-manager/index.js'
+import { querySalesContractList } from '@/apis/publicInterface.js'
 
 /**
  * 获取销售合同列表的仓库
@@ -17,8 +17,11 @@ import { querySalesContractList } from '@/apis/sales-manager/index.js'
 export const useSalesContractStore = defineStore(
   'salescontract',
   () => {
+    // 表格数据
     const tableData = ref([])
-    const tableTotal = ref(11)
+    // 数据总计
+    const tableTotal = ref(100)
+    const pageSize = ref(5)
     // 获取表格数据的方法
     const getTableData = async (params) => {
       await querySalesContractList(

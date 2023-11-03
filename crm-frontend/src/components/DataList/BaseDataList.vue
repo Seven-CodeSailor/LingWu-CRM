@@ -144,7 +144,10 @@
       </div>
       <template v-if="props?.useCalculate">
         <div>
-          合同金额统计：￥{{}} 回款金额统计：￥{{}} 欠款金额统计：￥{{}}
+          合同金额统计：￥{{
+            totalMoney
+          }}
+          回款金额统计：￥{{}} 欠款金额统计：￥{{}}
         </div>
       </template>
 
@@ -175,7 +178,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
+import { useSalesContractStore } from '@/stores/salesmanager/SalesContract.js'
+
+// 导入销售合同列表的仓库
+const useSalesContractStore1 = useSalesContractStore()
 
 const props = defineProps({
   // 标题
@@ -281,6 +288,24 @@ const paginationData = ref({
   pageSize: props.pageSizes ? props.pageSizes[0] : 5
 })
 
+// const tableDataList = ref(useSalesContractStore1.tableData)
+
+let MoneyList = ref([])
+// let totalMoney = ref(0)
+// 计算合同总金额
+let totalMoney = computed(() => {
+  // MoneyList.value = useSalesContractStore1.tableData
+  // console.log('moneyList', MoneyList.value[0].money)
+  // console.log(useSalesContractStore1.tableData)
+  // 循环遍历得到tableData中的所有money值
+  // for (let i = 0; i < 5; i++) {
+  //   totalMoney.value += MoneyList.value[i].money
+  // }
+  // return totalMoney.value
+})
+let totalBackMoney = ref(0)
+let totalOweMoney = ref(0)
+
 const rows = ref([])
 
 // 表格的loading
@@ -326,6 +351,20 @@ defineExpose({
   paginationData,
   // 开关的loading
   openSwitchLoading
+})
+
+const getSalesContractList = async (params) => {
+  await useSalesContractStore1.getTableData(params)
+}
+// 挂载时获得分页数据
+onMounted(() => {
+  // const bb = JSON.parse(JSON.stringify(Data))
+  // console.log('bb', bb)
+  const params = {
+    pageIndex: 1,
+    pageSize: 5
+  }
+  getSalesContractList(params)
 })
 </script>
 
