@@ -1,10 +1,10 @@
 /*
- * @Author: BINGWU HuJiaCheng2003@163.com
+ * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
- * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-02 13:39:59
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-03 16:57:19
  * @FilePath: \crm-frontend\src\apis\publicInterface.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from './request'
 import useSelect from '@/stores/customer/select.js'
@@ -180,6 +180,102 @@ export const getUserNameList = async (params, success, fail) => {
   )
     .then((response) => {
       // 请求返回的数据就是response,在成功回调函数可以拿到
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
+
+/**
+ * @description: 获取区域列表
+ * @param {*} params
+ *{
+    queryCondition:"string“ 查询条件
+    pageIndex:"number" 当前页
+    pageSize:"number" 页码容量
+ }
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @return {*}
+ */
+export const queryListArea = async (params, success, fail) => {
+  await Request.requestJson(Request.GET, 'url', {
+    params
+  })
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
+
+/**
+ * @description: 查询费用收入下拉列表
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @return {*}
+ */
+export const queryAllFeeincome = async (success, fail) => {
+  await Request.requestJson(Request.GET, 'url')
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
+/**
+ * @description: 查询费用开支下拉列表
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @return {*}
+ */
+export const queryAllExpensetype = async (success, fail) => {
+  await Request.requestJson(Request.GET, 'url')
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
+
+/**
+ * @description: 获取银行账号下拉列表数据
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @return {*}
+ */
+export const getBankaccountlist = async (success, fail) => {
+  await Request.requestJson(Request.GET, 'url')
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
+
+/**
+ * @description: 查询仓库（分页或仓库名）
+ * @param {*} params
+ * {
+ *   name: string 仓库名称
+ *   pageSize: number 页面容量
+ *   pageIndex: number 页码
+ *   keyWord: string 关键词
+ * }
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @return {*}
+ */
+export const queryStore = async (params, success, fail) => {
+  await Request.requestJson(Request.GET, 'url', {
+    params
+  })
+    .then((response) => {
       success(response)
     })
     .catch((error) => {

@@ -1,10 +1,10 @@
 <!--
- * @Author: BINGWU HuJiaCheng2003@163.com
+ * @Author: BINGWU
  * @Date: 2023-10-26 21:33:34
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-01 17:20:40
+ * @LastEditTime: 2023-11-03 13:31:36
  * @FilePath: \crm-frontend\src\views\basic-data\data-dictionary\classification\Classification.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
 -->
 <template>
   <div class="classfication">
