@@ -186,3 +186,51 @@ export const getUserNameList = async (params, success, fail) => {
       fail(error)
     })
 }
+
+/**
+ * 获取供应商名称列表
+ * @param {*} name 名称关键字
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ */
+export const querySupplierName = (
+  name,
+  success = () => {},
+  fail = () => {}
+) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(name)
+    }, 0)
+  })
+    .then(() => {
+      success()
+    })
+    .catch(() => {
+      fail()
+    })
+}
+
+/**
+ * 获取供应商联系人名称下拉列表
+ * @param {*} name 名称关键字
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ */
+export const queryNamePullList = (
+  keywords,
+  success = () => {},
+  fail = () => {}
+) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(keywords)
+    }, 0)
+  })
+    .then(() => {
+      success()
+    })
+    .catch(() => {
+      fail()
+    })
+}

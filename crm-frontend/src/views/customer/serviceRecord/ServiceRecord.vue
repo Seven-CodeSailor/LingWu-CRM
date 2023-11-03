@@ -36,25 +36,18 @@
           </template>
         </el-popconfirm>
         <BulkOPe
-          :getOpt="() => [2, 3]"
-          :msgSend="msgSend()"
-          :emailSend="emailSend()"
+          :getOpt="() => [3, 4]"
+          :msgSend="msgSend"
+          :emailSend="emailSend"
         >
         </BulkOPe>
       </div>
       <div class="right" style="display: flex">
         <el-input
           v-model="content"
-          placeholder="输入姓名"
+          placeholder="输入客户名称"
           style="margin-right: 4px; width: 200px"
         />
-        <DropDown
-          :inputValue1="name"
-          inputTitle1="客户名称"
-          :inputValue2="address"
-          inputTitle2="通信地址"
-          @handleSearch="handleSearch"
-        ></DropDown>
         <el-button
           type="primary"
           style="margin-left: 4px"
@@ -204,12 +197,16 @@ import useSelect from '@/stores/customer/select.js'
 import { getCustomerName } from '@/apis/publicInterface.js'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
-import DropDown from '@/components/DropDown/DropDown.vue'
 import { ArrowDown } from '@element-plus/icons-vue'
 import {
   queryServiceNote,
   getCustomerServiceType,
-  getCustomerServiceWay
+  getCustomerServiceWay,
+  addService,
+  modifyService,
+  removeService,
+  sendsmsService,
+  sendEmailService
 } from '@/apis/customer/index.js'
 
 // 初始化数据
@@ -217,7 +214,7 @@ const initLinks = async (currentPage, pageSize, customerName) => {
   await queryServiceNote(currentPage, pageSize, customerName)
 }
 onMounted(() => {
-  initLinks()
+  initLinks(currentPage, pageSize)
 })
 // 我的客户store仓库
 const serviceRecord = useServiceRecord()
@@ -238,12 +235,32 @@ const handleCurrentChange = (val) => {
   initLinks(currentPage, pageSize)
 }
 // 发送消息按钮回调
-const msgSend = (title, desc) => {
-  console.log(title, desc)
+const msgSend = async (title, desc) => {
+  await sendsmsService(
+    selectIdArr.value,
+    title,
+    desc,
+    () => {
+      ElMessage.success('短信发送成功')
+    },
+    () => {
+      ElMessage.error('短信发送失败')
+    }
+  )
 }
 // 发送邮件按钮回调
-const emailSend = (title, desc) => {
-  console.log(title, desc)
+const emailSend = async (title, desc) => {
+  await sendEmailService(
+    selectIdArr.value,
+    title,
+    desc,
+    () => {
+      ElMessage.success('邮件发送成功')
+    },
+    () => {
+      ElMessage.error('邮件发送失败')
+    }
+  )
 }
 
 let tempLinkData = ref({
@@ -306,7 +323,28 @@ const addMyClinet = async () => {
   dialogVisible.value = true
 }
 // 添加按钮确定回调
-const save = () => {
+const save = async () => {
+  if (tempLinkData.value.linkmanId === -1) {
+    await addService(
+      tempLinkData.value,
+      () => {
+        ElMessage.success('添加成功')
+      },
+      () => {
+        ElMessage.error('添加失败')
+      }
+    )
+  } else {
+    await modifyService(
+      tempLinkData.value,
+      () => {
+        ElMessage.success('修改成功')
+      },
+      () => {
+        ElMessage.error('修改失败')
+      }
+    )
+  }
   tempLinkDataReset()
   select.resetData()
   dialogVisible.value = false
@@ -330,23 +368,27 @@ const selectChange = (value) => {
   selectIdArr.value = value
 }
 // 批量删除按钮
-const deleteByQuery = () => {
+const deleteByQuery = async () => {
+  await removeService(
+    selectIdArr.value,
+    () => {
+      ElMessage.success('删除成功')
+    },
+    () => {
+      ElMessage.error('删除失败')
+    }
+  )
   // 删除后重新请求数据
-  initLinks()
+  initLinks(currentPage, pageSize)
 }
 
 /**
  * 搜索
  */
 let content = ref('')
-let name = ref('')
-let address = ref('')
-const searchDetails = () => {}
-// 下拉框搜索按钮回调
-const handleSearch = () => {
-  name.value = ''
-  address.value = ''
-  searchDetails()
+const searchDetails = () => {
+  initLinks(currentPage, pageSize, content.value)
+  content.value = ''
 }
 
 /**
@@ -359,9 +401,19 @@ const Deletes = (row) => {
   deleteId.value = row.id
   confirmDelete.value = true
 }
-const Confirms = () => {
+const Confirms = async () => {
   confirmDelete.value = false
-  ElMessage.success('删除成功')
+  await removeService(
+    [deleteId.value],
+    () => {
+      ElMessage.success('删除成功')
+    },
+    () => {
+      ElMessage.error('删除失败')
+    }
+  )
+  // 删除后重新请求数据
+  initLinks(currentPage, pageSize)
 }
 </script>
 

@@ -14,7 +14,6 @@ const useMyClient = defineStore('myClient', () => {
   let customerInfo = ref({
     id: '',
     name: '',
-    represent: '',
     belong: '',
     level: '',
     industry: '',
@@ -34,7 +33,6 @@ const useMyClient = defineStore('myClient', () => {
     customerInfo.value = {
       id: '',
       name: '',
-      represent: '',
       belong: '',
       level: '',
       industry: '',
