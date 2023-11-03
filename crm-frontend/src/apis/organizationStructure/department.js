@@ -2,7 +2,7 @@
  * @Author: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
  * @Date: 2023-11-02 15:17:44
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-02 19:48:49
+ * @LastEditTime: 2023-11-03 18:18:37
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\organizationStructure\department.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -28,7 +28,6 @@ export const getDepartmentTree = async (params, success, fail) => {
   )
     .then((response) => {
       // 请求返回的数据就是response,在成功回调函数可以拿到
-      console.log(response)
       success(response)
       // // 把响应数据存到 组织结构/部门管理 仓库
       // departmentManage.setDepartmentTree(response.data)
