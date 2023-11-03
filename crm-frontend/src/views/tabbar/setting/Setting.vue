@@ -44,6 +44,7 @@
           active-icon="IconMoonNight"
           inactive-icon="IconSunny"
         />
+        <el-button @click="setTheme(activeThemeName)">切换</el-button>
       </el-form-item>
     </el-form>
     <template #reference>
@@ -147,11 +148,15 @@ const changeDark = () => {
   //判断HTML标签是否有类名dark
   dark.value ? (html.className = 'dark') : (html.className = '')
 }
+
 // 消息提醒
 const message = ref(false)
 
 // 商机统计
 const business = ref(false)
+
+import { useTheme } from '@/hooks/useTheme'
+const { activeThemeName, setTheme } = useTheme()
 </script>
 
 <style lang="scss" scoped></style>
