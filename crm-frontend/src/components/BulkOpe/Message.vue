@@ -42,7 +42,8 @@ const props = defineProps({
   },
   send: {
     type: Function,
-    required: true
+    required: true,
+    default: () => {}
   }
 })
 // 简单描述

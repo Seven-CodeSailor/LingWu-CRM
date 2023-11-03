@@ -206,39 +206,6 @@ const handleDelete = (row) => {
         message: '删除成功',
       })
     })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '删除失败',
-      })
-    })
-}
-
-
-
-// 删除单条数据的弹窗反馈(还没实现)
-const deleteData = () => {
-  ElMessageBox.confirm(
-    '你确定要删除这条数据吗?',
-    '警告',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  )
-    .then(() => {
-      ElMessage({
-        type: 'success',
-        message: '删除成功',
-      })
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '删除失败',
-      })
-    })
 }
 
 // 添加抽屜表单

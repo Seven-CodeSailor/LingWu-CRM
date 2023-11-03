@@ -11,7 +11,7 @@
 <script setup>
 // 这是下拉选择框 create by 暮秋pro
 // 更新时间：23/10/19
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 
 const selectValue = ref('')
@@ -57,12 +57,14 @@ const props = defineProps({
 })
 // 定义子传父方法
 const emit = defineEmits(['update:cid'])
-onMounted(() => {
-  console.log('多选框父的数据', props.options)
-})
+
+const reset = () => {
+  selectValue.value = ''
+}
 // 微调  冰雾
 defineExpose({
-  selectValue
+  selectValue,
+  reset
 })
 </script>
 

@@ -18,7 +18,10 @@
     <!-- 操作搜索栏 -->
     <section class="menu">
       <div class="left">
-        <el-button type="primary" icon="IconPlus" @click="addMyClinet"
+        <el-button
+          type="primary"
+          icon="IconPlus"
+          @click="addOrUpdateClient.addMyClinet()"
           >添加</el-button
         >
         <el-popconfirm
@@ -30,35 +33,55 @@
             <el-button
               type="danger"
               icon="IconDelete"
-              style="margin-right: 10px"
               :disabled="selectIdArr.length ? false : true"
               >批量删除</el-button
             >
           </template>
         </el-popconfirm>
+        <el-button
+          type="primary"
+          style="margin-right: 10px"
+          :disabled="selectIdArr.length ? false : true"
+          @click="invesHightsea"
+          >批量投入公海</el-button
+        >
         <BulkOPe
           :getOpt="() => [0, 1]"
-          excelName="入库明细.xlsx"
-          tableName="入库明细的sheet表"
+          :exportExcel="exportExcel"
+          :action="action"
+          :importExcel="importExcel"
         >
         </BulkOPe>
       </div>
-      <div class="right">
+      <div class="right" style="display: flex">
         <ChooseSelect
           style="margin-right: 10px"
           des="最近联系时间"
           :options="options"
+          ref="coonTime"
+          @update:cid="getCoonTime"
         ></ChooseSelect>
         <ChooseSelect
           style="margin-right: 10px"
           :options="options"
           des="下次联系时间"
+          ref="nextTime"
+          @update:cid="getNextTime"
         ></ChooseSelect>
         <el-input
           v-model="name"
           placeholder="输入客户名称关键词"
           style="margin-right: 4px; width: 200px"
         />
+        <DropDown
+          :inputValue1="tel"
+          inputTitle1="座机"
+          :inputValue2="mobile"
+          inputTitle2="手机号"
+          :inputValue3="address"
+          inputTitle3="通信地址"
+          @handleSearch="handleSearch"
+        ></DropDown>
         <el-button
           type="primary"
           style="margin-left: 4px"
@@ -74,7 +97,7 @@
     <el-table
       style="width: 100%; margin-bottom: 20px"
       table-layout="auto"
-      :data="subclient.tableData"
+      :data="myclient.tableData"
       @selection-change="selectChange"
     >
       <el-table-column type="selection" width="55" />
@@ -99,473 +122,62 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item @click="addContact(row)"
+                <el-dropdown-item @click="addContacts.addContact(row)"
                   >添加联系人</el-dropdown-item
                 >
-                <el-dropdown-item @click="addCommunicate(row)"
+                <el-dropdown-item @click="communicate.addCommunicate(row)"
                   >添加沟通记录</el-dropdown-item
                 >
-                <el-dropdown-item divided @click="addService(row)"
+                <el-dropdown-item divided @click="service.addService(row)"
                   >添加服务记录</el-dropdown-item
                 >
-                <el-dropdown-item @click="addOpportunity(row)"
+                <el-dropdown-item @click="opportunity.addOpportunity(row)"
                   >添加销售机会</el-dropdown-item
                 >
-                <el-dropdown-item divided @click="addContract(row)"
+                <el-dropdown-item divided @click="contract.addContract(row)"
                   >添加合同</el-dropdown-item
                 >
-                <el-dropdown-item divided @click="detail(row)"
+                <el-dropdown-item divided @click="details.detail(row)"
                   >详情</el-dropdown-item
                 >
-                <el-dropdown-item @click="modify(row)">修改</el-dropdown-item>
+                <el-dropdown-item @click="addOrUpdateClient.modify(row)"
+                  >修改</el-dropdown-item
+                >
                 <el-dropdown-item @click="Deletes(row)">删除</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
         </template>
       </el-table-column>
+      <template #empty>
+        <el-empty description="没有数据"></el-empty>
+      </template>
     </el-table>
     <!-- 分页器 -->
     <el-pagination
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
       :page-sizes="[5, 10, 20, 50]"
-      :total="subclient.tableData.length"
+      :total="myclient.tableData.length"
       layout="prev, pager, next, jumper, ->, total, sizes"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
   </el-card>
   <!-- 添加或修改客户信息 -->
-  <el-drawer
-    v-model="dialogVisible"
-    :title="customerInfo.id === '' ? '添加客户信息' : '修改客户信息'"
-    size="50%"
-  >
-    <el-form :model="customerInfo" label-width="120px" label-position="right">
-      <el-form-item label="客户名称">
-        <el-input
-          v-model="customerInfo.name"
-          placeholder="请输入客户名称"
-          style="width: 500px"
-        />
-      </el-form-item>
-      <el-form-item label="客户代表">
-        <el-input
-          v-model="customerInfo.name"
-          placeholder="请输入客户代表"
-          style="width: 500px"
-        />
-      </el-form-item>
-      <el-form-item label="客户来源">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户来源"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="客户等级">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户等级"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="客户行业">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户行业"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="联系手机">
-        <el-input v-model="customerInfo.name" style="width: 500px" />
-      </el-form-item>
-      <el-form-item label="联系电话">
-        <el-input v-model="customerInfo.name" style="width: 500px" />
-      </el-form-item>
-      <el-form-item label="联系地址">
-        <el-input v-model="customerInfo.name" style="width: 500px" />
-      </el-form-item>
-      <el-form-item label="客户介绍">
-        <el-input
-          v-model="customerInfo.desc"
-          type="textarea"
-          style="width: 650px"
-        />
-      </el-form-item>
-      <el-form-item label="客户需求">
-        <el-input v-model="customerInfo.name" style="width: 500px" />
-      </el-form-item>
-      <el-form-item label="公海客户">
-        <el-checkbox-group v-model="customerInfo.seaCustomer">
-          <el-checkbox
-            name="type"
-            @click="customerInfo.seaCustomer = !customerInfo.seaCustomer"
-        /></el-checkbox-group>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="save"> 添加 </el-button>
-      </span>
-    </template>
-  </el-drawer>
+  <AddOrUpdateClient ref="addOrUpdateClient"></AddOrUpdateClient>
   <!-- 添加联系人 -->
-  <el-drawer v-model="dialogVisible1" title="添加联系人" size="50%">
-    <el-form :model="contactInfo" label-width="120px" label-position="right">
-      <el-form-item label="姓名">
-        <el-input
-          v-model="contactInfo.name"
-          placeholder="请输入联系人姓名"
-          style="width: 500px"
-        />
-      </el-form-item>
-      <el-form-item label="性别">
-        <el-radio-group v-model="contactInfo.sex">
-          <el-radio label="男" />
-          <el-radio label="女" />
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="手机">
-        <el-input
-          v-model="contactInfo.name"
-          placeholder="请输入联系人手机"
-          style="width: 500px"
-        />
-      </el-form-item>
-      <el-form-item label="职位">
-        <el-input
-          v-model="contactInfo.name"
-          placeholder="请输入联系人职位"
-          style="width: 500px"
-        />
-      </el-form-item>
-      <el-form-item label="电话">
-        <el-input
-          v-model="contactInfo.name"
-          placeholder="请输入联系人电话"
-          style="width: 500px"
-        />
-      </el-form-item>
-      <el-form-item label="QQ">
-        <el-input
-          v-model="contactInfo.name"
-          placeholder="请输入联系人QQ"
-          style="width: 500px"
-        />
-      </el-form-item>
-      <el-form-item label="邮箱">
-        <el-input
-          v-model="contactInfo.name"
-          placeholder="请输入联系人邮箱"
-          style="width: 500px"
-        />
-      </el-form-item>
-      <el-form-item label="通信地址">
-        <el-input
-          v-model="contactInfo.name"
-          placeholder="请输入联系人通信地址"
-          style="width: 500px"
-        />
-      </el-form-item>
-      <el-form-item label="客户名称">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户名称"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible1 = false">取消</el-button>
-        <el-button type="primary" @click="saveContact"> 添加 </el-button>
-      </span>
-    </template>
-  </el-drawer>
+  <AddContact ref="addContacts"></AddContact>
   <!-- 添加沟通记录 -->
-  <el-drawer v-model="dialogVisible2" title="添加沟通记录" size="50%">
-    <el-form
-      :model="communicateInfo"
-      label-width="120px"
-      label-position="right"
-    >
-      <el-form-item label="客户名称">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户名称"
-          :options="options"
-          @update:cid="(value) => (communicateInfo.name = value)"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="客户联系人">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户联系人"
-          :options="options"
-          :disabled="communicateInfo.name ? false : true"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="客户销售机会">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户销售机会"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="当前阶段">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择当前阶段"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="沟通方式">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择沟通方式"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="沟通日期">
-        <el-col :span="11">
-          <el-date-picker
-            v-model="contactInfo.data"
-            type="date"
-            placeholder="请选择沟通日期"
-          />
-        </el-col>
-        <el-time-picker
-          v-model="contactInfo.time"
-          placeholder="请选择沟通时间"
-        />
-      </el-form-item>
-      <el-form-item label="联系内容">
-        <el-input
-          v-model="contactInfo.name"
-          type="textarea"
-          style="width: 650px"
-        />
-      </el-form-item>
-      <el-form-item label="下次沟通日期">
-        <el-col :span="11">
-          <el-date-picker
-            v-model="contactInfo.nextData"
-            type="date"
-            placeholder="请选择下次沟通日期"
-          />
-        </el-col>
-        <el-time-picker
-          v-model="contactInfo.nextTime"
-          placeholder="请选择下次沟通时间"
-        />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible2 = false">取消</el-button>
-        <el-button type="primary" @click="saveCommunicate"> 添加 </el-button>
-      </span>
-    </template>
-  </el-drawer>
+  <Communicate ref="communicate"></Communicate>
   <!-- 添加服务记录 -->
-  <el-drawer v-model="dialogVisible3" title="添加服务记录" size="50%">
-    <el-form :model="serviceInfo" label-width="120px" label-position="right">
-      <el-form-item label="服务类型">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择服务类型"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="服务方式">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择服务方式"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="服务时间">
-        <el-col :span="11">
-          <el-date-picker
-            v-model="serviceInfo.data"
-            type="date"
-            placeholder="服务日期"
-          />
-        </el-col>
-      </el-form-item>
-      <el-form-item label="花费时间(分钟)">
-        <el-input-number v-model="serviceInfo.time" min="0" />
-      </el-form-item>
-      <el-form-item label="服务内容">
-        <el-input
-          v-model="serviceInfo.name"
-          type="textarea"
-          style="width: 650px"
-        />
-      </el-form-item>
-      <el-form-item label="客户名称">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户名称"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible3 = false">取消</el-button>
-        <el-button type="primary" @click="saveService"> 添加 </el-button>
-      </span>
-    </template>
-  </el-drawer>
+  <Service ref="service"></Service>
   <!-- 添加销售机会 -->
-  <el-drawer v-model="dialogVisible4" title="添加服务记录" size="50%">
-    <el-form
-      :model="opportunityInfo"
-      label-width="120px"
-      label-position="right"
-    >
-      <el-form-item label="服务内容">
-        <el-input v-model="opportunityInfo.theme" style="width: 650px" />
-      </el-form-item>
-      <el-form-item label="客户名称">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户名称"
-          @update:cid="(value) => (opportunityInfo.name = value)"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="客户联系人">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户联系人"
-          :options="options"
-          :disabled="opportunityInfo.name ? false : true"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="当前阶段">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择当前阶段"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="发现日期">
-        <el-col :span="11">
-          <el-date-picker
-            v-model="opportunityInfo.data"
-            type="date"
-            placeholder="选择发现日期"
-          />
-        </el-col>
-      </el-form-item>
-      <el-form-item label="预签订日期">
-        <el-col :span="11">
-          <el-date-picker
-            v-model="opportunityInfo.preData"
-            type="date"
-            placeholder="选择预签订日期"
-          />
-        </el-col>
-      </el-form-item>
-      <el-form-item label="金额(元)">
-        <el-input v-model="opportunityInfo.price" placeholder="预定签单金额" />
-      </el-form-item>
-      <el-form-item label="介绍">
-        <el-input
-          v-model="opportunityInfo.desc"
-          type="textarea"
-          style="width: 650px"
-        />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible4 = false">取消</el-button>
-        <el-button type="primary" @click="saveOpportunity"> 添加 </el-button>
-      </span>
-    </template>
-  </el-drawer>
+  <Opportunity ref="opportunity"></Opportunity>
   <!-- 添加合同 -->
-  <el-drawer v-model="dialogVisible5" title="添加合同" size="50%">
-    <el-form :model="contractInfo" label-width="120px" label-position="right">
-      <el-form-item label="合同编号">
-        <el-input v-model="contractInfo.id" style="width: 650px" disabled />
-      </el-form-item>
-      <el-form-item label="标题">
-        <el-input v-model="contractInfo.title" style="width: 650px" />
-      </el-form-item>
-      <el-form-item label="客户名称">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户名称"
-          @update:cid="(value) => (contractInfo.name = value)"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="客户联系人">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户联系人"
-          :options="options"
-          :disabled="contractInfo.name ? false : true"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="客户销售机会">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户销售机会"
-          :options="options"
-          :disabled="contractInfo.name ? false : true"
-        ></ChooseSelect>
-      </el-form-item>
-      <el-form-item label="起始日期">
-        <el-col :span="11">
-          <el-date-picker
-            v-model="contractInfo.data"
-            type="date"
-            placeholder="选择起始日期"
-          />
-        </el-col>
-      </el-form-item>
-      <el-form-item label="结束日期">
-        <el-col :span="11">
-          <el-date-picker
-            v-model="contractInfo.endData"
-            type="date"
-            placeholder="选择结束日期"
-          />
-        </el-col>
-      </el-form-item>
-      <el-form-item label="合同金额(元)">
-        <el-input v-model="contractInfo.price" placeholder="预定签单金额" />
-      </el-form-item>
-      <el-form-item label="介绍">
-        <el-input
-          v-model="contractInfo.desc"
-          type="textarea"
-          style="width: 650px"
-        />
-      </el-form-item>
-      <el-form-item label="我方代表">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择我方代表"
-          :options="options"
-        ></ChooseSelect>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible5 = false">取消</el-button>
-        <el-button type="primary" @click="saveContract"> 添加 </el-button>
-      </span>
-    </template>
-  </el-drawer>
+  <Contract ref="contract"></Contract>
+  <!-- 查看详情 -->
+  <Detail ref="details"></Detail>
   <!-- 删除确认 -->
   <el-dialog
     v-model="confirmDelete"
@@ -586,23 +198,115 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import useSubClient from '@/stores/customer/subclient.js'
+import { ref, onMounted } from 'vue'
+import useMyClient from '@/stores/customer/subclient.js'
+import {
+  getCustomer,
+  deleteCustomer,
+  invesHightSea,
+  exportCustomer,
+  importCustomer
+} from '@/apis/customer/index.js'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
+import DropDown from '@/components/DropDown/DropDown.vue'
 import { ArrowDown } from '@element-plus/icons-vue'
+import AddOrUpdateClient from './components/AddOrUpdateClient.vue'
+import AddContact from './components/AddContact.vue'
+import Communicate from './components/Communicate.vue'
+import Service from './components/Service.vue'
+import Opportunity from './components/Opportunity.vue'
+import Contract from './components/Contract.vue'
+import Detail from './components/Detail.vue'
 
+// 添加或修改客户的组件实例
+const addOrUpdateClient = ref()
+
+// 添加联系人的组件实例
+const addContacts = ref()
+
+// 添加沟通记录的组件实例
+const communicate = ref()
+
+// 添加服务记录的组件实例
+const service = ref()
+
+// 添加销售记录的组件实例
+const opportunity = ref()
+
+// 添加合同的组件实例
+const contract = ref()
+
+//查看详情的组件实例
+const details = ref()
+
+// 初始化数据
+const initCustomer = async (
+  currentPage,
+  pageSize,
+  coonTime,
+  nextTime,
+  name,
+  mobile,
+  tel,
+  address
+) => {
+  await getCustomer(
+    currentPage,
+    pageSize,
+    coonTime,
+    nextTime,
+    name,
+    mobile,
+    tel,
+    address
+  )
+}
+onMounted(() => {
+  initCustomer(currentPage, pageSize)
+})
 // 我的客户store仓库
-const subclient = useSubClient()
+const myclient = useMyClient()
 // 当前页数
 let currentPage = ref(1)
 // 每页数据
 let pageSize = ref(5)
 const handleSizeChange = (val) => {
-  console.log(`${val} items per page`)
+  pageSize.value = val
+  initCustomer(currentPage, pageSize)
 }
 const handleCurrentChange = (val) => {
-  console.log(`current page: ${val}`)
+  currentPage.value = val
+  initCustomer(currentPage, pageSize)
+}
+// 导出文件的按钮回调
+const exportExcel = async (value1, value2) => {
+  await exportCustomer(
+    value1,
+    value2,
+    () => {
+      ElMessage.success('导出成功')
+    },
+    () => {
+      ElMessage.error('导出失败')
+    }
+  )
+}
+
+// 导入文件-文件上传的全地址
+const action = ref('')
+
+//导入文件的按钮回调
+const importExcel = async (fileList) => {
+  await importCustomer(
+    fileList.value,
+    () => {
+      ElMessage.success('导入成功')
+    },
+    () => {
+      ElMessage.error('导入失败')
+    }
+  )
 }
 
 // 最近联系时间的选项
@@ -637,33 +341,46 @@ const options = ref([
   }
 ])
 
-// 用于搜索的客户名称关键词
-const name = ref('')
-
 /**
- * 添加
+ * 搜索
  */
-// 控制添加或修改客户信息对话框的显示与隐藏
-let dialogVisible = ref(false)
-// 存放添加或修改的客户信息
-let customerInfo = ref({
-  id: '',
-  name: '',
-  desc: '',
-  seaCustomer: false
-})
-// 点击添加按钮的回调
-const addMyClinet = () => {
-  dialogVisible.value = true
+// 最近联系人时间
+const coonTime = ref()
+const getCoonTime = () => {
+  coon.value = coonTime.value.selectValue.label
 }
-// 添加或修改客户按钮确定回调
-const save = () => {
-  customerInfo.value.id = ''
-  customerInfo.value.name = ''
-  customerInfo.value.desc = ''
-  customerInfo.value.seaCustomer = false
-  dialogVisible.value = false
-  ElMessage.success('添加成功')
+// 下次联系时间
+const nextTime = ref()
+const getNextTime = () => {
+  nexts.value = nextTime.value.selectValue.label
+}
+const name = ref('')
+const coon = ref('')
+const nexts = ref('')
+const searchDetails = () => {
+  initCustomer(
+    currentPage,
+    pageSize,
+    coon.value,
+    nexts.value,
+    name.value,
+    mobile.value,
+    tel.value,
+    address
+  )
+  coonTime.value.reset()
+  nextTime.value.reset()
+  name.value = ''
+}
+const tel = ref('')
+const mobile = ref('')
+const address = ref('')
+// 下拉框搜索按钮回调
+const handleSearch = () => {
+  searchDetails()
+  tel.value = ''
+  mobile.value = ''
+  address.value = ''
 }
 
 /**
@@ -676,147 +393,34 @@ const selectChange = (value) => {
   selectIdArr.value = value
 }
 // 批量删除按钮
-const deleteByQuery = () => {
-  ElMessage.success('批量删除成功')
+const deleteByQuery = async () => {
+  await deleteCustomer(
+    selectIdArr.value,
+    () => {
+      ElMessage.success('批量删除成功')
+    },
+    () => {
+      ElMessage.error('批量删除失败')
+    }
+  )
   // 删除后重新请求数据
+  initCustomer(currentPage, pageSize)
 }
 
 /**
- * 添加联系人
+ * 批量投入公海
  */
-// 控制添加联系人抽屉的显示和隐藏
-let dialogVisible1 = ref(false)
-// 存储联系人的数据
-let contactInfo = ref({
-  id: '',
-  name: '',
-  sex: ''
-})
-// 添加联系人按钮回调，打开抽屉
-const addContact = (row) => {
-  dialogVisible1.value = true
-  contactInfo.value.id = row.id
-  console.log('添加联系人', row)
-}
-// 添加联系人保存数据按钮回调
-const saveContact = () => {
-  dialogVisible1.value = false
-  ElMessage.success('添加成功')
-}
-
-/**
- * 添加沟通记录
- */
-// 控制添加沟通记录抽屉的显示和隐藏
-let dialogVisible2 = ref(false)
-// 存储添加沟通记录的数据
-let communicateInfo = ref({
-  id: '',
-  name: '',
-  data: '',
-  time: '',
-  nextData: '',
-  nextTime: ''
-})
-// 添加沟通记录按钮回调
-const addCommunicate = (row) => {
-  dialogVisible2.value = true
-  communicateInfo.value.id = row.id
-}
-// 保存数据，发送请求
-const saveCommunicate = () => {
-  dialogVisible2.value = false
-  ElMessage.success('添加成功')
-}
-
-/**
- * 添加服务记录
- */
-// 控制添加服务记录抽屉的显示和隐藏
-let dialogVisible3 = ref(false)
-let serviceInfo = ref({
-  id: '',
-  type: '',
-  name: '',
-  data: '',
-  time: ''
-})
-// 添加服务记录按钮回调
-const addService = (row) => {
-  dialogVisible3.value = true
-  serviceInfo.value.id = row.id
-}
-// 保存数据，发送请求
-const saveService = () => {
-  dialogVisible3.value = false
-  ElMessage.success('添加成功')
-}
-
-/**
- * 添加销售机会
- */
-// 控制添加销售机会抽屉的显示和隐藏
-let dialogVisible4 = ref(false)
-let opportunityInfo = ref({
-  id: '',
-  theme: '',
-  name: '',
-  data: '',
-  preData: '',
-  desc: '',
-  price: ''
-})
-// 添加销售机会按钮回调
-const addOpportunity = (row) => {
-  dialogVisible4.value = true
-  opportunityInfo.value.id = row.id
-}
-// 根据已保存的数据，发送请求
-const saveOpportunity = () => {
-  dialogVisible4.value = false
-  ElMessage.success('添加成功')
-}
-
-/**
- * 添加合同
- */
-// 控制添加销售机会抽屉的显示和隐藏
-let dialogVisible5 = ref(false)
-let contractInfo = {
-  id: '',
-  title: '',
-  name: '',
-  data: '',
-  endData: '',
-  price: '',
-  desc: ''
-}
-// 添加合同按钮回调
-const addContract = (row) => {
-  dialogVisible5.value = true
-  contractInfo.value.id = row.id
-}
-// 根据已保存的数据，发送请求
-const saveContract = () => {
-  dialogVisible5.value = false
-  ElMessage.success('添加成功')
-}
-
-/**
- * 详情
- */
-// 详情按钮回调
-const detail = (row) => {
-  alert('详情', row)
-}
-
-/**
- * 修改
- */
-// 修改按钮回调
-const modify = (row) => {
-  customerInfo.value.id = row.id
-  dialogVisible.value = true
+const invesHightsea = async () => {
+  await invesHightSea(
+    selectIdArr.value,
+    () => {
+      ElMessage.success('批量投入成功')
+    },
+    () => {
+      ElMessage.error('批量投入失败')
+    }
+  )
+  initCustomer(currentPage, pageSize)
 }
 
 /**
@@ -829,9 +433,19 @@ const Deletes = (row) => {
   deleteId.value = row.id
   confirmDelete.value = true
 }
-const Confirms = () => {
+// 确定删除
+const Confirms = async () => {
   confirmDelete.value = false
-  ElMessage.success('删除成功')
+  await deleteCustomer(
+    [deleteId.value],
+    () => {
+      ElMessage.success('删除成功')
+    },
+    () => {
+      ElMessage.error('删除失败')
+    }
+  )
+  initCustomer(currentPage, pageSize)
 }
 </script>
 
@@ -851,5 +465,8 @@ header {
 .dialog-footer {
   display: flex;
   justify-content: space-around;
+}
+.padding-bottom-5 {
+  padding-bottom: 5px;
 }
 </style>

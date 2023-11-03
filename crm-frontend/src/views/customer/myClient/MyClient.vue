@@ -47,9 +47,9 @@
         >
         <BulkOPe
           :getOpt="() => [0, 1]"
-          :exportFile="exportFile()"
+          :exportExcel="exportExcel"
           :action="action"
-          :importExcel="importExcel(fileList)"
+          :importExcel="importExcel"
         >
         </BulkOPe>
       </div>
@@ -58,11 +58,15 @@
           style="margin-right: 10px"
           des="最近联系时间"
           :options="options"
+          ref="coonTime"
+          @update:cid="getCoonTime"
         ></ChooseSelect>
         <ChooseSelect
           style="margin-right: 10px"
           :options="options"
           des="下次联系时间"
+          ref="nextTime"
+          @update:cid="getNextTime"
         ></ChooseSelect>
         <el-input
           v-model="name"
@@ -199,7 +203,9 @@ import useMyClient from '@/stores/customer/myclient.js'
 import {
   getCustomer,
   deleteCustomer,
-  invesHightSea
+  invesHightSea,
+  exportCustomer,
+  importCustomer
 } from '@/apis/customer/index.js'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
@@ -235,8 +241,26 @@ const contract = ref()
 const details = ref()
 
 // 初始化数据
-const initCustomer = async (currentPage, pageSize) => {
-  await getCustomer(currentPage, pageSize)
+const initCustomer = async (
+  currentPage,
+  pageSize,
+  coonTime,
+  nextTime,
+  name,
+  mobile,
+  tel,
+  address
+) => {
+  await getCustomer(
+    currentPage,
+    pageSize,
+    coonTime,
+    nextTime,
+    name,
+    mobile,
+    tel,
+    address
+  )
 }
 onMounted(() => {
   initCustomer(currentPage, pageSize)
@@ -256,14 +280,33 @@ const handleCurrentChange = (val) => {
   initCustomer(currentPage, pageSize)
 }
 // 导出文件的按钮回调
-const exportFile = () => {}
+const exportExcel = async (value1, value2) => {
+  await exportCustomer(
+    value1,
+    value2,
+    () => {
+      ElMessage.success('导出成功')
+    },
+    () => {
+      ElMessage.error('导出失败')
+    }
+  )
+}
 
 // 导入文件-文件上传的全地址
 const action = ref('')
 
 //导入文件的按钮回调
-const importExcel = (fileList) => {
-  console.log(fileList)
+const importExcel = async (fileList) => {
+  await importCustomer(
+    fileList.value,
+    () => {
+      ElMessage.success('导入成功')
+    },
+    () => {
+      ElMessage.error('导入失败')
+    }
+  )
 }
 
 // 最近联系时间的选项
@@ -301,11 +344,40 @@ const options = ref([
 /**
  * 搜索
  */
-let tel = ref('')
-let mobile = ref('')
-let address = ref('')
+// 最近联系人时间
+const coonTime = ref()
+const getCoonTime = () => {
+  coon.value = coonTime.value.selectValue.label
+}
+// 下次联系时间
+const nextTime = ref()
+const getNextTime = () => {
+  nexts.value = nextTime.value.selectValue.label
+}
+const name = ref('')
+const coon = ref('')
+const nexts = ref('')
+const searchDetails = () => {
+  initCustomer(
+    currentPage,
+    pageSize,
+    coon.value,
+    nexts.value,
+    name.value,
+    mobile.value,
+    tel.value,
+    address
+  )
+  coonTime.value.reset()
+  nextTime.value.reset()
+  name.value = ''
+}
+const tel = ref('')
+const mobile = ref('')
+const address = ref('')
 // 下拉框搜索按钮回调
 const handleSearch = () => {
+  searchDetails()
   tel.value = ''
   mobile.value = ''
   address.value = ''
@@ -322,21 +394,33 @@ const selectChange = (value) => {
 }
 // 批量删除按钮
 const deleteByQuery = async () => {
-  await deleteCustomer(selectIdArr, () => {
-    ElMessage.success('批量删除成功')
-  })
+  await deleteCustomer(
+    selectIdArr.value,
+    () => {
+      ElMessage.success('批量删除成功')
+    },
+    () => {
+      ElMessage.error('批量删除失败')
+    }
+  )
   // 删除后重新请求数据
-  initCustomer()
+  initCustomer(currentPage, pageSize)
 }
 
 /**
  * 批量投入公海
  */
 const invesHightsea = async () => {
-  await invesHightSea(selectIdArr, () => {
-    ElMessage.success('批量投入成功')
-  })
-  initCustomer()
+  await invesHightSea(
+    selectIdArr.value,
+    () => {
+      ElMessage.success('批量投入成功')
+    },
+    () => {
+      ElMessage.error('批量投入失败')
+    }
+  )
+  initCustomer(currentPage, pageSize)
 }
 
 /**
@@ -350,10 +434,18 @@ const Deletes = (row) => {
   confirmDelete.value = true
 }
 // 确定删除
-const Confirms = () => {
+const Confirms = async () => {
   confirmDelete.value = false
+  await deleteCustomer(
+    [deleteId.value],
+    () => {
+      ElMessage.success('删除成功')
+    },
+    () => {
+      ElMessage.error('删除失败')
+    }
+  )
   initCustomer(currentPage, pageSize)
-  ElMessage.success('删除成功')
 }
 </script>
 

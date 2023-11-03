@@ -83,6 +83,7 @@
 import { ref } from 'vue'
 import useMyClient from '@/stores/customer/myclient.js'
 import useSelect from '@/stores/customer/select.js'
+import { addNewContact } from '@/apis/customer/index.js'
 import { getCustomerName } from '@/apis/publicInterface.js'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 
@@ -105,7 +106,16 @@ const addContact = async (row) => {
 }
 const customerName = ref()
 // 添加联系人保存数据按钮回调
-const saveContact = () => {
+const saveContact = async () => {
+  await addNewContact(
+    myclient.contactInfo,
+    () => {
+      ElMessage.success('添加成功')
+    },
+    () => {
+      ElMessage.error('添加失败')
+    }
+  )
   dialogVisible1.value = false
   myclient.contactReset()
   select.resetData()
@@ -121,4 +131,9 @@ defineExpose({
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.dialog-footer {
+  display: flex;
+  justify-content: space-around;
+}
+</style>

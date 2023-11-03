@@ -467,10 +467,30 @@ export const getCustomerRepresent = (
  * @param {*} fail 失败的回调
  * @returns
  */
-export const getCustomer = (param, success = () => {}, fail = () => {}) => {
+export const getCustomer = (
+  pageIndex,
+  pageSize,
+  coonTime,
+  nextTime,
+  name,
+  mobile,
+  tel,
+  address,
+  success = () => {},
+  fail = () => {}
+) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(param)
+      resolve(
+        pageIndex,
+        pageSize,
+        coonTime,
+        nextTime,
+        name,
+        mobile,
+        tel,
+        address
+      )
     }, 0)
   })
     .then(() => {
@@ -572,14 +592,8 @@ export const queryCustomerDetails = (
       resolve(id)
     }, 0)
   })
-    .then(() => {
-      let data = []
-      if (data) {
-        myclient.gettableData(data)
-        success()
-        return
-      }
-      fail()
+    .then((data) => {
+      success(data)
     })
     .catch((err) => {
       fail(err)
@@ -673,9 +687,9 @@ export const deleteCustomer = (
     }, 0)
   })
     .then(() => {
-      myclient.tableData.value = myclient.tableData.filters((item) => {
-        return !param.includes(item.id)
-      })
+      // myclient.tableData.value = myclient.tableData.filters((item) => {
+      //   return !param.includes(item.id)
+      // })
       success()
     })
     .catch((err) => {
@@ -833,7 +847,7 @@ export const queryContactList = (
       resolve({
         pageIndex: currentPage,
         pageSize,
-        name: linkName,
+        key: linkName,
         customer_name: customerName,
         address
       })
@@ -936,7 +950,7 @@ export const getContactField = (success = () => {}, fail = () => {}) => {
  * @param {*} fail 失败的回调
  * @returns
  */
-export const addContact = (param, success = () => {}, fail = () => {}) => {
+export const addNewContact = (param, success = () => {}, fail = () => {}) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(param)

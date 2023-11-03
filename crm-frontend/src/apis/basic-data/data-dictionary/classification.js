@@ -1,10 +1,12 @@
 /*
- * @Author: BINGWU HuJiaCheng2003@163.com
+ * @Author: BINGWU
  * @Date: 2023-11-01 14:52:14
+ * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
+ * @LastEditTime: 2023-11-03 21:25:20
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-01 17:39:28
+ * @LastEditTime: 2023-11-03 13:26:55
  * @FilePath: \crm-frontend\src\apis\basic-data\data-dictionary\classification.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 
 import Request from '@/apis/request.js'
@@ -74,7 +76,7 @@ export const modifyDictclassify = (params) => {
  * @description: 删除字典分类数据
  * @param {*} params
  * id
- * @return {*}
+ * @return {Promise}
  */
 export const deleteDictclassify = (params) => {
   return Request.requestJson(

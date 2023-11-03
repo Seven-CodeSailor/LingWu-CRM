@@ -17,19 +17,12 @@
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="客户代表">
-        <el-input
-          v-model="myclient.customerInfo.represent"
-          placeholder="请输入客户代表"
-          style="width: 500px"
-        />
-      </el-form-item>
       <el-form-item label="客户来源">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户来源"
           :options="select.belong"
-          @update:cid="customerGetBelong()"
+          @update:cid="customerGetBelong"
           ref="belong"
         ></ChooseSelect>
       </el-form-item>
@@ -38,7 +31,7 @@
           style="margin-right: 10px; width: 250px"
           des="请选择客户等级"
           :options="select.level"
-          @update:cid="customerGetLevel()"
+          @update:cid="customerGetLevel"
           ref="level"
         ></ChooseSelect>
       </el-form-item>
@@ -47,7 +40,7 @@
           style="margin-right: 10px; width: 250px"
           des="请选择客户行业"
           :options="select.industy"
-          @update:cid="customerGetIndusty()"
+          @update:cid="customerGetIndusty"
           ref="industry"
         ></ChooseSelect>
       </el-form-item>
@@ -87,7 +80,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="save"> 添加 </el-button>
+        <el-button type="primary" @click="save"> 确定 </el-button>
       </span>
     </template>
   </el-drawer>
@@ -100,7 +93,10 @@ import useSelect from '@/stores/customer/select.js'
 import {
   getCustomerBelong,
   getCustomerLevel,
-  getCustomerIndusty
+  getCustomerIndusty,
+  postCustomer,
+  putCustomer,
+  queryCustomerDetails
 } from '@/apis/customer/index.js'
 
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
@@ -144,10 +140,28 @@ const addMyClinet = async () => {
   dialogVisible.value = true
 }
 // 添加或修改客户按钮确定回调
-const save = () => {
+const save = async () => {
   dialogVisible.value = false
   if (myclient.customerInfo.id === '') {
-    myclient.addNewCustomer()
+    await postCustomer(
+      myclient.customerInfo,
+      () => {
+        ElMessage.success('添加成功')
+      },
+      () => {
+        ElMessage.error('添加失败')
+      }
+    )
+  } else {
+    await putCustomer(
+      myclient.customerInfo,
+      () => {
+        ElMessage.success('修改成功')
+      },
+      () => {
+        ElMessage.error('修改失败')
+      }
+    )
   }
   myclient.customerReset()
   select.resetData()
@@ -157,7 +171,14 @@ const save = () => {
  * 修改
  */
 // 修改按钮回调
-const modify = (row) => {
+const modify = async (row) => {
+  await queryCustomerDetails(
+    row.id,
+    () => {},
+    () => {
+      ElMessage.error('获取数据失败')
+    }
+  )
   myclient.customerInfo.id = row.id
   dialogVisible.value = true
 }
@@ -168,4 +189,9 @@ defineExpose({
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.dialog-footer {
+  display: flex;
+  justify-content: space-around;
+}
+</style>
