@@ -7,8 +7,8 @@
       :page-sizes="[5, 10, 15]"
       :total="stockStorageDetailsStore.tableTotal"
       :table-data="noticeStore.data"
+      :dropdown-menu-actions-info="dropdownMenuActionsInfo"
       :useDropdownMenu="true"
-      :dropdownMenuActionsInfo="operateData"
       @update-table-data="
         (pageSize, currentPage) =>
           getStockStorageList({
@@ -25,38 +25,36 @@
         </el-icon>
       </template>
 
-      <!-- 中部内容区 -->
+      <!-- 中间搜索栏 -->
       <template #menu>
         <div class="menu">
           <div class="left">
-            <!-- 添加按钮需要抽屉功能 -->
-            <el-button
-              type="success"
-              style="margin-right: 10px"
-              @click="addEvent"
-            >
-              <el-icon>
+            <!-- 左侧按钮区域 -->
+            <el-button type="success" @click="addEvent">
+              <el-icon style="padding-right: 5px">
                 <icon-Plus />
               </el-icon>
               添加
             </el-button>
-
-            <!-- 批量导入 -->
-            <BulkOPe
-              :excelData="() => tableData"
-              :getOpt="() => [0]"
-              excelName="库存清单.xlsx"
-              tableName="库存清单的sheet表"
+            <el-button
+              type="primary"
+              icon="IconChatDotRound"
+              @click="readBatches"
+              >批量已读</el-button
             >
-            </BulkOPe>
-            <!-- 搜索栏 -->
+
+            <el-button type="danger" icon="IconDelete" @click="deleteBatches"
+              >批量删除</el-button
+            >
           </div>
+          <!-- 右侧搜索栏 -->
           <div class="right">
             <el-input
               v-model="inputValue"
               placeholder="输入关键字搜索"
               style="margin-right: 4px; width: auto"
             />
+            <!-- 搜索按钮：还差数据读取逻辑和加载loading动画 -->
             <el-button
               type="primary"
               style="margin-left: 4px"
@@ -70,26 +68,19 @@
       </template>
     </BaseDataList>
 
-    <!-- 弹出抽屉内容 -->
-    <el-drawer 
-      v-model="addFrawer" 
-      title="添加通知" 
-      direction="rtl"
-      placeholder="Activity zone"
-    >
-      <el-form 
+    <!-- 添加的抽屉内容 -->
+    <el-drawer v-model="addDrawer" title="添加通知" direction="rtl">
+      <el-form
         ref="ruleFormRef"
-        :model="ruleForm" 
+        :model="ruleForm"
         :rules="rules"
         label-width="120px"
         class="demo-ruleForm"
       >
-        <el-form-item label="通知标题"  prop="toTitle">
+        <el-form-item label="通知标题" prop="toTitle">
           <el-input v-model="ruleForm.name" placeholder="输入标题" />
         </el-form-item>
-        <!-- 输入规则还没改，需要添加 -->
         <el-form-item label="通知对象" prop="toDepartment">
-          <!-- 下拉选择框 -->
           <ChooseSelect
             :options="options"
             des="请选通知部门"
@@ -107,11 +98,29 @@
           <el-input v-model="textarea" :rows="2" type="textarea" />
         </el-form-item>
         <el-form-item margin-top="20px">
-          <el-button type="primary"  @click="submitForm(ruleFormRef)">确定</el-button>
           <el-button>取消</el-button>
+          <el-button type="primary" @click="handleSubmit">提交</el-button>
         </el-form-item>
       </el-form>
     </el-drawer>
+
+    <!-- 查看公告的抽屉内容 -->
+    <el-drawer v-model="dialogVisible1" title="查看通知" size="40%">
+      <el-card>
+        <template #header>
+          <div class="card-header" style="text-align: center">
+            <span style="font-size: 24px; font-weight: 700">{{ detail.title }}</span>
+          </div>
+        </template>
+        <section style="margin-top: 20px">{{ detail.content }}</section>
+      </el-card>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="dialogVisible1 = false">确定</el-button>
+        </span>
+      </template>
+    </el-drawer>
+
   </div>
 </template>
 
@@ -120,12 +129,56 @@ import { ref, onMounted } from 'vue'
 import { useStockStorageDetailsStore } from '@/stores/inventory/stockstoragedetails.js'
 import { ElMessage } from 'element-plus'
 import { useNotice } from '../../../stores/inventory/notice'
-import BaseDataList from '@/views/person-homepage/notice/components/BaseDataList_refresh.vue'
-import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
+import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
 
-// 数据引入
+
+// 批量删除的逻辑
+const deleteBatches = () => {
+  if (!baseDataListRef.value.rows.length) {
+    ElMessage.error('请先选择')
+  } else {
+    console.log('1')
+  }
+}
+// 批量已读的逻辑(批量已读的逻辑未定)
+const readBatches = () => {
+  if (!baseDataListRef.value.rows.length) {
+    ElMessage.success('全部已读')
+  } else {
+    console.log('1')
+  }
+}
+
+// 表格数据引入
 const noticeStore = useNotice()
+
+// 
+const dropdownMenuActionsInfo = [
+    {
+      command: 'delete',
+      // row为当前行的数据
+      handleAction: (row) => {
+        dialogVisible1.value = true
+        console.log('删除的回调函数', row)
+      },
+      actionName: '查看'
+    },
+    {
+      command: 'edit',
+      handleAction: (row) => {
+        console.log('修改的回调函数', row)
+      },
+      actionName: '修改'
+    },
+    {
+      command: 'add',
+      handleAction: (row) => {
+        console.log('添加的回调函数', row)
+      },
+      actionName: '添加'
+    }
+  ]
 
 // 表格标题栏
 const tableColumnAttribute = [
@@ -155,79 +208,23 @@ const tableColumnAttribute = [
     label: '接收人'
   }
 ]
+
+// 批量删除和批量已读的逻辑
 const baseDataListRef = ref(null)
 const inputValue = ref('')
 
-const stockStorageDetailsStore = useStockStorageDetailsStore()
-
-// 搜索框条件
-const searchDetails = () => {
-  console.log('t', stockStorageDetailsStore.tableData)
-  if (!inputValue.value) {
-    ElMessage.error('输入不能为空')
-  } else {
-    console.log('pp', baseDataListRef.value.paginationData)
-    baseDataListRef.value.paginationData.pageSize = 5
-    baseDataListRef.value.paginationData.currentPage = 1
-    // 搜索数据的时候就重新初始化页面容量和当前页的页码
-    const params = {
-      pageSize: 5,
-      pageIndex: 1
-      // 如何知道我输入的是sku名称或商品名
-    }
-    getStockStorageList(params)
-  }
-}
-const getStockStorageList = async (params) => {
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  await stockStorageDetailsStore.getTableData(params)
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-}
-
-onMounted(() => {
-  const params = {
-    pageIndex: 1,
-    pageSize: 5
-  }
-  getStockStorageList(params)
-  noticeStore.getData()
-})
-
-// 操作下拉菜单的数据
-const operateData = ref([
-  {
-    command: '查看',
-    // row为当前行的数据
-    handleAction: (row) => {
-      console.log('查看回调函数', row)
-    },
-    actionName: '查看'
-  },
-  {
-    command: '刪除',
-    // row为当前行的数据
-    handleAction: (row) => {
-      console.log('刪除回调函数', row)
-    },
-    actionName: '刪除'
-  }
-])
-
-// 添加抽屜
-const addFrawer = ref(false)
+// 添加抽屜表单
+const addDrawer = ref(false)
+// 添加公告逻辑
 const addEvent = () => {
-  addFrawer.value = true
+  addDrawer.value = true
 }
 const ruleForm = ref({
-  name: '',
-  region: '',
-  date1: '',
-  date2: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: ''
+  toTitle: '',
+  toDepartment: '',
+  toPerson: ''
 })
+// 通知中的部门选项
 const options = ref([
   {
     value: 'Option1',
@@ -243,11 +240,10 @@ const options = ref([
   }
 ])
 
-// 提交表单校验规则(暂时还没改对应名称)
-
+// 提交表单校验规则逻辑（未完待研究
 const rules = {
   toTitle: [
-    { required: true, message: '请输入标题',  trigger: 'blur' },
+    { required: true, message: '请输入标题', trigger: 'blur' },
     {
       pattern: /^\S{1,10}$/,
       message: '分类名必须是1-10位非空字符',
@@ -255,7 +251,11 @@ const rules = {
     }
   ],
   toDepartment: [
-    { required: true, message: '通知需要下发的团队员及成员，默认为当前用户及下级成员', trigger: 'blur' },
+    {
+      required: true,
+      message: '通知需要下发的团队员及成员，默认为当前用户及下级成员',
+      trigger: 'blur'
+    },
     {
       pattern: /^\S{1,10}$/,
       message: '部门名必须是1-10位非空字符',
@@ -263,7 +263,11 @@ const rules = {
     }
   ],
   toPerson: [
-    { required: true, message: '请输入分此功能针对单独一个用户通知类别名', trigger: 'blur' },
+    {
+      required: true,
+      message: '请输入分此功能针对单独一个用户通知类别名',
+      trigger: 'blur'
+    },
     {
       pattern: /^\S{1,10}$/,
       message: '用户名必须是1-10位的非空字符',
@@ -271,6 +275,102 @@ const rules = {
     }
   ]
 }
+
+// 搜索框条件
+const stockStorageDetailsStore = useStockStorageDetailsStore()
+const searchDetails = () => {
+  console.log('t', stockStorageDetailsStore.tableData)
+  if (!inputValue.value) {
+    ElMessage.error('输入不能为空')
+  } else {
+    console.log('pp', baseDataListRef.value.paginationData)
+    baseDataListRef.value.paginationData.pageSize = 5
+    baseDataListRef.value.paginationData.currentPage = 1
+    // 搜索数据的时候就重新初始化页面容量和当前页的页码
+    const params = {
+      pageSize: 5,
+      pageIndex: 1
+    }
+    getStockStorageList(params)
+  }
+}
+const getStockStorageList = async (params) => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  await stockStorageDetailsStore.getTableData(params)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+
+//删除单条数据
+const handleDelete = (row) => {
+  console.log('删除', row)
+  ElMessageBox.confirm('你确定要删除这条数据吗?', '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      ElMessage({
+        type: 'success',
+        message: '删除成功'
+      })
+    })
+}
+
+// 查看公告
+const detail = ref({
+  id: '',
+  title: '',
+  content: ''
+})
+const dialogVisible1 = ref(false)
+const look = (row) => {
+  ;(detail.value.id = row.id),
+    (detail.value.title = row.title),
+    (detail.value.content = row.content),
+    (dialogVisible1.value = true)
+}
+
+// 操作下拉菜单的数据
+const operateData = ref([
+  {
+    command: '查看',
+    // row为当前行的数据
+    handleAction: (row) => {
+      addDrawer.value = true
+      console.log('查看回调函数', row)
+    },
+    actionName: '查看'
+  },
+  {
+    command: '刪除',
+    // row为当前行的数据
+    handleAction: (row) => {
+      console.log('刪除回调函数', row)
+    },
+    actionName: '刪除'
+  }
+])
+
+
+//表单提交逻辑
+const props = defineProps({
+  handleSubmit: {
+    type: Function,
+    default: () => {
+      console.log('sumbit')
+    }
+  }
+})
+
+// 分页逻辑
+onMounted(() => {
+  const params = {
+    pageIndex: 1,
+    pageSize: 5
+  }
+  getStockStorageList(params)
+  noticeStore.getData()
+})
 
 </script>
 
@@ -296,8 +396,12 @@ const rules = {
     }
   }
 }
-// 表格里的内容换行用
-:deep(.el-table .cell) {
-  white-space: pre-wrap;
+// // 表格里的内容换行用(暂无引用)
+// :deep(.el-table .cell) {
+//   white-space: pre-wrap;
+// }
+.dialog-footer {
+  display: flex;
+  justify-content: space-around;
 }
 </style>

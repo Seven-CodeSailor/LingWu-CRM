@@ -13,7 +13,9 @@
 import {
   Bell,
   ChatDotRound,
+  Check,
   FullScreen,
+  Histogram,
   Menu,
   MoonNight,
   Plus,
@@ -36,6 +38,11 @@ import { Operation } from '@element-plus/icons-vue'
 import { HomeFilled } from '@element-plus/icons-vue'
 import { BellFilled } from '@element-plus/icons-vue'
 import { CreditCard } from '@element-plus/icons-vue'
+import { Comment } from '@element-plus/icons-vue'
+import { View } from '@element-plus/icons-vue'
+import { FolderChecked } from '@element-plus/icons-vue'
+
+
 export default (app) => {
   app.component('IconMenu', Menu)
   app.component('IconSetting', Setting)
@@ -64,4 +71,9 @@ export default (app) => {
   app.component('IconPlus', Plus)
   app.component('IconChatDotRound', ChatDotRound)
   app.component('IconCreditCard', CreditCard)
+  app.component('IconComment', Comment)
+  app.component('IconView', View)
+  app.component('IconFolderChecked', FolderChecked)
+  app.component('IconCheck', Check)
+  app.component('IconHistogram', Histogram)
 }

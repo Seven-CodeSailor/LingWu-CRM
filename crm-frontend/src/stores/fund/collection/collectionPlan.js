@@ -2,17 +2,20 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-31 15:56:56
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-31 21:26:45
+ * @LastEditTime: 2023-11-02 21:34:36
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\fund\collection\collectionPlan.js
  * @Description:
  *
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
  */
-
+//1
 import { defineStore } from 'pinia'
-import Request from '@/apis/request.js'
+import { getCollectionPlanList } from '@/apis/fund/collectionPlan/index.js'
 export const useCollectionPlan = defineStore('collectionPlan', {
   state: () => ({
+    clientNameList: ['sayoriqwq', 'sayori'],
+    saleContractList: ['合同1', '合同2'],
+    payAccountList: ['账户1', '账户2'],
     sendData: {
       tableColumnAttribute: [
         {
@@ -47,22 +50,19 @@ export const useCollectionPlan = defineStore('collectionPlan', {
       ],
       tableData: [],
       useHeader: false,
-      usePagination: true
+      usePagination: true,
+      pageSizes: [2, 4, 6, 10],
+      total: 10,
+      useDropdownMenu: true
     }
   }),
   getters: {},
   actions: {
     //发请求拿table表的数据
-    async getCollectionPlanList(pageSize, pageIndex) {
-      const data = await Request.requestJson(
-        Request.GET,
-        'https://www.fastmock.site/mock/8e32bb7d22d2160aa723642e11594457/api/collectionplans/get-collectionplans',
-        {
-          pageIndex,
-          pageSize
-        },
-        null
-      ).catch((e) => e)
+    async getCollectionPlanList(pageParams) {
+      const data = await getCollectionPlanList(pageParams).catch((e) => {
+        ElMessage.warn(e.message)
+      })
       if (!data.data) return
       this.sendData.tableData = data.data.rows
       //处理tag列数据

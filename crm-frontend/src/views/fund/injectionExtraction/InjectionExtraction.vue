@@ -2,7 +2,7 @@
  * @Author: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
  * @Date: 2023-10-28 14:38:07
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-10-31 19:54:07
+ * @LastEditTime: 2023-11-01 20:36:30
  * @FilePath: \zero-one-crmsys\crm-frontend\src\views\fund\injectionExtraction\InjectionExtraction.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -46,7 +46,10 @@
           </BulkOPe>
         </div>
         <div class="search">
-          <ChooseSelect :options="optionsFir" des="所有回款账户"></ChooseSelect>
+          <ChooseSelect
+            :options="fundInjection.bankSelectList"
+            des="所有回款账户"
+          ></ChooseSelect>
           <ChooseSelect :options="optionsSec" des="产生日期所有"></ChooseSelect>
           <ChooseSelect :options="optionsThi" des="创建日期所有"></ChooseSelect>
           <el-input
@@ -98,7 +101,10 @@
         </el-form-item>
         <el-form-item label="银行账户" :label-width="labelWidth">
           <!-- 调用选择框组件 -->
-          <ChooseSelect :options="optionsFir" des="选择银行账户"></ChooseSelect>
+          <ChooseSelect
+            :options="fundInjection.bankSelectList"
+            des="选择银行账户"
+          ></ChooseSelect>
         </el-form-item>
         <el-form-item label="金额" :label-width="labelWidth" prop="money">
           <el-input v-model="addForm.money" autocomplete="off" />
@@ -130,9 +136,17 @@ import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import BulkOPe from '@/components/BulkOPe/BulkOPe.vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { CreditCard, Plus, Search } from '@element-plus/icons-vue'
-
+// 导入公共接口 => 获取银行下拉菜单接口方法
+import { getBankAccountList } from '@/apis/publicInterface.js'
+// 导入 资金管理/资金抽取注入 仓库
+import useFundInjectionStore from '@/stores/fundManagement/fundInjection.js'
+const fundInjection = useFundInjectionStore()
+onMounted(() => {
+  getBankAccountList()
+  console.log('仓库的数据', fundInjection.bankSelectList)
+})
 // ref数据绑定BaseDataList这个组件
 const baseDataListRef = ref(null)
 // 表格数据传递
@@ -237,20 +251,20 @@ const sendData = {
 
 // 搜索业务
 // 三个下拉选择框的数据
-const optionsFir = ref([
-  {
-    value: 'Option1',
-    label: '所有回款账户'
-  },
-  {
-    value: 'Option2',
-    label: '工商银行982731237861283'
-  },
-  {
-    value: 'Option3',
-    label: '农业银行982731237861283'
-  }
-])
+// const optionsFir = ref([
+//   {
+//     value: 'Option1',
+//     label: '所有回款账户'
+//   },
+//   {
+//     value: 'Option2',
+//     label: '工商银行982731237861283'
+//   },
+//   {
+//     value: 'Option3',
+//     label: '农业银行982731237861283'
+//   }
+// ])
 const optionsSec = ref([
   {
     value: 'Option1',

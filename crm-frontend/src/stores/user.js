@@ -9,6 +9,7 @@ import basicData from './menus/basicData'
 import customer from './menus/customer'
 import sale from './menus/sale'
 import fund from './menus/fund'
+import supplier from './menus/supplier'
 // 测试菜单数据
 let testMenus = [
   homepage,
@@ -18,7 +19,8 @@ let testMenus = [
   customer,
   sale,
   inventory,
-  fund
+  fund,
+  supplier
 ]
 
 export const userStore = defineStore('user', {

@@ -21,15 +21,13 @@
       <div class="data">
         <div class="left">
           <div class="top">
-            <h3 style="font-weight: 700">
-              合同标题：{{ props.contractTitle }}
-            </h3>
+            <h3 style="font-weight: 700">合同编号：{{ props.contractId }}</h3>
           </div>
           <el-divider />
           <div class="content">
             <div class="item">
-              合同编号：
-              {{ props.contractId }}
+              合同标题：
+              {{ props.contractTitle }}
             </div>
             <div class="item">合同金额：{{ props.contractMoney }}</div>
             <div class="item">去零金额：{{ props.zeroOutMoney }}</div>
@@ -368,21 +366,21 @@ const firstTableInfo = {
   tableData: props.firstTableData
 }
 
-const firstTableTotalMoney = computed(() => {
-  let money = 0
-  firstTableInfo.tableData.forEach((item) => {
-    money += item.price * item.goodsNumber
-  })
-  return money
-})
+// const firstTableTotalMoney = computed(() => {
+//   let money = 0
+//   firstTableInfo.tableData.forEach((item) => {
+//     money += item.price * item.goodsNumber
+//   })
+//   return money
+// })
 
-const firstTableTotalGoodsNumber = computed(() => {
-  let number = 0
-  firstTableInfo.tableData.forEach((item) => {
-    number += item.goodsNumber
-  })
-  return number
-})
+// const firstTableTotalGoodsNumber = computed(() => {
+//   let number = 0
+//   firstTableInfo.tableData.forEach((item) => {
+//     number += item.goodsNumber
+//   })
+//   return number
+// })
 // 第二个tab
 const sellContractSecondTableColumnAttribute = [
   {
@@ -460,13 +458,13 @@ const secondTableInfo = {
   tableData: props.secondTableData
 }
 
-const secondTableTotalMoney = computed(() => {
-  let money = 0
-  secondTableInfo.tableData.forEach((item) => {
-    money += item.money
-  })
-  return money
-})
+// const secondTableTotalMoney = computed(() => {
+//   let money = 0
+//   secondTableInfo.tableData.forEach((item) => {
+//     money += item.money
+//   })
+//   return money
+// })
 // 第三个tab
 const sellContractThirdTableColumnAttribute = [
   {
@@ -538,13 +536,13 @@ const thirdTableInfo = {
   tableData: props.thirdTableData
 }
 
-const thirdTableTotalMoney = computed(() => {
-  let money = 0
-  thirdTableInfo.tableData.forEach((item) => {
-    money += item.invoiceMoney
-  })
-  return money
-})
+// const thirdTableTotalMoney = computed(() => {
+//   let money = 0
+//   thirdTableInfo.tableData.forEach((item) => {
+//     money += item.invoiceMoney
+//   })
+//   return money
+// })
 
 // 第四个tab
 const fourthTableInfo = {

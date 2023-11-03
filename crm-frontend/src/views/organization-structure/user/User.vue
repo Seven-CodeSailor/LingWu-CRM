@@ -10,6 +10,7 @@
     :total="sendData.total"
     :useDropdownMenu="true"
     :dropdownMenuActionsInfo="dropdownMenuActionsInfo"
+    @updateTableData="handleSizeChange"
   >
     <template #ico>
       <el-icon><Operation /></el-icon>
@@ -19,12 +20,14 @@
         <template #header>
           <div class="card-header">
             <span>用户管理</span>
-            <el-button class="button" text>刷新</el-button>
+            <el-button class="button" text @click="handelRefresh"
+              >刷新</el-button
+            >
           </div>
         </template>
         <!-- 树形菜单标签结构 -->
         <el-tree
-          :data="treeData"
+          :data="departmentManage.DepartmentTree"
           :props="defaultProps"
           highlight-current="true"
           default-expand-all="true"
@@ -44,10 +47,7 @@
           添加
         </el-button>
         <div class="search">
-          <el-input
-            placeholder="请输入关键字搜索"
-            v-model="searchKey"
-          ></el-input>
+          <el-input placeholder="请输入姓名搜索" v-model="searchKey"></el-input>
           <el-button
             type="primary"
             :loading="btnLoading"
@@ -94,7 +94,7 @@
           <el-input v-model="addForm.name" autocomplete="off" />
         </el-form-item>
         <el-form-item label="性别" :label-width="labelWidth">
-          <el-radio-group v-model="addForm.sex">
+          <el-radio-group v-model="addForm.showGender">
             <el-radio label="男" />
             <el-radio label="女" />
           </el-radio-group>
@@ -126,7 +126,7 @@
         <el-form-item label="角色" :label-width="labelWidth">
           <el-tree-select
             v-model="selectRole"
-            :data="treeDataRole"
+            :data="userManage.userNameList"
             check-strictly
             default-expand-all
             :render-after-expand="false"
@@ -135,11 +135,11 @@
             @change="handelSelectRole"
           />
         </el-form-item>
-        <el-form-item label="手机" :label-width="labelWidth" prop="phone">
-          <el-input v-model="addForm.phone" autocomplete="off" />
+        <el-form-item label="手机" :label-width="labelWidth" prop="mobile">
+          <el-input v-model="addForm.mobile" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="QQ" :label-width="labelWidth" prop="QQ">
-          <el-input v-model="addForm.QQ" autocomplete="off" />
+        <el-form-item label="QQ" :label-width="labelWidth" prop="qicq">
+          <el-input v-model="addForm.qicq" autocomplete="off" />
         </el-form-item>
         <el-form-item label="邮箱" :label-width="labelWidth" prop="email">
           <el-input v-model="addForm.email" autocomplete="off" />
@@ -181,7 +181,7 @@
           <el-input v-model="addForm.name" autocomplete="off" />
         </el-form-item>
         <el-form-item label="性别" :label-width="labelWidth">
-          <el-radio-group v-model="addForm.sex">
+          <el-radio-group v-model="addForm.showGender">
             <el-radio label="男" />
             <el-radio label="女" />
           </el-radio-group>
@@ -222,11 +222,11 @@
             @change="handelSelectRole"
           />
         </el-form-item>
-        <el-form-item label="手机" :label-width="labelWidth" prop="phone">
-          <el-input v-model="addForm.phone" autocomplete="off" />
+        <el-form-item label="手机" :label-width="labelWidth" prop="mobile">
+          <el-input v-model="addForm.mobile" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="QQ" :label-width="labelWidth" prop="QQ">
-          <el-input v-model="addForm.QQ" autocomplete="off" />
+        <el-form-item label="QQ" :label-width="labelWidth" prop="qicq">
+          <el-input v-model="addForm.qicq" autocomplete="off" />
         </el-form-item>
         <el-form-item label="邮箱" :label-width="labelWidth" prop="email">
           <el-input v-model="addForm.email" autocomplete="off" />
@@ -253,30 +253,103 @@ import BaseDataList from '@/components/DataList/BaseDataList.vue'
 // import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
 import { Operation, Plus, Search } from '@element-plus/icons-vue'
 // import { ElMessage } from 'element-plus'
-import { ref } from 'vue'
-// 树形菜单的数据
-const treeData = ref([
-  {
-    label: '零起飞工作室',
-    children: [
-      {
-        label: '商务部'
-      },
-      {
-        label: '行政部'
-      },
-      {
-        label: '技术部'
-      },
-      {
-        label: '篮球部'
-      },
-      {
-        label: '财务部'
+import { onMounted, ref } from 'vue'
+import { getUserNameList } from '@/apis/publicInterface.js'
+import { getDepartmentTree } from '@/apis/organizationStructure/department.js'
+import { getUserTableList } from '@/apis/organizationStructure/user.js'
+// 导入 组织结构/用户管理 仓库
+import useUserManageStore from '@/stores/organizationStructure/usermanage.js'
+const userManage = useUserManageStore()
+// 导入 组织结构/部门管理 仓库
+import useDepartmentManageStore from '@/stores/organizationStructure/departmentManage.js'
+const departmentManage = useDepartmentManageStore()
+onMounted(async () => {
+  // 获取系统用户名称列表数据
+  await getUserNameList(
+    { name: 'name' },
+    (res) => {
+      const { data } = res
+      // console.log('获取系统用户名称列表数据', data)
+      // 把数据存到 组织结构/用户管理仓库
+      userManage.setUserNameList(data)
+    },
+    (error) => {
+      if (error) {
+        console.log(error)
       }
-    ]
-  }
-])
+    }
+  )
+  // 获取部门名称结构树
+  await getDepartmentTree(
+    {
+      depth: 0,
+      pid: 0
+    },
+    (res) => {
+      const { data } = res
+      console.log('获取部门名称结构树', data)
+      // 更新默认部门
+      defaultDep.value = data[0]
+      currentTreeOption.value = data[0]
+      // 把数据存到 组织结构/部门管理 仓库
+      departmentManage.setDepartmentTree(data)
+      // console.log(departmentManage.DepartmentTree)
+    },
+    (error) => {
+      if (error) {
+        console.log(error)
+      }
+    }
+  )
+  // 获取用户列表数据
+  // 开启表格加载效果
+  baseDataListRef.value.openLoading = true
+  await getUserTableList(
+    {
+      deptId: defaultDep.value.id,
+      name: '',
+      pageIndex: 1,
+      pageSize: 10
+    },
+    (res) => {
+      const { data } = res
+      console.log('获取表格数据', data)
+      sendData.value.tableData = data.rows
+      baseDataListRef.value.openLoading = false
+    },
+    (error) => {
+      if (error) {
+        console.log(error)
+      }
+    }
+  )
+})
+// 定义默认部门 第一个部门
+const defaultDep = ref({})
+// 刷新部门名称结构树
+const handelRefresh = async () => {
+  await getDepartmentTree(
+    {
+      depth: 0,
+      pid: 0
+    },
+    (res) => {
+      const { data } = res
+      console.log('刷新部门名称结构树', data)
+      // 更新默认部门
+      defaultDep.value = data[0]
+      currentTreeOption.value = data[0]
+      // 把数据存到 组织结构/部门管理 仓库
+      departmentManage.setDepartmentTree(data)
+      // console.log(departmentManage.DepartmentTree)
+    },
+    (error) => {
+      if (error) {
+        console.log(error)
+      }
+    }
+  )
+}
 const treeDataPos = ref([
   {
     value: '1',
@@ -332,15 +405,17 @@ const treeDataRole = ref([
     children: [
       {
         value: '1-1',
-        label: '主管'
-      },
-      {
-        value: '1-2',
-        label: '组员'
-      },
-      {
-        value: '1-3',
-        label: '总经理'
+        label: '总经理',
+        children: [
+          {
+            value: '1-1-1',
+            label: '财务总监'
+          },
+          {
+            value: ' 1-1-2',
+            label: '人事总监'
+          }
+        ]
       }
     ]
   }
@@ -361,18 +436,75 @@ const handelSelectRole = (value) => {
 }
 
 const defaultProps = ref({
-  children: 'children',
-  label: 'label'
+  children: 'nodes',
+  label: 'name'
 })
 // 点击树节点的事件
-const handleNodeClick = (data) => {
-  console.log('树形菜单数据:', data)
+const handleNodeClick = async (treeData) => {
+  currentTreeOption.value = treeData
+  console.log('当前部门:', currentTreeOption.value)
+
+  baseDataListRef.value.openLoading = true
+  await getUserTableList(
+    {
+      deptId: currentTreeOption.value.id,
+      name: '',
+      pageIndex: 1,
+      pageSize: 10
+    },
+    (res) => {
+      const { data } = res
+      console.log('点树形菜单请求得到的数据', data)
+      // 渲染
+      sendData.value.tableData = data.rows
+      baseDataListRef.value.openLoading = false
+    },
+    (error) => {
+      if (error) {
+        console.log(error)
+      }
+    }
+  )
+}
+// 当前树形菜单部门数据
+const currentTreeOption = ref({})
+
+// 分页器页面数据容量改变函数
+const handleSizeChange = async (pagesize, currentPage) => {
+  console.log(currentTreeOption.value)
+  console.log('条数:', pagesize, '当前页', currentPage)
+  // 开启表格加载效果
+  baseDataListRef.value.openLoading = true
+  // 分页器改变,需要发请求重新获取数据并渲染
+  await getUserTableList(
+    {
+      deptId: currentTreeOption.value.id,
+      name: '',
+      pageIndex: currentPage,
+      pageSize: pagesize
+    },
+    (res) => {
+      const { data } = res
+      console.log('分页器改变请求的数据', data)
+      // 更新分页器数据
+      sendData.value.total = data.total
+      // 重新渲染
+      // console.log('要改的数组', sendData.value.tableData)
+      sendData.value.tableData = data.rows
+      baseDataListRef.value.openLoading = false
+    },
+    (error) => {
+      if (error) {
+        console.log(error)
+      }
+    }
+  )
 }
 
 // ref数据绑定BaseDataList这个组件
 const baseDataListRef = ref(null)
 // 表格数据传递
-const sendData = {
+const sendData = ref({
   tableColumnAttribute: [
     {
       prop: 'account',
@@ -385,17 +517,17 @@ const sendData = {
       sortable: false
     },
     {
-      prop: 'sex',
+      prop: 'showGender',
       label: '性别',
       sortable: false
     },
     {
-      prop: 'phone',
+      prop: 'mobile',
       label: '手机',
       sortable: false
     },
     {
-      prop: 'QQ',
+      prop: 'qicq',
       label: 'QQ',
       sortable: false
     },
@@ -405,17 +537,17 @@ const sendData = {
       sortable: false
     },
     {
-      prop: 'Department',
+      prop: 'deptName',
       label: '部门',
       sortable: false
     },
     {
-      prop: 'duties',
+      prop: 'positionName',
       label: '职位',
       sortable: false
     },
     {
-      prop: 'role',
+      prop: 'roleName',
       label: '角色',
       sortable: false
     }
@@ -424,46 +556,13 @@ const sendData = {
     {
       account: 'cw',
       name: 'cw',
-      sex: '男',
-      phone: 14763726475,
-      QQ: 17385738475,
-      email: '17385738475@qq.com',
-      Department: '商务部',
-      duties: '财务总监',
-      role: '组员'
-    },
-    {
-      account: 'admin',
-      name: '管理员',
-      sex: '男',
-      phone: 17497374852,
-      QQ: 17385738475,
-      email: '17385738475@qq.com',
-      Department: '零起飞工作室',
-      duties: '技术总监',
-      role: 'null'
-    },
-    {
-      account: 'test',
-      name: 'test',
-      sex: '男',
-      phone: 16583729576,
-      QQ: 17385738475,
-      email: '17385738475@qq.com',
-      Department: '商务部',
-      duties: '董事会',
-      role: '总经理'
-    },
-    {
-      account: 'admin',
-      name: '',
-      sex: '女',
-      phone: 16583729576,
-      QQ: 17385738475,
-      email: '17385738475@qq.com',
-      Department: '商务部',
-      duties: '董事会',
-      role: '超级管理员'
+      showGender: '男',
+      mobile: 14763726475,
+      qicq: 17385738475,
+      email: '17385738475@qicq.com',
+      deptName: '商务部',
+      positionName: '财务总监',
+      roleName: '组员'
     }
   ],
   handleEdit: (row) => {
@@ -472,7 +571,7 @@ const sendData = {
   // 分页数组
   pageSizes: [5, 10, 15],
   total: 100
-}
+})
 // 操作菜单的数据和处理函数
 const dropdownMenuActionsInfo = ref([
   {
@@ -482,10 +581,10 @@ const dropdownMenuActionsInfo = ref([
       editDrawer.value = true
       console.log('修改回调函数', row)
       // 需要发请求获取没有的数据
-      addForm.value.name = row.Department
+      addForm.value.name = row.deptName
       addForm.value.desc = row.DepartmentDes
       addForm.value.sort = row.sort
-      console.log(row.Department)
+      console.log(row.deptName)
     },
     actionName: '修改'
   },
@@ -509,9 +608,9 @@ const addForm = ref({
   account: '',
   password: '',
   name: '',
-  sex: '',
-  phone: '',
-  QQ: '',
+  showGender: '',
+  mobile: '',
+  qicq: '',
   email: '',
   desc: ''
 })
@@ -542,7 +641,7 @@ const formRule = ref({
     { min: 1, max: 10, message: '名称必须是1-10位的字符', trigger: 'blur' }
   ],
   // 手机
-  phone: [
+  mobile: [
     { required: true, message: '请输入手机号码', trigger: 'blur' },
     {
       pattern: /^1[3-9]\d{9}$/,
@@ -550,8 +649,8 @@ const formRule = ref({
       trigger: 'blur'
     }
   ],
-  // QQ
-  QQ: [
+  // qicq
+  qicq: [
     { required: true, message: '请输入QQ号', trigger: 'blur' },
     {
       pattern: /^[1-9][0-9]{4,10}$/,
@@ -618,19 +717,43 @@ const editDrawer = ref(false)
 // 输入框绑定的数据
 const searchKey = ref('')
 // 搜索方法
-const handelSearch = () => {
+const handelSearch = async () => {
   if (searchKey.value === '') {
     ElMessage('搜索关键词不能为空')
     return false
   }
   btnLoading.value = true
-  setTimeout(() => {
-    btnLoading.value = false
-    ElMessage({
-      message: '搜索执行!调接口发请求',
-      type: 'success'
-    })
-  }, 1000)
+  // 开启表格加载效果
+  baseDataListRef.value.openLoading = true
+  // 分页器改变,需要发请求重新获取数据并渲染
+  await getUserTableList(
+    {
+      deptId: currentTreeOption.value.id,
+      name: searchKey.value,
+      pageIndex: 1,
+      pageSize: 10
+    },
+    (res) => {
+      const { data } = res
+      console.log('分页器改变请求的数据', data)
+      // 更新分页器数据
+      sendData.value.total = data.total
+      // 重新渲染
+      // console.log('要改的数组', sendData.value.tableData)
+      sendData.value.tableData = data.rows
+      baseDataListRef.value.openLoading = false
+      btnLoading.value = false
+      ElMessage({
+        message: '搜索成功',
+        type: 'success'
+      })
+    },
+    (error) => {
+      if (error) {
+        console.log(error)
+      }
+    }
+  )
 }
 </script>
 

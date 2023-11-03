@@ -13,12 +13,20 @@ state
         publishing_content:"哈哈哈",
         publisher:'小明',
         release_time:'2023-01-01 22:32:19',
-        status:{
-            
+        status:
+        {
             value:'未读',
             tagType:'danger'
         },
-        recipient:"小红"
+        recipient:"小红",
+        // 以下内容引入但没有展示，研究中
+        // operations: 
+        // {
+        //     value: '查看',
+        // },
+        // {
+        //     value: '删除',
+        // },
     },
     {
         headline:"雨",
@@ -56,7 +64,7 @@ state
    }
 
     return {
-    //  data,
+     data,
      str,
      getData,
      getD1,

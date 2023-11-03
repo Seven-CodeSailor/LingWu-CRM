@@ -2,82 +2,66 @@
  * @Author: BINGWU HuJiaCheng2003@163.com
  * @Date: 2023-10-31 15:54:40
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-10-31 17:59:53
+ * @LastEditTime: 2023-11-01 16:57:45
  * @FilePath: \crm-frontend\src\stores\basic-data\data-dictionary\classification.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
+
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getDictclassifylist } from '@/apis/publicInterface.js'
 import {
-  getPagedict,
-  getDict
+  queryDictclassify,
+  addDictclassify,
+  modifyDictclassify,
+  deleteDictclassify
 } from '@/apis/basic-data/data-dictionary/classification'
 export const useClassificationStore = defineStore('classification', () => {
-  const options = ref([])
-  const getOptions = async (params) => {
-    await getDictclassifylist(
-      params,
-      (response) => {
-        options.value = response.data.rows.map((row) => {
-          return {
-            value: row.typeName,
-            label: row.typeName,
-            typeTag: row.typeTag
-          }
-        })
-      },
-      (error) => {
-        console.log('error', error)
-      }
-    )
-  }
   const tableData = ref([])
-  const getDictList = async () => {
-    await getPagedict(
-      (response) => {
-        tableData.value = response.data.rows.map((row) => {
-          return {
-            id: row.id,
-            name: row.name,
-            sort: row.sort,
-            typeTag: row.typeTag,
-            typeName: row.typename,
-            visible: row.visible ? true : false
-          }
-        })
-      },
-      (error) => {
-        console.log('er', error)
-      }
-    )
+  const total = ref(0)
+  const getDictclassify = async (params) => {
+    console.log('p', params)
+    await queryDictclassify(params)
+      .then((response) => {
+        tableData.value = response.data.rows
+        total.value = response.data.total
+      })
+      .catch((err) => {
+        console.log('err', err)
+      })
   }
-  const queryDictList = async (params) => {
-    await getDict(
-      params,
-      (response) => {
-        tableData.value = response.data.rows.map((row) => {
-          return {
-            id: row.id,
-            name: row.name,
-            sort: row.sort,
-            typeTag: row.typeTag,
-            typeName: row.typename,
-            visible: row.visible ? true : false
-          }
-        })
-        console.log('r', tableData.value)
-      },
-      (error) => {
-        console.log('er', error)
-      }
-    )
+  const addDictclassifyItem = async (params) => {
+    await addDictclassify(params)
+      .then((response) => {
+        console.log('response', response)
+      })
+      .catch((err) => {
+        console.log('err', err)
+      })
+  }
+  const modifyDictclassifyItem = async (params) => {
+    await modifyDictclassify(params)
+      .then((response) => {
+        console.log('r', response)
+      })
+      .catch((err) => {
+        console.log('err', err)
+      })
+  }
+  const deleteDictclassifyItem = async (params) => {
+    deleteDictclassify(params)
+      .then((response) => {
+        console.log('deleteDictclassifyItem', response)
+      })
+      .catch((err) => {
+        console.log('deletDictclassifyItem', err)
+      })
   }
   return {
-    options,
     tableData,
-    getOptions,
-    getDictList,
-    queryDictList
+    total,
+    getDictclassify,
+    addDictclassifyItem,
+    modifyDictclassifyItem,
+    deleteDictclassifyItem
   }
 })

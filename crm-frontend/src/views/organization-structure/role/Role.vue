@@ -201,7 +201,25 @@ import BaseDataList from '@/components/DataList/BaseDataList.vue'
 // import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
 import { Operation, Plus, Search } from '@element-plus/icons-vue'
 // import { ElMessage } from 'element-plus'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+// 导入api方法
+import { getUserTableList } from '@/apis/organizationStructure/user.js'
+onMounted(async () => {
+  await getUserTableList(
+    {
+      deptId: 1,
+      name: 'test',
+      pageIndex: 1,
+      pageSize: 10
+    },
+    (data) => {
+      console.log(data)
+    },
+    (err) => {
+      console.log(err)
+    }
+  )
+})
 // 树形菜单的数据
 const treeData = ref([
   {

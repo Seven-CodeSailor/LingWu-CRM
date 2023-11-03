@@ -53,7 +53,7 @@
               <!-- 表格列使用switch开关 -->
               <template #default="{ row }" v-else-if="item.useSwitch">
                 <el-switch
-                  :model-value="row[item.prop]"
+                  :model-value="row[item.prop] ? true : false"
                   inline-prompt
                   active-text="是"
                   inactive-text="否"
@@ -143,7 +143,9 @@
         </div>
       </div>
       <template v-if="props?.useCalculate">
-        <div>商品金额：{{}}</div>
+        <div>
+          合同金额统计：￥{{}} 回款金额统计：￥{{}} 欠款金额统计：￥{{}}
+        </div>
       </template>
 
       <!-- 分页 -->
