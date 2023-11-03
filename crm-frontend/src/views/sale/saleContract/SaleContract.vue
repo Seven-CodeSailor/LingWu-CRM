@@ -306,8 +306,8 @@ const addGoodsRef = ref(null)
 // 批量删除所选列表
 // let selectArr = ref([])
 // // table表勾选时触发的事件
-// const selectChange = (value) => {
-//   selectArr.value = value
+// const selectChange = () => {
+//   selectArr.value = baseDataListRef.value.rows
 // }
 // 删除成功的回调
 const deleteByQuery = () => {
@@ -476,7 +476,7 @@ const sendData = {
       command: 'update',
       // row为当前行的数据
       handleAction: (row) => {
-        dialogVisible.value = 'ture'
+        dialogVisible.value = 'true'
 
         console.log('修改当前行的数据', row)
       },
@@ -488,7 +488,15 @@ const sendData = {
       // row为当前行的数据
       handleAction: (row) => {
         alert('确认删除吗')
-        console.log('删除当前行数据', row)
+        // 获取当前行的id
+        const id = row.id
+        console.log('删除当前行数据', id)
+        salesContractStore.tableData = salesContractStore.tableData.filter(
+          (item) => {
+            return item.id !== id
+          }
+        )
+        console.log(salesContractStore.tableData)
       },
       actionName: '删除'
     },
@@ -554,8 +562,8 @@ const getSalesContractList = async (params) => {
 // 挂载时获得分页数据
 onMounted(() => {
   const Data = baseDataListRef.value.rows
-  const bb = JSON.parse(JSON.stringify(Data))
-  console.log('bb', bb)
+  // const bb = JSON.parse(JSON.stringify(Data))
+  // console.log('bb', bb)
   const params = {
     pageIndex: 1,
     pageSize: 5

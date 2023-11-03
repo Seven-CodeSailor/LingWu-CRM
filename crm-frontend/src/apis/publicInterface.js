@@ -180,9 +180,28 @@ export const getUserNameList = async (params, success, fail) => {
   )
     .then((response) => {
       // 请求返回的数据就是response,在成功回调函数可以拿到
+      console.log('12313', response)
       success(response)
     })
     .catch((error) => {
       fail(error)
     })
+}
+
+/**
+ * @description: 获取销售合同数据列表  参数字段配置的路径:  crm-frontend\src\stores\salesmanager\SalesContract.js
+ * @param {*} data 请求参数:{name(String)}
+ * @param {*} success 成功回调 这里直接返回一个promise对象去store里处理了 store地址如上
+ * @param {*} fail 失败回调
+ * @Author{*} seven(有问题找我)
+ * @return {*}
+ */
+export const querySalesContractList = async(data) => {
+    return Request.requestJson(
+    Request.GET,
+    'https://mockapi.eolink.com/fhdz9TQ7632232d76db4f62838f5c8793d22b77760ead7b/get-sales-contract-list',
+    {
+    data
+    }
+  )
 }
