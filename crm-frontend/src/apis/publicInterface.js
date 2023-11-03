@@ -1,8 +1,8 @@
 /*
  * @Author: BINGWU HuJiaCheng2003@163.com
  * @Date: 2023-10-28 22:16:05
- * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-02 13:39:59
+ * @LastEditors: setti5 2283356040@qq.com
+ * @LastEditTime: 2023-11-03 19:22:09
  * @FilePath: \crm-frontend\src\apis\publicInterface.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,6 +17,7 @@ const select = useSelect()
  * @param {*} fail 失败的回调
  * @returns
  */
+
 export const getCustomerName = (param, success = () => {}, fail = () => {}) => {
   return new Promise((resolve) => {
     setTimeout(() => {
