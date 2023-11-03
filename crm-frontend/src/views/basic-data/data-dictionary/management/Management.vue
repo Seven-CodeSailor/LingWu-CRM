@@ -8,7 +8,14 @@
       :dropdown-menu-actions-info="dropdownMenuActionsInfo"
       :page-sizes="[5, 10, 15]"
       :total="999"
-      @update-table-data="updateTableData"
+      @update-table-data="
+        (pageSize, pageIndex) => {
+          getTableData({
+            pageSize,
+            pageIndex
+          })
+        }
+      "
       @update-switch-state="get1"
       ref="baseDataListRef"
     >
@@ -19,13 +26,22 @@
         <div class="content">
           <div class="left">
             <el-button type="primary" @click="add">添加数据</el-button>
-            <el-button type="danger" @click="deleteBatches">批量删除</el-button>
+            <el-button type="danger" @click="handleDelete">批量删除</el-button>
           </div>
           <div class="right">
             <ChooseSelect
               des="请选择字典分类"
               :options="managementStore.options"
-              @update:cid="queryTableData"
+              @update:cid="
+                (selectValue) => {
+                  getTableData({
+                    pageIndex: 1,
+                    pageSize: 5,
+                    name: selectValue.value,
+                    typeTag: selectValue.typeTag
+                  })
+                }
+              "
               ref="chooseSelectRef"
             ></ChooseSelect>
             <el-input
@@ -59,74 +75,9 @@ import { useManagementStore } from '@/stores/basic-data/data-dictionary/manageme
 const baseDataListRef = ref(null)
 const chooseSelectRef = ref(null)
 const managementStore = useManagementStore()
-const getOptions = async () => {
-  await managementStore.getOptions()
-}
-// 分类名称
-const name = ref('')
-// 调用标识
-const typeTag = ref('')
-
 // 列的数据id
 const rowId = ref('')
-
-const queryTableData = async (selectValue) => {
-  console.log('qqq')
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  name.value = selectValue.value
-  typeTag.value = selectValue.typeTag
-  await managementStore.queryDictList({
-    pageSize: 5,
-    parseInt: 1,
-    name: name.value,
-    typeTag: typeTag.value
-  })
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-}
-
-const getTableData = async (params) => {
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  await managementStore.getDictList(params)
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-}
-
-const updateTableData = async (pageSize, currentPage) => {
-  const params = {
-    pageSize,
-    pageIndex: currentPage
-  }
-
-  if (!chooseSelectRef.value.selectValue) {
-    getTableData(params)
-  } else {
-    params.name = name.value
-    params.typeTag = typeTag.value
-    console.log('p', params)
-    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-    // 如果用户选择了分类 更新表格数据的函数如下
-    await managementStore.queryDictList(params)
-    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  }
-}
-
-const deleteBatches = () => {
-  if (!baseDataListRef.value.rows.length) {
-    ElMessage.error('请先选择')
-  } else {
-    // 删除的逻辑
-    console.log('1')
-  }
-}
-
-const search = () => {
-  if (!inputValue.value.length) {
-    ElMessage.error('输入不能为空')
-  } else {
-    // 搜索的逻辑
-    console.log('1')
-  }
-}
-
+const inputValue = ref('')
 const tableColumnAttribute = ref([
   {
     prop: 'id',
@@ -162,8 +113,18 @@ const dropdownMenuActionsInfo = [
   {
     command: 'delete',
     // row为当前行的数据
-    handleAction: (row) => {
+    handleAction: async (row) => {
       console.log('删除的回调函数', row)
+      await deleteTableData({ id: row.id }).then(async (res) => {
+        ElMessage({
+          type: 'success',
+          message: res.message
+        })
+        await getTableData({
+          pageIndex: baseDataListRef.value.paginationData.currentPage,
+          pageSize: baseDataListRef.value.paginationData.pageSize
+        })
+      })
     },
     actionName: '删除'
   },
@@ -193,8 +154,37 @@ const dropdownMenuActionsInfo = [
     actionName: '修改'
   }
 ]
+const getOptions = async () => {
+  await managementStore.getOptions()
+}
 
-const inputValue = ref('')
+const getTableData = async (params) => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  await managementStore.queryDictList(params)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+
+const deleteTableData = async (params) => {
+  return await managementStore.deleteDictList(params)
+}
+
+const handleDelete = () => {
+  if (!baseDataListRef.value.rows.length) {
+    ElMessage.error('请先选择')
+  } else {
+    // 删除的逻辑
+    console.log('1')
+  }
+}
+
+const search = () => {
+  if (!inputValue.value.length) {
+    ElMessage.error('输入不能为空')
+  } else {
+    // 搜索的逻辑
+    console.log('1')
+  }
+}
 
 const get1 = (state, row) => {
   console.log('调用后端的接口发请求修改开关的state后才能真正改变开关的状态')

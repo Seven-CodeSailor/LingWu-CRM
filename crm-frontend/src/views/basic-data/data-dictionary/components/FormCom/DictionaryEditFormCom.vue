@@ -47,25 +47,17 @@
           </el-form-item>
           <el-form-item
             label="下级层数设置"
-            prop="sort"
+            prop="seotitle"
             v-if="!(props.title === '编辑分类')"
           >
-            <el-input-number
-              v-model="form.seotitle"
-              :min="0"
-              @change="handleChange"
-            />
+            <el-input-number v-model="form.seotitle" :min="0" />
           </el-form-item>
           <el-form-item
             label="层数提成比例"
-            prop="sort"
+            prop="keywords"
             v-if="!(props.title === '编辑分类')"
           >
-            <el-input-number
-              v-model="form.keywords"
-              :min="0"
-              @change="handleChange"
-            />
+            <el-input-number v-model="form.keywords" :min="0" />
           </el-form-item>
         </el-form>
       </template>
@@ -119,10 +111,16 @@ const props = defineProps({
 const formRef = ref(null)
 
 const rules = ref({
-  // name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
-  // typeName: [{ required: true, message: '请输入调用标识', trigger: 'blur' }],
-  // intro: [{ required: true, message: '请输入简介', trigger: 'blur' }],
-  // sort: [{ required: true, message: '', trigger: 'blur' }]
+  typeTag: [{ required: true, message: '请输入调用标识', trigger: 'blur' }],
+  typeName: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
+  intro: [{ required: true, message: '请输入简介', trigger: 'blur' }],
+  sort: [{ required: true, message: '请输入排序', trigger: 'change' }],
+  seotitle: [
+    { required: true, message: '请输入下级层数设置', trigger: 'change' }
+  ],
+  keywords: [
+    { required: true, message: '请输入层数提成比例', trigger: 'change' }
+  ]
 })
 
 defineExpose({

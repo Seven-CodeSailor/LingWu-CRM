@@ -1,10 +1,10 @@
 <!--
- * @Author: BINGWU HuJiaCheng2003@163.com
+ * @Author: BINGWU
  * @Date: 2023-10-26 21:33:34
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-01 17:20:40
+ * @LastEditTime: 2023-11-03 17:35:23
  * @FilePath: \crm-frontend\src\views\basic-data\data-dictionary\classification\Classification.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
 -->
 <template>
   <div class="classfication">
@@ -16,7 +16,14 @@
       :table-data="classficationStore.tableData"
       :page-size="[5, 10, 15]"
       :total="classficationStore.total"
-      @update-table-data="updateTableData"
+      @update-table-data="
+        (pageSize, pageIndex) => {
+          getTableData({
+            pageSize,
+            pageIndex
+          })
+        }
+      "
       ref="baseDataListRef"
     >
       <template #ico>
@@ -60,6 +67,8 @@ const tableColumnAttribute = ref([
     sortable: true
   }
 ])
+const DictionaryEditFormRef = ref(null)
+const title = ref('')
 const baseDataListRef = ref(null)
 const getTableData = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
@@ -67,18 +76,42 @@ const getTableData = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
 const addTableData = async (params) => {
-  await classficationStore.addDictclassifyItem(params)
+  return await classficationStore.addDictclassifyItem(params)
 }
 const modifyTableData = async (params) => {
-  await classficationStore.modifyDictclassifyItem(params)
+  return await classficationStore.modifyDictclassifyItem(params)
 }
 
-const updateTableData = (pageSize, currentPage) => {
-  getTableData({ pageSize, pageIndex: currentPage })
+const deleteTableData = async (params) => {
+  return await classficationStore.deleteDictclassifyItem(params)
 }
 
 const handleDelete = (row) => {
-  console.log('删除', row)
+  ElMessageBox.confirm('确认要删除吗?', '警告', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(() => {
+      const { id } = row
+      deleteTableData({ id }).then(async (res) => {
+        ElMessage({
+          type: 'success',
+          message: res.message
+        })
+        // 更新表格数据
+        await getTableData({
+          pageSize: baseDataListRef.value.paginationData.pageSize,
+          pageIndex: baseDataListRef.value.paginationData.currentPage
+        })
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '删除取消'
+      })
+    })
 }
 
 const handleEdit = (row) => {
@@ -106,34 +139,38 @@ const submitType = async () => {
       params.visible = params.visible ? 1 : 0
       if (title.value === '添加分类') {
         // 接口函数
-        await addTableData(params)
+        const res = await addTableData(params)
+        ElMessage({
+          type: 'success',
+          message: res.message
+        })
       } else {
         // 修改的接口函数
-        await modifyTableData(params)
+        const res = await modifyTableData(params)
+        ElMessage({
+          type: 'success',
+          message: res.message
+        })
       }
+      // 清空表单
+      DictionaryEditFormRef.value.form = {
+        typeName: '',
+        typeTag: '',
+        intro: '',
+        sort: 0,
+        visible: false,
+        seotitle: 0,
+        keywords: 0
+      }
+      DictionaryEditFormRef.value.visible = false
+      // 更新表格数据
+      await getTableData({
+        pageSize: baseDataListRef.value.paginationData.pageSize,
+        pageIndex: baseDataListRef.value.paginationData.currentPage
+      })
     }
   })
-  // 清空表单
-  DictionaryEditFormRef.value.form = {
-    typeName: '',
-    typeTag: '',
-    intro: '',
-    sort: 0,
-    visible: false,
-    seotitle: 0,
-    keywords: 0
-  }
-  DictionaryEditFormRef.value.visible = false
-  // 更新表格数据
-  await getTableData({
-    pageSize: baseDataListRef.value.paginationData.pageSize,
-    pageIndex: baseDataListRef.value.paginationData.currentPage
-  })
 }
-
-const DictionaryEditFormRef = ref(null)
-
-const title = ref('')
 
 onMounted(() => {
   // 测试
