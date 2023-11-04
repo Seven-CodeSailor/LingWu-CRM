@@ -203,10 +203,23 @@ import { SoldOut, Plus } from '@element-plus/icons-vue'
 // 搜索框的searchDetails方法还需完善
 
 // 批量删除所选列表
-let selectArr = ref([])
-// table表勾选时触发的事件
-const selectChange = (value) => {
-  selectArr.value = value
+const selectArr = ref([])
+
+const isDisabled = ref(true)
+// // table表勾选时触发的事件
+const selectChange = (length) => {
+  if (length === 0) {
+    // 改变按钮的状态
+    isDisabled.value = true
+  } else {
+    selectArr.value = baseDataListRef.value.rows
+    // salesOpportunityStore.tableData =
+    //       salesOpportunityStore.tableData.filter((item) => {
+    //         return item.chance_id !== selectArr.value.chance_id
+    //       })
+    console.log(selectArr.value)
+    isDisabled.value = false
+  }
 }
 // 删除成功的回调
 const deleteByQuery = () => {
