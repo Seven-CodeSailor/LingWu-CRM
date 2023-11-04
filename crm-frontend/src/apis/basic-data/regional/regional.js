@@ -1,16 +1,19 @@
 /*
  * @Author: BINGWU
  * @Date: 2023-11-04 00:24:28
- * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-04 11:25:54
- * @FilePath: \crm-frontend\src\apis\basic-data\regional\regional.js
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-04 17:54:52
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\basic-data\regional\regional.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from '@/apis/request.js'
-const baseUrl = '/api1'
 
 export const queryListArea = async (params) => {
-  return await Request.requestJson(Request.GET, baseUrl + '/query-list-area', {
-    params
-  })
+  return await Request.requestJson(
+    Request.GET,
+    '/bingwu/j3-area/query-list-area',
+    {
+      params
+    }
+  )
 }

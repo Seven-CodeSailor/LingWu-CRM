@@ -4,7 +4,7 @@ import { ElMessage } from 'element-plus'
 import { userStore } from '../stores/user'
 
 // 配置axios基本属性
-// http.defaults.baseURL = import.meta.env.VITE_API_URL
+http.defaults.baseURL = import.meta.env.VITE_API_URL
 http.defaults.timeout = 10000
 
 // 数据上传数据类型

@@ -1,9 +1,9 @@
 /*
  * @Author: BINGWU
  * @Date: 2023-10-26 20:52:05
- * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-04 10:59:06
- * @FilePath: \crm-frontend\vite.config.js
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-04 17:49:54
+ * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import { fileURLToPath, URL } from 'node:url'
@@ -26,6 +26,11 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
+        '/api/bingwu': {
+          changeOrigin: true,
+          target: 'http://118.31.61.96:10031',
+          rewrite: (path) => path.replace(/^\/api\/bingwu/, '')
+        },
         '/api': {
           changeOrigin: true,
           // target: 'http://localhost:10100',
@@ -40,11 +45,6 @@ export default ({ mode }) =>
           changeOrigin: true,
           target: 'http://localhost:10680',
           rewrite: (path) => path.replace(/^\/captcha/, '')
-        },
-        '/api1': {
-          changeOrigin: true,
-          target: 'http://118.31.61.96:10031',
-          rewrite: (path) => path.replace(/^\/api1/, '')
         }
       }
     },
