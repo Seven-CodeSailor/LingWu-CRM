@@ -18,6 +18,8 @@ export const delSku = async (params) => {
   return await Request.requestJson(
     Request.POST,
     baseUrl + '/j4Commodity/commoditySku/del-sku',
-    params
+    {
+      params
+    }
   )
 }
