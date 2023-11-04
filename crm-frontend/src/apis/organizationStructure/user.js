@@ -2,7 +2,7 @@
  * @Author: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
  * @Date: 2023-11-02 15:18:28
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-02 19:52:21
+ * @LastEditTime: 2023-11-04 13:06:08
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\organizationStructure\user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -18,9 +18,9 @@ import Request from '../request'
  */
 export const getUserTableList = async (params, success, fail) => {
   await Request.requestJson(
-    Request.POST,
+    Request.GET,
     'http://101.34.252.80:10110/orgstructure/user/user/query-all-by-deptid-or-name',
-    params
+    { params }
   )
     .then((response) => {
       // 请求返回的数据就是response,在成功回调函数可以拿到
