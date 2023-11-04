@@ -1,3 +1,11 @@
+/*
+ * @Author: setti5 2283356040@qq.com
+ * @Date: 2023-10-20 22:10:31
+ * @LastEditors: setti5 2283356040@qq.com
+ * @LastEditTime: 2023-11-04 19:08:09
+ * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -18,6 +26,11 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
+        '/api/pipazi': {
+          changeOrigin: true,
+          target: 'http://1.15.64.225:10032',
+          rewrite: (path) => path.replace(/^\/api\/pipazi/, '')
+        },
         '/api': {
           changeOrigin: true,
           // target: 'http://localhost:10100',

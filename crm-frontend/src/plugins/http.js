@@ -61,7 +61,8 @@ export default (router) => {
       let store = userStore()
       let token = store.getToken
       if (token) {
-        config.headers.common['Authorization'] = 'Bearer ' + token
+        // config.headers.common['Authorization'] = 'Bearer ' + token
+        config.headers.common['Authorization'] = token
       }
       //处理提交方式参数序列化操作
       if (config.upType === http.upType.json) {

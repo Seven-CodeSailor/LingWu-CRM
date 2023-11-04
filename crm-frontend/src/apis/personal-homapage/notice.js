@@ -2,13 +2,13 @@
  * @Author: pipazi 2283356040@qq.com
  * @Date: 2023-11-01 21:29:40
  * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-03 22:37:11
+ * @LastEditTime: 2023-11-04 19:46:00
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\personal-homapage\notice.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 import Request from '@/apis/request.js'
-
+const basrUrl = '/pipazi'
 // 个人首页 —— 公告通知接口
 /**
  * @description: 发布公告
@@ -23,10 +23,10 @@ import Request from '@/apis/request.js'
     }
  */
 export const releaseNotice = async (params, success, fail) => {
-  await Request.requestJson(
+  await Request.requestForm(
     Request.POST,
-    'https://mock.apifox.cn/m1/3500676-0-default/getdata',
-    {}
+    basrUrl+'/j3-notice-remind/add-notice',
+    params
   )
     .then((response) => {
       success(response)
