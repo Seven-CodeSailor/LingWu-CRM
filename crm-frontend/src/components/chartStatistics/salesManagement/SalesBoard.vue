@@ -246,7 +246,7 @@ let initChart = () => {
       text: '销售榜',
       textStyle: {
         fontWeight: 'bolder',
-        fontSize: 15
+        fontSize: 20
       }
     },
     // 图例组件
@@ -259,10 +259,9 @@ let initChart = () => {
     },
     // 修改坐标系显示大小
     grid: {
-      top: '15%',
-      left: 0,
-      height: 'auto',
-      width: 450,
+      top: '18%',
+      left: '1%',
+      bottom: 0,
 
       containLabel: true
     },
@@ -273,7 +272,7 @@ let initChart = () => {
     xAxis: {
       name: '销售金额/元',
       nameTextStyle: {
-        fontSize: 12
+        fontSize: 15
       },
       type: 'value',
       min: 0,
@@ -295,7 +294,7 @@ let initChart = () => {
         showMinLabel: true,
         margin: 8,
         fontWeight: 'normal',
-        fontSize: 12,
+        fontSize: 15,
         align: 'center'
       },
       // 坐标轴标签
@@ -330,8 +329,8 @@ let initChart = () => {
         axisLabel: {
           show: true,
           align: 'center',
-          margin: 30,
-          fontSize: 12
+          margin: 60,
+          fontSize: 15
         },
         data: chartData.value.salesman
       }
@@ -363,16 +362,17 @@ let initChart = () => {
 
 <style scoped>
 .salesBoard {
-  width: 530px;
-  height: 500px;
+  width: 1200px;
+  height: 600px;
 }
 /* 图表样式 */
 .chartBox {
-  margin: 0;
-  width: 530px;
+  margin-left: 2%;
+  width: 1000px;
   height: 500px;
 }
 .chartCheckBox {
-  margin-left: 320px;
+  margin-left: 900px;
+  margin-right: 0;
 }
 </style>

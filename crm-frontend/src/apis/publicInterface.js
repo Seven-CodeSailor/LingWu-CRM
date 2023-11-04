@@ -197,7 +197,7 @@ export const getUserNameList = async (params, success, fail) => {
  * @Author{*} seven(有问题找我)
  * @return {*}
  */
-export const querySalesContractList = async (data) => {
+export const querySalesContractList = (data) => {
   return Request.requestJson(
     Request.GET,
     'https://mockapi.eolink.com/fhdz9TQ7632232d76db4f62838f5c8793d22b77760ead7b/get-sales-contract-list',
