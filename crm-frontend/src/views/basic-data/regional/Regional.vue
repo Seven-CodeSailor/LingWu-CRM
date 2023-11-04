@@ -9,6 +9,15 @@
       :total="regionalStore.total"
       :pageSizes="[5, 10, 15]"
       :usePagination="true"
+      @update-table-data="
+        (pageSize, pageIndex) => {
+          getTableData({
+            pageSize,
+            pageIndex
+          })
+        }
+      "
+      ref="baseDataListRef"
     >
       <template #ico>
         <el-icon><icon-message-box /></el-icon>
@@ -43,7 +52,11 @@
               placeholder="请输入搜索名称"
               style="margin: 0 4px; width: 200px"
             />
-            <el-button type="primary" style="margin-left: 4px">
+            <el-button
+              type="primary"
+              style="margin-left: 4px"
+              @click="handleSearch"
+            >
               <el-icon style="margin-right: 4px"><icon-search /></el-icon
               >搜索</el-button
             >
@@ -67,6 +80,7 @@ import { ref, onMounted } from 'vue'
 const regionalFormRef = ref(null)
 const regionalStore = useRegionalStore()
 const title = ref('')
+
 const tableColumnAttribute = [
   {
     prop: 'name',
@@ -87,10 +101,31 @@ const tableColumnAttribute = [
     useSwitch: true
   }
 ]
-
+const baseDataListRef = ref(null)
+const getTableData = async (params) => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  await regionalStore.getListAreaItem(params)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+const deleteTableData = async (params) => {
+  return await regionalStore.deleteAreaItem(params)
+}
 // 传入删除操作的函数就会显示删除按钮
-const handleDelete = (row) => {
-  console.log('删除', row)
+const handleDelete = async (row) => {
+  await deleteTableData({ id: row.id })
+    .then((res) => {
+      ElMessage({
+        message: res.message,
+        type: 'success'
+      })
+    })
+    .catch((err) => {
+      console.log('error', err)
+    })
+  getTableData({
+    pageSize: baseDataListRef.value.paginationData.pageSize,
+    pageIndex: baseDataListRef.value.paginationData.currentpage
+  })
 }
 const handleEdit = (row) => {
   console.log('编辑', row)
@@ -105,13 +140,13 @@ const handleEdit = (row) => {
   regionalFormRef.value.form = { name, intro, sort, visible }
 }
 
-const findObjectById = (arr, idToFind) => {
+const findObjectById = (arr, parentID) => {
   for (const obj of arr) {
-    if (obj.id === idToFind) {
+    if (obj.parentID === parentID) {
       return obj
     }
     if (obj.children && obj.children.length > 0) {
-      const result = findObjectById(obj.children, idToFind)
+      const result = findObjectById(obj.children, parentID)
       if (result) {
         return result
       }
@@ -121,13 +156,28 @@ const findObjectById = (arr, idToFind) => {
 }
 
 const addTableData = (params) => {}
+const inputValue = ref('')
+const handleSearch = async () => {
+  if (!inputValue.value) {
+    ElMessage({
+      type: 'danger',
+      message: '输入不能为空'
+    })
+  } else {
+    await getTableData({
+      pageSize: 5,
+      pageIndex: 1,
+      name: inputValue
+    })
+  }
+}
 const handleAdd = () => {
   title.value = '添加'
   regionalFormRef.value.visible = true
 }
 
 onMounted(() => {
-  regionalStore.getListAreaItem()
+  getTableData({ pageSize: 5, pageIndex: 1 })
 })
 </script>
 

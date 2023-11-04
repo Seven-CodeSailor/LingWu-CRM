@@ -11,7 +11,7 @@
           </el-form-item>
           <el-form-item label="父级栏目">
             <el-tree-select
-              v-model="selectValue"
+              v-model="form.selectValue"
               :data="props.areaTreeData"
               :render-after-expand="false"
             />
@@ -55,7 +55,6 @@ const form = ref({
   intro: '',
   selectValue: ''
 })
-const selectValue = ref('')
 const props = defineProps({
   handleSubmit: {
     type: Function,

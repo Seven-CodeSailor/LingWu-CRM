@@ -2,22 +2,24 @@
  * @Author: BINGWU
  * @Date: 2023-11-04 00:24:28
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-04 14:42:00
+ * @LastEditTime: 2023-11-04 18:56:40
  * @FilePath: \crm-frontend\src\apis\basic-data\regional\regional.js
  * @Describe:
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from '@/apis/request.js'
-const baseUrl = '/wahaha'
+const baseUrl = '/java3-area'
 /**
  * @description: 获取区域列表
  * @param {Object} params
  * @return {Promise}
  */
 export const queryListArea = async (params) => {
-  return await Request.requestJson(Request.GET, baseUrl + '/query-list-area', {
+  return await Request.requestJson(
+    Request.GET,
+    baseUrl + '/j3-area/query-list-area',
     params
-  })
+  )
 }
 /**
  * @description: 删除地区
@@ -28,9 +30,7 @@ export const deleteArea = async (params) => {
   return await Request.requestJson(
     Request.DELETE,
     baseUrl + '/j3-area/deleteArea',
-    {
-      params
-    }
+    params
   )
 }
 /**

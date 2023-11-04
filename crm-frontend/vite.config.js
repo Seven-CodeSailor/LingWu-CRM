@@ -2,7 +2,7 @@
  * @Author: BINGWU
  * @Date: 2023-10-26 20:52:05
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-04 12:21:24
+ * @LastEditTime: 2023-11-04 18:07:42
  * @FilePath: \crm-frontend\vite.config.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -26,6 +26,16 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
+        '/api/java3-warehouse': {
+          changeOrigin: true,
+          target: 'http://8.130.82.226:10033',
+          rewrite: (path) => path.replace(/^\/api\/java3-warehouse/, '')
+        },
+        '/api/java3-area': {
+          changeOrigin: true,
+          target: 'http://118.31.61.96:10031',
+          rewrite: (path) => path.replace(/^\/api\/java3-area/, '')
+        },
         '/api': {
           changeOrigin: true,
           // target: 'http://localhost:10100',

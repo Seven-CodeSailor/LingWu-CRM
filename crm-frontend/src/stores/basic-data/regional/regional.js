@@ -9,124 +9,84 @@ import {
   selectArea
 } from '@/apis/basic-data/regional/regional'
 export const useRegionalStore = defineStore('regional', () => {
-  const tableData = ref([
-    {
-      id: 1,
-      name: '西南地区',
-      parentID: '0',
-      sort: 1,
-      visible: 1,
-      intro: 'xxxx'
-    },
-    {
-      id: 2,
-      name: '中东地区',
-      parentID: '1',
-      sort: 2,
-      visible: 0,
-      intro: '哈哈哈哈'
-    },
-    {
-      id: 3,
-      name: '美国',
-      parentID: '1',
-      sort: 3,
-      visible: 0,
-      intro: '枪战每一天'
-    },
-    {
-      id: 4,
-      name: '中国',
-      parentID: '1',
-      sort: 4,
-      visible: 1,
-      intro: '中国'
-    },
-    {
-      id: 5,
-      name: '日本',
-      parentID: '1',
-      sort: 5,
-      visible: 0,
-      intro: '日本'
-    },
-    {
-      id: 6,
-      name: '韩国',
-      parentID: '1',
-      sort: 6,
-      visible: 1,
-      intro: '韩国'
-    }
-  ])
+  const tableData = ref([])
   const total = ref(999)
   const areaTreeData = ref([
     {
-      id: 1,
-      label: '西南地区',
-      sort: 1,
-      visible: 1,
-      intro: 'xxxx',
-      level: 1,
+      value: '1',
+      label: 'Level one 1',
       children: [
         {
-          id: 2,
-          label: '中东地区',
-          sort: 2,
-          visible: 0,
-          intro: '哈哈哈哈',
-          treeName: '||-西南地区',
-          level: 2,
-          children: []
+          value: '1-1',
+          label: 'Level two 1-1',
+          children: [
+            {
+              value: '1-1-1',
+              label: 'Level three 1-1-1'
+            }
+          ]
+        }
+      ]
+    },
+    {
+      value: '2',
+      label: 'Level one 2',
+      children: [
+        {
+          value: '2-1',
+          label: 'Level two 2-1',
+          children: [
+            {
+              value: '2-1-1',
+              label: 'Level three 2-1-1'
+            }
+          ]
         },
         {
-          id: 3,
-          label: '美国',
-          sort: 3,
-          visible: 0,
-          intro: '枪战每一天',
-          treeName: '||-西南地区',
-          level: 2,
-          children: []
+          value: '2-2',
+          label: 'Level two 2-2',
+          children: [
+            {
+              value: '2-2-1',
+              label: 'Level three 2-2-1'
+            }
+          ]
+        }
+      ]
+    },
+    {
+      value: '3',
+      label: 'Level one 3',
+      children: [
+        {
+          value: '3-1',
+          label: 'Level two 3-1',
+          children: [
+            {
+              value: '3-1-1',
+              label: 'Level three 3-1-1'
+            }
+          ]
         },
         {
-          id: 4,
-          label: '中国',
-          sort: 4,
-          visible: 1,
-          intro: '中国',
-          treeName: '||-西南地区',
-          level: 2,
-          children: []
-        },
-        {
-          id: 5,
-          label: '日本',
-          sort: 5,
-          visible: 0,
-          intro: '日本',
-          treeName: '||-西南地区',
-          level: 2,
-          children: []
-        },
-        {
-          id: 6,
-          label: '韩国',
-          sort: 6,
-          visible: 1,
-          intro: '韩国',
-          treeName: '||-西南地区',
-          level: 2,
-          children: []
+          value: '3-2',
+          label: 'Level two 3-2',
+          children: [
+            {
+              value: '3-2-1',
+              label: 'Level three 3-2-1'
+            }
+          ]
         }
       ]
     }
   ])
   const getListAreaItem = async (params) => {
-    console.log('queryListArea', params)
     await queryListArea(params)
       .then((response) => {
-        console.log('res', response)
+        console.log('res', response.data.rows)
+        tableData.value = response.data.rows
+        total.value = response.data.total
       })
       .catch((err) => {
         console.log('err', err)

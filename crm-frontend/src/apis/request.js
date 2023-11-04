@@ -49,7 +49,7 @@ export default class Request {
         break
       case Request.DELETE:
         config.method = 'delete'
-        config.data = data
+        config.params = data
         break
     }
     // 发送真正的请求
