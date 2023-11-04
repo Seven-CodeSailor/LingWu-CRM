@@ -102,11 +102,12 @@
         <el-form-item label="部门" :label-width="labelWidth">
           <el-tree-select
             v-model="selectValue"
-            :data="treeData"
+            :data="departmentManage.DepartmentTree"
             check-strictly
             default-expand-all
             :render-after-expand="false"
             clearable
+            :props="defaultProps"
             :highlight-current="true"
             @change="handelSelectDep"
           />
@@ -114,7 +115,7 @@
         <el-form-item label="职位" :label-width="labelWidth">
           <el-tree-select
             v-model="selectPosition"
-            :data="treeDataPos"
+            :data="PostManage.userPostList"
             check-strictly
             default-expand-all
             :render-after-expand="false"
@@ -189,7 +190,7 @@
         <el-form-item label="部门" :label-width="labelWidth">
           <el-tree-select
             v-model="selectValue"
-            :data="treeData"
+            :data="departmentManage.DepartmentTree"
             check-strictly
             default-expand-all
             :render-after-expand="false"
@@ -201,7 +202,7 @@
         <el-form-item label="职位" :label-width="labelWidth">
           <el-tree-select
             v-model="selectPosition"
-            :data="treeDataPos"
+            :data="PostManage.userPostList"
             check-strictly
             default-expand-all
             :render-after-expand="false"
@@ -254,7 +255,7 @@ import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import { Operation, Plus, Search } from '@element-plus/icons-vue'
 // import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
-import { getUserNameList } from '@/apis/publicInterface.js'
+import { getUserNameList, getPostNameList } from '@/apis/publicInterface.js'
 import { getDepartmentTree } from '@/apis/organizationStructure/department.js'
 import { getUserTableList } from '@/apis/organizationStructure/user.js'
 // 导入 组织结构/用户管理 仓库
@@ -263,6 +264,9 @@ const userManage = useUserManageStore()
 // 导入 组织结构/部门管理 仓库
 import useDepartmentManageStore from '@/stores/organizationStructure/departmentManage.js'
 const departmentManage = useDepartmentManageStore()
+// 导入 组织结构/岗位管理仓库
+import usePostManageStore from '../../../stores/organizationStructure/postManagement.js'
+const PostManage = usePostManageStore()
 onMounted(async () => {
   // 获取系统用户名称列表数据
   await getUserNameList(
@@ -270,8 +274,16 @@ onMounted(async () => {
     (res) => {
       const { data } = res
       // console.log('获取系统用户名称列表数据', data)
+      const arrData = data.map((item) => {
+        // 修改字段 id=>value name=>label
+        const obj = { value: '', label: '' }
+        obj.value = item.id
+        obj.label = item.name
+        return obj
+      })
+      // console.log('矫正后的数据', arrData)
       // 把数据存到 组织结构/用户管理仓库
-      userManage.setUserNameList(data)
+      userManage.setUserNameList(arrData)
     },
     (error) => {
       if (error) {
@@ -291,9 +303,21 @@ onMounted(async () => {
       // 更新默认部门
       defaultDep.value = data[0]
       currentTreeOption.value = data[0]
+      // 矫正数据
+      const newArr = data.map((item) => {
+        for (let key in item) {
+          if (key === 'id') {
+            item.value = item[key]
+          }
+          if (key === 'name') {
+            item.label = item[key]
+          }
+        }
+        return item
+      })
       // 把数据存到 组织结构/部门管理 仓库
-      departmentManage.setDepartmentTree(data)
-      // console.log(departmentManage.DepartmentTree)
+      departmentManage.setDepartmentTree(newArr)
+      console.log('存仓库', departmentManage.DepartmentTree)
     },
     (error) => {
       if (error) {
@@ -304,18 +328,51 @@ onMounted(async () => {
   // 获取用户列表数据
   // 开启表格加载效果
   baseDataListRef.value.openLoading = true
+  // console.log('id是', defaultDep.value.id)
+  console.log('当前的条数', $page.value.pageSize)
   await getUserTableList(
     {
       deptId: defaultDep.value.id,
       name: '',
-      pageIndex: 1,
-      pageSize: 10
+      pageIndex: $page.value.currentPage,
+      pageSize: $page.value.pageSize
     },
     (res) => {
       const { data } = res
       console.log('获取表格数据', data)
       sendData.value.tableData = data.rows
+      sendData.value.total = data.total
       baseDataListRef.value.openLoading = false
+    },
+    (error) => {
+      baseDataListRef.value.openLoading = false
+      if (error) {
+        console.log(error)
+      }
+    }
+  )
+
+  // 获取岗位名称列表数据
+  await getPostNameList(
+    {
+      positionName: ''
+    },
+    (res) => {
+      const { data } = res
+      console.log('获取岗位名称列表数据', data)
+      // 矫正数据
+      const newArr = data.map((item) => {
+        // 修改字段 id=>value name=>label
+        const obj = { value: '', label: '' }
+        obj.value = item.id
+        obj.label = item.name
+        return obj
+      })
+      console.log('矫正字段', newArr)
+      // 存到 组织管理/岗位管理仓库
+      // setTimeout(() => {
+      //   PostManage.setPostList(newArr)
+      // })
     },
     (error) => {
       if (error) {
@@ -323,6 +380,12 @@ onMounted(async () => {
       }
     }
   )
+})
+// 获取分页数据
+const $page = ref()
+setTimeout(() => {
+  $page.value = baseDataListRef.value.paginationData
+  console.log('当前分页器数据', $page.value)
 })
 // 定义默认部门 第一个部门
 const defaultDep = ref({})
@@ -350,54 +413,54 @@ const handelRefresh = async () => {
     }
   )
 }
-const treeDataPos = ref([
-  {
-    value: '1',
-    label: '董事会',
-    children: [
-      {
-        value: '1-1',
-        label: '总经理',
-        children: [
-          {
-            value: '1-1-1',
-            label: '财务总监'
-          },
-          {
-            value: ' 1-1-2',
-            label: '人事总监'
-          },
-          {
-            value: '1-1-3',
-            label: '技术总监'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    value: '2',
-    label: '不懂事会',
-    children: [
-      {
-        value: '2-1',
-        label: '鸡'
-      },
-      {
-        value: '2-2',
-        label: '你'
-      },
-      {
-        value: '2-3',
-        label: '太'
-      },
-      {
-        value: '2-4',
-        label: '美'
-      }
-    ]
-  }
-])
+// const treeDataPos = ref([
+//   {
+//     value: '1',
+//     label: '董事会',
+//     children: [
+//       {
+//         value: '1-1',
+//         label: '总经理',
+//         children: [
+//           {
+//             value: '1-1-1',
+//             label: '财务总监'
+//           },
+//           {
+//             value: ' 1-1-2',
+//             label: '人事总监'
+//           },
+//           {
+//             value: '1-1-3',
+//             label: '技术总监'
+//           }
+//         ]
+//       }
+//     ]
+//   },
+//   {
+//     value: '2',
+//     label: '不懂事会',
+//     children: [
+//       {
+//         value: '2-1',
+//         label: '鸡'
+//       },
+//       {
+//         value: '2-2',
+//         label: '你'
+//       },
+//       {
+//         value: '2-3',
+//         label: '太'
+//       },
+//       {
+//         value: '2-4',
+//         label: '美'
+//       }
+//     ]
+//   }
+// ])
 const treeDataRole = ref([
   {
     value: '1',
@@ -437,29 +500,32 @@ const handelSelectRole = (value) => {
 
 const defaultProps = ref({
   children: 'nodes',
-  label: 'name'
+  label: 'name',
+  value: 'id'
 })
 // 点击树节点的事件
 const handleNodeClick = async (treeData) => {
   currentTreeOption.value = treeData
   console.log('当前部门:', currentTreeOption.value)
-
+  console.log('当前id:', currentTreeOption.value.id)
   baseDataListRef.value.openLoading = true
   await getUserTableList(
     {
       deptId: currentTreeOption.value.id,
-      name: '',
-      pageIndex: 1,
-      pageSize: 10
+      // name: '',
+      pageIndex: $page.value.currentPage,
+      pageSize: $page.value.pageSize
     },
     (res) => {
       const { data } = res
       console.log('点树形菜单请求得到的数据', data)
       // 渲染
       sendData.value.tableData = data.rows
+      sendData.value.total = data.total
       baseDataListRef.value.openLoading = false
     },
     (error) => {
+      baseDataListRef.value.openLoading = false
       if (error) {
         console.log(error)
       }
@@ -494,6 +560,7 @@ const handleSizeChange = async (pagesize, currentPage) => {
       baseDataListRef.value.openLoading = false
     },
     (error) => {
+      baseDataListRef.value.openLoading = false
       if (error) {
         console.log(error)
       }
@@ -620,54 +687,54 @@ const labelWidth = ref('100px')
 const theAddForm = ref()
 const editForm = ref()
 //表单校验规则
-const formRule = ref({
-  // 账号
-  account: [
-    { required: true, message: '请输入账号名称', trigger: 'blur' },
-    { min: 1, max: 15, message: '账号必须是1-15位的字符', trigger: 'blur' }
-  ],
-  // 密码
-  password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    {
-      pattern: /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/,
-      message: '密码至少包含一个字母和一个数字且长度大于等于8',
-      trigger: 'blur'
-    }
-  ],
-  //名称
-  name: [
-    { required: true, message: '请输入名称', trigger: 'blur' },
-    { min: 1, max: 10, message: '名称必须是1-10位的字符', trigger: 'blur' }
-  ],
-  // 手机
-  mobile: [
-    { required: true, message: '请输入手机号码', trigger: 'blur' },
-    {
-      pattern: /^1[3-9]\d{9}$/,
-      message: '请输入正确的电话格式',
-      trigger: 'blur'
-    }
-  ],
-  // qicq
-  qicq: [
-    { required: true, message: '请输入QQ号', trigger: 'blur' },
-    {
-      pattern: /^[1-9][0-9]{4,10}$/,
-      message: '请输入正确的QQ号',
-      trigger: 'blur'
-    }
-  ],
-  // 邮箱
-  email: [
-    { required: true, message: '请输入邮箱', trigger: 'blur' },
-    {
-      pattern: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
-      message: '请输入正确的邮箱格式',
-      trigger: 'blur'
-    }
-  ]
-})
+// const formRule = ref({
+//   // 账号
+//   account: [
+//     { required: true, message: '请输入账号名称', trigger: 'blur' },
+//     { min: 1, max: 15, message: '账号必须是1-15位的字符', trigger: 'blur' }
+//   ],
+//   // 密码
+//   password: [
+//     { required: true, message: '请输入密码', trigger: 'blur' },
+//     {
+//       pattern: /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/,
+//       message: '密码至少包含一个字母和一个数字且长度大于等于8',
+//       trigger: 'blur'
+//     }
+//   ],
+//   //名称
+//   name: [
+//     { required: true, message: '请输入名称', trigger: 'blur' },
+//     { min: 1, max: 10, message: '名称必须是1-10位的字符', trigger: 'blur' }
+//   ],
+//   // 手机
+//   mobile: [
+//     { required: true, message: '请输入手机号码', trigger: 'blur' },
+//     {
+//       pattern: /^1[3-9]\d{9}$/,
+//       message: '请输入正确的电话格式',
+//       trigger: 'blur'
+//     }
+//   ],
+//   // qicq
+//   qicq: [
+//     { required: true, message: '请输入QQ号', trigger: 'blur' },
+//     {
+//       pattern: /^[1-9][0-9]{4,10}$/,
+//       message: '请输入正确的QQ号',
+//       trigger: 'blur'
+//     }
+//   ],
+//   // 邮箱
+//   email: [
+//     { required: true, message: '请输入邮箱', trigger: 'blur' },
+//     {
+//       pattern: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
+//       message: '请输入正确的邮箱格式',
+//       trigger: 'blur'
+//     }
+//   ]
+// })
 // 点击添加打开抽屉,置空数据
 const handelAddFn = () => {
   // 置空表单数据
@@ -683,6 +750,30 @@ const btnLoading = ref(false)
 const handelAddSubmit = async () => {
   // 添加表单的校验,通过了才能发送添加请求
   await theAddForm.value.validate()
+  //判断选择框全部选中
+  if (addForm.value.showGender === '') {
+    ElMessage('请选择性别')
+    return false
+  }
+  if (selectValue.value === '') {
+    ElMessage('请选择部门')
+    return false
+  }
+  // 先去处理职位接口!!
+  if (selectPosition.value === '') {
+    ElMessage('请选择职位')
+    return false
+  }
+  if (selectRole.value === '') {
+    ElMessage('请选择角色')
+    return false
+  }
+  console.log(
+    '添加表单数据',
+    addForm.value,
+    selectValue.value,
+    selectRole.value
+  )
   // 这里要处理添加接口的逻辑
   btnLoading.value = true
   setTimeout(() => {
@@ -730,8 +821,8 @@ const handelSearch = async () => {
     {
       deptId: currentTreeOption.value.id,
       name: searchKey.value,
-      pageIndex: 1,
-      pageSize: 10
+      pageIndex: $page.value.currentPage,
+      pageSize: $page.value.pageSize
     },
     (res) => {
       const { data } = res
