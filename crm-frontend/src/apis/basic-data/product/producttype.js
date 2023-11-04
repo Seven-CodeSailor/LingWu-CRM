@@ -9,7 +9,11 @@
  */
 import Request from '@/apis/request.js'
 const baseUrl = ''
-
+/**
+ * @description: 添加类型
+ * @param {Object} params
+ * @return {Promise}
+ */
 export const addType = async (params) => {
   return await Request.requestJson(
     Request.POST,
