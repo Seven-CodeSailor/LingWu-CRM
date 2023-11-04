@@ -159,10 +159,7 @@ const addTableData = (params) => {}
 const inputValue = ref('')
 const handleSearch = async () => {
   if (!inputValue.value) {
-    ElMessage({
-      type: 'danger',
-      message: '输入不能为空'
-    })
+    ElMessage.error('输入不能为空')
   } else {
     await getTableData({
       pageSize: 5,
