@@ -2,13 +2,13 @@
   <div class="Regional">
     <BaseDataList
       title="地区管理"
-      :tableColumnAttribute="sendData.tableColumnAttribute"
-      :tableData="sendData.tableData"
-      :handleDelete="sendData.handleDelete"
-      :handleEdit="sendData.handleEdit"
-      :total="sendData.total"
-      :pageSizes="sendData.pageSizes"
-      :usePagination="sendData.usePagination"
+      :tableColumnAttribute="tableColumnAttribute"
+      :tableData="regionalStore.tableData"
+      :handleDelete="handleDelete"
+      :handleEdit="handleEdit"
+      :total="regionalStore.total"
+      :pageSizes="[5, 10, 15]"
+      :usePagination="true"
     >
       <template #ico>
         <el-icon><icon-message-box /></el-icon>
@@ -23,8 +23,7 @@
             </div>
           </template>
           <el-tree
-            :data="treeData.treeArr"
-            :props="treeData.defaultProps"
+            :data="regionalStore.areaTreeData"
             highlight-current="true"
             default-expand-all="true"
             draggable
@@ -36,7 +35,7 @@
       <template #menu
         ><div class="content">
           <div class="left">
-            <el-button type="primary" @click="addArea">添加数据</el-button>
+            <el-button type="primary" @click="handleAdd">添加数据</el-button>
           </div>
           <div class="right">
             <el-input
@@ -55,7 +54,7 @@
     <RegionalForm
       ref="regionalFormRef"
       :title="title"
-      :options="options"
+      :area-tree-data="regionalStore.areaTreeData"
     ></RegionalForm>
   </div>
 </template>
@@ -67,111 +66,68 @@ import { useRegionalStore } from '@/stores/basic-data/regional/regional'
 import { ref, onMounted } from 'vue'
 const regionalFormRef = ref(null)
 const regionalStore = useRegionalStore()
-const sendData = {
-  tableColumnAttribute: [
-    {
-      prop: 'areaName',
-      label: '地区名称'
-    },
-    {
-      prop: 'areaInfo',
-      label: '地区描述'
-    },
-    {
-      prop: 'sort',
-      label: '排序',
-      sortable: true
-    },
-    {
-      prop: 'visible',
-      label: '是否启用',
-      useSwitch: true
-    }
-  ],
-  tableData: [
-    {
-      areaName: '鸡场',
-      areaInfo: 'ikun集中营',
-      sort: 250,
-      visible: false
-    },
-    {
-      areaName: '鸡场',
-      areaInfo: 'ikun集中营',
-      sort: 251,
-      visible: true
-    },
-    {
-      areaName: '鸡场',
-      areaInfo: 'ikun集中营',
-      sort: 252,
-      visible: true
-    }
-  ],
-  // 传入删除操作的函数就会显示删除按钮
-  handleDelete: (row) => {
-    console.log('删除', row)
-  },
-  handleEdit: (row) => {
-    console.log('编辑', row)
-    regionalFormRef.value.visible = true
-    title.value = '修改'
-    regionalFormRef.value.form = { ...row }
-    // setTimeout(() => {
-    //   regionalFormRef.value.chooseSelectRef.selectValue =
-    // })
-  },
-  pageSizes: [5, 10, 15],
-  total: 100,
-  usePagination: true
-}
-
-const treeData = {
-  treeArr: [
-    {
-      label: '鸡窝',
-      children: [
-        {
-          label: '🐓公鸡',
-          children: [
-            {
-              label: '鸡蛋'
-            }
-          ]
-        }
-      ]
-    }
-  ],
-
-  defaultProps: {
-    children: 'children',
-    label: 'label'
-  }
-}
-
 const title = ref('')
+const tableColumnAttribute = [
+  {
+    prop: 'name',
+    label: '地区名称'
+  },
+  {
+    prop: 'intro',
+    label: '地区描述'
+  },
+  {
+    prop: 'sort',
+    label: '排序',
+    sortable: true
+  },
+  {
+    prop: 'visible',
+    label: '是否启用',
+    useSwitch: true
+  }
+]
 
-const addArea = () => {
+// 传入删除操作的函数就会显示删除按钮
+const handleDelete = (row) => {
+  console.log('删除', row)
+}
+const handleEdit = (row) => {
+  console.log('编辑', row)
+  const { name, intro, sort, visible, id } = row
+  regionalFormRef.value.visible = true
+  // treeData的数据回显
+
+  const data = findObjectById(regionalStore.areaTreeData, id)
+  console.log('d', data)
+  title.value = '修改'
+  // 数据回显
+  regionalFormRef.value.form = { name, intro, sort, visible }
+}
+
+const findObjectById = (arr, idToFind) => {
+  for (const obj of arr) {
+    if (obj.id === idToFind) {
+      return obj
+    }
+    if (obj.children && obj.children.length > 0) {
+      const result = findObjectById(obj.children, idToFind)
+      if (result) {
+        return result
+      }
+    }
+  }
+  return null
+}
+
+const addTableData = (params) => {}
+const handleAdd = () => {
   title.value = '添加'
   regionalFormRef.value.visible = true
 }
 
-const options = ref([
-  {
-    value: 'Option1',
-    label: '选项1'
-  },
-  {
-    value: 'Option2',
-    label: '选项2'
-  },
-  {
-    value: 'Option2',
-    label: '选项3'
-  }
-])
 onMounted(() => {
-  regionalStore.getListArea()
+  regionalStore.getListAreaItem()
 })
 </script>
 
