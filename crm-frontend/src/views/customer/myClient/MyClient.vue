@@ -128,7 +128,7 @@
                 <el-dropdown-item @click="communicate.addCommunicate(row)"
                   >添加沟通记录</el-dropdown-item
                 >
-                <el-dropdown-item divided @click="service.addService(row)"
+                <el-dropdown-item divided @click="service.addNewService(row)"
                   >添加服务记录</el-dropdown-item
                 >
                 <el-dropdown-item @click="opportunity.addOpportunity(row)"
@@ -241,7 +241,7 @@ const contract = ref()
 const details = ref()
 
 // 初始化数据
-const initCustomer = async (
+const initCustomer = (
   currentPage,
   pageSize,
   coonTime,
@@ -251,9 +251,9 @@ const initCustomer = async (
   tel,
   address
 ) => {
-  await getCustomer(
-    currentPage,
-    pageSize,
+  getCustomer(
+    currentPage.value,
+    pageSize.value,
     coonTime,
     nextTime,
     name,
@@ -359,8 +359,8 @@ const coon = ref('')
 const nexts = ref('')
 const searchDetails = () => {
   initCustomer(
-    currentPage,
-    pageSize,
+    currentPage.value,
+    pageSize.value,
     coon.value,
     nexts.value,
     name.value,

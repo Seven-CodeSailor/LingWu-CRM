@@ -119,7 +119,7 @@ const saveContact = async () => {
   dialogVisible1.value = false
   myclient.contactReset()
   select.resetData()
-  //   initCustomer()
+  customerName.value.reset()
 }
 // 获取客户名称下拉列表
 const contactGetName = async () => {

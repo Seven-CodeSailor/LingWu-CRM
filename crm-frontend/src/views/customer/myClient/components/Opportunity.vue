@@ -129,6 +129,9 @@ const saveOpportunity = () => {
   dialogVisible4.value = false
   myclient.opportunityReset()
   select.resetData()
+  customerName2.value.reset()
+  customerContacts1.value.reset()
+  customerStage1.value.reset()
   ElMessage.success('添加成功')
 }
 defineExpose({
