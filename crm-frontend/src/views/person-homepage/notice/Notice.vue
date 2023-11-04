@@ -109,30 +109,34 @@
       <el-card>
         <template #header>
           <div class="card-header" style="text-align: center">
-            <span style="font-size: 24px; font-weight: 700">{{ detail.title }}</span>
+            <span style="font-size: 24px; font-weight: 700">{{
+              detail.title
+            }}</span>
           </div>
         </template>
         <section style="margin-top: 20px">{{ detail.content }}</section>
       </el-card>
       <template #footer>
         <span class="dialog-footer">
-          <el-button type="primary" @click="dialogVisible1 = false">确定</el-button>
+          <el-button type="primary" @click="dialogVisible1 = false"
+            >确定</el-button
+          >
         </span>
       </template>
     </el-drawer>
 
+    <!-- 删除公告弹出框 -->
+   
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useStockStorageDetailsStore } from '@/stores/inventory/stockstoragedetails.js'
-import { ElMessage } from 'element-plus'
 import { useNotice } from '../../../stores/inventory/notice'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
-
-
+import {releaseNotice} from '@/apis/personal-homapage/notice.js'
 // 批量删除的逻辑
 const deleteBatches = () => {
   if (!baseDataListRef.value.rows.length) {
@@ -153,32 +157,43 @@ const readBatches = () => {
 // 表格数据引入
 const noticeStore = useNotice()
 
-// 
+// 操作下拉菜单按钮
 const dropdownMenuActionsInfo = [
-    {
-      command: 'delete',
-      // row为当前行的数据
-      handleAction: (row) => {
-        dialogVisible1.value = true
-        console.log('删除的回调函数', row)
-      },
-      actionName: '查看'
+  {
+    command: 'check',
+    // row为当前行的数据
+    handleAction: (row) => {
+      dialogVisible1.value = true
+      console.log('查看的回调函数', row)
     },
+    actionName: '查看'
+  },
+  {
+    command: 'delete',
+    handleAction: (row) => {
+    ElMessageBox.alert(
+    '您确定要删除该条数据吗?',
+    '警告',
     {
-      command: 'edit',
-      handleAction: (row) => {
-        console.log('修改的回调函数', row)
-      },
-      actionName: '修改'
-    },
-    {
-      command: 'add',
-      handleAction: (row) => {
-        console.log('添加的回调函数', row)
-      },
-      actionName: '添加'
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
     }
-  ]
+  )
+    .then(() => {
+      ElMessage({
+        type: 'success',
+        message: '删除成功',
+      })
+    })
+    .catch(() => {
+      
+    })
+    console.log('删除的回调函数', row)
+    },
+    actionName: '删除'
+  }
+]
 
 // 表格标题栏
 const tableColumnAttribute = [
@@ -213,7 +228,7 @@ const tableColumnAttribute = [
 const baseDataListRef = ref(null)
 const inputValue = ref('')
 
-// 添加抽屜表单
+// 添加公告抽屜表单
 const addDrawer = ref(false)
 // 添加公告逻辑
 const addEvent = () => {
@@ -240,7 +255,7 @@ const options = ref([
   }
 ])
 
-// 提交表单校验规则逻辑（未完待研究
+// 添加公告校验规则
 const rules = {
   toTitle: [
     { required: true, message: '请输入标题', trigger: 'blur' },
@@ -303,17 +318,16 @@ const getStockStorageList = async (params) => {
 //删除单条数据
 const handleDelete = (row) => {
   console.log('删除', row)
-  ElMessageBox.confirm('你确定要删除这条数据吗?', '警告', {
+  ElMessage.confirm('你确定要删除这条数据吗?', '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
-  })
-    .then(() => {
-      ElMessage({
-        type: 'success',
-        message: '删除成功'
-      })
+  }).then(() => {
+    ElMessage({
+      type: 'success',
+      message: '删除成功'
     })
+  })
 }
 
 // 查看公告
@@ -323,34 +337,13 @@ const detail = ref({
   content: ''
 })
 const dialogVisible1 = ref(false)
+// look还没绑上@事件
 const look = (row) => {
   ;(detail.value.id = row.id),
     (detail.value.title = row.title),
     (detail.value.content = row.content),
     (dialogVisible1.value = true)
 }
-
-// 操作下拉菜单的数据
-const operateData = ref([
-  {
-    command: '查看',
-    // row为当前行的数据
-    handleAction: (row) => {
-      addDrawer.value = true
-      console.log('查看回调函数', row)
-    },
-    actionName: '查看'
-  },
-  {
-    command: '刪除',
-    // row为当前行的数据
-    handleAction: (row) => {
-      console.log('刪除回调函数', row)
-    },
-    actionName: '刪除'
-  }
-])
-
 
 //表单提交逻辑
 const props = defineProps({
@@ -370,8 +363,17 @@ onMounted(() => {
   }
   getStockStorageList(params)
   noticeStore.getData()
+  releaseNotice({
+    content: '七点半, 01烧烤店集合',
+    ownerDeptId:'133671677',
+    ownerUserId:'133411',
+    title:'下班',
+  },(res) => {
+    console.log(res)
+  },(err) => {
+    console.log(err)
+  })
 })
-
 </script>
 
 <style lang="scss" scoped>

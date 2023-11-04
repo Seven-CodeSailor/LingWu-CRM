@@ -1,4 +1,4 @@
-// import Request from '../request'
+import Request from '../request'
 import useSelect from '@/stores/customer/select.js'
 import useMyClient from '@/stores/customer/myClient.js'
 import useServiceRecord from '@/stores/customer/servicerecord.js'
@@ -467,7 +467,7 @@ export const getCustomerRepresent = (
  * @param {*} fail 失败的回调
  * @returns
  */
-export const getCustomer = (
+export const getCustomer = async (
   pageIndex,
   pageSize,
   coonTime,
@@ -479,100 +479,23 @@ export const getCustomer = (
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(
-        pageIndex,
-        pageSize,
-        coonTime,
-        nextTime,
-        name,
-        mobile,
-        tel,
-        address
-      )
-    }, 0)
+  await Request.requestForm(Request.GET, '/customer-mycustomer/get-customer', {
+    pageIndex,
+    pageSize,
+    coonTime,
+    nextTime,
+    name,
+    mobile,
+    tel,
+    address
   })
-    .then(() => {
-      let data = [
-        {
-          id: 1,
-          name: '成都零起飞科技',
-          createTime: '2023-02-11 14:50:14', //创建时间
-          represent: '01', //客户代表
-          belong: '中国', //客户来源
-          level: '重点客户', //客户等级
-          industry: '互联网企业', //客户行业,
-          tel: '112', //联系电话
-          mobile: '145', //联系手机,
-          address: '联系地址', //联系地址
-          intro: '客户介绍', //客户介绍
-          demand: '', //客户需求
-          lastContact: '2023-09-20 18:35:14', //上次联系
-          content: '干饭干饭', //联系内容
-          nextContact: '2023-09-18 11:55:14' //下次联系
-        },
-        {
-          id: 2,
-          name: '成都零起飞科技',
-          createTime: '2023-02-11 14:50:14', //创建时间
-          representative: '01', //客户代表
-          belong: '中国', //客户来源
-          level: '重点客户', //客户等级
-          industry: '互联网企业', //客户行业,
-          tel: '112', //联系电话
-          mobile: '145', //联系手机,
-          address: '联系地址', //联系地址
-          intro: '客户介绍', //客户介绍
-          demand: '', //客户需求
-          lastContact: '2023-09-20 18:35:14', //上次联系
-          content: '干饭干饭', //联系内容
-          nextContact: '2023-09-18 11:55:14' //下次联系
-        },
-        {
-          id: 3,
-          name: '成都零起飞科技',
-          createTime: '2023-02-11 14:50:14', //创建时间
-          representative: '01', //客户代表
-          belong: '中国', //客户来源
-          level: '重点客户', //客户等级
-          industry: '互联网企业', //客户行业,
-          tel: '112', //联系电话
-          mobile: '145', //联系手机,
-          address: '联系地址', //联系地址
-          intro: '客户介绍', //客户介绍
-          demand: '', //客户需求
-          lastContact: '2023-09-20 18:35:14', //上次联系
-          content: '干饭干饭', //联系内容
-          nextContact: '2023-09-18 11:55:14' //下次联系
-        },
-        {
-          id: 4,
-          name: '成都零起飞科技',
-          createTime: '2023-02-11 14:50:14', //创建时间
-          representative: '01', //客户代表
-          belong: '中国', //客户来源
-          level: '重点客户', //客户等级
-          industry: '互联网企业', //客户行业,
-          tel: '112', //联系电话
-          mobile: '145', //联系手机,
-          address: '联系地址', //联系地址
-          intro: '客户介绍', //客户介绍
-          demand: '', //客户需求
-          lastContact: '2023-09-20 18:35:14', //上次联系
-          content: '干饭干饭', //联系内容
-          nextContact: '2023-09-18 11:55:14' //下次联系
-        }
-      ]
-      if (data) {
-        myclient.gettableData(data)
-        success()
-        return
-      }
-      fail()
+    .then((response) => {
+      // 请求返回的数据就是response,在成功回调函数可以拿到
+      console.log('12313', response)
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 

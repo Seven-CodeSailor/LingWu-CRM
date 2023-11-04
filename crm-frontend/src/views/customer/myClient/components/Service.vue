@@ -67,7 +67,8 @@ import useMyClient from '@/stores/customer/myclient.js'
 import useSelect from '@/stores/customer/select.js'
 import {
   getCustomerServiceType,
-  getCustomerServiceWay
+  getCustomerServiceWay,
+  addService
 } from '@/apis/customer/index.js'
 import { getCustomerName } from '@/apis/publicInterface.js'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
@@ -100,7 +101,7 @@ const serviceGetWay = async () => {
   myclient.serviceInfo.way = serviceWay.value.selectValue.label
 }
 // 添加服务记录按钮回调
-const addService = async (row) => {
+const addNewService = async (row) => {
   await getCustomerName()
   await getCustomerServiceType()
   await getCustomerServiceWay()
@@ -108,14 +109,25 @@ const addService = async (row) => {
   myclient.serviceInfo.id = row.id
 }
 // 保存数据，发送请求
-const saveService = () => {
+const saveService = async () => {
+  await addService(
+    myclient.serviceInfo,
+    () => {
+      ElMessage.success('添加成功')
+    },
+    () => {
+      ElMessage.error('添加失败')
+    }
+  )
   dialogVisible3.value = false
   myclient.serviceReset()
   select.resetData()
-  ElMessage.success('添加成功')
+  customerName1.value.reset()
+  serviceWay.value.reset()
+  serviceType.value.reset()
 }
 defineExpose({
-  addService
+  addNewService
 })
 </script>
 

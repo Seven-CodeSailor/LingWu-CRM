@@ -1,7 +1,11 @@
 import Request from '../request'
 
 
-
+/**
+ * @description: 删除销售合同数据列表  参数字段配置的路径:  crm-frontend\src\stores\salesmanager\SalesContract.js
+ * @param {*} data
+ * 
+ */
 
 export const deleteSales = (data) => {
   return Request.requestJson(

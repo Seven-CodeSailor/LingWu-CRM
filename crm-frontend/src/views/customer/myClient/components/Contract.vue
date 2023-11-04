@@ -155,6 +155,10 @@ const saveContract = () => {
   dialogVisible5.value = false
   myclient.contractReset()
   select.resetData()
+  customerName3.value.reset()
+  customerContacts2.value.reset()
+  customerOpportunity1.value.reset()
+  myRepresent.value.reset()
   ElMessage.success('添加成功')
 }
 
