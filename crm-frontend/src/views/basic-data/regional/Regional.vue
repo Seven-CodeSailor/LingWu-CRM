@@ -63,8 +63,10 @@
 <script setup>
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import RegionalForm from './RegionalForm.vue'
-import { ref } from 'vue'
+import { useRegionalStore } from '@/stores/basic-data/regional/regional'
+import { ref, onMounted } from 'vue'
 const regionalFormRef = ref(null)
+const regionalStore = useRegionalStore()
 const sendData = {
   tableColumnAttribute: [
     {
@@ -168,6 +170,9 @@ const options = ref([
     label: '选项3'
   }
 ])
+onMounted(() => {
+  regionalStore.getListArea()
+})
 </script>
 
 <style lang="scss" scoped>

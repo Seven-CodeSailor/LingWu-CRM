@@ -44,9 +44,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import WarehouseFrom from './WarehouseFrom.vue'
+import { useWarehouseStore } from '@/stores/basic-data/warehouse/warehouse'
+const warehouseStore = useWarehouseStore()
 const baseDataListRef = ref(null)
 const warehouseFromRef = ref(null)
 const tableColumnAttribute = ref([
@@ -147,6 +149,9 @@ const get1 = (state, row) => {
       !baseDataListRef.value.openSwitchLoading
   }, 1000)
 }
+onMounted(() => {
+  warehouseStore.getStoreList({ pageSize: 5, pageIndex: 1 })
+})
 </script>
 
 <style lang="scss" scoped>
