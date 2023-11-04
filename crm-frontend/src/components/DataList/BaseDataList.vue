@@ -150,6 +150,7 @@
           回款金额统计：￥{{}} 欠款金额统计：￥{{}}
         </div>
       </template>
+      <slot name="statistics"></slot>
 
       <!-- 分页 -->
       <template v-if="props?.usePagination">

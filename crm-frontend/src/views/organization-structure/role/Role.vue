@@ -184,9 +184,55 @@
       :data="dataSource"
       show-checkbox
       node-key="id"
+      empty-text="没有数据"
       :expand-on-click-node="false"
       :render-content="renderContent"
-    />
+    >
+      <template #default="{ node, data }">
+        <!-- <span class="custom-tree-node">
+          <span>{{ node.label }}</span>
+          <span>
+            <a @click="append(data)"> Append </a>
+            <a @click="remove(node, data)"> Delete </a>
+          </span>
+        </span> -->
+        <span>{{ node.label }}</span>
+        <el-checkbox-group v-model="authForm.type">
+          <el-checkbox label="增加" name="type" />
+          <el-checkbox label="修改" name="type" />
+          <el-checkbox label="删除" name="type" />
+        </el-checkbox-group>
+      </template>
+    </el-tree>
+    <!-- 用表格来处理权限 -->
+    <!-- <el-table row-key="item">
+      <el-table-column label="名称"></el-table-column>
+      <el-table-column label="权限值"></el-table-column>
+      <el-table-column label="修改时间"></el-table-column>
+      <el-table-column label="操作">
+        <template #default="{ row }">
+          <el-button
+            type="primary"
+            @click="addPermisstion(row)"
+            size="small"
+            :disabled="row.level == 4 ? true : false"
+          >
+            {{ row.level == 3 ? '添加功能' : '添加菜单' }}
+          </el-button>
+          <el-button
+            type="primary"
+            @click="updatePermisstion(row)"
+            size="small"
+            :disabled="row.level == 1 ? true : false"
+          >
+            编辑
+          </el-button>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-empty description="没有数据"></el-empty>
+      </template>
+    </el-table> -->
     <div class="drawerFooter">
       <el-button @click="powerDrawer = false">取消</el-button>
       <el-button type="primary" :loading="btnLoading" @click="handelPowerSubmit"
@@ -817,6 +863,9 @@ const dataSource = ref([
     ]
   }
 ])
+const authForm = ref({
+  type: []
+})
 // 菜单权限抽屉=>保存数据按钮的方法
 const handelPowerSubmit = () => {
   btnLoading.value = true
@@ -864,5 +913,9 @@ const handelPowerSubmit = () => {
 }
 .drawerFooter button {
   margin: 0 40px;
+}
+.emptyTable {
+  min-width: 800px;
+  min-height: 600px;
 }
 </style>
