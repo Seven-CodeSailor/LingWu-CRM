@@ -172,6 +172,7 @@ const save = async () => {
  */
 // 修改按钮回调
 const modify = async (row) => {
+  getSelect()
   await queryCustomerDetails(
     row.id,
     () => {},

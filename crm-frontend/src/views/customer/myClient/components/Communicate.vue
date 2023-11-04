@@ -164,6 +164,11 @@ const saveCommunicate = () => {
   dialogVisible2.value = false
   myclient.communicateReset()
   select.resetData()
+  customerName0.value.reset()
+  customerContact.value.reset()
+  customerOpportunity.value.reset()
+  customerStage.value.reset()
+  communicateWay.value.reset()
   ElMessage.success('添加成功')
 }
 defineExpose({
