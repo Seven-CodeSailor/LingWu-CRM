@@ -2,7 +2,7 @@
  * @Author: BINGWU
  * @Date: 2023-10-26 20:52:05
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-04 10:59:06
+ * @LastEditTime: 2023-11-04 12:21:24
  * @FilePath: \crm-frontend\vite.config.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -41,10 +41,10 @@ export default ({ mode }) =>
           target: 'http://localhost:10680',
           rewrite: (path) => path.replace(/^\/captcha/, '')
         },
-        '/api1': {
+        '/wahaha': {
           changeOrigin: true,
           target: 'http://118.31.61.96:10031',
-          rewrite: (path) => path.replace(/^\/api1/, '')
+          rewrite: (path) => path.replace(/^\/wahaha/, '')
         }
       }
     },

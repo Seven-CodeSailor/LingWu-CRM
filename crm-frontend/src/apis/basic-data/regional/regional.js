@@ -7,7 +7,7 @@
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from '@/apis/request.js'
-const baseUrl = '/api1'
+const baseUrl = '/wahaha'
 
 export const queryListArea = async (params) => {
   return await Request.requestJson(Request.GET, baseUrl + '/query-list-area', {
