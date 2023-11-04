@@ -51,10 +51,10 @@ export default ({ mode }) =>
           target: 'http://localhost:10680',
           rewrite: (path) => path.replace(/^\/captcha/, '')
         },
-        '/wahaha': {
+        '/api1': {
           changeOrigin: true,
           target: 'http://118.31.61.96:10031',
-          rewrite: (path) => path.replace(/^\/wahaha/, '')
+          rewrite: (path) => path.replace(/^\/api1/, '')
         }
       }
     },
