@@ -18,36 +18,23 @@ const select = useSelect()
  * @returns
  */
 
-export const getCustomerName = (param, success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(param)
-    }, 0)
-  })
-    .then(() => {
-      let name = [
-        {
-          value: 'Option1',
-          label: '成都零起飞科技'
-        },
-        {
-          value: 'Option2',
-          label: '01'
-        },
-        {
-          value: 'Option3',
-          label: 'asd'
-        }
-      ]
-      if (name) {
-        select.setName(name)
-        success()
-        return
-      }
-      fail()
+export const getCustomerName = async (
+  name,
+  success = () => {},
+  fail = () => {}
+) => {
+  await Request.requestForm(
+    Request.GET,
+    '/customer-mycustomer/get-customername',
+    {
+      name
+    }
+  )
+    .then(async (response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 
