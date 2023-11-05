@@ -31,7 +31,7 @@
           <div class="left">
             <!-- 左侧按钮区域 -->
             <el-button type="success" @click="addEvent">
-              <el-icon style="padding-right: 5px">
+              <el-icon style="padding-rigt: 5px">
                 <icon-Plus />
               </el-icon>
               添加
@@ -109,18 +109,21 @@
       <el-card>
         <template #header>
           <div class="card-header" style="text-align: center">
-            <span style="font-size: 24px; font-weight: 700">{{ detail.title }}</span>
+            <span style="font-size: 24px; font-weight: 700">{{
+              detail.title
+            }}</span>
           </div>
         </template>
         <section style="margin-top: 20px">{{ detail.content }}</section>
       </el-card>
       <template #footer>
         <span class="dialog-footer">
-          <el-button type="primary" @click="dialogVisible1 = false">确定</el-button>
+          <el-button type="primary" @click="dialogVisible1 = false"
+            >确定</el-button
+          >
         </span>
       </template>
     </el-drawer>
-
   </div>
 </template>
 
@@ -131,7 +134,6 @@ import { ElMessage } from 'element-plus'
 import { useNotice } from '../../../stores/inventory/notice'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
-
 
 // 批量删除的逻辑
 const deleteBatches = () => {
@@ -153,32 +155,49 @@ const readBatches = () => {
 // 表格数据引入
 const noticeStore = useNotice()
 
-// 
+// 操作栏下拉菜单选项
 const dropdownMenuActionsInfo = [
-    {
-      command: 'delete',
-      // row为当前行的数据
-      handleAction: (row) => {
-        dialogVisible1.value = true
-        console.log('删除的回调函数', row)
-      },
-      actionName: '查看'
+  {
+    command: 'check',
+    // row为当前行的数据
+    handleAction: (row) => {
+      dialogVisible1.value = true
+      console.log('查看的回调函数', row)
     },
-    {
-      command: 'edit',
-      handleAction: (row) => {
-        console.log('修改的回调函数', row)
-      },
-      actionName: '修改'
+    actionName: '查看'
+  },
+  {
+    command: 'delete',
+    handleAction: (row) => {
+      ElMessageBox.confirm('您确定要删除该条数据吗?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        ElMessage({
+          type: 'success',
+          message: '删除成功'
+        })
+      })
+      console.log('删除的回调函数', row)
     },
-    {
-      command: 'add',
-      handleAction: (row) => {
-        console.log('添加的回调函数', row)
-      },
-      actionName: '添加'
-    }
-  ]
+    actionName: '删除'
+  },
+  {
+    command: 'edit',
+    handleAction: (row) => {
+      console.log('修改的回调函数', row)
+    },
+    actionName: '修改'
+  },
+  {
+    command: 'add',
+    handleAction: (row) => {
+      console.log('添加的回调函数', row)
+    },
+    actionName: '添加'
+  }
+]
 
 // 表格标题栏
 const tableColumnAttribute = [
@@ -209,7 +228,7 @@ const tableColumnAttribute = [
   }
 ]
 
-// 批量删除和批量已读的逻辑
+// 放入值的逻辑
 const baseDataListRef = ref(null)
 const inputValue = ref('')
 
@@ -300,22 +319,6 @@ const getStockStorageList = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
 
-//删除单条数据
-const handleDelete = (row) => {
-  console.log('删除', row)
-  ElMessageBox.confirm('你确定要删除这条数据吗?', '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  })
-    .then(() => {
-      ElMessage({
-        type: 'success',
-        message: '删除成功'
-      })
-    })
-}
-
 // 查看公告
 const detail = ref({
   id: '',
@@ -351,7 +354,6 @@ const operateData = ref([
   }
 ])
 
-
 //表单提交逻辑
 const props = defineProps({
   handleSubmit: {
@@ -371,7 +373,6 @@ onMounted(() => {
   getStockStorageList(params)
   noticeStore.getData()
 })
-
 </script>
 
 <style lang="scss" scoped>
