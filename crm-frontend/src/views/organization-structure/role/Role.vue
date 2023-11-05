@@ -24,7 +24,7 @@
         </template>
         <!-- 树形菜单标签结构 -->
         <el-tree
-          :data="treeData"
+          :data="$RoleManage.roleTreeList"
           :props="defaultProps"
           highlight-current="true"
           default-expand-all="true"
@@ -93,7 +93,7 @@
           <!-- 树形选择 -->
           <el-tree-select
             v-model="selectValue"
-            :data="treeData"
+            :data="$RoleManage.roleTreeList"
             check-strictly
             :render-after-expand="false"
             clearable
@@ -143,7 +143,7 @@
           <!-- 树形选择 -->
           <el-tree-select
             v-model="selectValue"
-            :data="treeData"
+            :data="$RoleManage.roleTreeList"
             check-strictly
             :render-after-expand="false"
             clearable
@@ -249,44 +249,64 @@ import { Operation, Plus, Search } from '@element-plus/icons-vue'
 // import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 // 导入api方法
-import { getUserTableList } from '@/apis/organizationStructure/user.js'
+// import { getUserTableList } from '@/apis/organizationStructure/user.js'
+import { getRoleTree } from '../../../apis/organizationStructure/Roles.js'
+// 导入 组织结构/角色管理 仓库
+import useRoleManageStore from '../../../stores/organizationStructure/rolesManage'
+const $RoleManage = useRoleManageStore()
 onMounted(async () => {
-  await getUserTableList(
+  //获取角色名称结构树
+  await getRoleTree(
     {
-      deptId: 1,
-      name: 'test',
-      pageIndex: 1,
-      pageSize: 10
+      depth: 0,
+      pid: 0
     },
-    (data) => {
-      console.log(data)
+    (res) => {
+      const { data } = res
+      console.log('获取角色名称结构树', data)
+      // 处理数据 id =>value name => label
+      const newArr = data.map((item) => {
+        for (let key in item) {
+          if (key === 'id') {
+            item.value = item[key]
+          }
+          if (key === 'name') {
+            item.label = item[key]
+          }
+        }
+        return item
+      })
+      // console.log('矫正后的角色结构树:', newArr)
+      // 把数据存到 组织结构/角色管理 仓库
+      $RoleManage.setRoleTreeList(newArr)
+      console.log('角色管理 仓库数据:', $RoleManage.roleTreeList)
     },
-    (err) => {
-      console.log(err)
+    (error) => {
+      console.log(error)
     }
   )
 })
 // 树形菜单的数据
-const treeData = ref([
-  {
-    value: '1',
-    label: '超级管理员',
-    children: [
-      {
-        value: '1-1',
-        label: '主管'
-      },
-      {
-        value: '1-2',
-        label: '组员'
-      },
-      {
-        value: '1-3',
-        label: '总经理'
-      }
-    ]
-  }
-])
+// const treeData = ref([
+//   {
+//     value: '1',
+//     label: '超级管理员',
+//     children: [
+//       {
+//         value: '1-1',
+//         label: '主管'
+//       },
+//       {
+//         value: '1-2',
+//         label: '组员'
+//       },
+//       {
+//         value: '1-3',
+//         label: '总经理'
+//       }
+//     ]
+//   }
+// ])
 // 树形选择绑定值
 const selectValue = ref('')
 // 更新选中值

@@ -333,7 +333,16 @@ onMounted(async () => {
   // 开启表格加载效果
   baseDataListRef.value.openLoading = true
   // console.log('id是', defaultDep.value.id)
-  console.log('当前的条数', $page.value.pageSize)
+  // console.log('当前的条数', $page.value.pageSize)
+  console.log(
+    '收集的数据:',
+    '部门id:',
+    defaultDep.value.id,
+    '当前页',
+    $page.value.currentPage,
+    '当前条数',
+    $page.value.pageSize
+  )
   await getUserTableList(
     {
       deptId: defaultDep.value.id,
@@ -343,7 +352,7 @@ onMounted(async () => {
     },
     (res) => {
       const { data } = res
-      // console.log('获取表格数据', data)
+      console.log('获取表格数据', data)
       sendData.value.tableData = data.rows
       sendData.value.total = data.total
       baseDataListRef.value.openLoading = false
