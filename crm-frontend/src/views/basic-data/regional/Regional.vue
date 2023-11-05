@@ -110,21 +110,38 @@ const modifyTableData = async (params) => {
   return await regionalStore.modifyAreaItem(params)
 }
 
-const handleDelete = async (row) => {
-  await deleteTableData({ id: row.id })
-    .then((res) => {
+const handleDelete = (row) => {
+  ElMessageBox.confirm('确认要删除吗?', 'Warning', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(async () => {
+      await ElMessage({
+        type: 'success',
+        message: '删除完成'
+      })
+      await deleteTableData({ id: row.id })
+        .then(async (res) => {
+          ElMessage({
+            message: res.message,
+            type: 'success'
+          })
+          await getTableData({
+            pageSize: baseDataListRef.value.paginationData.pageSize,
+            pageIndex: baseDataListRef.value.paginationData.currentPage
+          })
+        })
+        .catch((err) => {
+          console.log('error', err)
+        })
+    })
+    .catch(() => {
       ElMessage({
-        message: res.message,
-        type: 'success'
+        type: 'info',
+        message: '删除取消'
       })
     })
-    .catch((err) => {
-      console.log('error', err)
-    })
-  getTableData({
-    pageSize: baseDataListRef.value.paginationData.pageSize,
-    pageIndex: baseDataListRef.value.paginationData.currentpage
-  })
 }
 const handleEdit = (row) => {
   const { name, intro, sort, visible, id } = row
@@ -170,16 +187,26 @@ const updateTableData = (pageSize, pageIndex) => {
 const updateSwitchState = async (state, row) => {
   baseDataListRef.value.openSwitchLoading =
     !baseDataListRef.value.openSwitchLoading
+
   await modifyTableData({ id: row.id, visible: state ? 1 : 0 }).then(
     async (res) => {
       ElMessage({
         message: res.message,
         type: 'success'
       })
-      await regionalStore.getListAreaItem({
-        pageIndex: baseDataListRef.value.paginationData.currentPage,
-        pageSize: baseDataListRef.value.paginationData.pageSize
-      })
+      if (inputValue.value) {
+        await regionalStore.getListAreaItem({
+          pageIndex: baseDataListRef.value.paginationData.currentPage,
+          pageSize: baseDataListRef.value.paginationData.pageSize,
+          queryCondition: inputValue.value
+        })
+      } else {
+        await regionalStore.getListAreaItem({
+          pageIndex: baseDataListRef.value.paginationData.currentPage,
+          pageSize: baseDataListRef.value.paginationData.pageSize
+        })
+      }
+
       baseDataListRef.value.openSwitchLoading =
         !baseDataListRef.value.openSwitchLoading
     }
@@ -194,6 +221,9 @@ const handleSearch = async () => {
   if (!inputValue.value) {
     ElMessage.error('输入不能为空')
   } else {
+    // 执行搜索后初始化分页数据
+    baseDataListRef.value.paginationData.pageSize = 5
+    baseDataListRef.value.paginationData.currentPage = 1
     await getTableData({
       pageSize: 5,
       pageIndex: 1,

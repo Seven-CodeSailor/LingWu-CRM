@@ -1,3 +1,12 @@
+<!--
+ * @Author: BINGWU
+ * @Date: 2023-10-30 18:29:35
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-05 15:00:38
+ * @FilePath: \crm-frontend\src\views\basic-data\warehouse\WarehouseFrom.vue
+ * @Describe: 
+ * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
+-->
 <template>
   <div class="WarehouseFrom">
     <el-drawer
@@ -22,7 +31,7 @@
       </template>
       <template #default>
         <el-form :model="form" :rules="rules" ref="formRef">
-          <el-form-item label="仓库名称" prop="typeName">
+          <el-form-item label="仓库名称" prop="name">
             <el-input
               placeholder="请输入仓库名称"
               v-model="form.name"
@@ -81,10 +90,9 @@ const props = defineProps({
 const formRef = ref(null)
 
 const rules = ref({
-  typeName: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
-  typeTag: [{ required: true, message: '请输入调用标识', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
   intro: [{ required: true, message: '请输入简介', trigger: 'blur' }],
-  sort: [{ required: true, message: '', trigger: 'blur' }]
+  sort: [{ required: true, message: '', trigger: 'change' }]
 })
 
 defineExpose({
