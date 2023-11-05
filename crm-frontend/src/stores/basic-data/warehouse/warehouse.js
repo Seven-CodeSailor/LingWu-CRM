@@ -5,7 +5,8 @@ import {
   addStore,
   modifyStoreInfo,
   deleteStore,
-  exportStore
+  exportStore,
+  importStore
 } from '@/apis/basic-data/warehouse/warehouse'
 export const useWarehouseStore = defineStore('warehouse', () => {
   const tableData = ref([])
@@ -33,6 +34,9 @@ export const useWarehouseStore = defineStore('warehouse', () => {
   const exportStoreItem = async (params) => {
     return await exportStore(params)
   }
+  const importStoreItem = async (params, success, fail) => {
+    return await importStore(params, success, fail)
+  }
   return {
     tableData,
     total,
@@ -40,6 +44,7 @@ export const useWarehouseStore = defineStore('warehouse', () => {
     addStoreItem,
     modifyStoreItem,
     deleteStoreItem,
-    exportStoreItem
+    exportStoreItem,
+    importStoreItem
   }
 })

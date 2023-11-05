@@ -7,6 +7,7 @@
       multiple
       :on-preview="handlePreview"
       :on-remove="handleRemove"
+      :on-change="props.handleChange"
       :before-remove="beforeRemove"
       :limit="3"
       :on-exceed="handleExceed"
@@ -40,6 +41,10 @@ const props = defineProps({
   importExcel: {
     type: Function,
     required: true
+  },
+  // 微调冰雾
+  handleChange: {
+    type: Function
   }
 })
 // 显示已上传文件，格式{name: '', url: ''}

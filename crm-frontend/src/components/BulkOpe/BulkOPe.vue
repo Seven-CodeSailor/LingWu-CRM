@@ -33,6 +33,7 @@
   <FileUpload
     ref="file"
     :action="props.action"
+    :handle-change="props.handleChange"
     :importExcel="props.importExcel"
   >
     <slot name="file"></slot>
@@ -112,6 +113,10 @@ const props = defineProps({
   confirmsDelete: {
     type: Function,
     default: () => {}
+  },
+  // 微调冰雾
+  handleChange: {
+    type: Function
   }
 })
 
