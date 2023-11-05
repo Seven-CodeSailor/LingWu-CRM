@@ -1,9 +1,9 @@
 /*
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
- * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-03 17:54:53
- * @FilePath: \crm-frontend\src\apis\publicInterface.js
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-05 21:10:25
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from './request'
@@ -181,7 +181,7 @@ export const getUserNameList = async (params, success, fail) => {
   )
     .then((response) => {
       // 请求返回的数据就是response,在成功回调函数可以拿到
-      console.log('12313', response)
+      // console.log('12313', response)
       success(response)
     })
     .catch((error) => {
