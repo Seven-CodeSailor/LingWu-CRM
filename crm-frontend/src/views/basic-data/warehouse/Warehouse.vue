@@ -29,8 +29,6 @@
             <BulkOPe
               :getOpt="() => [0, 1]"
               :export-excel="handleExport"
-              :import-excel="handleImport"
-              :handle-change="handleChange"
             ></BulkOPe>
           </div>
           <div class="right">
@@ -158,10 +156,6 @@ const modifyTableData = async (params) => {
 
 const exportTableData = async (params) => {
   return await warehouseStore.exportStoreItem(params)
-}
-
-const importTableData = async (params, success, fail) => {
-  return await warehouseStore.importStoreItem(params, success, fail)
 }
 
 const updateSwitchState = async (state, row) => {
@@ -301,21 +295,6 @@ const handleManyDelete = async () => {
       pageSize: baseDataListRef.value.paginationData.pageSize
     })
   }
-}
-
-const handleImport = async () => {
-  importTableData(
-    excelFile.value.raw,
-    (res) => {
-      console.log('res', res)
-    },
-    (err) => {
-      console.log('err', err)
-    }
-  )
-}
-const handleChange = (newFile) => {
-  excelFile.value = newFile
 }
 
 onMounted(async () => {

@@ -19,7 +19,10 @@
     :dropdownMenuActionsInfo="sendData.dropdownMenuActionsInfo"
     useOperateColumn="true"
     useCalculate="true"
-    @change="selectChange"
+    :totalMoney="paymentRecordsStore.money"
+    :totalBackMoney="paymentRecordsStore.back_money"
+    :totalOweMoney="paymentRecordsStore.owe_money"
+    @selectFuckingChange="selectChange"
     @update-table-data="
       (pageSize, currentPage) =>
         getPaymentRecordsList({
@@ -43,7 +46,7 @@
           >
           <el-button @click="changeLoadAnimation">刷新</el-button>
           <!-- 下拉选择框 -->
-          <BulkOPe :excelData="getRows" :getOpt="() => [0, 2, 3, 4]">
+          <BulkOPe :getOpt="() => [0, 2, 3, 4]">
             <template #excel>
               <div>
                 下拉选择：<ChooseSelect @update:cid="changecid"></ChooseSelect>
@@ -97,7 +100,7 @@
           <el-button
             type="primary"
             style="margin-left: 4px"
-            @click="changeLoadAnimation"
+            @click="searchDetails"
             :disabled="searchContractTitle ? false : true"
           >
             <el-icon style="margin-right: 4px"><icon-search /></el-icon>搜索
@@ -215,12 +218,14 @@ import { usePaymentRecordsStore } from '@/stores/fund/paymentrecords/paymentReco
 // 批量删除所选列表
 let selectArr = ref([])
 
-let isDisabled = ref(true)
+const isDisabled = ref(true)
 // // table表勾选时触发的事件
-const selectChange = () => {
-  isDisabled.value = false
-  selectArr.value = baseDataListRef.value.rows
-  console.log(selectArr.value[0].id)
+const selectChange = (length) => {
+  if (length === 0) {
+    isDisabled.value = true
+  } else {
+    isDisabled.value = false
+  }
 }
 // 删除成功的回调
 const deleteByQuery = () => {
@@ -313,6 +318,22 @@ const saveData = () => {
 // 搜索的销售合同标题
 const searchContractTitle = ref('')
 
+// 搜索框的searchDetails方法还需完善
+const searchDetails = () => {
+  console.log('搜索', searchContractTitle.value)
+  const searchData = paymentRecordsStore.tableData.filter((item) => {
+    return item.title === searchContractTitle.value
+  })
+  if (searchData.length === 0) {
+    ElMessage({
+      type: 'warning',
+      message: '未找到相关数据，请重新输入合同主题'
+    })
+  } else {
+    paymentRecordsStore.tableData = searchData
+  }
+}
+
 // 付款记录列表项
 const tableColumnAttribute = [
   {
@@ -395,7 +416,6 @@ const getPaymentRecordsList = async (params) => {
 }
 // 挂载时获得分页数据
 onMounted(() => {
-  const Data = baseDataListRef.value.rows
   // const bb = JSON.parse(JSON.stringify(Data))
   // console.log('bb', bb)
   const params = {
@@ -420,14 +440,10 @@ const paginationData = ref({
   pageSize: sendData.pageSizes ? sendData.pageSizes[0] : 5
 })
 
-const getRows = () => {
-  // 获取组件暴露出来的rows
-  console.log('rows', baseDataListRef.value.rows)
-}
 // 处理选择的行是否发生变化
-const handleSelectionChange = (newRows) => {
-  baseDataListRef.value.rows = newRows
-}
+// const handleSelectionChange = (newRows) => {
+//   baseDataListRef.value.rows = newRows
+// }
 // 开启/关闭表格加载动画
 const changeLoadAnimation = () => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
