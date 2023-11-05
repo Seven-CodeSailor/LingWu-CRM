@@ -40,3 +40,12 @@ export const deleteStore = async (params) => {
     params
   )
 }
+
+export const exportStore = async (params) => {
+  return await Request.requestJson(
+    Request.POST,
+    baseUrl + '/j3-controller-warehouse/export-store',
+    params
+  )
+}
+

@@ -26,6 +26,11 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
+        '/api/java3-file': {
+          changeOrigin: true,
+          target: 'http://8.130.45.222:8888',
+          rewrite: (path) => path.replace(/^\/api\/java3-file/, '')
+        },
         '/api/java3-warehouse': {
           changeOrigin: true,
           target: 'http://8.130.82.226:10033',

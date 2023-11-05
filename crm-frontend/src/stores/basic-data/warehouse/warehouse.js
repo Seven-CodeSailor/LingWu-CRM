@@ -4,7 +4,8 @@ import {
   queryStore,
   addStore,
   modifyStoreInfo,
-  deleteStore
+  deleteStore,
+  exportStore
 } from '@/apis/basic-data/warehouse/warehouse'
 export const useWarehouseStore = defineStore('warehouse', () => {
   const tableData = ref([])
@@ -29,12 +30,16 @@ export const useWarehouseStore = defineStore('warehouse', () => {
   const deleteStoreItem = async (params) => {
     return await deleteStore(params)
   }
+  const exportStoreItem = async (params) => {
+    return await exportStore(params)
+  }
   return {
     tableData,
     total,
     getStoreList,
     addStoreItem,
     modifyStoreItem,
-    deleteStoreItem
+    deleteStoreItem,
+    exportStoreItem
   }
 })
