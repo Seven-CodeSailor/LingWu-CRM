@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { postCustomer } from '@/apis/customer/index.js'
 
 const useMyClient = defineStore('myClient', () => {
+  const total = ref(0)
   // 表格数据
   let tableData = ref([])
   // 初始化tableData
@@ -12,16 +13,16 @@ const useMyClient = defineStore('myClient', () => {
 
   // 存放添加或修改的客户信息
   let customerInfo = ref({
-    id: '',
+    customer_id: '',
     name: '',
-    belong: '',
-    level: '',
+    source: '',
+    grade: '',
     industry: '',
     tel: '',
     mobile: '',
     address: '',
     intro: '',
-    demand: '',
+    needs: '',
     seaCustomer: false
   })
   // 新增客户信息
@@ -31,23 +32,22 @@ const useMyClient = defineStore('myClient', () => {
   // 重置数据
   const customerReset = () => {
     customerInfo.value = {
-      id: '',
+      customer_id: '',
       name: '',
-      belong: '',
-      level: '',
+      source: '',
+      grade: '',
       industry: '',
       tel: '',
       mobile: '',
       address: '',
       intro: '',
-      demand: '',
+      needs: '',
       seaCustomer: false
     }
   }
 
   // 存储联系人的数据
   let contactInfo = ref({
-    id: '',
     name: '',
     gender: '',
     mobile: '',
@@ -56,7 +56,7 @@ const useMyClient = defineStore('myClient', () => {
     qq: '',
     email: '',
     address: '',
-    customerName: ''
+    customer_id: ''
   })
   // 重置数据
   const contactReset = () => {
@@ -74,6 +74,7 @@ const useMyClient = defineStore('myClient', () => {
     }
   }
 
+  const total1 = ref(0)
   // 联系人表格数据
   let linksTableData = ref([])
   const getLinksTableData = (data = []) => {
@@ -192,6 +193,7 @@ const useMyClient = defineStore('myClient', () => {
   }
 
   return {
+    total,
     tableData,
     gettableData,
     customerInfo,
@@ -199,6 +201,7 @@ const useMyClient = defineStore('myClient', () => {
     customerReset,
     contactInfo,
     contactReset,
+    total1,
     linksTableData,
     getLinksTableData,
     communicateInfo,

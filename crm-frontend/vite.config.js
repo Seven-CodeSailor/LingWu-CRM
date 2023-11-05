@@ -1,3 +1,13 @@
+/*
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-11-05 21:18:17
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-05 21:18:47
+ * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
+ */
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -18,6 +28,21 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
+        '/api/java3-file': {
+          changeOrigin: true,
+          target: 'http://8.130.45.222:8888',
+          rewrite: (path) => path.replace(/^\/api\/java3-file/, '')
+        },
+        '/api/java3-warehouse': {
+          changeOrigin: true,
+          target: 'http://8.130.82.226:10033',
+          rewrite: (path) => path.replace(/^\/api\/java3-warehouse/, '')
+        },
+        '/api/java3-area': {
+          changeOrigin: true,
+          target: 'http://118.31.61.96:10031',
+          rewrite: (path) => path.replace(/^\/api\/java3-area/, '')
+        },
         '/api': {
           changeOrigin: true,
           // target: 'http://localhost:10100',
