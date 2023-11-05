@@ -17,6 +17,7 @@
     "dayjs": "^1.11.10",
     "echarts": "latest",
     "element-plus": "latest",
+    "nanoid": "^5.0.2",
     "pinia": "^2.0.21",
     "qs": "^6.11.0",
     "v-charts": "^1.19.0",
