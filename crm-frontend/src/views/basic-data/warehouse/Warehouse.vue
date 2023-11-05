@@ -19,7 +19,17 @@
         <div class="content">
           <div class="left">
             <el-button type="primary" @click="handleAdd">添加数据</el-button>
-            <el-button type="danger">批量删除</el-button>
+            <el-button
+              type="danger"
+              style="margin-right: 8px"
+              @click="handleManyDelete"
+            >
+              批量删除</el-button
+            >
+            <BulkOPe
+              :getOpt="() => [0, 1]"
+              :export-excel="handleExport"
+            ></BulkOPe>
           </div>
           <div class="right">
             <el-input
@@ -52,6 +62,8 @@ import { ref, onMounted } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import WarehouseFrom from './WarehouseFrom.vue'
 import { useWarehouseStore } from '@/stores/basic-data/warehouse/warehouse'
+import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
+import downloadFile from '@/utils/downloadfile.js'
 const warehouseStore = useWarehouseStore()
 const baseDataListRef = ref(null)
 const warehouseFromRef = ref(null)
@@ -139,6 +151,10 @@ const addTableData = async (params) => {
 
 const modifyTableData = async (params) => {
   return await warehouseStore.modifyStoreItem(params)
+}
+
+const exportTableData = async (params) => {
+  return await warehouseStore.exportStoreItem(params)
 }
 
 const updateSwitchState = async (state, row) => {
@@ -237,6 +253,47 @@ const handleSubmit = () => {
       warehouseFromRef.value.visible = false
     }
   })
+}
+
+const handleExport = () => {
+  if (!baseDataListRef.value.rows.length) {
+    ElMessage.error('请先选择要导出的数据')
+  } else {
+    const ids = baseDataListRef.value.rows.map((row) => {
+      return row.storeId
+    })
+    console.log('ids', ids)
+    exportTableData({ ids }).then(async (res) => {
+      const originalString = res.data
+      const searchStr = 'http://8.130.45.222:8888'
+
+      const startIndex = originalString.indexOf(searchStr) // 查找要截取内容的起始位置
+      const extractedString = originalString.slice(
+        startIndex + searchStr.length
+      ) // 提取后面的内容
+      await downloadFile('/java3-file' + extractedString, '仓库管理')
+    })
+  }
+}
+
+const handleManyDelete = async () => {
+  if (!baseDataListRef.value.rows.length) {
+    ElMessage.error('请先选择要删除的数据')
+  } else {
+    const ids = baseDataListRef.value.rows.map((row) => {
+      return row.storeId
+    })
+    await deleteTableData({ ids }).then((res) => {
+      ElMessage({
+        message: res.message,
+        type: 'success'
+      })
+    })
+    await getTableData({
+      pageIndex: baseDataListRef.value.paginationData.currentPage,
+      pageSize: baseDataListRef.value.paginationData.pageSize
+    })
+  }
 }
 
 onMounted(async () => {
