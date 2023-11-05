@@ -2,7 +2,7 @@
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-04 21:11:15
+ * @LastEditTime: 2023-11-05 16:04:39
  * @FilePath: \crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -181,7 +181,7 @@ export const getUserNameList = async (params, success, fail) => {
   )
     .then((response) => {
       // 请求返回的数据就是response,在成功回调函数可以拿到
-      console.log('12313', response)
+      // console.log('12313', response)
       success(response)
     })
     .catch((error) => {

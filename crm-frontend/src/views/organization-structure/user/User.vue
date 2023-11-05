@@ -115,7 +115,7 @@
         <el-form-item label="职位" :label-width="labelWidth">
           <el-tree-select
             v-model="selectPosition"
-            :data="PostManage.userPostList"
+            :data="$postStore.usePostList"
             check-strictly
             default-expand-all
             :render-after-expand="false"
@@ -202,7 +202,7 @@
         <el-form-item label="职位" :label-width="labelWidth">
           <el-tree-select
             v-model="selectPosition"
-            :data="PostManage.userPostList"
+            :data="$postStore.usePostList"
             check-strictly
             default-expand-all
             :render-after-expand="false"
@@ -257,7 +257,10 @@ import { Operation, Plus, Search } from '@element-plus/icons-vue'
 import { onMounted, ref } from 'vue'
 import { getUserNameList, getPostNameList } from '@/apis/publicInterface.js'
 import { getDepartmentTree } from '@/apis/organizationStructure/department.js'
-import { getUserTableList } from '@/apis/organizationStructure/user.js'
+import {
+  getUserTableList,
+  addUserApi
+} from '@/apis/organizationStructure/user.js'
 // 导入 组织结构/用户管理 仓库
 import useUserManageStore from '@/stores/organizationStructure/usermanage.js'
 const userManage = useUserManageStore()
@@ -265,8 +268,8 @@ const userManage = useUserManageStore()
 import useDepartmentManageStore from '@/stores/organizationStructure/departmentManage.js'
 const departmentManage = useDepartmentManageStore()
 // 导入 组织结构/岗位管理仓库
-import usePostManageStore from '../../../stores/organizationStructure/postManagement.js'
-const PostManage = usePostManageStore()
+import usePostManageStore from '@/stores/organizationStructure/postManagement.js'
+const $postStore = usePostManageStore()
 onMounted(async () => {
   // 获取系统用户名称列表数据
   await getUserNameList(
@@ -281,9 +284,10 @@ onMounted(async () => {
         obj.label = item.name
         return obj
       })
-      // console.log('矫正后的数据', arrData)
+      console.log('矫正后的数据', arrData)
       // 把数据存到 组织结构/用户管理仓库
       userManage.setUserNameList(arrData)
+      // console.log(userManage)
     },
     (error) => {
       if (error) {
@@ -299,7 +303,7 @@ onMounted(async () => {
     },
     (res) => {
       const { data } = res
-      console.log('获取部门名称结构树', data)
+      // console.log('获取部门名称结构树', data)
       // 更新默认部门
       defaultDep.value = data[0]
       currentTreeOption.value = data[0]
@@ -317,7 +321,7 @@ onMounted(async () => {
       })
       // 把数据存到 组织结构/部门管理 仓库
       departmentManage.setDepartmentTree(newArr)
-      console.log('存仓库', departmentManage.DepartmentTree)
+      // console.log('存仓库', departmentManage.DepartmentTree)
     },
     (error) => {
       if (error) {
@@ -339,7 +343,7 @@ onMounted(async () => {
     },
     (res) => {
       const { data } = res
-      console.log('获取表格数据', data)
+      // console.log('获取表格数据', data)
       sendData.value.tableData = data.rows
       sendData.value.total = data.total
       baseDataListRef.value.openLoading = false
@@ -359,7 +363,7 @@ onMounted(async () => {
     },
     (res) => {
       const { data } = res
-      console.log('获取岗位名称列表数据', data)
+      // console.log('获取岗位名称列表数据', data)
       // 矫正数据
       const newArr = data.map((item) => {
         // 修改字段 id=>value name=>label
@@ -368,11 +372,12 @@ onMounted(async () => {
         obj.label = item.name
         return obj
       })
-      console.log('矫正字段', newArr)
+      // console.log('矫正字段', newArr)
       // 存到 组织管理/岗位管理仓库
-      // setTimeout(() => {
-      //   PostManage.setPostList(newArr)
-      // })
+      setTimeout(() => {
+        $postStore.setUserPostList(newArr)
+        // console.log('部门仓库', $postStore)
+      })
     },
     (error) => {
       if (error) {
@@ -404,7 +409,7 @@ const handelRefresh = async () => {
       currentTreeOption.value = data[0]
       // 把数据存到 组织结构/部门管理 仓库
       departmentManage.setDepartmentTree(data)
-      // console.log(departmentManage.DepartmentTree)
+      // console.log( departmentManage.DepartmentTree)
     },
     (error) => {
       if (error) {
@@ -435,28 +440,6 @@ const handelRefresh = async () => {
 //             label: '技术总监'
 //           }
 //         ]
-//       }
-//     ]
-//   },
-//   {
-//     value: '2',
-//     label: '不懂事会',
-//     children: [
-//       {
-//         value: '2-1',
-//         label: '鸡'
-//       },
-//       {
-//         value: '2-2',
-//         label: '你'
-//       },
-//       {
-//         value: '2-3',
-//         label: '太'
-//       },
-//       {
-//         value: '2-4',
-//         label: '美'
 //       }
 //     ]
 //   }
@@ -686,62 +669,67 @@ const labelWidth = ref('100px')
 // ref绑定表单
 const theAddForm = ref()
 const editForm = ref()
-//表单校验规则
-// const formRule = ref({
-//   // 账号
-//   account: [
-//     { required: true, message: '请输入账号名称', trigger: 'blur' },
-//     { min: 1, max: 15, message: '账号必须是1-15位的字符', trigger: 'blur' }
-//   ],
-//   // 密码
-//   password: [
-//     { required: true, message: '请输入密码', trigger: 'blur' },
-//     {
-//       pattern: /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/,
-//       message: '密码至少包含一个字母和一个数字且长度大于等于8',
-//       trigger: 'blur'
-//     }
-//   ],
-//   //名称
-//   name: [
-//     { required: true, message: '请输入名称', trigger: 'blur' },
-//     { min: 1, max: 10, message: '名称必须是1-10位的字符', trigger: 'blur' }
-//   ],
-//   // 手机
-//   mobile: [
-//     { required: true, message: '请输入手机号码', trigger: 'blur' },
-//     {
-//       pattern: /^1[3-9]\d{9}$/,
-//       message: '请输入正确的电话格式',
-//       trigger: 'blur'
-//     }
-//   ],
-//   // qicq
-//   qicq: [
-//     { required: true, message: '请输入QQ号', trigger: 'blur' },
-//     {
-//       pattern: /^[1-9][0-9]{4,10}$/,
-//       message: '请输入正确的QQ号',
-//       trigger: 'blur'
-//     }
-//   ],
-//   // 邮箱
-//   email: [
-//     { required: true, message: '请输入邮箱', trigger: 'blur' },
-//     {
-//       pattern: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
-//       message: '请输入正确的邮箱格式',
-//       trigger: 'blur'
-//     }
-//   ]
-// })
-// 点击添加打开抽屉,置空数据
+
+// 表单校验规则
+const formRule = ref({
+  // 账号
+  account: [
+    { required: true, message: '请输入账号名称', trigger: 'blur' },
+    { min: 1, max: 15, message: '账号必须是1-15位的字符', trigger: 'blur' }
+  ],
+  // 密码
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    {
+      pattern: /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/,
+      message: '密码至少包含一个字母和一个数字且长度大于等于8',
+      trigger: 'blur'
+    }
+  ],
+  //名称
+  name: [
+    { required: true, message: '请输入名称', trigger: 'blur' },
+    { min: 1, max: 10, message: '名称必须是1-10位的字符', trigger: 'blur' }
+  ],
+  // 手机
+  mobile: [
+    { required: true, message: '请输入手机号码', trigger: 'blur' },
+    {
+      pattern: /^1[3-9]\d{9}$/,
+      message: '请输入正确的电话格式',
+      trigger: 'blur'
+    }
+  ],
+  // qicq
+  qicq: [
+    { required: true, message: '请输入QQ号', trigger: 'blur' },
+    {
+      pattern: /^[1-9][0-9]{4,10}$/,
+      message: '请输入正确的QQ号',
+      trigger: 'blur'
+    }
+  ],
+  // 邮箱
+  email: [
+    { required: true, message: '请输入邮箱', trigger: 'blur' },
+    {
+      pattern: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
+      message: '请输入正确的邮箱格式',
+      trigger: 'blur'
+    }
+  ]
+})
+
+// 点击添加打开抽屉, 置空数据
 const handelAddFn = () => {
   // 置空表单数据
   let obj = addForm.value
   for (let key in obj) {
     obj[key] = ''
   }
+  selectValue.value = ''
+  selectRole.value = ''
+  selectPosition.value = ''
   addDrawer.value = true
 }
 
@@ -754,6 +742,12 @@ const handelAddSubmit = async () => {
   if (addForm.value.showGender === '') {
     ElMessage('请选择性别')
     return false
+  }
+  // 矫正性别数据  性别 (1-男，2-女)
+  if (addForm.value.showGender === '男') {
+    addForm.value.showGender = '1'
+  } else {
+    addForm.value.showGender = '2'
   }
   if (selectValue.value === '') {
     ElMessage('请选择部门')
@@ -771,19 +765,48 @@ const handelAddSubmit = async () => {
   console.log(
     '添加表单数据',
     addForm.value,
+    '部门id:',
     selectValue.value,
+    '职位id',
+    selectPosition.value,
+    '角色id:',
     selectRole.value
   )
-  // 这里要处理添加接口的逻辑
   btnLoading.value = true
-  setTimeout(() => {
-    ElMessage({
-      message: '提交成功',
-      type: 'success'
-    })
-    btnLoading.value = false
-    addDrawer.value = false
-  }, 1000)
+  // 这里要处理添加接口的逻辑
+  await addUserApi(
+    {
+      account: addForm.value.account,
+      deptID: selectValue.value,
+      email: addForm.value.email,
+      gender: addForm.value.showGender,
+      intro: addForm.value.desc,
+      mobile: addForm.value.mobile,
+      name: addForm.value.name,
+      password: addForm.value.password,
+      positionID: selectPosition.value,
+      qicq: addForm.value.qicq,
+      roleID: selectRole.value
+    },
+    (res) => {
+      const { data } = res
+      console.log('添加用户接口返回结果', res)
+      // 提示用户
+      ElMessage({
+        message: data.message,
+        type: 'success'
+      })
+      btnLoading.value = false
+      addDrawer.value = false
+    },
+    (error) => {
+      console.log(error)
+      btnLoading.value = false
+      addDrawer.value = false
+    }
+  )
+  btnLoading.value = false
+  addDrawer.value = false
 }
 
 // 编辑业务
