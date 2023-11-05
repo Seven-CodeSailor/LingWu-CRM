@@ -30,8 +30,11 @@
               :getOpt="() => [0, 1]"
               :export-excel="handleExport"
               :import-excel="handleImport"
-              :handle-change="handleChange"
-              action="/api/java3-warehouse/j3-controller-warehouse/export-store"
+              :handle-change="
+                (file) => {
+                  excelFile = file
+                }
+              "
             ></BulkOPe>
           </div>
           <div class="right">
@@ -159,6 +162,10 @@ const modifyTableData = async (params) => {
 
 const exportTableData = async (params) => {
   return await warehouseStore.exportStoreItem(params)
+}
+
+const importTableData = async (params) => {
+  return await warehouseStore.importStoreItem(params)
 }
 
 const updateSwitchState = async (state, row) => {
@@ -296,6 +303,20 @@ const handleManyDelete = async () => {
       pageSize: baseDataListRef.value.paginationData.pageSize
     })
   }
+}
+const handleImport = () => {
+  let fdParams = new FormData()
+  fdParams.append('excelFile', excelFile.value.raw)
+  console.log('1', fdParams.get('excelFile'))
+  importTableData({
+    excelFile: excelFile.value.raw
+  })
+    .then((res) => {
+      console.log('res', res)
+    })
+    .catch((error) => {
+      console.log('error', error)
+    })
 }
 
 onMounted(async () => {

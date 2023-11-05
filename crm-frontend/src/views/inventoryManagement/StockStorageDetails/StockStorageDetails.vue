@@ -184,9 +184,6 @@ const t1 = () => {
 // }
 
 onMounted(() => {
-  const Data = baseDataListRef.value.rows
-  const bb = JSON.parse(JSON.stringify(Data))
-  console.log('bb', bb)
   const params = {
     pageIndex: 1,
     pageSize: 5

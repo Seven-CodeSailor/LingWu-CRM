@@ -1,3 +1,12 @@
+/*
+ * @Author: BINGWU
+ * @Date: 2023-10-26 20:52:05
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-06 01:07:17
+ * @FilePath: \crm-frontend\src\apis\login\index.js
+ * @Describe:
+ * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
+ */
 import Request from '../request'
 import { userStore } from '@/stores/user'
 
@@ -16,7 +25,8 @@ export const login = (data, success, fail) => {
     .then((data) => {
       // 记录Token到本地
       if (data.data) {
-        data.data.token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTkyMDQyMzcsImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.inkPd2E0H2DZZrCuhErMp4qXaSrHfaUfX6XN4BGe-1Hfajegeb0RiltDLjaGmDI1WUetI7iy6NaES6PTqquWgNMqJiECJl3iq8ouOS6BNF7zwZ-dtd7hh7iVtFwPUY6opIJEaLqly-Yy4QWyFcWBXg0-cbuIzVSmdFkVFY2jm2Gm2gKzVRxW3Y5G2ioS61uokszlwRMXuGonVb6lZ-Epdce1AH7sBySMUAPv0lqXLfj6H4HVjJ0ZbQNacfJTgjer-H68lSKzPmNmSfyEseXVTUnXtXeqossijuKHEtzfhgfDlQPJMr-yGxzAndsyIiTmJQCUOs3uyMY32oYCGR6KaQ'
+        data.data.token =
+          'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTkyOTYzODksImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.ryOHSBH9Lc6noZlmA6S-X_1ACHvcSACLpIwNr7aKOVIW1OJg7fqUKi3NQrln-gdEmp3i6k4l73Kxotl4hygzq-J2SCJr-h15QyqL_Z6c7wDd_QAqi4Jx6idg2mK5jNbB2ZTCoKq4b0k85wFbgk2sdKftjM9-z5Z3O0TWXnyka0-rFG9Jxaw28LGQ3OdrdrTMPfoR9B-GNd0pKj-rlJu6rrjv_mcDO0K1aJaHiV_aecwXiQTv07O8C8oY_VBZ1bq-ctENK2OF6RbDhwW3bcSC7KKbgoQUJ8VsxV-Y9_9VjCuwxfOuOJ8Oj-L6T63WUBaaTI2GgHf4-YPowBjg67Df6g'
         $store.setToken(data.data)
         // 执行成功回调
         success()

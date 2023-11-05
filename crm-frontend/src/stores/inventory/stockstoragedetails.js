@@ -1,9 +1,9 @@
 /*
  * @Author: seven 1473008948@qq.com
  * @Date: 2023-10-27 22:00:55
- * @LastEditors: seven 1473008948@qq.com
- * @LastEditTime: 2023-10-29 00:02:52
- * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\inventory\stockstoragedetails.js
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-06 01:15:16
+ * @FilePath: \crm-frontend\src\stores\inventory\stockstoragedetails.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { defineStore } from 'pinia'
@@ -19,8 +19,8 @@ export const useStockStorageDetailsStore = defineStore(
       await queryStorageDetails(
         params,
         (res) => {
-          console.log('5')
-          const { rows, total } = res.data.data
+          console.log('res', res)
+          const { rows, total } = res.data
           tableTotal.value = total
           tableData.value = rows.map((item) => {
             return {
