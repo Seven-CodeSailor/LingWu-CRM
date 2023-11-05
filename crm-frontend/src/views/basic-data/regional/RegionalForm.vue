@@ -29,7 +29,7 @@
           <el-form-item label="介绍" prop="intro">
             <el-input
               placeholder="请输入介绍"
-              v-model="form.areaInfo"
+              v-model="form.intro"
               type="textarea"
             ></el-input>
           </el-form-item>
@@ -47,14 +47,13 @@
 
 <script setup>
 import { ref } from 'vue'
-// import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 const visible = ref(false)
-const chooseSelectRef = ref(null)
 const form = ref({
-  areaName: '',
+  name: '',
   sort: 0,
   visible: false,
-  areaInfo: ''
+  intro: '',
+  selectValue: ''
 })
 
 const props = defineProps({
@@ -69,6 +68,9 @@ const props = defineProps({
     default: '标题的默认值'
   },
   options: {
+    type: Array
+  },
+  areaTreeData: {
     type: Array
   }
 })
@@ -85,15 +87,12 @@ const rules = ref({
 const handleClear = () => {
   if (props.title === '修改') {
     form.value = {
-      areaName: '',
+      name: '',
       sort: 0,
       visible: false,
-      areaInfo: ''
+      intro: '',
+      selectValue: ''
     }
-    // typeTag = ''
-    setTimeout(() => {
-      chooseSelectRef.value.selectValue = ''
-    })
   }
   visible.value = false
   formRef.value.clearValidate()
@@ -102,8 +101,7 @@ const handleClear = () => {
 defineExpose({
   visible,
   form,
-  formRef,
-  chooseSelectRef
+  formRef
 })
 </script>
 

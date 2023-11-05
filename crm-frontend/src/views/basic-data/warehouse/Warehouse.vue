@@ -266,11 +266,9 @@ const handleExport = () => {
     const ids = baseDataListRef.value.rows.map((row) => {
       return row.storeId
     })
-    console.log('ids', ids)
     exportTableData({ ids }).then(async (res) => {
       const originalString = res.data
       const searchStr = 'http://8.130.45.222:8888'
-
       const startIndex = originalString.indexOf(searchStr) // 查找要截取内容的起始位置
       const extractedString = originalString.slice(
         startIndex + searchStr.length
