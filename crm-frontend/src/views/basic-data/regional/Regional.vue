@@ -9,14 +9,9 @@
       :total="regionalStore.total"
       :pageSizes="[5, 10, 15]"
       :usePagination="true"
-      @update-table-data="
-        (pageSize, pageIndex) => {
-          getTableData({
-            pageSize,
-            pageIndex
-          })
-        }
-      "
+      :useSelectColumn="false"
+      @update-table-data="updateTableData"
+      @update-switch-state="updateSwitchState"
       ref="baseDataListRef"
     >
       <template #ico>
@@ -68,6 +63,7 @@
       ref="regionalFormRef"
       :title="title"
       :area-tree-data="regionalStore.areaTreeData"
+      :handle-submit="handleSubmit"
     ></RegionalForm>
   </div>
 </template>
@@ -80,7 +76,7 @@ import { ref, onMounted } from 'vue'
 const regionalFormRef = ref(null)
 const regionalStore = useRegionalStore()
 const title = ref('')
-
+const rowId = ref('')
 const tableColumnAttribute = [
   {
     prop: 'name',
@@ -110,7 +106,10 @@ const getTableData = async (params) => {
 const deleteTableData = async (params) => {
   return await regionalStore.deleteAreaItem(params)
 }
-// 传入删除操作的函数就会显示删除按钮
+const modifyTableData = async (params) => {
+  return await regionalStore.modifyAreaItem(params)
+}
+
 const handleDelete = async (row) => {
   await deleteTableData({ id: row.id })
     .then((res) => {
@@ -128,13 +127,11 @@ const handleDelete = async (row) => {
   })
 }
 const handleEdit = (row) => {
-  console.log('编辑', row)
   const { name, intro, sort, visible, id } = row
+  rowId.value = id
   regionalFormRef.value.visible = true
   // treeData的数据回显
-
   const data = findObjectById(regionalStore.areaTreeData, id)
-  console.log('d', data)
   title.value = '修改'
   // 数据回显
   regionalFormRef.value.form = { name, intro, sort, visible }
@@ -155,7 +152,43 @@ const findObjectById = (arr, parentID) => {
   return null
 }
 
-const addTableData = (params) => {}
+const updateTableData = (pageSize, pageIndex) => {
+  if (inputValue.value) {
+    getTableData({
+      pageSize,
+      pageIndex,
+      queryCondition: inputValue.value
+    })
+  } else {
+    getTableData({
+      pageSize,
+      pageIndex
+    })
+  }
+}
+
+const updateSwitchState = async (state, row) => {
+  baseDataListRef.value.openSwitchLoading =
+    !baseDataListRef.value.openSwitchLoading
+  await modifyTableData({ id: row.id, visible: state ? 1 : 0 }).then(
+    async (res) => {
+      ElMessage({
+        message: res.message,
+        type: 'success'
+      })
+      await regionalStore.getListAreaItem({
+        pageIndex: baseDataListRef.value.paginationData.currentPage,
+        pageSize: baseDataListRef.value.paginationData.pageSize
+      })
+      baseDataListRef.value.openSwitchLoading =
+        !baseDataListRef.value.openSwitchLoading
+    }
+  )
+}
+
+const addTableData = async (params) => {
+  return await regionalStore.insertAreaItem(params)
+}
 const inputValue = ref('')
 const handleSearch = async () => {
   if (!inputValue.value) {
@@ -164,7 +197,7 @@ const handleSearch = async () => {
     await getTableData({
       pageSize: 5,
       pageIndex: 1,
-      name: inputValue
+      queryCondition: inputValue.value
     })
   }
 }
@@ -172,7 +205,59 @@ const handleAdd = () => {
   title.value = '添加'
   regionalFormRef.value.visible = true
 }
-
+const handleSubmit = async () => {
+  regionalFormRef.value.formRef.validate(async (vaild) => {
+    if (vaild) {
+      const { intro, name, selectValue, sort, visible } =
+        regionalFormRef.value.form
+      if (title.value === '修改') {
+        await modifyTableData({
+          intro,
+          name,
+          sort,
+          visible: visible ? 1 : 0,
+          parentId: Math.ceil(Math.random() * 1000),
+          id: rowId.value
+        })
+          .then((res) => {
+            ElMessage({
+              message: res.message,
+              type: 'success'
+            })
+          })
+          .catch((err) => {
+            ElMessage.error(err.data.message)
+          })
+      } else {
+        // parentId问题待处理
+        await addTableData({
+          intro,
+          name,
+          sort,
+          visible: visible ? 1 : 0,
+          parentId: Math.ceil(Math.random() * 1000)
+        }).then((res) => {
+          ElMessage({
+            message: res.message,
+            type: 'success'
+          })
+        })
+      }
+      regionalFormRef.value.form = {
+        name: '',
+        sort: 0,
+        visible: false,
+        intro: '',
+        selectValue: ''
+      }
+      regionalFormRef.value.visible = false
+      await getTableData({
+        pageIndex: baseDataListRef.value.paginationData.currentPage,
+        pageSize: baseDataListRef.value.paginationData.pageSize
+      })
+    }
+  })
+}
 onMounted(() => {
   getTableData({ pageSize: 5, pageIndex: 1 })
 })
