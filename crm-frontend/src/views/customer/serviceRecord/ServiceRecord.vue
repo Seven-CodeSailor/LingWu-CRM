@@ -69,7 +69,7 @@
       <el-table-column type="selection" width="55" />
       <el-table-column
         label="客户名称"
-        prop="customerName"
+        prop="customer_name"
         sortable
       ></el-table-column>
       <el-table-column label="服务类型" prop="services"></el-table-column>
@@ -98,7 +98,7 @@
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
       :page-sizes="[5, 10, 20, 50]"
-      :total="serviceRecord.tableData.length"
+      :total="serviceRecord.total"
       layout="prev, pager, next, jumper, ->, total, sizes"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -108,7 +108,7 @@
   <el-drawer
     v-model="dialogVisible"
     :title="
-      serviceRecord.temp.linkmanId === -1 ? '添加服务记录' : '修改服务记录'
+      serviceRecord.temp.service_id === '' ? '添加服务记录' : '修改服务记录'
     "
     size="50%"
   >
@@ -210,11 +210,14 @@ import {
 } from '@/apis/customer/index.js'
 
 // 初始化数据
-const initLinks = async (currentPage, pageSize, customerName) => {
-  await queryServiceNote(currentPage, pageSize, customerName)
+const initLinks = (currentPage, pageSize, customerName) => {
+  queryServiceNote(currentPage, pageSize, customerName, (response) => {
+    serviceRecord.setTableData(response.data.rows)
+    serviceRecord.total = response.data.total
+  })
 }
 onMounted(() => {
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 })
 // 我的客户store仓库
 const serviceRecord = useServiceRecord()
@@ -228,11 +231,11 @@ const currentPage = ref(1)
 const pageSize = ref(5)
 const handleSizeChange = (val) => {
   pageSize.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 const handleCurrentChange = (val) => {
   currentPage.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 // 发送消息按钮回调
 const msgSend = async (title, desc) => {
@@ -263,56 +266,23 @@ const emailSend = async (title, desc) => {
   )
 }
 
-let tempLinkData = ref({
-  linkmanId: -1, //联系人ID
-  cuntomerId: '', //客户ID
-  customerName: '', //客户名称
-  linkName: '', //联系人名称
-  gender: 0, //联系人性别 1=男，0=女
-  position: '', //联系人职位
-  tel: '', //联系人座机
-  mobile: '', //联系人手机
-  qicq: '', //联系人QQ
-  email: '', //联系人邮箱
-  zipcode: '', //联系人邮政编码
-  address: '', //联系人地址
-  intro: '' //联系人简介
-})
-
-const tempLinkDataReset = () => {
-  tempLinkData.value = {
-    linkmanId: -1, //联系人ID
-    cuntomerId: '', //客户ID
-    customerName: '', //客户名称
-    linkName: '', //联系人名称
-    gender: 0, //联系人性别 1=男，0=女
-    position: '', //联系人职位
-    tel: '', //联系人座机
-    mobile: '', //联系人手机
-    qicq: '', //联系人QQ
-    email: '', //联系人邮箱
-    zipcode: '', //联系人邮政编码
-    address: '', //联系人地址
-    intro: '' //联系人简介
-  }
-}
 const customerName = ref()
 const serviceWay = ref()
 const serviceType = ref()
 // 获取客户名称下拉列表
 const contractGetName = async () => {
   await getCustomerName()
-  serviceRecord.temp.customerName = customerName.value.value.label
+  serviceRecord.temp.customer_id = customerName.value.selectValue.value
 }
 // 获取服务类型下拉列表
 const serviceGettype = async () => {
   await getCustomerServiceType()
-  serviceRecord.temp.services = serviceType.value.value.label
+  serviceRecord.temp.services = serviceType.value.selectValue.label
 }
 // 获取服务方式下拉列表
 const serviceGetWay = async () => {
   await getCustomerServiceWay()
-  serviceRecord.temp.servicesmodel = serviceWay.value.value.label
+  serviceRecord.temp.servicesmodel = serviceWay.value.selectValue.label
 }
 // 点击添加按钮的回调
 const addMyClinet = async () => {
@@ -324,9 +294,9 @@ const addMyClinet = async () => {
 }
 // 添加按钮确定回调
 const save = async () => {
-  if (tempLinkData.value.linkmanId === -1) {
+  if (serviceRecord.temp.linkman_id === -1) {
     await addService(
-      tempLinkData.value,
+      serviceRecord.temp,
       () => {
         ElMessage.success('添加成功')
       },
@@ -336,7 +306,7 @@ const save = async () => {
     )
   } else {
     await modifyService(
-      tempLinkData.value,
+      serviceRecord.temp,
       () => {
         ElMessage.success('修改成功')
       },
@@ -345,7 +315,7 @@ const save = async () => {
       }
     )
   }
-  tempLinkDataReset()
+  serviceRecord.tempReset()
   select.resetData()
   dialogVisible.value = false
 }
@@ -354,7 +324,7 @@ const modify = async (row) => {
   await getCustomerName()
   await getCustomerServiceType()
   await getCustomerServiceWay()
-  tempLinkData.value.linkmanId = row.linkmanId
+  serviceRecord.temp.service_id = row.service_id
   dialogVisible.value = true
 }
 
@@ -379,7 +349,7 @@ const deleteByQuery = async () => {
     }
   )
   // 删除后重新请求数据
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 
 /**
@@ -387,7 +357,7 @@ const deleteByQuery = async () => {
  */
 let content = ref('')
 const searchDetails = () => {
-  initLinks(currentPage, pageSize, content.value)
+  initLinks(currentPage.value, pageSize.value, content.value)
   content.value = ''
 }
 
@@ -413,7 +383,7 @@ const Confirms = async () => {
     }
   )
   // 删除后重新请求数据
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 </script>
 

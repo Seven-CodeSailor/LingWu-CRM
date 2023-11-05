@@ -58,39 +58,39 @@ const op2 = ref()
 const value2 = ref('')
 let createUser = ref([
   {
-    value: 'Option1',
+    value: 1,
     label: 'test'
   },
   {
-    value: 'Option2',
+    value: 2,
     label: '管理员'
   },
   {
-    value: 'Option3',
+    value: 3,
     label: 'cw'
   }
 ])
 let belongUser = ref([
   {
-    value: 'Option1',
+    value: 1,
     label: 'test'
   },
   {
-    value: 'Option2',
+    value: 2,
     label: '管理员'
   },
   {
-    value: 'Option3',
+    value: 3,
     label: 'cw'
   }
 ])
 // 设置创建人的值
 const setValue1 = () => {
-  value1.value = op1.value.selectValue.label
+  value1.value = op1.value.selectValue.value
 }
 // 设置归属人的值
 const setValue2 = () => {
-  value2.value = op2.value.selectValue.label
+  value2.value = op2.value.selectValue.value
 }
 // 控制dialog是否显示
 let dialogVisible = ref(false)

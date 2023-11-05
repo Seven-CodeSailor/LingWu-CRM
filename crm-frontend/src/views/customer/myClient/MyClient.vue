@@ -7,13 +7,6 @@
         <slot name="ico"></slot>
         <div style="margin-left: 8px">我的客户</div>
       </h3>
-      <el-button
-        class="button"
-        @click="operatingInstructionDialogVisible = true"
-      >
-        <el-icon style="margin-right: 4px"> <icon-question /></el-icon
-        >操作说明</el-button
-      >
     </header>
     <!-- 操作搜索栏 -->
     <section class="menu">
@@ -81,12 +74,12 @@
           :inputValue3="address"
           inputTitle3="通信地址"
           @handleSearch="handleSearch"
+          ref="dropdown"
         ></DropDown>
         <el-button
           type="primary"
           style="margin-left: 4px"
           @click="searchDetails"
-          :disabled="name ? false : true"
           icon="IconSearch"
         >
           搜索</el-button
@@ -102,16 +95,16 @@
     >
       <el-table-column type="selection" width="55" />
       <el-table-column label="客户名称" prop="name" sortable></el-table-column>
-      <el-table-column label="归属于" prop="belong"></el-table-column>
+      <el-table-column label="归属于" prop="owner_user_id"></el-table-column>
       <el-table-column
         label="上次联系"
-        prop="lastContact"
+        prop="coon_time"
         sortable
       ></el-table-column>
-      <el-table-column label="联系内容" prop="content"></el-table-column>
+      <el-table-column label="联系内容" prop="coon_body"></el-table-column>
       <el-table-column
         label="下次联系"
-        prop="nextContact"
+        prop="next_time"
         sortable
       ></el-table-column>
       <el-table-column label="操作" fixed="right">
@@ -158,7 +151,7 @@
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
       :page-sizes="[5, 10, 20, 50]"
-      :total="myclient.tableData.length"
+      :total="myclient.total"
       layout="prev, pager, next, jumper, ->, total, sizes"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -179,12 +172,7 @@
   <!-- 查看详情 -->
   <Detail ref="details"></Detail>
   <!-- 删除确认 -->
-  <el-dialog
-    v-model="confirmDelete"
-    title="删除"
-    width="30%"
-    :before-close="(deleteId = null)"
-  >
+  <el-dialog v-model="confirmDelete" title="删除" width="30%">
     <span style="color: red; margin-left: 33%; font-size: 24px"
       >是否确认删除</span
     >
@@ -252,18 +240,25 @@ const initCustomer = (
   address
 ) => {
   getCustomer(
-    currentPage.value,
-    pageSize.value,
+    currentPage,
+    pageSize,
     coonTime,
     nextTime,
     name,
     mobile,
     tel,
-    address
+    address,
+    (response) => {
+      myclient.total = response.data.total
+      myclient.gettableData(response.data.rows)
+    },
+    () => {
+      myclient.gettableData([])
+    }
   )
 }
 onMounted(() => {
-  initCustomer(currentPage, pageSize)
+  initCustomer(currentPage.value, pageSize.value)
 })
 // 我的客户store仓库
 const myclient = useMyClient()
@@ -273,19 +268,25 @@ let currentPage = ref(1)
 let pageSize = ref(5)
 const handleSizeChange = (val) => {
   pageSize.value = val
-  initCustomer(currentPage, pageSize)
+  initCustomer(currentPage.value, pageSize.value)
 }
 const handleCurrentChange = (val) => {
   currentPage.value = val
-  initCustomer(currentPage, pageSize)
+  initCustomer(currentPage.value, pageSize.value)
 }
 // 导出文件的按钮回调
-const exportExcel = async (value1, value2) => {
-  await exportCustomer(
+const exportExcel = (value1, value2) => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.customer_id)
+  })
+  exportCustomer(
+    data,
     value1,
     value2,
     () => {
       ElMessage.success('导出成功')
+      initCustomer(currentPage.value, pageSize.value)
     },
     () => {
       ElMessage.error('导出失败')
@@ -294,7 +295,9 @@ const exportExcel = async (value1, value2) => {
 }
 
 // 导入文件-文件上传的全地址
-const action = ref('')
+const action = ref(
+  'http://8.130.17.229:8090/customer-mycustomer/upload-customer-file'
+)
 
 //导入文件的按钮回调
 const importExcel = async (fileList) => {
@@ -366,12 +369,15 @@ const searchDetails = () => {
     name.value,
     mobile.value,
     tel.value,
-    address
+    address.value
   )
   coonTime.value.reset()
   nextTime.value.reset()
+  coon.value = ''
+  nexts.value = ''
   name.value = ''
 }
+const dropdown = ref()
 const tel = ref('')
 const mobile = ref('')
 const address = ref('')
@@ -393,34 +399,44 @@ const selectChange = (value) => {
   selectIdArr.value = value
 }
 // 批量删除按钮
-const deleteByQuery = async () => {
-  await deleteCustomer(
-    selectIdArr.value,
+const deleteByQuery = () => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.customer_id)
+  })
+  deleteCustomer(
+    data,
     () => {
       ElMessage.success('批量删除成功')
+      selectIdArr.value = []
     },
     () => {
       ElMessage.error('批量删除失败')
     }
   )
   // 删除后重新请求数据
-  initCustomer(currentPage, pageSize)
+  initCustomer(currentPage.value, pageSize.value)
 }
 
 /**
  * 批量投入公海
  */
 const invesHightsea = async () => {
-  await invesHightSea(
-    selectIdArr.value,
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.customer_id)
+  })
+  invesHightSea(
+    data,
     () => {
       ElMessage.success('批量投入成功')
+      selectIdArr.value = []
     },
     () => {
       ElMessage.error('批量投入失败')
     }
   )
-  initCustomer(currentPage, pageSize)
+  initCustomer(currentPage.value, pageSize.value)
 }
 
 /**
@@ -430,13 +446,12 @@ let confirmDelete = ref(false)
 let deleteId = ref()
 // 删除按钮回调
 const Deletes = (row) => {
-  deleteId.value = row.id
+  deleteId.value = row.customer_id
   confirmDelete.value = true
 }
 // 确定删除
-const Confirms = async () => {
-  confirmDelete.value = false
-  await deleteCustomer(
+const Confirms = () => {
+  deleteCustomer(
     [deleteId.value],
     () => {
       ElMessage.success('删除成功')
@@ -445,7 +460,8 @@ const Confirms = async () => {
       ElMessage.error('删除失败')
     }
   )
-  initCustomer(currentPage, pageSize)
+  confirmDelete.value = false
+  initCustomer(currentPage.value, pageSize.value)
 }
 </script>
 

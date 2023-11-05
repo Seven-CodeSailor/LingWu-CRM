@@ -53,7 +53,6 @@
       </div>
     </el-container>
   </el-container>
-  <Tip></Tip>
 </template>
 
 <style lang="scss" scoped>
@@ -143,7 +142,6 @@ import useLayOutSettingStore from '@/stores/setting.js'
 import Setting from './tabbar/setting/Setting.vue'
 import BreadCrumb from './tabbar/bread-crumb/BreadCrumb.vue'
 import Menu from './menu/Menu.vue'
-import Tip from './tip/Tip.vue'
 const store = userStore()
 const layOutSettingStore = useLayOutSettingStore()
 

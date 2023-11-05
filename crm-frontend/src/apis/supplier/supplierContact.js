@@ -1,92 +1,71 @@
-// import Request from '../request'
+import Request from '../request'
 
 import useSupplierLinkman from '@/stores/supplier/linkman/linkman'
 
 const supplierLinkman = useSupplierLinkman()
 
+// 过滤对象中值为null '' undefined 0 的值
+export const delEmptyQueryNodes = (obj = {}) => {
+  Object.keys(obj).forEach((key) => {
+    let value = obj[key]
+    value && typeof value === 'object' && delEmptyQueryNodes(value)
+    ;(value === '' ||
+      value === null ||
+      value === undefined ||
+      value.length === 0 ||
+      Object.keys(value).length === 0) &&
+      delete obj[key]
+  })
+  return obj
+}
+
 /**
- *
- * @param {*} pageIndex 查询页码
- * @param {*} pageSize 查询条数
- * @param {*} keywords 查询关键字
- * @param {*} supplierName 供应商名称
- * @param {*} address 通信地址
- * @param {*} success 成功的回调
- * @param {*} fail 失败的回调
- * @returns
+ * 获取供应商联系人名称列表
  */
-export const getSupplier = (
+export const queryNamePullList = async (
+  keywords,
+  success = () => {},
+  fail = () => {}
+) => {
+  await Request.requestForm(keywords)
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
+
+/**
+ *  获取供应商联系人列表
+ */
+export const getSupplier = async (
   pageIndex,
   pageSize,
   keywords,
-  supplierName,
+  supplier_name,
   address,
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ pageIndex, pageSize, keywords, supplierName, address })
-    }, 0)
-  })
-    .then(() => {
-      supplierLinkman.setTableData([
-        {
-          supplierId: '1', // 供应商ID
-          supplierName: '供应商名称', //供应商名称
-          gender: '男', //性别
-          position: 'P1', //职位
-          tel: '120', //电话号码
-          mobile: '110', //座机
-          qq: '12345', // QQ      fax: '', // 传真
-          email: '@.com', //邮箱
-          zipcode: '36584', //邮政编码
-          address: '123', //联系地址
-          intro: '无', //介绍
-          createUserId: '13', //创建用户ID
-          createTime: '11-3', //创建时间
-          linkmanId: '1', //供应商联系人ID
-          name: '供应商联系人' // 供应商联系人名称
-        },
-        {
-          supplierId: '2', // 供应商ID
-          supplierName: '供应商名称', //供应商名称
-          gender: '男', //性别
-          position: 'P1', //职位
-          tel: '120', //电话号码
-          mobile: '110', //座机
-          qq: '12345', // QQ      fax: '', // 传真
-          email: '@.com', //邮箱
-          zipcode: '36584', //邮政编码
-          address: '123', //联系地址
-          intro: '无', //介绍
-          createUserId: '13', //创建用户ID
-          createTime: '11-3', //创建时间
-          linkmanId: '1', //供应商联系人ID
-          name: '供应商联系人' // 供应商联系人名称
-        },
-        {
-          supplierId: '3', // 供应商ID
-          supplierName: '供应商名称', //供应商名称
-          gender: '男', //性别
-          position: 'P1', //职位
-          tel: '120', //电话号码
-          mobile: '110', //座机
-          qq: '12345', // QQ      fax: '', // 传真
-          email: '@.com', //邮箱
-          zipcode: '36584', //邮政编码
-          address: '123', //联系地址
-          intro: '无', //介绍
-          createUserId: '13', //创建用户ID
-          createTime: '11-3', //创建时间
-          linkmanId: '1', //供应商联系人ID
-          name: '供应商联系人' // 供应商联系人名称
-        }
-      ])
-      success()
+  let data = { keywords, supplier_name, address }
+  const params = delEmptyQueryNodes(delEmptyQueryNodes(data))
+  await Request.requestForm(
+    Request.GET,
+    '/supplier-manage/supplier-linkman/query-linkman-page',
+    {
+      pageIndex,
+      pageSize,
+      ...params
+    }
+  )
+    .then((response) => {
+      supplierLinkman.pageTotal = response.data.total
+      supplierLinkman.setTableData(response.data.rows)
+      success(response)
     })
-    .catch(() => {
-      fail()
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -96,17 +75,22 @@ export const getSupplier = (
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调
  */
-export const addlinkman = (params, success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(params)
-    }, 0)
-  })
-    .then(() => {
-      success()
+export const addlinkman = async (
+  params,
+  success = () => {},
+  fail = () => {}
+) => {
+  delete params['linkman_id']
+  await Request.requestJson(
+    Request.GET,
+    '/supplier-manage/supplier-linkman/add-linkman',
+    params
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch(() => {
-      fail()
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -116,17 +100,21 @@ export const addlinkman = (params, success = () => {}, fail = () => {}) => {
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调
  */
-export const modifylinkman = (params, success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(params)
-    }, 0)
-  })
-    .then(() => {
-      success()
+export const modifylinkman = async (
+  params,
+  success = () => {},
+  fail = () => {}
+) => {
+  await Request.requestJson(
+    Request.GET,
+    '/supplier-manage/supplier-linkman/modify-link-man',
+    params
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch(() => {
-      fail()
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -136,21 +124,23 @@ export const modifylinkman = (params, success = () => {}, fail = () => {}) => {
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调
  */
-export const removelinkman = (
+export const removelinkman = async (
   list = [],
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(list)
-    }, 0)
-  })
-    .then(() => {
-      success()
+  await Request.requestJson(
+    Request.DELETE,
+    '/supplier-manage/supplier-linkman/remove-linkman',
+    {
+      rows: list
+    }
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch(() => {
-      fail()
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -162,49 +152,59 @@ export const removelinkman = (
  * @param {*} fail 失败的回调
  * @returns
  */
-export const sendMessage = (
-  supplierList = [],
-  supMessage,
+export const sendMessage = async (
+  supplier_list = [],
+  type,
+  message,
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(supplierList, supMessage)
-    }, 0)
-  })
-    .then(() => {
-      success()
+  await Request.requestJson(
+    Request.POST,
+    '/supplier-manage/supplier-linkman/send-message',
+    {
+      supplier_list,
+      type,
+      message
+    }
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch(() => {
-      fail()
+    .catch((error) => {
+      fail(error)
     })
 }
 
 /**
- * 批量发短信
+ * 批量发邮件
  * @param {*} supplierList 收件人列表
  * @param {*} emailMsg 邮件内容
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调
  * @returns
  */
-export const sendEmail = (
-  supplierList = [],
-  emailMsg,
+export const sendEmail = async (
+  supplier_list = [],
+  type,
+  mess,
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(supplierList, emailMsg)
-    }, 0)
-  })
-    .then(() => {
-      success()
+  await Request.requestJson(
+    Request.POST,
+    '/supplier-manage/supplier-linkman/send-email',
+    {
+      supplier_list,
+      type,
+      mess
+    }
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch(() => {
-      fail()
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -214,22 +214,27 @@ export const sendEmail = (
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调
  */
-export const exportlinkman = (
+export const exportlinkman = async (
   keywords,
-  supplierName,
+  supplier_name,
   address,
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(keywords, supplierName, address)
-    }, 0)
-  })
-    .then(() => {
-      success()
+  await Request.requestForm(
+    Request.GET,
+    '/supplier-manage/supplier-linkman/export-linkman',
+    {
+      keywords,
+      supplier_name,
+      address
+    }
+  )
+    .then((response) => {
+      window.location.href = response.data
+      success(response)
     })
-    .catch(() => {
-      fail()
+    .catch((error) => {
+      fail(error)
     })
 }
