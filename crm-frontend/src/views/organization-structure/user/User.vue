@@ -114,7 +114,7 @@
         <el-form-item label="职位" :label-width="labelWidth">
           <el-tree-select
             v-model="selectPosition"
-            :data="treeDataPos"
+            :data="$postStore.usePostList"
             check-strictly
             default-expand-all
             :render-after-expand="false"
@@ -201,7 +201,7 @@
         <el-form-item label="职位" :label-width="labelWidth">
           <el-tree-select
             v-model="selectPosition"
-            :data="treeDataPos"
+            :data="$postStore.usePostList"
             check-strictly
             default-expand-all
             :render-after-expand="false"
@@ -256,13 +256,19 @@ import { Operation, Plus, Search } from '@element-plus/icons-vue'
 import { onMounted, ref } from 'vue'
 import { getUserNameList } from '@/apis/publicInterface.js'
 import { getDepartmentTree } from '@/apis/organizationStructure/department.js'
-import { getUserTableList } from '@/apis/organizationStructure/user.js'
+import {
+  getUserTableList,
+  addUserApi
+} from '@/apis/organizationStructure/user.js'
 // 导入 组织结构/用户管理 仓库
 import useUserManageStore from '@/stores/organizationStructure/usermanage.js'
 const userManage = useUserManageStore()
 // 导入 组织结构/部门管理 仓库
 import useDepartmentManageStore from '@/stores/organizationStructure/departmentManage.js'
 const departmentManage = useDepartmentManageStore()
+// 导入 组织结构/岗位管理仓库
+import usePostManageStore from '@/stores/organizationStructure/postManagement.js'
+const $postStore = usePostManageStore()
 onMounted(async () => {
   // 获取系统用户名称列表数据
   await getUserNameList(
@@ -270,8 +276,17 @@ onMounted(async () => {
     (res) => {
       const { data } = res
       // console.log('获取系统用户名称列表数据', data)
+      const arrData = data.map((item) => {
+        // 修改字段 id=>value name=>label
+        const obj = { value: '', label: '' }
+        obj.value = item.id
+        obj.label = item.name
+        return obj
+      })
+      console.log('矫正后的数据', arrData)
       // 把数据存到 组织结构/用户管理仓库
-      userManage.setUserNameList(data)
+      userManage.setUserNameList(arrData)
+      // console.log(userManage)
     },
     (error) => {
       if (error) {
@@ -287,13 +302,13 @@ onMounted(async () => {
     },
     (res) => {
       const { data } = res
-      console.log('获取部门名称结构树', data)
+      // console.log('获取部门名称结构树', data)
       // 更新默认部门
       defaultDep.value = data[0]
       currentTreeOption.value = data[0]
       // 把数据存到 组织结构/部门管理 仓库
-      departmentManage.setDepartmentTree(data)
-      // console.log(departmentManage.DepartmentTree)
+      departmentManage.setDepartmentTree(newArr)
+      // console.log('存仓库', departmentManage.DepartmentTree)
     },
     (error) => {
       if (error) {
@@ -304,6 +319,17 @@ onMounted(async () => {
   // 获取用户列表数据
   // 开启表格加载效果
   baseDataListRef.value.openLoading = true
+  // console.log('id是', defaultDep.value.id)
+  // console.log('当前的条数', $page.value.pageSize)
+  console.log(
+    '收集的数据:',
+    '部门id:',
+    defaultDep.value.id,
+    '当前页',
+    $page.value.currentPage,
+    '当前条数',
+    $page.value.pageSize
+  )
   await getUserTableList(
     {
       deptId: defaultDep.value.id,
@@ -316,6 +342,37 @@ onMounted(async () => {
       console.log('获取表格数据', data)
       sendData.value.tableData = data.rows
       baseDataListRef.value.openLoading = false
+    },
+    (error) => {
+      baseDataListRef.value.openLoading = false
+      if (error) {
+        console.log(error)
+      }
+    }
+  )
+
+  // 获取岗位名称列表数据
+  await getPostNameList(
+    {
+      positionName: ''
+    },
+    (res) => {
+      const { data } = res
+      // console.log('获取岗位名称列表数据', data)
+      // 矫正数据
+      const newArr = data.map((item) => {
+        // 修改字段 id=>value name=>label
+        const obj = { value: '', label: '' }
+        obj.value = item.id
+        obj.label = item.name
+        return obj
+      })
+      // console.log('矫正字段', newArr)
+      // 存到 组织管理/岗位管理仓库
+      setTimeout(() => {
+        $postStore.setUserPostList(newArr)
+        // console.log('部门仓库', $postStore)
+      })
     },
     (error) => {
       if (error) {
@@ -341,7 +398,7 @@ const handelRefresh = async () => {
       currentTreeOption.value = data[0]
       // 把数据存到 组织结构/部门管理 仓库
       departmentManage.setDepartmentTree(data)
-      // console.log(departmentManage.DepartmentTree)
+      // console.log( departmentManage.DepartmentTree)
     },
     (error) => {
       if (error) {
@@ -350,54 +407,32 @@ const handelRefresh = async () => {
     }
   )
 }
-const treeDataPos = ref([
-  {
-    value: '1',
-    label: '董事会',
-    children: [
-      {
-        value: '1-1',
-        label: '总经理',
-        children: [
-          {
-            value: '1-1-1',
-            label: '财务总监'
-          },
-          {
-            value: ' 1-1-2',
-            label: '人事总监'
-          },
-          {
-            value: '1-1-3',
-            label: '技术总监'
-          }
-        ]
-      }
-    ]
-  },
-  {
-    value: '2',
-    label: '不懂事会',
-    children: [
-      {
-        value: '2-1',
-        label: '鸡'
-      },
-      {
-        value: '2-2',
-        label: '你'
-      },
-      {
-        value: '2-3',
-        label: '太'
-      },
-      {
-        value: '2-4',
-        label: '美'
-      }
-    ]
-  }
-])
+// const treeDataPos = ref([
+//   {
+//     value: '1',
+//     label: '董事会',
+//     children: [
+//       {
+//         value: '1-1',
+//         label: '总经理',
+//         children: [
+//           {
+//             value: '1-1-1',
+//             label: '财务总监'
+//           },
+//           {
+//             value: ' 1-1-2',
+//             label: '人事总监'
+//           },
+//           {
+//             value: '1-1-3',
+//             label: '技术总监'
+//           }
+//         ]
+//       }
+//     ]
+//   }
+// ])
 const treeDataRole = ref([
   {
     value: '1',
@@ -619,7 +654,8 @@ const labelWidth = ref('100px')
 // ref绑定表单
 const theAddForm = ref()
 const editForm = ref()
-//表单校验规则
+
+// 表单校验规则
 const formRule = ref({
   // 账号
   account: [
@@ -668,13 +704,17 @@ const formRule = ref({
     }
   ]
 })
-// 点击添加打开抽屉,置空数据
+
+// 点击添加打开抽屉, 置空数据
 const handelAddFn = () => {
   // 置空表单数据
   let obj = addForm.value
   for (let key in obj) {
     obj[key] = ''
   }
+  selectValue.value = ''
+  selectRole.value = ''
+  selectPosition.value = ''
   addDrawer.value = true
 }
 
@@ -683,16 +723,75 @@ const btnLoading = ref(false)
 const handelAddSubmit = async () => {
   // 添加表单的校验,通过了才能发送添加请求
   await theAddForm.value.validate()
-  // 这里要处理添加接口的逻辑
+  //判断选择框全部选中
+  if (addForm.value.showGender === '') {
+    ElMessage('请选择性别')
+    return false
+  }
+  // 矫正性别数据  性别 (1-男，2-女)
+  if (addForm.value.showGender === '男') {
+    addForm.value.showGender = '1'
+  } else {
+    addForm.value.showGender = '2'
+  }
+  if (selectValue.value === '') {
+    ElMessage('请选择部门')
+    return false
+  }
+  // 先去处理职位接口!!
+  if (selectPosition.value === '') {
+    ElMessage('请选择职位')
+    return false
+  }
+  if (selectRole.value === '') {
+    ElMessage('请选择角色')
+    return false
+  }
+  console.log(
+    '添加表单数据',
+    addForm.value,
+    '部门id:',
+    selectValue.value,
+    '职位id',
+    selectPosition.value,
+    '角色id:',
+    selectRole.value
+  )
   btnLoading.value = true
-  setTimeout(() => {
-    ElMessage({
-      message: '提交成功',
-      type: 'success'
-    })
-    btnLoading.value = false
-    addDrawer.value = false
-  }, 1000)
+  // 这里要处理添加接口的逻辑
+  await addUserApi(
+    {
+      account: addForm.value.account,
+      deptID: selectValue.value,
+      email: addForm.value.email,
+      gender: addForm.value.showGender,
+      intro: addForm.value.desc,
+      mobile: addForm.value.mobile,
+      name: addForm.value.name,
+      password: addForm.value.password,
+      positionID: selectPosition.value,
+      qicq: addForm.value.qicq,
+      roleID: selectRole.value
+    },
+    (res) => {
+      const { data } = res
+      console.log('添加用户接口返回结果', res)
+      // 提示用户
+      ElMessage({
+        message: data.message,
+        type: 'success'
+      })
+      btnLoading.value = false
+      addDrawer.value = false
+    },
+    (error) => {
+      console.log(error)
+      btnLoading.value = false
+      addDrawer.value = false
+    }
+  )
+  btnLoading.value = false
+  addDrawer.value = false
 }
 
 // 编辑业务

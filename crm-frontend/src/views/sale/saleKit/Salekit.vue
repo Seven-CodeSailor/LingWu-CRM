@@ -20,10 +20,10 @@
       >
     </header>
     <section class="menu">
-      <el-card style="width: 580px; height: 520px">
+      <el-card style="width: 100%; height: 600px">
         <SalesKit :getData="getData"></SalesKit>
       </el-card>
-      <el-card style="width: 580px; height: 520px">
+      <el-card style="width: 100%; height: 600px">
         <SalesBoard :getData="getDatas"></SalesBoard
       ></el-card>
     </section>

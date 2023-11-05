@@ -1,6 +1,3 @@
-/** @Author: seven * @Date: 2023-10-19 23:51:18 * @Last Modified by: seven *
-@Last Modified time: 2023-10-20 11:03:15 **/
-
 <!-- 销售管理 数量统计 -->
 
 <template>
@@ -272,13 +269,16 @@ let initChart = () => {
       text: '销售简报-新增数据统计',
       textStyle: {
         fontWeight: 'bolder',
-        fontSize: 15
+        fontSize: 20
       }
     },
     // 图例组件
     legend: {
       show: true,
-      top: 30
+      top: 30,
+      textStyle: {
+        fontSize: 15
+      }
     },
     // 修改坐标系显示大小
     grid: {
@@ -286,8 +286,8 @@ let initChart = () => {
       left: '3%',
       right: '3%',
       bottom: 0,
-      height: 350,
-      width: 480,
+      // height: 350,
+      // width: 480,
       containLabel: true
     },
     tooltip: {
@@ -305,7 +305,7 @@ let initChart = () => {
         showMinLabel: true,
         margin: 10,
         fontWeight: 'normal',
-        fontSize: 12,
+        fontSize: 15,
         align: 'center'
       },
       axisTick: {
@@ -541,6 +541,6 @@ let initChart = () => {
   height: 500px;
 }
 .chartCheckBox {
-  margin-left: 300px;
+  margin-left: 900px;
 }
 </style>

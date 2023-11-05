@@ -1,9 +1,9 @@
 /*
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
- * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-03 17:54:53
- * @FilePath: \crm-frontend\src\apis\publicInterface.js
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-05 21:10:25
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from './request'
@@ -18,36 +18,23 @@ const select = useSelect()
  * @returns
  */
 
-export const getCustomerName = (param, success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(param)
-    }, 0)
-  })
-    .then(() => {
-      let name = [
-        {
-          value: 'Option1',
-          label: '成都零起飞科技'
-        },
-        {
-          value: 'Option2',
-          label: '01'
-        },
-        {
-          value: 'Option3',
-          label: 'asd'
-        }
-      ]
-      if (name) {
-        select.setName(name)
-        success()
-        return
-      }
-      fail()
+export const getCustomerName = async (
+  name,
+  success = () => {},
+  fail = () => {}
+) => {
+  await Request.requestForm(
+    Request.GET,
+    '/customer-mycustomer/get-customername',
+    {
+      name
+    }
+  )
+    .then(async (response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -181,7 +168,7 @@ export const getUserNameList = async (params, success, fail) => {
   )
     .then((response) => {
       // 请求返回的数据就是response,在成功回调函数可以拿到
-      console.log('12313', response)
+      // console.log('12313', response)
       success(response)
     })
     .catch((error) => {

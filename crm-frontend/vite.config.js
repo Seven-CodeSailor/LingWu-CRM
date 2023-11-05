@@ -1,10 +1,12 @@
 /*
- * @Author: BINGWU
- * @Date: 2023-10-26 20:52:05
- * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-04 18:07:42
- * @FilePath: \crm-frontend\vite.config.js
- * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-11-05 21:18:17
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-05 21:18:47
+ * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
  */
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
@@ -55,11 +57,6 @@ export default ({ mode }) =>
           changeOrigin: true,
           target: 'http://localhost:10680',
           rewrite: (path) => path.replace(/^\/captcha/, '')
-        },
-        '/api1': {
-          changeOrigin: true,
-          target: 'http://118.31.61.96:10031',
-          rewrite: (path) => path.replace(/^\/api1/, '')
         }
       }
     },
