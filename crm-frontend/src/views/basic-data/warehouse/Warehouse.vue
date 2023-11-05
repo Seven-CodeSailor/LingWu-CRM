@@ -31,6 +31,7 @@
               :export-excel="handleExport"
               :import-excel="handleImport"
               :handle-change="handleChange"
+              action="/api/java3-warehouse/j3-controller-warehouse/export-store"
             ></BulkOPe>
           </div>
           <div class="right">
