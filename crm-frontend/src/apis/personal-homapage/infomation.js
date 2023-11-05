@@ -1,8 +1,8 @@
 /*
  * @Author: pipazi 2283356040@qq.com
  * @Date: 2023-11-03 12:55:47
- * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-03 20:43:27
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-05 22:08:26
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\personal-homapage\infomation.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -23,18 +23,15 @@ import Request from '@/apis/request.js'
  */
 
 export const postPersonalInformation = async (params, success, fail) => {
-    await Request.requestJson(
-      Request.POST,
-      'https://mock.apifox.cn/m1/3500676-0-default/getdata',
-      {}
-    )
-      .then((response) => {
-        success(response)
-      })
-      .catch((error) => {
-        fail(error)
-      })
+  await Request.requestJson(
+    Request.POST,
+    'https://mock.apifox.cn/m1/3500676-0-default/getdata',
+    {}
+  )
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
 }
-
-
-  
