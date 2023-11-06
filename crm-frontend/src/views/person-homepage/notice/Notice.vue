@@ -2,7 +2,7 @@
  * @Author: setti5 2283356040@qq.com
  * @Date: 2023-10-28 21:29:26
  * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-06 19:38:38
+ * @LastEditTime: 2023-11-06 21:05:33
  * @FilePath: \zero-one-crmsys\crm-frontend\src\views\person-homepage\notice\Notice.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -20,13 +20,7 @@
       :dropdown-menu-actions-info="dropdownMenuActionsInfo"
       :useDropdownMenu="true"
       @updateTableData="handelPageChange"
-      @update-table-data="
-        (pageSize, currentPage) =>
-          getStockStorageList({
-            pageSize,
-            pageIndex: currentPage
-          })
-      "
+      
       ref="baseDataListRef"
     >
       <!-- 导航图标 -->
@@ -102,7 +96,7 @@
         <el-form-item label="指定对象" prop="Person">
           <ChooseSelect
           v-model="form.ownerUserId"
-            :options="options"
+            :options="noticeStore.optionsUserName"
             des="请选指定对象"
             style="width: 60%"
           ></ChooseSelect>
@@ -300,27 +294,27 @@ const rules = {
 
 // 搜索框条件
 const stockStorageDetailsStore = useStockStorageDetailsStore()
-const searchDetails = () => {
-  console.log('t', stockStorageDetailsStore.tableData)
-  if (!inputValue.value) {
-    ElMessage.error('输入不能为空')
-  } else {
-    console.log('pp', baseDataListRef.value.paginationData)
-    baseDataListRef.value.paginationData.pageSize = 5
-    baseDataListRef.value.paginationData.currentPage = 1
-    // 搜索数据的时候就重新初始化页面容量和当前页的页码
-    const params = {
-      pageSize: 5,
-      pageIndex: 1
-    }
-    getStockStorageList(params)
-  }
-}
-const getStockStorageList = async (params) => {
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  await stockStorageDetailsStore.getTableData(params)
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-}
+// const searchDetails = () => {
+//   console.log('t', stockStorageDetailsStore.tableData)
+//   if (!inputValue.value) {
+//     ElMessage.error('输入不能为空')
+//   } else {
+//     console.log('pp', baseDataListRef.value.paginationData)
+//     baseDataListRef.value.paginationData.pageSize = 5
+//     baseDataListRef.value.paginationData.currentPage = 1
+//     // 搜索数据的时候就重新初始化页面容量和当前页的页码
+//     const params = {
+//       pageSize: 5,
+//       pageIndex: 1
+//     }
+//     getStockStorageList(params)
+//   }
+// }
+// const getStockStorageList = async (params) => {
+//   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+//   await stockStorageDetailsStore.getTableData(params)
+//   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+// }
 
 // 查看公告
 const detail = ref({
@@ -376,12 +370,12 @@ const handleSubmit= () => {
 // 分页逻辑
 onMounted(() => {
   const params = {
-    pageIndex: '',
-    pageSize: ''
+    pageIndex: 1,
+    pageSize: 5
   }
-  getStockStorageList(params)
-  noticeStore.getNoticeDetails(params)
-
+  // getStockStorageList(params)
+  noticeStore.getNoticeStore(params)
+  noticeStore.getOptionsUserName()
 
   // 暮秋的逻辑
   // noticeStore.getNoticeApi({
