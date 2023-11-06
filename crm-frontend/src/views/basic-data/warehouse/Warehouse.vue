@@ -108,10 +108,12 @@ const dropdownMenuActionsInfo = [
               type: 'success'
             })
           })
-          await getTableData({
-            pageIndex: baseDataListRef.value.paginationData.currentPage,
-            pageSize: baseDataListRef.value.paginationData.pageSize
-          })
+          baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+          await isUseInputValueGetTableData(
+            baseDataListRef.value.paginationData.pageSize,
+            baseDataListRef.value.paginationData.currentPage
+          )
+          baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
         })
         .catch(() => {
           ElMessage({
@@ -168,6 +170,22 @@ const importTableData = async (params) => {
   return await warehouseStore.importStoreItem(params)
 }
 
+const isUseInputValueGetTableData = async (pageSize, pageIndex) => {
+  if (inputValue.value) {
+    // 输入框有值
+    await warehouseStore.getStoreList({
+      pageIndex,
+      pageSize,
+      keyWord: inputValue.value
+    })
+  } else {
+    await warehouseStore.getStoreList({
+      pageIndex,
+      pageSize
+    })
+  }
+}
+
 const updateSwitchState = async (state, row) => {
   baseDataListRef.value.openSwitchLoading =
     !baseDataListRef.value.openSwitchLoading
@@ -179,30 +197,18 @@ const updateSwitchState = async (state, row) => {
       })
     }
   )
-  if (inputValue.value) {
-    // 输入框有值
-    await warehouseStore.getStoreList({
-      pageIndex: baseDataListRef.value.paginationData.currentPage,
-      pageSize: baseDataListRef.value.paginationData.pageSize,
-      keyWord: inputValue.value
-    })
-  } else {
-    await warehouseStore.getStoreList({
-      pageIndex: baseDataListRef.value.paginationData.currentPage,
-      pageSize: baseDataListRef.value.paginationData.pageSize
-    })
-  }
+  await isUseInputValueGetTableData(
+    baseDataListRef.value.paginationData.pageSize,
+    baseDataListRef.value.paginationData.currentPage
+  )
   baseDataListRef.value.openSwitchLoading =
     !baseDataListRef.value.openSwitchLoading
 }
 
 const updateTableData = async (pageSize, pageIndex) => {
-  // 如果输入框有值 就带着输入框的值去分页
-  if (inputValue.value) {
-    await getTableData({ pageSize, pageIndex, keyWord: inputValue.value })
-  } else {
-    await getTableData({ pageSize, pageIndex })
-  }
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  await isUseInputValueGetTableData(pageSize, pageIndex)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
 
 const handleAdd = () => {
@@ -251,10 +257,12 @@ const handleSubmit = () => {
           })
         })
       }
-      await getTableData({
-        pageIndex: baseDataListRef.value.paginationData.currentPage,
-        pageSize: baseDataListRef.value.paginationData.pageSize
-      })
+      baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+      await isUseInputValueGetTableData(
+        baseDataListRef.value.paginationData.pageSize,
+        baseDataListRef.value.paginationData.currentPage
+      )
+      baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
       warehouseFromRef.value.form = {
         name: '',
         visible: true,
@@ -302,10 +310,12 @@ const handleManyDelete = async () => {
         type: 'success'
       })
     })
-    await getTableData({
-      pageIndex: baseDataListRef.value.paginationData.currentPage,
-      pageSize: baseDataListRef.value.paginationData.pageSize
-    })
+    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+    await isUseInputValueGetTableData(
+      baseDataListRef.value.paginationData.pageSize,
+      baseDataListRef.value.paginationData.currentPage
+    )
+    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   }
 }
 const handleImport = () => {

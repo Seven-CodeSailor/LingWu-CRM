@@ -91,7 +91,7 @@ export const queryContactName = (
 export const getDictclassifylist = async (params, success, fail) => {
   await Request.requestJson(
     Request.GET,
-    'https://mockapi.eolink.com/KnVGhupeb89500c132462100d3745b0046ecd1264eeb224/get-dictclassifylist',
+    '/cpp1-dictionary/data-dictionary/dictclassify/get-dictclassifylist',
     {
       params
     }

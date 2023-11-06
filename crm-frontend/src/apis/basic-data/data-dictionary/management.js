@@ -9,16 +9,6 @@
 import Request from '@/apis/request.js'
 const baseUrl = '/cpp1-dictionary'
 /**
- * @description: 获取字典管理列表
- * @return {Promise}
- */
-export const getPagedict = async () => {
-  return await Request.requestJson(
-    Request.GET,
-    baseUrl + '/data-dictionary/dictmanage/get-pagedict'
-  )
-}
-/**
  * @description: 查询字典管理数据
  * @param {Object} params // pageSize pageIndex name  分类名称 typetag 调用标识
  * @return {Promise}
@@ -39,17 +29,23 @@ export const getDict = async (params) => {
 export const deleteDict = async (params) => {
   return await Request.requestJson(
     Request.DELETE,
-    'https://mockapi.eolink.com/KnVGhupeb89500c132462100d3745b0046ecd1264eeb224/dictmanage/get-dict',
-    {
-      params
-    }
+    baseUrl + `/data-dictionary/dictmanage/delete-dict/${params.id}`,
+    params
   )
 }
 
 export const modifyDict = async (params) => {
   return await Request.requestJson(
     Request.PUT,
-    'https://mockapi.eolink.com/KnVGhupeb89500c132462100d3745b0046ecd1264eeb224/dictmanage/get-dict',
+    baseUrl + '/data-dictionary/dictmanage/modify-dict',
+    params
+  )
+}
+
+export const addDict = async (params) => {
+  return await Request.requestJson(
+    Request.POST,
+    baseUrl + '/data-dictionary/dictmanage/add-dict',
     params
   )
 }
