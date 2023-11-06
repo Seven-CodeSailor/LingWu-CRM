@@ -138,7 +138,7 @@
       <el-form-item label="服务日期">
         <el-col :span="11">
           <el-date-picker
-            v-model="serviceRecord.temp.linkName"
+            v-model="serviceRecord.temp.service_time"
             type="date"
             placeholder="请选择服务日期"
           />
@@ -208,13 +208,22 @@ import {
   sendsmsService,
   sendEmailService
 } from '@/apis/customer/index.js'
+import { ElMessage } from 'element-plus'
 
 // 初始化数据
 const initLinks = (currentPage, pageSize, customerName) => {
-  queryServiceNote(currentPage, pageSize, customerName, (response) => {
-    serviceRecord.setTableData(response.data.rows)
-    serviceRecord.total = response.data.total
-  })
+  queryServiceNote(
+    currentPage,
+    pageSize,
+    customerName,
+    (response) => {
+      serviceRecord.setTableData(response.data.rows)
+      serviceRecord.total = response.data.total
+    },
+    () => {
+      ElMessage.error('获取数据失败')
+    }
+  )
 }
 onMounted(() => {
   initLinks(currentPage.value, pageSize.value)
@@ -270,8 +279,14 @@ const customerName = ref()
 const serviceWay = ref()
 const serviceType = ref()
 // 获取客户名称下拉列表
-const contractGetName = async () => {
-  await getCustomerName()
+const contractGetName = () => {
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
   serviceRecord.temp.customer_id = customerName.value.selectValue.value
 }
 // 获取服务类型下拉列表
@@ -286,7 +301,13 @@ const serviceGetWay = async () => {
 }
 // 点击添加按钮的回调
 const addMyClinet = async () => {
-  await getCustomerName()
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
   await getCustomerServiceType()
   await getCustomerServiceWay()
   serviceRecord.tempReset()
@@ -294,7 +315,7 @@ const addMyClinet = async () => {
 }
 // 添加按钮确定回调
 const save = async () => {
-  if (serviceRecord.temp.linkman_id === -1) {
+  if (serviceRecord.temp.service_id === '') {
     await addService(
       serviceRecord.temp,
       () => {
@@ -318,6 +339,7 @@ const save = async () => {
   serviceRecord.tempReset()
   select.resetData()
   dialogVisible.value = false
+  initLinks(currentPage.value, pageSize.value)
 }
 // 修改按钮回调
 const modify = async (row) => {
@@ -338,9 +360,13 @@ const selectChange = (value) => {
   selectIdArr.value = value
 }
 // 批量删除按钮
-const deleteByQuery = async () => {
-  await removeService(
-    selectIdArr.value,
+const deleteByQuery = () => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.service_id)
+  })
+  removeService(
+    data,
     () => {
       ElMessage.success('删除成功')
     },

@@ -52,12 +52,15 @@
   </el-popover>
   <!-- 消息通知 -->
 
-  <el-button
-    small="small"
-    icon="IconBell"
-    circle
-    @click="message = true"
-  ></el-button>
+  <el-badge :value="2" class="item" style="margin-left: 12px">
+    <el-button
+      small="small"
+      icon="IconBell"
+      circle
+      @click="message = true"
+    ></el-button>
+  </el-badge>
+
   <el-drawer v-model="message" title="消息提醒" append-to-body="true">
     <MessageInfo></MessageInfo>
   </el-drawer>
@@ -68,6 +71,7 @@
     icon="IconHistogram"
     circle
     @click="business = true"
+    style="margin-left: 12px"
   ></el-button>
   <el-drawer
     v-model="business"

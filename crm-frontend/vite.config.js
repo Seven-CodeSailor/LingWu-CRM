@@ -29,34 +29,33 @@ export default ({ mode }) =>
       https: false,
       proxy: {
         // 本地测试用
-        '/api/java3-personalhomepage': {
-          changeOrigin: true,
-          target: 'http://1.15.64.225:10032',
-          rewrite: (path) => path.replace(/^\/api\/java3-personalhomepage/, '')
-        },
-        '/api/java3-file': {
-          changeOrigin: true,
-          target: 'http://8.130.45.222:8888',
-          rewrite: (path) => path.replace(/^\/api\/java3-file/, '')
-        },
-        '/api/java3-warehouse': {
-          changeOrigin: true,
-          target: 'http://8.130.82.226:10033',
-          rewrite: (path) => path.replace(/^\/api\/java3-warehouse/, '')
-        },
-        '/api/java3-area': {
-          changeOrigin: true,
-          target: 'http://118.31.61.96:10031',
-          rewrite: (path) => path.replace(/^\/api\/java3-area/, '')
-        },
+        // '/api/java3-personalhomepage': {
+        //   changeOrigin: true,
+        //   target: 'http://1.15.64.225:10032',
+        //   rewrite: (path) => path.replace(/^\/api\/java3-personalhomepage/, '')
+        // },
+        // '/api/java3-file': {
+        //   changeOrigin: true,
+        //   target: 'http://8.130.45.222:8888',
+        //   rewrite: (path) => path.replace(/^\/api\/java3-file/, '')
+        // },
+        // '/api/java3-warehouse': {
+        //   changeOrigin: true,
+        //   target: 'http://8.130.82.226:10033',
+        //   rewrite: (path) => path.replace(/^\/api\/java3-warehouse/, '')
+        // },
+        // '/api/java3-area': {
+        //   changeOrigin: true,
+        //   target: 'http://118.31.61.96:10031',
+        //   rewrite: (path) => path.replace(/^\/api\/java3-area/, '')
+        // },
         '/api': {
           changeOrigin: true,
           // target: 'http://localhost:10100',
           // rewrite: (path) => path.replace(/^\/api/, '')
 
           //TODO[TEST_CODE]:使用ApiPost云MOCK
-          target:
-            'https://console-mock.apipost.cn/mock/99738a62-8857-4bb2-8010-c92424b03584',
+          target: 'http://8.130.30.150:10001',
           rewrite: (path) => path.replace(/^\/api/, '')
         },
         '/captcha': {

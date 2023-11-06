@@ -69,7 +69,7 @@
         prop="name"
         sortable
       ></el-table-column>
-      <el-table-column label="经济类型" prop="ecoType"></el-table-column>
+      <el-table-column label="经济类型" prop="ecitype"></el-table-column>
       <el-table-column label="行业类型" prop="trade"></el-table-column>
       <el-table-column label="联系人" prop="linkman_name"></el-table-column>
       <el-table-column label="电话号码" prop="tel"></el-table-column>

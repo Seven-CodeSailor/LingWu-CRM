@@ -1,4 +1,4 @@
-// import Request from '../request'
+import Request from '../request'
 import useSelect from '@/stores/customer/select.js'
 import useMyClient from '@/stores/customer/myClient.js'
 
@@ -570,12 +570,12 @@ export const postCustomer = async (
   fail = () => {}
 ) => {
   delete param['customer_id']
+  param['seaCustomer'] = param['seaCustomer'] ? 0 : 1
+  delete param['seaCustomer']
   await Request.requestJson(
     Request.POST,
     '/customer-mycustomer/post-customers',
-    {
-      param
-    }
+    param
   )
     .then((response) => {
       success(response)
@@ -596,9 +596,8 @@ export const putCustomer = async (
   success = () => {},
   fail = () => {}
 ) => {
-  console.log(param)
   await Request.requestJson(Request.PUT, '/customer-mycustomer/put-customers', {
-    param
+    ...param
   })
     .then((response) => {
       success(response)
@@ -991,9 +990,9 @@ export const sendEmail = async (
  * @returns
  */
 export const queryServiceNote = async (
-  currentPage,
+  pageIndex,
   pageSize,
-  customerName,
+  customer_name,
   success = () => {},
   fail = () => {}
 ) => {
@@ -1001,9 +1000,9 @@ export const queryServiceNote = async (
     Request.POST,
     '/customer-servicerecords/service-note',
     {
-      currentPage,
+      pageIndex,
       pageSize,
-      customerName
+      customer_name
     }
   )
     .then((response) => {
@@ -1026,10 +1025,12 @@ export const addService = async (
   fail = () => {}
 ) => {
   delete param['service_id']
+  delete param['customer_name']
+  delete param['linkman_name']
   await Request.requestJson(
     Request.POST,
     '/customer-servicerecords/add-service',
-    param
+    { ...param }
   )
     .then((response) => {
       success(response)

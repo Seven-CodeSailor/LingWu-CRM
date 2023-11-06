@@ -42,6 +42,7 @@
           :getOpt="() => [0, 1]"
           :exportExcel="exportExcel"
           :action="action"
+          :baseURL="baseURL"
           :importExcel="importExcel"
         >
         </BulkOPe>
@@ -295,9 +296,8 @@ const exportExcel = (value1, value2) => {
 }
 
 // 导入文件-文件上传的全地址
-const action = ref(
-  'http://8.130.17.229:8090/customer-mycustomer/upload-customer-file'
-)
+const action = ref('http://8.130.17.229:8090')
+const baseURL = ref('/customer-mycustomer/upload-customer-file')
 
 //导入文件的按钮回调
 const importExcel = async (fileList) => {

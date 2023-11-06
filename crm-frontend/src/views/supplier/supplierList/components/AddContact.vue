@@ -99,11 +99,17 @@ const select = useSelect()
 // 控制添加联系人抽屉的显示和隐藏
 let dialogVisible1 = ref(false)
 // 添加联系人按钮回调，打开抽屉
-const addContact = async (row) => {
-  await getCustomerName()
+const addContact = (row) => {
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
   // 根据传入id获取数据
   dialogVisible1.value = true
-  supplierList.contactInfo.id = row.supplierId
+  supplierList.contactInfo.supplierId = row.supplierId
   console.log(row)
 }
 const customerName = ref()
@@ -124,8 +130,14 @@ const saveContact = async () => {
   //   initCustomer()
 }
 // 获取客户名称下拉列表
-const contactGetName = async () => {
-  await getCustomerName()
+const contactGetName = () => {
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
   supplierList.contactInfo.customerName = customerName.value.selectValue.label
 }
 defineExpose({
