@@ -184,12 +184,12 @@ export const getUserNameList = async (params, success, fail) => {
  * @Author{*} seven(有问题找我)
  * @return {*}
  */
-export const querySalesContractList = async (data) => {
-  return Request.requestJson(
+export const querySalesContractData = async (params) => {
+  return await Request.requestJson(
     Request.GET,
-    'https://mockapi.eolink.com/fhdz9TQ7632232d76db4f62838f5c8793d22b77760ead7b/get-sales-contract-list',
+    '/sales-contract' + '/sales-contract/get-sales-contract-list/{query}',
     {
-      data
+      params
     }
   )
 }
@@ -333,4 +333,18 @@ export const queryStore = async (params, success, fail) => {
     .catch((error) => {
       fail(error)
     })
+}
+
+/**
+ * 获取销售机会名称列表（用于输入表单下拉列表）
+ * @param {*} params 传递的参数
+ * @returns promise对象
+ */
+export const querySalesOpportunityNameList = async (params) => {
+  //TODO 这里是否该用form请求方式
+  return await Request.requestJson(
+    Request.GET,
+    '/sales-opportunities' + '/sales-opportunities/sales-oppo-name-list',
+    params
+  )
 }

@@ -4,9 +4,9 @@
  * @LastEditors: sayoriqwq 2531600563@qq.com
  * @LastEditTime: 2023-11-05 21:18:47
  * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
- * @Description: 
- * 
- * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
+ * @Description:
+ *
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
  */
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
@@ -28,6 +28,24 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
+        // 销售合同
+        'api/sales-contract': {
+          changeOrigin: true,
+          target: 'http://43.138.164.141:8090',
+          rewrite: (path) => path.replace(/^\/api\/sales-contract/, '')
+        },
+        // 销售机会本地测试
+        '/api/sales-opportunities': {
+          changeOrigin: true,
+          target: 'http://124.221.254.153:8090',
+          rewrite: (path) => path.replace(/^\/api\/sales-opportunities/, '')
+        },
+        // 本地测试用
+        '/api/java3-personalhomepage': {
+          changeOrigin: true,
+          target: 'http://1.15.64.225:10032',
+          rewrite: (path) => path.replace(/^\/api\/java3-personalhomepage/, '')
+        },
         '/api/java3-file': {
           changeOrigin: true,
           target: 'http://8.130.45.222:8888',

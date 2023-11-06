@@ -2,21 +2,21 @@
   <div class="contract_details">
     <el-card class="box-card">
       <template #header>
-        <div class="card-header">
-          <!-- 面包屑 -->
-          <el-breadcrumb separator="/">
+        <!-- <div class="card-header"> -->
+        <!-- 面包屑 -->
+        <!-- <el-breadcrumb separator="/">
             <el-breadcrumb-item
               v-for="(item, index) in $route.matched"
               :to="{ path: item.path }"
               :key="index"
               >{{ item.meta.text }}</el-breadcrumb-item
             >
-          </el-breadcrumb>
-          <el-button @click="$router.go(-1)"
+          </el-breadcrumb> -->
+        <!-- <el-button @click="$router.go(-1)"
             ><el-icon style="margin-right: 4px"><icon-back /></el-icon
             >返回</el-button
-          >
-        </div>
+          > -->
+        <!-- </div> -->
       </template>
       <div class="data">
         <div class="left">
@@ -197,7 +197,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import BaseDataList from './BaseDataList.vue'
 const activeName = ref('first')
 const props = defineProps({
@@ -574,6 +574,7 @@ const fourthTableInfo = {
     height: 100%;
 
     .card-header {
+      margin-right: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
