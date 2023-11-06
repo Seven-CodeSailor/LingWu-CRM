@@ -1,9 +1,9 @@
 /*
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:18:17
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-05 21:18:47
- * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-06 18:10:35
+ * @FilePath: \crm-frontend\vite.config.js
  * @Description:
  *
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
@@ -28,6 +28,11 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
+        '/api/cpp1-dictionary': {
+          changeOrigin: true,
+          target: 'http://8.130.16.24:8090',
+          rewrite: (path) => path.replace(/^\/api\/cpp1-dictionary/, '')
+        },
         // 库存管理接口的跨域处理
         '/api/cpp5-inventory': {
           changeOrigin: true,
