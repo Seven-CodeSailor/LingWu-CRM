@@ -6,17 +6,15 @@
       </template>
       <template #default>
         <el-form :model="form" :rules="rules" ref="formRef">
-          <el-form-item label="名称" prop="typeName">
-            <el-input
-              placeholder="请输入名称"
-              v-model="form.areaName"
-            ></el-input>
+          <el-form-item label="名称" prop="name">
+            <el-input placeholder="请输入名称" v-model="form.name"></el-input>
           </el-form-item>
-          <el-form-item label="父级栏目" prop="typeTag">
-            <ChooseSelect
-              :options="props.options"
-              ref="chooseSelectRef"
-            ></ChooseSelect>
+          <el-form-item label="父级栏目" prop="selectValue">
+            <el-tree-select
+              v-model="form.selectValue"
+              :data="props.areaTreeData"
+              :render-after-expand="false"
+            />
           </el-form-item>
           <el-form-item label="排序" prop="sort">
             <el-input-number
@@ -28,10 +26,10 @@
           <el-form-item label="启用">
             <el-switch v-model="form.visible" />
           </el-form-item>
-          <el-form-item label="介绍">
+          <el-form-item label="介绍" prop="intro">
             <el-input
               placeholder="请输入介绍"
-              v-model="form.areaInfo"
+              v-model="form.intro"
               type="textarea"
             ></el-input>
           </el-form-item>
@@ -49,14 +47,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 const visible = ref(false)
-const chooseSelectRef = ref(null)
 const form = ref({
-  areaName: '',
+  name: '',
   sort: 0,
   visible: false,
-  areaInfo: ''
+  intro: '',
+  selectValue: ''
 })
 
 const props = defineProps({
@@ -72,28 +69,30 @@ const props = defineProps({
   },
   options: {
     type: Array
+  },
+  areaTreeData: {
+    type: Array
   }
 })
 
 const formRef = ref(null)
 
 const rules = ref({
-  // typeName: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
-  // sort: [{ required: true, message: '', trigger: 'blur' }]
+  name: [{ required: true, message: '请输入地区名称', trigger: 'blur' }],
+  intro: [{ required: true, message: '请输入地区描述', trigger: 'blur' }],
+  selectValue: [{ required: true, message: '请选择父级栏目', trigger: 'blur' }],
+  sort: [{ required: true, message: '', trigger: 'change' }]
 })
 
 const handleClear = () => {
   if (props.title === '修改') {
     form.value = {
-      areaName: '',
+      name: '',
       sort: 0,
       visible: false,
-      areaInfo: ''
+      intro: '',
+      selectValue: ''
     }
-    // typeTag = ''
-    setTimeout(() => {
-      chooseSelectRef.value.selectValue = ''
-    })
   }
   visible.value = false
   formRef.value.clearValidate()
@@ -102,8 +101,7 @@ const handleClear = () => {
 defineExpose({
   visible,
   form,
-  formRef,
-  chooseSelectRef
+  formRef
 })
 </script>
 

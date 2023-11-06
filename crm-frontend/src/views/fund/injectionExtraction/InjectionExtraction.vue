@@ -2,7 +2,7 @@
  * @Author: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
  * @Date: 2023-10-28 14:38:07
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-04 18:18:24
+ * @LastEditTime: 2023-11-01 20:36:30
  * @FilePath: \zero-one-crmsys\crm-frontend\src\views\fund\injectionExtraction\InjectionExtraction.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -34,10 +34,9 @@
             ></el-icon>
             添加
           </el-button>
-          <el-button type="danger" icon="IconDelete">批量删除</el-button>
           <BulkOPe
             :excelData="excel"
-            :getOpt="() => [0]"
+            :getOpt="() => [0, 5]"
             path="/file/upload"
             baseURL="http://localhost:8090"
           >
@@ -59,15 +58,10 @@
             style="width: 150px"
           ></el-input>
           <DropDown
-            :inputValue1="tel"
-            inputTitle1="供应商名称"
-            :inputValue2="tel"
-            inputTitle2="通信地址"
-            :getDropDown="
-              () => {
-                return [0, 1, 3]
-              }
-            "
+            v-model:topInputValue="supplier_name"
+            v-model:bottomInputValue="mailing_address"
+            topInputTitle="供应商名称"
+            bottomInputTitle="通信地址"
             @handle-search="handleSearch"
           ></DropDown>
           <el-button type="primary" :icon="Search" @click="handelSearch"

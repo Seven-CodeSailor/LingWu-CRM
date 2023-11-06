@@ -1,9 +1,9 @@
 /*
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
- * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-04 21:11:15
- * @FilePath: \crm-frontend\src\apis\publicInterface.js
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-05 21:10:25
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from './request'
@@ -18,36 +18,23 @@ const select = useSelect()
  * @returns
  */
 
-export const getCustomerName = (param, success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(param)
-    }, 0)
-  })
-    .then(() => {
-      let name = [
-        {
-          value: 'Option1',
-          label: '成都零起飞科技'
-        },
-        {
-          value: 'Option2',
-          label: '01'
-        },
-        {
-          value: 'Option3',
-          label: 'asd'
-        }
-      ]
-      if (name) {
-        select.setName(name)
-        success()
-        return
-      }
-      fail()
+export const getCustomerName = async (
+  name,
+  success = () => {},
+  fail = () => {}
+) => {
+  await Request.requestForm(
+    Request.GET,
+    '/customer-mycustomer/get-customername',
+    {
+      name
+    }
+  )
+    .then(async (response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -181,7 +168,7 @@ export const getUserNameList = async (params, success, fail) => {
   )
     .then((response) => {
       // 请求返回的数据就是response,在成功回调函数可以拿到
-      console.log('12313', response)
+      // console.log('12313', response)
       success(response)
     })
     .catch((error) => {
@@ -341,34 +328,6 @@ export const queryStore = async (params, success, fail) => {
     params
   })
     .then((response) => {
-      success(response)
-    })
-    .catch((error) => {
-      fail(error)
-    })
-}
-
-/**
- * @description: 获取岗位名称列表数据
- * @param {*} params 请求参数:
- * {
- *  positionName(岗位名称)
- * }
- * @param {*} success 成功回调
- * @param {*} fail 失败回调
- * @Author{*} 暮秋(有问题找我)
- * @return {*}
- */
-export const getPostNameList = async (params, success, fail) => {
-  await Request.requestForm(
-    Request.GET,
-    'http://101.34.252.80:10110/orgstructure/position/position/query-name-all',
-    {
-      params
-    }
-  )
-    .then((response) => {
-      // 请求返回的数据就是response,在成功回调函数可以拿到
       success(response)
     })
     .catch((error) => {

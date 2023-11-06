@@ -24,7 +24,7 @@
         </template>
         <!-- 树形菜单标签结构 -->
         <el-tree
-          :data="treeData"
+          :data="$RoleManage.roleTreeList"
           :props="defaultProps"
           highlight-current="true"
           default-expand-all="true"
@@ -93,7 +93,7 @@
           <!-- 树形选择 -->
           <el-tree-select
             v-model="selectValue"
-            :data="treeData"
+            :data="$RoleManage.roleTreeList"
             check-strictly
             :render-after-expand="false"
             clearable
@@ -143,7 +143,7 @@
           <!-- 树形选择 -->
           <el-tree-select
             v-model="selectValue"
-            :data="treeData"
+            :data="$RoleManage.roleTreeList"
             check-strictly
             :render-after-expand="false"
             clearable
@@ -184,55 +184,9 @@
       :data="dataSource"
       show-checkbox
       node-key="id"
-      empty-text="没有数据"
       :expand-on-click-node="false"
       :render-content="renderContent"
-    >
-      <template #default="{ node, data }">
-        <!-- <span class="custom-tree-node">
-          <span>{{ node.label }}</span>
-          <span>
-            <a @click="append(data)"> Append </a>
-            <a @click="remove(node, data)"> Delete </a>
-          </span>
-        </span> -->
-        <span>{{ node.label }}</span>
-        <el-checkbox-group v-model="authForm.type">
-          <el-checkbox label="增加" name="type" />
-          <el-checkbox label="修改" name="type" />
-          <el-checkbox label="删除" name="type" />
-        </el-checkbox-group>
-      </template>
-    </el-tree>
-    <!-- 用表格来处理权限 -->
-    <!-- <el-table row-key="item">
-      <el-table-column label="名称"></el-table-column>
-      <el-table-column label="权限值"></el-table-column>
-      <el-table-column label="修改时间"></el-table-column>
-      <el-table-column label="操作">
-        <template #default="{ row }">
-          <el-button
-            type="primary"
-            @click="addPermisstion(row)"
-            size="small"
-            :disabled="row.level == 4 ? true : false"
-          >
-            {{ row.level == 3 ? '添加功能' : '添加菜单' }}
-          </el-button>
-          <el-button
-            type="primary"
-            @click="updatePermisstion(row)"
-            size="small"
-            :disabled="row.level == 1 ? true : false"
-          >
-            编辑
-          </el-button>
-        </template>
-      </el-table-column>
-      <template #empty>
-        <el-empty description="没有数据"></el-empty>
-      </template>
-    </el-table> -->
+    />
     <div class="drawerFooter">
       <el-button @click="powerDrawer = false">取消</el-button>
       <el-button type="primary" :loading="btnLoading" @click="handelPowerSubmit"
@@ -249,44 +203,64 @@ import { Operation, Plus, Search } from '@element-plus/icons-vue'
 // import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
 // 导入api方法
-import { getUserTableList } from '@/apis/organizationStructure/user.js'
+// import { getUserTableList } from '@/apis/organizationStructure/user.js'
+import { getRoleTree } from '../../../apis/organizationStructure/Roles.js'
+// 导入 组织结构/角色管理 仓库
+import useRoleManageStore from '../../../stores/organizationStructure/rolesManage'
+const $RoleManage = useRoleManageStore()
 onMounted(async () => {
-  await getUserTableList(
+  //获取角色名称结构树
+  await getRoleTree(
     {
-      deptId: 1,
-      name: 'test',
-      pageIndex: 1,
-      pageSize: 10
+      depth: 0,
+      pid: 0
     },
-    (data) => {
-      console.log(data)
+    (res) => {
+      const { data } = res
+      console.log('获取角色名称结构树', data)
+      // 处理数据 id =>value name => label
+      const newArr = data.map((item) => {
+        for (let key in item) {
+          if (key === 'id') {
+            item.value = item[key]
+          }
+          if (key === 'name') {
+            item.label = item[key]
+          }
+        }
+        return item
+      })
+      // console.log('矫正后的角色结构树:', newArr)
+      // 把数据存到 组织结构/角色管理 仓库
+      $RoleManage.setRoleTreeList(newArr)
+      console.log('角色管理 仓库数据:', $RoleManage.roleTreeList)
     },
-    (err) => {
-      console.log(err)
+    (error) => {
+      console.log(error)
     }
   )
 })
 // 树形菜单的数据
-const treeData = ref([
-  {
-    value: '1',
-    label: '超级管理员',
-    children: [
-      {
-        value: '1-1',
-        label: '主管'
-      },
-      {
-        value: '1-2',
-        label: '组员'
-      },
-      {
-        value: '1-3',
-        label: '总经理'
-      }
-    ]
-  }
-])
+// const treeData = ref([
+//   {
+//     value: '1',
+//     label: '超级管理员',
+//     children: [
+//       {
+//         value: '1-1',
+//         label: '主管'
+//       },
+//       {
+//         value: '1-2',
+//         label: '组员'
+//       },
+//       {
+//         value: '1-3',
+//         label: '总经理'
+//       }
+//     ]
+//   }
+// ])
 // 树形选择绑定值
 const selectValue = ref('')
 // 更新选中值
@@ -863,9 +837,6 @@ const dataSource = ref([
     ]
   }
 ])
-const authForm = ref({
-  type: []
-})
 // 菜单权限抽屉=>保存数据按钮的方法
 const handelPowerSubmit = () => {
   btnLoading.value = true
@@ -913,9 +884,5 @@ const handelPowerSubmit = () => {
 }
 .drawerFooter button {
   margin: 0 40px;
-}
-.emptyTable {
-  min-width: 800px;
-  min-height: 600px;
 }
 </style>

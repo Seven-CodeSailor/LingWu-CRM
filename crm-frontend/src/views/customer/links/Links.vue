@@ -77,11 +77,15 @@
       <el-table-column type="selection" width="55" />
       <el-table-column
         label="客户名称"
-        prop="customerName"
+        prop="customer_name"
         sortable
       ></el-table-column>
-      <el-table-column label="姓名" prop="linkName"></el-table-column>
-      <el-table-column label="性别" prop="gender"></el-table-column>
+      <el-table-column label="联系人" prop="link_name"></el-table-column>
+      <el-table-column label="性别" prop="gender">
+        <template #default="{ row }">
+          {{ row.gender === 0 ? '女' : '男' }}
+        </template>
+      </el-table-column>
       <el-table-column label="职位" prop="position"></el-table-column>
       <el-table-column label="手机" prop="mobile"></el-table-column>
       <el-table-column label="座机" prop="tel"></el-table-column>
@@ -116,13 +120,13 @@
   <!-- 添加或修改客户信息 -->
   <el-drawer
     v-model="dialogVisible"
-    :title="tempLinkData.linkmanId === -1 ? '添加联系人' : '修改联系人'"
+    :title="tempLinkData.linkman_id === -1 ? '添加联系人' : '修改联系人'"
     size="50%"
   >
     <el-form :model="tempLinkData" label-width="120px" label-position="right">
       <el-form-item label="姓名">
         <el-input
-          v-model="tempLinkData.linkName"
+          v-model="tempLinkData.linkman_name"
           placeholder="请输入姓名"
           style="width: 500px"
         />
@@ -186,12 +190,7 @@
     </template>
   </el-drawer>
   <!-- 删除确认 -->
-  <el-dialog
-    v-model="confirmDelete"
-    title="删除"
-    width="30%"
-    :before-close="(deleteId = null)"
-  >
+  <el-dialog v-model="confirmDelete" title="删除" width="30%">
     <span style="color: red; margin-left: 33%; font-size: 24px"
       >是否确认删除</span
     >
@@ -232,10 +231,20 @@ const initLinks = async (
   linkName,
   address
 ) => {
-  await queryContactList(currentPage, pageSize, customerName, linkName, address)
+  await queryContactList(
+    currentPage,
+    pageSize,
+    customerName,
+    linkName,
+    address,
+    (response) => {
+      myclient.total1 = response.data.total
+      myclient.linksTableData = response.data.rows
+    }
+  )
 }
 onMounted(() => {
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 })
 // 我的客户store仓库
 const myclient = useMyClient()
@@ -249,11 +258,11 @@ const currentPage = ref(1)
 const pageSize = ref(5)
 const handleSizeChange = (val) => {
   pageSize.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 const handleCurrentChange = (val) => {
   currentPage.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 
 // 导出文件按钮回调
@@ -270,9 +279,13 @@ const exportExcel = async (value1, value2) => {
   )
 }
 // 发送消息按钮回调
-const msgSend = async (title, desc) => {
-  await sendsms(
-    selectIdArr,
+const msgSend = (title, desc) => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.linkman_id)
+  })
+  sendsms(
+    data,
     title,
     desc,
     () => {
@@ -284,9 +297,13 @@ const msgSend = async (title, desc) => {
   )
 }
 // 发送邮件按钮回调
-const emailSend = async (title, desc) => {
-  await sendEmail(
-    selectIdArr,
+const emailSend = (title, desc) => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.linkman_id)
+  })
+  sendEmail(
+    data,
     title,
     desc,
     () => {
@@ -299,10 +316,10 @@ const emailSend = async (title, desc) => {
 }
 
 let tempLinkData = ref({
-  linkmanId: -1, //联系人ID
-  cuntomerId: '', //客户ID
+  linkman_id: -1, //联系人ID
+  cuntomer_id: '', //客户ID
   customerName: '', //客户名称
-  linkName: '', //联系人名称
+  linkman_name: '', //联系人名称
   gender: 0, //联系人性别 1=男，0=女
   position: '', //联系人职位
   tel: '', //联系人座机
@@ -316,10 +333,10 @@ let tempLinkData = ref({
 
 const tempLinkDataReset = () => {
   tempLinkData.value = {
-    linkmanId: -1, //联系人ID
-    cuntomerId: '', //客户ID
+    linkman_id: -1, //联系人ID
+    cuntomer_id: '', //客户ID
     customerName: '', //客户名称
-    linkName: '', //联系人名称
+    linkman_name: '', //联系人名称
     gender: 0, //联系人性别 1=男，0=女
     position: '', //联系人职位
     tel: '', //联系人座机
@@ -332,20 +349,34 @@ const tempLinkDataReset = () => {
   }
 }
 const customerName = ref()
-const contractGetName = async () => {
-  await getCustomerName()
-  tempLinkData.value.customerName = customerName.value.value.label
+const contractGetName = () => {
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.rows.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
+  tempLinkData.value.cuntomer_id = customerName.value.selectValue.value
+  tempLinkData.value.customerName = customerName.value.selectValue.label
 }
 // 点击添加按钮的回调
 const addMyClinet = async () => {
   await getContactField()
-  await getCustomerName()
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.rows.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+    customerName.value.reset()
+  })
   dialogVisible.value = true
 }
 // 添加按钮确定回调
-const save = async () => {
-  if (tempLinkData.value === -1) {
-    await addNewContact(
+const save = () => {
+  if (tempLinkData.value.linkman_id === -1) {
+    addNewContact(
       tempLinkData.value,
       () => {
         ElMessage.success('添加成功')
@@ -355,7 +386,7 @@ const save = async () => {
       }
     )
   } else {
-    await modifyContact(
+    modifyContact(
       tempLinkData.value,
       () => {
         ElMessage.success('修改成功')
@@ -373,7 +404,7 @@ const save = async () => {
 // 修改按钮回调
 const modify = async (row) => {
   await getCustomerName()
-  tempLinkData.value.linkmanId = row.linkmanId
+  tempLinkData.value.linkman_id = row.linkman_id
   dialogVisible.value = true
 }
 
@@ -387,18 +418,23 @@ const selectChange = (value) => {
   selectIdArr.value = value
 }
 // 批量删除按钮
-const deleteByQuery = async () => {
-  await removeContact(
-    selectIdArr.value,
+const deleteByQuery = () => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.linkman_id)
+  })
+  removeContact(
+    data,
     () => {
       ElMessage.success('删除成功')
+      selectIdArr.value = []
     },
     () => {
       ElMessage.error('删除失败')
     }
   )
   // 删除后重新请求数据
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 
 /**
@@ -408,7 +444,13 @@ let content = ref('')
 let name = ref('')
 let address = ref('')
 const searchDetails = () => {
-  initLinks(currentPage, pageSize, content.value, name.value, address.value)
+  initLinks(
+    currentPage.value,
+    pageSize.value,
+    content.value,
+    name.value,
+    address.value
+  )
   content.value = ''
 }
 // 下拉框搜索按钮回调
@@ -425,7 +467,8 @@ let confirmDelete = ref(false)
 let deleteId = ref()
 // 删除按钮回调
 const Deletes = (row) => {
-  deleteId.value = row.id
+  console.log(row)
+  deleteId.value = row.linkman_id
   confirmDelete.value = true
 }
 const Confirms = async () => {
@@ -440,7 +483,7 @@ const Confirms = async () => {
     }
   )
   // 删除后重新请求数据
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 </script>
 

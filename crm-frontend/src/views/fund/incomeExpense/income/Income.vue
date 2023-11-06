@@ -2,14 +2,14 @@
  * @Author: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
  * @Date: 2023-10-28 14:38:07
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-03 23:20:17
+ * @LastEditTime: 2023-11-03 20:50:35
  * @FilePath: \zero-one-crmsys\crm-frontend\src\views\fund\injectionExtraction\InjectionExtraction.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <!-- <div>其他收入单</div> -->
   <BaseDataList
-    title="其他费用收入单"
+    title="其他收入单"
     msg="这里是操作提示"
     ref="baseDataListRef"
     :table-column-attribute="sendData.tableColumnAttribute"
@@ -34,7 +34,16 @@
             ></el-icon>
             添加
           </el-button>
-          <el-button type="danger" icon="IconDelete">批量删除</el-button>
+          <BulkOPe
+            :excelData="excel"
+            :getOpt="() => [0, 5]"
+            path="/file/upload"
+            baseURL="http://localhost:8090"
+          >
+            <template #excel> </template>
+            <template #file> </template>
+            <template #print> </template>
+          </BulkOPe>
         </div>
         <div class="search">
           <ChooseSelect
@@ -49,25 +58,17 @@
             style="width: 150px"
           ></el-input>
           <DropDown
-            :inputValue1="tel"
-            inputTitle1="金额"
-            :getDropDown="
-              () => {
-                return [0, 3]
-              }
-            "
-            @handleSearch="handleSearch"
+            v-model:topInputValue="supplier_name"
+            v-model:bottomInputValue="mailing_address"
+            topInputTitle="供应商名称"
+            bottomInputTitle="通信地址"
+            @handle-search="handleSearch"
           ></DropDown>
           <el-button type="primary" :icon="Search" @click="handelSearch"
             >搜索</el-button
           >
         </div>
       </div>
-    </template>
-    <template #statistics>
-      <p>金额合计:
-        <span class="money">{{ 75600.00}} 元</span>
-      </p>
     </template>
   </BaseDataList>
   <el-dialog v-model="isDelete" title="温馨提示" width="30%">
@@ -94,9 +95,19 @@
         label-width="120px"
         :rules="formRule"
       >
-      <el-form-item label="选择分类" :label-width="labelWidth">
+        <el-form-item label="操作类型" :label-width="labelWidth">
           <!-- 调用选择框组件 -->
-          <ChooseSelect :options="optionType" des="请选择分类"></ChooseSelect>
+          <ChooseSelect :options="optionType" des="选择操作类型"></ChooseSelect>
+        </el-form-item>
+        <el-form-item label="银行账户" :label-width="labelWidth">
+          <!-- 调用选择框组件 -->
+          <ChooseSelect
+            :options="fundInjection.bankSelectList"
+            des="选择银行账户"
+          ></ChooseSelect>
+        </el-form-item>
+        <el-form-item label="金额" :label-width="labelWidth" prop="money">
+          <el-input v-model="addForm.money" autocomplete="off" />
         </el-form-item>
         <el-form-item label="产生日期" :label-width="labelWidth">
           <el-date-picker
@@ -105,16 +116,6 @@
             placeholder="请选择一个日期"
             :size="size"
           />
-        </el-form-item>
-        <el-form-item label="金额" :label-width="labelWidth" prop="money">
-          <el-input v-model="addForm.money" autocomplete="off" />
-        </el-form-item>
-        <el-form-item label="付款账户" :label-width="labelWidth">
-          <!-- 调用选择框组件 -->
-          <ChooseSelect
-            :options="fundInjection.bankSelectList"
-            des="选择银行账户"
-          ></ChooseSelect>
         </el-form-item>
         <el-form-item label="备注" :label-width="labelWidth">
           <el-input v-model="addForm.desc" type="textarea" />
@@ -132,7 +133,7 @@
 
 <script setup>
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-// import BulkOPe from '@/components/BulkOPe/BulkOPe.vue'
+import BulkOPe from '@/components/BulkOPe/BulkOPe.vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
 import { onMounted, ref } from 'vue'
@@ -356,19 +357,11 @@ const addForm = ref({
 const optionType = [
   {
     value: 'option1',
-    label: '其他分裂收入'
+    label: '资金抽取'
   },
   {
     value: 'option2',
-    label: '办公司开支'
-  },
-  {
-    value: 'option2',
-    label: '销售收入'
-  },
-  {
-    value: 'option2',
-    label: '营业外收入'
+    label: '资金注入'
   }
 ]
 //表单校验规则
@@ -457,8 +450,5 @@ const isDelete = ref(false)
 
 button {
   margin: 0 6px;
-}
-.money {
-  color: red;
 }
 </style>
