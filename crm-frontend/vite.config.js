@@ -1,8 +1,8 @@
 /*
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:18:17
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-05 21:18:47
+ * @LastEditors: setti5 2283356040@qq.com
+ * @LastEditTime: 2023-11-05 23:04:26
  * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
  * @Description:
  *
@@ -28,11 +28,11 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
-        // 本地测试用
-        '/api/java3-personalhomepage': {
+        
+        '/api/java3-personal-homepage': {
           changeOrigin: true,
           target: 'http://1.15.64.225:10032',
-          rewrite: (path) => path.replace(/^\/api\/java3-personalhomepage/, '')
+          rewrite: (path) => path.replace(/^\/api\/java3-personal-homepage/, '')
         },
         '/api/java3-file': {
           changeOrigin: true,

@@ -1,27 +1,71 @@
+/*
+ * @Author: setti5 2283356040@qq.com
+ * @Date: 2023-11-01 21:29:40
+ * @LastEditors: setti5 2283356040@qq.com
+ * @LastEditTime: 2023-11-06 19:40:43
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\person-homepage\notice.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { test } from '@/apis/inventory-manager/index.js'
-import { releaseNotice } from '@/apis/personal-homepage/notice.js'
+// import { test } from '@/apis/inventory-manager/index.js'
+import { 
+  addNotice,
+  getNotice,
+  queryNotion,
+  removeNotice,
+  updateNotice
+} from '@/apis/personal-homapage/notice.js'
 
-//api接口测试
-// export const useNoticeStore = defineStore('notice', () => {
-//     const tableData = ref([])
-//     const total = ref(0)
-//     const getStoreList = async (params) => {
-//         console.log('getStoreList', params)
-//         .then((res) => {
-//             console.log('res', res)
-//         })
-//         .catch((err) => {
-//             console.log('err',err)
-//         })
-//     }
-//     return {
-//         tableData,
-//         total,
-//         getStoreList
-//     }
-// })
+export const useNoticeStore = defineStore('notice', () => {
+  const tableData = ref([])
+  const total = ref(0)
+  const postNoticeStore = async (params) => {
+    console.log('getStoreList', params)
+    return await addNotice(params)
+  }
+
+  const getNoticeDetails = async (params) => {
+    await queryNotion(params).then((res)=>{
+      tableData.value = res
+      
+      // .data.rows
+      // .map((row)=>{
+      //   row.status = {
+      //     value:row.status?'已读':"未读",
+      //     tagType:row.status?'info':'danger'
+      //   }
+      //   return row
+      // })
+      total.value = 100
+    })
+  }
+  /**
+   * 获取系统公告-muqiu
+  */
+//  const getNoticeApi = async(paramsObj)=> {
+//   const {
+//       content,
+//       pageIndex,
+//       pageSize,
+//       title
+//   } = paramsObj
+//   await queryNotion({
+//       content,
+//       pageIndex,
+//       pageSize,
+//       title
+//   },(res)=> {
+//     console.log('获取系统公告',res)
+//   })
+//  }
+  return {
+      tableData,
+      total,
+      postNoticeStore,
+      getNoticeDetails
+  }
+})
 
 //以下是本地模拟数据，后期会删除
 export const useNotice = defineStore('notice', () => {
@@ -80,6 +124,7 @@ export const useNotice = defineStore('notice', () => {
       }
     )
   }
+  
 
   return {
     data,
