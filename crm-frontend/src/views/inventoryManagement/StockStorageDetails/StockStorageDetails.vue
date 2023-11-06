@@ -9,7 +9,7 @@
       :table-data="stockStorageDetailsStore.tableData"
       @update-table-data="
         (pageSize, currentPage) =>
-          getStockStorageList({
+          getTableData({
             pageSize,
             pageIndex: currentPage
           })
@@ -19,12 +19,7 @@
       <template #menu>
         <div class="menu">
           <div class="left">
-            <BulkOPe
-              :excelData="t1"
-              :getOpt="() => [0]"
-              excelName="入库明细.xlsx"
-              tableName="入库明细的sheet表"
-            >
+            <BulkOPe :getOpt="() => [0]" :export-excel="handleExport">
             </BulkOPe>
           </div>
           <div class="right">
@@ -40,7 +35,6 @@
               input-title2="通信地址"
               @handle-search="handleSearch"
             ></DropDown>
-            <el-button @click="test">获取勾选的rows</el-button>
             <el-button
               type="primary"
               style="margin-left: 4px"
@@ -106,6 +100,12 @@ const inputValue = ref('')
 
 const stockStorageDetailsStore = useStockStorageDetailsStore()
 
+const getTableData = async (params) => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  await stockStorageDetailsStore.getStorageDetails(params)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+
 const searchDetails = () => {
   console.log('t', stockStorageDetailsStore.tableData)
   if (!inputValue.value) {
@@ -120,13 +120,8 @@ const searchDetails = () => {
       pageIndex: 1
       // 如何知道我输入的是sku名称或商品名
     }
-    getStockStorageList(params)
+    getTableData(params)
   }
-}
-const getStockStorageList = async (params) => {
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  await stockStorageDetailsStore.getTableData(params)
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
 
 const topInputValue = ref('')
@@ -135,63 +130,12 @@ const handleSearch = () => {
   console.log('调用search函数')
 }
 
-const test = () => {
-  const Data = baseDataListRef.value.rows
-  const b = JSON.parse(JSON.stringify(Data))
-  console.log('v1', baseDataListRef.value)
-  console.log('b1', b)
-}
-
-// const aa = () => {
-//   console.log('aa')
-//   return []
-// }
-
-const t1 = () => {
-  // console.log('t1'.Data)
-  // // console.log('v', baseDataListRef.value)
-
-  // // // const b = JSON.parse(JSON.stringify(Data))
-  // // console.log('b', Data)
-  // console.log('ss')
-  return baseDataListRef.value.rows // 相对于return []
-}
-
-// const t2 = () => {
-//   const tableData = baseDataListRef.value.rows
-//   console.log('tabledata', tableData)
-//   // t1(JSON.parse(JSON.stringify(tableData)))
-//   return [
-//     {
-//       性别: '男',
-//       年龄: '19',
-//       爱好: '唱',
-//       name: 'a'
-//     },
-//     {
-//       性别: '女',
-//       年龄: '21',
-//       爱好: 'rap',
-//       address: 'b'
-//     },
-//     {
-//       性别: '男',
-//       年龄: '22',
-//       爱好: '篮球',
-//       habb: 'c'
-//     }
-//   ]
-// }
-
 onMounted(() => {
-  const Data = baseDataListRef.value.rows
-  const bb = JSON.parse(JSON.stringify(Data))
-  console.log('bb', bb)
   const params = {
     pageIndex: 1,
     pageSize: 5
   }
-  getStockStorageList(params)
+  getTableData(params)
 })
 </script>
 

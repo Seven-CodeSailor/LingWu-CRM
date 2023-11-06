@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:18:17
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-05 21:18:47
+ * @LastEditTime: 2023-11-06 22:28:57
  * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
  * @Description:
  *
@@ -28,23 +28,21 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
-        // 销售合同
-        'api/sales-contract': {
-          changeOrigin: true,
-          target: 'http://43.138.164.141:8090',
-          rewrite: (path) => path.replace(/^\/api\/sales-contract/, '')
-        },
-        // 销售机会本地测试
-        '/api/sales-opportunities': {
-          changeOrigin: true,
-          target: 'http://124.221.254.153:8090',
-          rewrite: (path) => path.replace(/^\/api\/sales-opportunities/, '')
-        },
-        // 本地测试用
-        '/api/java3-personalhomepage': {
+        '/api/java3-personal-homepage': {
           changeOrigin: true,
           target: 'http://1.15.64.225:10032',
-          rewrite: (path) => path.replace(/^\/api\/java3-personalhomepage/, '')
+          rewrite: (path) => path.replace(/^\/api\/java3-personal-homepage/, '')
+        },
+        '/api/cpp1-dictionary': {
+          changeOrigin: true,
+          target: 'http://8.130.16.24:8090',
+          rewrite: (path) => path.replace(/^\/api\/cpp1-dictionary/, '')
+        },
+        // 库存管理接口的跨域处理
+        '/api/cpp5-inventory': {
+          changeOrigin: true,
+          target: 'http://47.108.95.155:8090',
+          rewrite: (path) => path.replace(/^\/api\/cpp5-inventory/, '')
         },
         '/api/java3-file': {
           changeOrigin: true,

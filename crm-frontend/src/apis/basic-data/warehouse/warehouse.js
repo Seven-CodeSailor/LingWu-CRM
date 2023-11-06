@@ -1,9 +1,9 @@
 /*
  * @Author: BINGWU
  * @Date: 2023-11-03 23:36:26
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-05 21:27:55
- * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\basic-data\warehouse\warehouse.js
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-06 13:19:05
+ * @FilePath: \crm-frontend\src\apis\basic-data\warehouse\warehouse.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from '@/apis/request.js'
@@ -45,6 +45,13 @@ export const exportStore = async (params) => {
   return await Request.requestJson(
     Request.POST,
     baseUrl + '/j3-controller-warehouse/export-store',
+    params
+  )
+}
+
+export const importStore = async (params) => {
+  return await Request.postFile(
+    baseUrl + '/j3-controller-warehouse/import-store',
     params
   )
 }

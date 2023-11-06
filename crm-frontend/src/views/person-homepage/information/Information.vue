@@ -1,100 +1,21 @@
 <template>
   <el-card class="information">
-    编辑资料
-    <el-form
+    <template #header>
+      <div class="card-header">
+        <span>编辑资料</span>
+      </div>
+    </template>
+    <div class="card-body">
+      <el-form
       :model="form"
       label-width="120px"
-      style="margin-top: 40px"
+      style="margin: 18px 40px"
       ref="ruleFormRef"
       :rules="rules"
       class="demo-ruleForm"
       :size="formSize"
       status-icon
     >
-      <div class="group1">
-        <el-row>
-          <el-col :span="7">
-            <div class="grid-content ep-bg-purple">
-              <el-form-item label="地址" prop="oldPassword">
-                <el-input v-model="form.oldPassword" style="width: 400px" />
-              </el-form-item>
-            </div>
-          </el-col>
-
-          <el-col :span="7">
-            <div class="grid-content ep-bg-purple">
-              <el-form-item label="电子邮箱" prop="confirmPassword">
-                <el-input v-model="form.confirmPassword" style="width: 300px" />
-              </el-form-item>
-            </div>
-          </el-col>
-
-          <el-col :span="10">
-            <div class="grid-content ep-bg-purple">
-              <el-form-item style="">
-                <div class="head-avatar">
-                  更换头像
-                  <el-upload
-                    style="
-                      margin: 18px 22px;
-                      border: 1px #a9b1bc solid;
-                      border-radius: 2%;
-                    "
-                    :auto-upload="false"
-                    class="avatar-uploader"
-                    :show-file-list="false"
-                  >
-                    <img v-if="imgUrl" :src="imgUrl" class="avatar" />
-                    <el-icon v-else class="avatar-uploader-icon"
-                      ><Plus
-                    /></el-icon>
-                  </el-upload>
-                  <el-button type="primary" :icon="Plus" @click="pickPicture"
-                    >选择图片</el-button
-                  >
-                  <el-button type="success" :icon="Upload" @click="saveUpdate"
-                    >上传头像</el-button
-                  >
-                </div>
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
-
-        <el-row>
-          <el-col :span="10" style="margin-top: -275px"
-            ><div class="grid-content ep-bg-purple">
-              <el-form-item label="性别" prop="confirmPassword">
-                <el-radio-group v-model="form.resource">
-                  <el-radio label="男" />
-                  <el-radio label="女" />
-                </el-radio-group>
-              </el-form-item></div
-          ></el-col>
-
-          <el-col :span="16" style="margin-top: -230px"
-            ><div class="grid-content ep-bg-purple-light">
-              <el-form-item label="身份" prop="confirmPassword">
-                <el-input v-model="form.confirmPassword" style="width: 224px" />
-              </el-form-item>
-            </div>
-          </el-col>
-
-          <el-col :span="12" style="margin-top: -180px"
-            ><div class="grid-content ep-bg-purple-light">
-              <el-form-item label="简介" prop="confirmPassword">
-                <el-input
-                  v-model="form.desc"
-                  type="textarea"
-                  :rows="4"
-                  placeholder="Please input"
-                />
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-
       <div class="card-body">
         <el-form
           :model="form"
@@ -251,6 +172,9 @@
         </el-form>
       </div>
     </el-form>
+    </div>
+
+   
   </el-card>
 </template>
 
@@ -275,7 +199,7 @@ const form = ref({
 
 //校验规则
 const rules = {
-  oldPassword: [
+  address: [
     {
       required: false,
       pattern: '',
@@ -283,16 +207,46 @@ const rules = {
       trigger: 'blur'
     }
   ],
-  newPassword: [
+  email: [
     {
       trigger: 'blur'
     }
   ],
-  confirmPassword: [
+  gender: [
     {
       trigger: 'blur'
     }
-  ]
+  ],
+  identity: [
+    {
+      trigger: 'blur'
+    }
+  ],
+  intro: [
+    {
+      trigger: 'blur'
+    }
+  ],
+  mobile: [
+    {
+      trigger: 'blur'
+    }
+  ],
+  name: [
+    {
+      trigger: 'blur'
+    }
+  ],
+  qicq: [
+    {
+      trigger: 'blur'
+    }
+  ],
+  zipcode: [
+    {
+      trigger: 'blur'
+    }
+  ],
 }
 
 //提交按钮的反馈逻辑

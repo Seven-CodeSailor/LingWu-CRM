@@ -29,6 +29,12 @@
             <BulkOPe
               :getOpt="() => [0, 1]"
               :export-excel="handleExport"
+              :import-excel="handleImport"
+              :handle-change="
+                (file) => {
+                  excelFile = file
+                }
+              "
             ></BulkOPe>
           </div>
           <div class="right">
@@ -158,6 +164,10 @@ const exportTableData = async (params) => {
   return await warehouseStore.exportStoreItem(params)
 }
 
+const importTableData = async (params) => {
+  return await warehouseStore.importStoreItem(params)
+}
+
 const updateSwitchState = async (state, row) => {
   baseDataListRef.value.openSwitchLoading =
     !baseDataListRef.value.openSwitchLoading
@@ -255,7 +265,6 @@ const handleSubmit = () => {
     }
   })
 }
-
 const handleExport = () => {
   if (!baseDataListRef.value.rows.length) {
     ElMessage.error('请先选择要导出的数据')
@@ -263,16 +272,19 @@ const handleExport = () => {
     const ids = baseDataListRef.value.rows.map((row) => {
       return row.storeId
     })
-    console.log('ids', ids)
     exportTableData({ ids }).then(async (res) => {
       const originalString = res.data
       const searchStr = 'http://8.130.45.222:8888'
-
       const startIndex = originalString.indexOf(searchStr) // 查找要截取内容的起始位置
       const extractedString = originalString.slice(
         startIndex + searchStr.length
       ) // 提取后面的内容
+      // 下载文件
       await downloadFile('/java3-file' + extractedString, '仓库管理')
+      ElMessage({
+        message: '导出成功',
+        type: 'success'
+      })
     })
   }
 }
@@ -296,6 +308,24 @@ const handleManyDelete = async () => {
     })
   }
 }
+const handleImport = () => {
+  importTableData({
+    excelFile: excelFile.value.raw
+  })
+    .then(async (res) => {
+      ElMessage({
+        message: res.message,
+        type: 'success'
+      })
+      await getTableData({
+        pageIndex: baseDataListRef.value.paginationData.currentPage,
+        pageSize: baseDataListRef.value.paginationData.pageSize
+      })
+    })
+    .catch((error) => {
+      console.log('error', error)
+    })
+}
 
 onMounted(async () => {
   await getTableData({
@@ -308,6 +338,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .warehouse {
   .content {
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: space-between;
