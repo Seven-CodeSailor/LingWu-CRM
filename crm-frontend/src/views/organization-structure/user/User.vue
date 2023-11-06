@@ -352,7 +352,7 @@ onMounted(async () => {
     },
     (res) => {
       const { data } = res
-      console.log('获取表格数据', data)
+      console.log('获取表格数据', res)
       sendData.value.tableData = data.rows
       sendData.value.total = data.total
       baseDataListRef.value.openLoading = false
