@@ -19,6 +19,7 @@
     :dropdownMenuActionsInfo="sendData.dropdownMenuActionsInfo"
     useOperateColumn="true"
     useCalculate="true"
+    @selectFuckingChange="selectChange"
     @update-table-data="
       (pageSize, currentPage) =>
         getSalesContractList({
@@ -96,7 +97,7 @@
           <el-button
             type="primary"
             style="margin-left: 4px"
-            @click="changeLoadAnimation"
+            @click="searchDetails"
             :disabled="searchContractName ? false : true"
           >
             <el-icon style="margin-right: 4px"><icon-search /></el-icon>搜索
@@ -299,19 +300,44 @@ import { SoldOut, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import { useSalesContractStore } from '@/stores/salesmanager/SalesContract.js'
 import AddGoods from '@/components/OrganizationStructure/AddGoods.vue'
-
+//添加商品的ref
 const addGoodsRef = ref(null)
+
+// 搜索的销售合同主题名称
+const searchContractName = ref('')
+
 // 搜索框的searchDetails方法还需完善
+const searchDetails = () => {
+  console.log('搜索', searchContractName.value)
+  const searchData = salesContractStore.tableData.filter((item) => {
+    return item.title === searchContractName.value
+  })
+  if (searchData.length === 0) {
+    ElMessage({
+      type: 'warning',
+      message: '未找到相关数据，请重新输入合同主题'
+    })
+  } else {
+    salesContractStore.tableData = searchData
+  }
+}
 
 // 批量删除所选列表
-// let selectArr = ref([])
+let selectArr = ref([])
+
+const isDisabled = ref(true)
 // // table表勾选时触发的事件
-// const selectChange = () => {
-//   selectArr.value = baseDataListRef.value.rows
-// }
+const selectChange = (length) => {
+  if (length === 0) {
+    isDisabled.value = true
+  } else {
+    isDisabled.value = false
+  }
+}
 // 删除成功的回调
 const deleteByQuery = () => {
   ElMessage.success('删除成功')
+  isDisabled.value = !isDisabled.value
 }
 
 // 最近联系时间的选项
@@ -410,9 +436,6 @@ const saveData = () => {
   saleContractData.value = resetData.value
 }
 
-// 搜索的销售合同主题名称
-const searchContractName = ref('')
-
 const item = ref({})
 
 // 合同列表项
@@ -488,7 +511,7 @@ const sendData = {
       // row为当前行的数据
       handleAction: (row) => {
         alert('确认删除吗')
-        // 获取当前行的id
+        // 获取当前行的id 这里需要使用获取id的接口
         const id = row.id
         console.log('删除当前行数据', id)
         salesContractStore.tableData = salesContractStore.tableData.filter(
@@ -561,7 +584,6 @@ const getSalesContractList = async (params) => {
 }
 // 挂载时获得分页数据
 onMounted(() => {
-  const Data = baseDataListRef.value.rows
   // const bb = JSON.parse(JSON.stringify(Data))
   // console.log('bb', bb)
   const params = {
@@ -769,7 +791,7 @@ const getRows = () => {
 const handleSelectionChange = (newRows) => {
   baseDataListRef.value.rows = newRows
 }
-// 开启/关闭表格加载动画
+// 开启/关闭表格加载动画 这里要刷新数据的，每次刷新数据要获取表格数据
 const changeLoadAnimation = () => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   setTimeout(() => {

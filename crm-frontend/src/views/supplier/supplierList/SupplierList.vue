@@ -66,13 +66,13 @@
       <el-table-column type="selection" width="55" />
       <el-table-column
         label="供应商名称"
-        prop="supplierName"
+        prop="name"
         sortable
       ></el-table-column>
       <el-table-column label="经济类型" prop="ecoType"></el-table-column>
-      <el-table-column label="行业类型" prop="indType"></el-table-column>
-      <el-table-column label="联系人" prop="contact"></el-table-column>
-      <el-table-column label="电话号码" prop="telephone"></el-table-column>
+      <el-table-column label="行业类型" prop="trade"></el-table-column>
+      <el-table-column label="联系人" prop="linkman_name"></el-table-column>
+      <el-table-column label="电话号码" prop="tel"></el-table-column>
       <el-table-column label="传真" prop="fax"></el-table-column>
       <el-table-column label="邮箱" prop="email"></el-table-column>
       <el-table-column label="介绍" prop="intro"></el-table-column>
@@ -159,7 +159,7 @@ const initLinks = async (
   await getSupplier(currentPage, pageSize, name, telephone, mombile, address)
 }
 onMounted(() => {
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 })
 
 // 当前页数
@@ -168,11 +168,11 @@ const currentPage = ref(1)
 const pageSize = ref(5)
 const handleSizeChange = (val) => {
   pageSize.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 const handleCurrentChange = (val) => {
   currentPage.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 
 /**
@@ -196,7 +196,7 @@ const deleteByQuery = async () => {
     }
   )
   // 删除后重新请求数据
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 
 /**

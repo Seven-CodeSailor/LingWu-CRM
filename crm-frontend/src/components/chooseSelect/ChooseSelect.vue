@@ -1,8 +1,8 @@
 <!--
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-30 21:35:22
- * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-04 12:11:43
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-10-30 21:36:32
  * @FilePath: \zero-one-crmsys\crm-frontend\src\components\chooseSelect\ChooseSelect.vue
  * @Description: 
  * 
@@ -58,19 +58,13 @@ const props = defineProps({
 // 定义子传父方法
 const emit = defineEmits(['update:cid'])
 
-// 重置选中值
 const reset = () => {
   selectValue.value = ''
-}
-// 修改选中值的方法
-const setSelect = (val) => {
-  selectValue.value = val
 }
 // 微调  冰雾
 defineExpose({
   selectValue,
-  reset,
-  setSelect
+  reset
 })
 </script>
 

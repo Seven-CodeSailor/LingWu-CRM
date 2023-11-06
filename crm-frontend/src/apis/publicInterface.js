@@ -2,8 +2,8 @@
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-05 16:04:39
- * @FilePath: \crm-frontend\src\apis\publicInterface.js
+ * @LastEditTime: 2023-11-06 11:09:19
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from './request'
@@ -18,36 +18,23 @@ const select = useSelect()
  * @returns
  */
 
-export const getCustomerName = (param, success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(param)
-    }, 0)
-  })
-    .then(() => {
-      let name = [
-        {
-          value: 'Option1',
-          label: '成都零起飞科技'
-        },
-        {
-          value: 'Option2',
-          label: '01'
-        },
-        {
-          value: 'Option3',
-          label: 'asd'
-        }
-      ]
-      if (name) {
-        select.setName(name)
-        success()
-        return
-      }
-      fail()
+export const getCustomerName = async (
+  name,
+  success = () => {},
+  fail = () => {}
+) => {
+  await Request.requestForm(
+    Request.GET,
+    '/customer-mycustomer/get-customername',
+    {
+      name
+    }
+  )
+    .then(async (response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 

@@ -100,10 +100,10 @@ import { ref } from 'vue'
 import useMyClient from '@/stores/customer/myclient.js'
 import useSelect from '@/stores/customer/select.js'
 import {
-  getCustomerConcats,
   getCustomerOpportnity,
   getCustomerStage,
-  getCustomerWay
+  getCustomerWay,
+  queryContactName
 } from '@/apis/customer/index.js'
 import { getCustomerName } from '@/apis/publicInterface.js'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
@@ -124,13 +124,21 @@ const customerOpportunity = ref()
 const customerStage = ref()
 const communicateWay = ref()
 // 获取客户名称下拉列表
-const communicateGetName = async () => {
-  await getCustomerName()
+const communicateGetName = () => {
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.rows.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
   myclient.communicateInfo.customerName = customerName0.value.selectValue.label
 }
 // 获取客户联系人下拉列表
-const communicateGetContacts = async () => {
-  await getCustomerConcats()
+const communicateGetContacts = () => {
+  queryContactName('', (response) => {
+    console.log(response)
+  })
   myclient.communicateInfo.contact = customerContact.value.selectValue.label
 }
 // 获取客户销售机会下拉列表
@@ -151,8 +159,16 @@ const communicateGetWay = async () => {
 }
 // 添加沟通记录按钮回调
 const addCommunicate = async (row) => {
-  await getCustomerName()
-  await getCustomerConcats()
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.rows.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
+  queryContactName('', (response) => {
+    console.log(response)
+  })
   await getCustomerOpportnity()
   await getCustomerStage()
   await getCustomerWay()
