@@ -10,6 +10,7 @@
     :total="sendData.total"
     :useDropdownMenu="true"
     :dropdownMenuActionsInfo="dropdownMenuActionsInfo"
+    @updateTableData="handleSizeChange"
   >
     <template #ico>
       <el-icon><Operation /></el-icon>
@@ -19,7 +20,9 @@
         <template #header>
           <div class="card-header">
             <span>角色管理</span>
-            <el-button class="button" text>刷新</el-button>
+            <el-button class="button" @click="handelRefreshTree" text
+              >刷新</el-button
+            >
           </div>
         </template>
         <!-- 树形菜单标签结构 -->
@@ -88,8 +91,6 @@
           <el-input v-model="addForm.name" autocomplete="off" />
         </el-form-item>
         <el-form-item label="父级栏目" :label-width="labelWidth">
-          <!-- 调用选择框组件 -->
-          <!-- <ChooseSelect :options="selOptions" des="选择上级"></ChooseSelect> -->
           <!-- 树形选择 -->
           <el-tree-select
             v-model="selectValue"
@@ -250,7 +251,10 @@ import { Operation, Plus, Search } from '@element-plus/icons-vue'
 import { onMounted, ref } from 'vue'
 // 导入api方法
 // import { getUserTableList } from '@/apis/organizationStructure/user.js'
-import { getRoleTree } from '../../../apis/organizationStructure/Roles.js'
+import {
+  getRoleTree,
+  addRoleListApi
+} from '../../../apis/organizationStructure/Roles.js'
 // 导入 组织结构/角色管理 仓库
 import useRoleManageStore from '../../../stores/organizationStructure/rolesManage'
 const $RoleManage = useRoleManageStore()
@@ -264,6 +268,9 @@ onMounted(async () => {
     (res) => {
       const { data } = res
       console.log('获取角色名称结构树', data)
+      // 默认以第一个角色获取表格数据
+      defaultRole.value = data[0]
+      currentTreeOption.value = data[0]
       // 处理数据 id =>value name => label
       const newArr = data.map((item) => {
         for (let key in item) {
@@ -285,28 +292,33 @@ onMounted(async () => {
       console.log(error)
     }
   )
+  // 开启表格加载
+  baseDataListRef.value.openLoading = true
+
+  const res = await $RoleManage.getTheRoleList({
+    keyword: defaultRole.value.name,
+    pageIndex: $page.value.currentPage,
+    pageSize: $page.value.pageSize,
+    pid: ''
+  })
+
+  const {
+    _rawValue: { data }
+  } = res
+  // console.log(data)
+  // 重新渲染
+  sendData.value.total = data.total
+  sendData.value.tableData = data.rows
+  baseDataListRef.value.openLoading = false
 })
-// 树形菜单的数据
-// const treeData = ref([
-//   {
-//     value: '1',
-//     label: '超级管理员',
-//     children: [
-//       {
-//         value: '1-1',
-//         label: '主管'
-//       },
-//       {
-//         value: '1-2',
-//         label: '组员'
-//       },
-//       {
-//         value: '1-3',
-//         label: '总经理'
-//       }
-//     ]
-//   }
-// ])
+
+// 获取分页数据
+const $page = ref()
+setTimeout(() => {
+  $page.value = baseDataListRef.value.paginationData
+  console.log('当前分页器数据', $page.value)
+})
+
 // 树形选择绑定值
 const selectValue = ref('')
 // 更新选中值
@@ -319,22 +331,40 @@ const defaultProps = ref({
   label: 'label'
 })
 // 点击树节点的事件
-const handleNodeClick = (data) => {
-  console.log('树形菜单数据:', data)
+const handleNodeClick = async (treeData) => {
+  console.log('树形菜单数据:', treeData)
+  currentTreeOption.value = treeData
+  // 基于当前菜单树的数据，重新渲染表格
+  // 开启表格加载
+  baseDataListRef.value.openLoading = true
+  const res = await $RoleManage.getTheRoleList({
+    keyword: currentTreeOption.value.name,
+    pageIndex: $page.value.currentPage,
+    pageSize: $page.value.pageSize,
+    pid: ''
+  })
+  const {
+    _rawValue: { data }
+  } = res
+  // console.log(data)
+  // 重新渲染
+  sendData.value.total = data.total
+  sendData.value.tableData = data.rows
+  baseDataListRef.value.openLoading = false
 }
 
 // ref数据绑定BaseDataList这个组件
 const baseDataListRef = ref(null)
 // 表格数据传递
-const sendData = {
+const sendData = ref({
   tableColumnAttribute: [
     {
-      prop: 'Department',
+      prop: 'name',
       label: '角色名称',
       sortable: false
     },
     {
-      prop: 'DepartmentDes',
+      prop: 'intro',
       label: '角色描述',
       sortable: true
     },
@@ -344,53 +374,23 @@ const sendData = {
       sortable: true
     },
     {
-      prop: 'Enable',
+      prop: 'visible',
       label: '启用',
       useSwitch: true
     }
   ],
   tableData: [
     {
-      Department: '主管',
-      DepartmentDes: '公司小领导',
+      name: '主管',
+      intro: '公司小领导',
       sort: '4',
-      Enable: ''
+      visible: ''
     },
     {
-      Department: '组员',
-      DepartmentDes: '',
+      name: '组员',
+      intro: '',
       sort: '6',
-      Enable: ''
-    },
-    {
-      Department: '组员',
-      DepartmentDes: '',
-      sort: '4',
-      Enable: ''
-    },
-    {
-      Department: '总经理',
-      DepartmentDes: '',
-      sort: '7',
-      Enable: ''
-    },
-    {
-      Department: '总监',
-      DepartmentDes: '',
-      sort: '2',
-      Enable: ''
-    },
-    {
-      Department: '组员',
-      DepartmentDes: '萌新组员',
-      sort: '3',
-      Enable: ''
-    },
-    {
-      Department: '副管',
-      DepartmentDes: '第二个管事的',
-      sort: '12',
-      Enable: ''
+      visible: ''
     }
   ],
   handleEdit: (row) => {
@@ -399,7 +399,37 @@ const sendData = {
   // 分页数组
   pageSizes: [5, 10, 15],
   total: 100
+})
+// 默认角色
+const defaultRole = ref({})
+// 当前树形菜单
+const currentTreeOption = ref([])
+/**
+ * 分页器切换处理方法
+ */
+const handleSizeChange = async (pagesize, currentPage) => {
+  // 收集数据
+  // console.log(currentTreeOption.value)
+  console.log('分页器数据', pagesize, currentPage)
+  // 开启表格加载
+  baseDataListRef.value.openLoading = true
+
+  const res = await $RoleManage.getTheRoleList({
+    keyword: currentTreeOption.value.name,
+    pageIndex: currentPage,
+    pageSize: pagesize,
+    pid: ''
+  })
+  const {
+    _rawValue: { data }
+  } = res
+  // console.log(data)
+  // 重新渲染
+  sendData.value.total = data.total
+  sendData.value.tableData = data.rows
+  baseDataListRef.value.openLoading = false
 }
+
 // 操作菜单的数据和处理函数
 const dropdownMenuActionsInfo = ref([
   {
@@ -420,7 +450,7 @@ const dropdownMenuActionsInfo = ref([
       addForm.value.name = row.Department
       addForm.value.desc = row.DepartmentDes
       addForm.value.sort = row.sort
-      console.log(row.Department)
+      // console.log(row.Department)
     },
     actionName: '修改'
   },
@@ -453,24 +483,27 @@ const labelWidth = ref('100px')
 // ref绑定表单
 const theAddForm = ref()
 const editForm = ref()
+
 //表单校验规则
-const formRule = ref({
-  // 部门名称
-  name: [
-    { required: true, message: '请输入名称', trigger: 'blur' },
-    { min: 1, max: 10, message: '名称必须是1-10位的字符', trigger: 'blur' }
-  ],
-  // 父级栏目需要用数据判断用户是否选中
-  // 排位序号
-  sort: [
-    { required: true, message: '请输入排位序号', trigger: 'blur' },
-    {
-      pattern: /^\d+$/,
-      message: '输入格式是任意长度数字',
-      trigger: 'blur'
-    }
-  ]
-})
+
+// const formRule = ref({
+//   // 部门名称
+//   name: [
+//     { required: true, message: '请输入名称', trigger: 'blur' },
+//     { min: 1, max: 10, message: '名称必须是1-10位的字符', trigger: 'blur' }
+//   ],
+//   // 父级栏目需要用数据判断用户是否选中
+//   // 排位序号
+//   sort: [
+//     { required: true, message: '请输入排位序号', trigger: 'blur' },
+//     {
+//       pattern: /^\d+$/,
+//       message: '输入格式是任意长度数字',
+//       trigger: 'blur'
+//     }
+//   ]
+// })
+
 // 点击添加打开抽屉,置空数据
 const handelAddFn = () => {
   // 置空表单数据
@@ -481,12 +514,84 @@ const handelAddFn = () => {
   addDrawer.value = true
 }
 
+/**
+ * 刷新业务，点击刷新，刷新菜单树
+ */
+const handelRefreshTree = async () => {
+  //获取角色名称结构树
+  await getRoleTree(
+    {
+      depth: 0,
+      pid: 0
+    },
+    (res) => {
+      const { data } = res
+      console.log('获取角色名称结构树', data)
+      // 默认以第一个角色获取表格数据
+      defaultRole.value = data[0]
+      currentTreeOption.value = data[0]
+      // 处理数据 id =>value name => label
+      const newArr = data.map((item) => {
+        for (let key in item) {
+          if (key === 'id') {
+            item.value = item[key]
+          }
+          if (key === 'name') {
+            item.label = item[key]
+          }
+        }
+        return item
+      })
+      // console.log('矫正后的角色结构树:', newArr)
+      // 把数据存到 组织结构/角色管理 仓库
+      $RoleManage.setRoleTreeList(newArr)
+      // console.log('角色管理 仓库数据:', $RoleManage.roleTreeList)
+      ElMessage({
+        message: '刷新成功',
+        type: 'success'
+      })
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
+}
+
 // 按钮提交加载的数据和方法
 const btnLoading = ref(false)
 const handelAddSubmit = async () => {
   // 添加表单的校验,通过了才能发送添加请求
-  await theAddForm.value.validate()
+  // await theAddForm.value.validate()
+
+  // 收集数据
+  console.log(
+    '名称:',
+    addForm.value.name,
+    '排序:',
+    addForm.value.sort,
+    '启用:',
+    addForm.value.delivery,
+    '介绍:',
+    addForm.value.desc,
+    '父级栏目:',
+    selectValue.value
+  )
   // 这里要处理添加接口的逻辑
+  await addRoleListApi(
+    {
+      intro: addForm.value.desc,
+      name: addForm.value.name,
+      parentID: selectValue.value,
+      sort: addForm.value.sort,
+      visible: addForm.value.delivery
+    },
+    (res) => {
+      console.log('新增角色:', res)
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
   btnLoading.value = true
   setTimeout(() => {
     ElMessage({
