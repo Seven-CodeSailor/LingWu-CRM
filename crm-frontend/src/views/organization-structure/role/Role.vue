@@ -188,7 +188,7 @@
       :expand-on-click-node="false"
       :render-content="renderContent"
     >
-      <template #default="{ node, data }">
+      <template #default="{ node }">
         <!-- <span class="custom-tree-node">
           <span>{{ node.label }}</span>
           <span>
