@@ -28,6 +28,18 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
+        // 销售合同
+        'api/sales-contract': {
+          changeOrigin: true,
+          target: 'http://43.138.164.141:8090',
+          rewrite: (path) => path.replace(/^\/api\/sales-contract/, '')
+        },
+        // 销售机会本地测试
+        '/api/sales-opportunities': {
+          changeOrigin: true,
+          target: 'http://124.221.254.153:8090',
+          rewrite: (path) => path.replace(/^\/api\/sales-opportunities/, '')
+        },
         // 本地测试用
         '/api/java3-personalhomepage': {
           changeOrigin: true,

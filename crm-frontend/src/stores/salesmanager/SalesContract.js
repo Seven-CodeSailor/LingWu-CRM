@@ -6,32 +6,27 @@
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\sales-manager\SalesContract.js
  */
 
-
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { querySalesContractList } from '@/apis/publicInterface.js'
+import { querySalesContractData } from '@/apis/publicInterface.js'
 
 /**
  * 获取销售合同列表的仓库
  */
-export const useSalesContractStore = defineStore(
-  'salescontract',
-  () => {
-    // 表格数据
-    const tableData = ref([])
-    // 数据总计
-    const tableTotal = ref(100)
-    const pageSize = ref(5)
-    // 获取表格数据的方法
-    const getTableData = async (params) => {
-      await querySalesContractList(
-        params
-      ).then((res) => {
-        console.log('res的值',res);
+export const useSalesContractStore = defineStore('salescontract', () => {
+  // 表格数据
+  const tableData = ref([])
+  // 数据总计
+  const tableTotal = ref(100)
+  // const pageSize = ref(5)
+  // 获取表格数据的方法
+  const getTableData = async (params) => {
+    await querySalesContractData(params)
+      .then((res) => {
+        console.log('res的值', res)
         // console.log('5')
         const rows = res.data.data
 
-        
         tableData.value = rows.map((item) => {
           return {
             id: item.id,
@@ -49,23 +44,24 @@ export const useSalesContractStore = defineStore(
             zero_money: item.zero_money,
             owe_money: item.owe_money,
             back_status: item.back_status,
-            back_money_status:`回款：${item.back_money}\n去零： ${item.zero_money}\n欠款： ${item.owe_money}\n状态：${item.back_status}`,
+            back_money_status: `回款：${item.back_money}\n去零： ${item.zero_money}\n欠款： ${item.owe_money}\n状态：${item.back_status}`,
             deliver_money: item.deliver_money,
             invoice_money: item.invoice_money,
             invoice_status: {
               value: item.invoice_status,
               tagType: 'success'
             },
-            deliver_money_status:`开票： ${item.deliver_money}\n状态：${item.invoice_status}`
+            deliver_money_status: `开票： ${item.deliver_money}\n状态：${item.invoice_status}`
           }
         })
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err)
       })
-    }
-    return {
-      getTableData,
-      tableData,
-      tableTotal
-    }
-  })
+  }
+  return {
+    getTableData,
+    tableData,
+    tableTotal
+  }
+})

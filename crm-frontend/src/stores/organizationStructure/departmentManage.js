@@ -19,11 +19,11 @@ const useDepartmentManageStore = defineStore('DepartmentManage', () => {
           label: 'Level two 1-1',
           children: [
             {
-              label: 'Level three 1-1-1',
-            },
-          ],
-        },
-      ],
+              label: 'Level three 1-1-1'
+            }
+          ]
+        }
+      ]
     },
     {
       label: 'Level one 2',
@@ -32,19 +32,19 @@ const useDepartmentManageStore = defineStore('DepartmentManage', () => {
           label: 'Level two 2-1',
           children: [
             {
-              label: 'Level three 2-1-1',
-            },
-          ],
+              label: 'Level three 2-1-1'
+            }
+          ]
         },
         {
           label: 'Level two 2-2',
           children: [
             {
-              label: 'Level three 2-2-1',
-            },
-          ],
-        },
-      ],
+              label: 'Level three 2-2-1'
+            }
+          ]
+        }
+      ]
     },
     {
       label: 'Level one 3',
@@ -53,20 +53,20 @@ const useDepartmentManageStore = defineStore('DepartmentManage', () => {
           label: 'Level two 3-1',
           children: [
             {
-              label: 'Level three 3-1-1',
-            },
-          ],
+              label: 'Level three 3-1-1'
+            }
+          ]
         },
         {
           label: 'Level two 3-2',
           children: [
             {
-              label: 'Level three 3-2-1',
-            },
-          ],
-        },
-      ],
-    },
+              label: 'Level three 3-2-1'
+            }
+          ]
+        }
+      ]
+    }
   ])
   const setDepartmentTree = (dataList) => {
     DepartmentTree.value = dataList
