@@ -16,6 +16,7 @@
       :table-data="classficationStore.tableData"
       :page-sizes="[5, 10, 15]"
       :total="classficationStore.total"
+      :useSelectColumn="false"
       @update-table-data="
         (pageSize, pageIndex) => {
           getTableData({
