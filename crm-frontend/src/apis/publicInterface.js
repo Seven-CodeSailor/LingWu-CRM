@@ -30,7 +30,7 @@ export const getCustomerName = async (
       name
     }
   )
-    .then(async (response) => {
+    .then((response) => {
       success(response)
     })
     .catch((error) => {

@@ -87,7 +87,8 @@ export const addSupplier = async (
   success = () => {},
   fail = () => {}
 ) => {
-  delete params['supplier_id']
+  delete params['supplierId']
+  console.log(params)
   await Request.requestJson(
     Request.POST,
     '/supplier-manage/supplier/add-supplier',

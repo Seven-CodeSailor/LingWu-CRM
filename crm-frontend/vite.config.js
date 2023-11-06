@@ -1,8 +1,8 @@
 /*
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:18:17
- * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-06 19:47:39
+ * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
+ * @LastEditTime: 2023-11-06 21:36:33
  * @FilePath: \crm-frontend\vite.config.js
  * @Description:
  *
@@ -28,7 +28,6 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
-        
         '/api/java3-personal-homepage': {
           changeOrigin: true,
           target: 'http://1.15.64.225:10032',
@@ -66,8 +65,7 @@ export default ({ mode }) =>
           // rewrite: (path) => path.replace(/^\/api/, '')
 
           //TODO[TEST_CODE]:使用ApiPost云MOCK
-          target:
-            'https://console-mock.apipost.cn/mock/99738a62-8857-4bb2-8010-c92424b03584',
+          target: 'http://8.130.30.150:10001',
           rewrite: (path) => path.replace(/^\/api/, '')
         },
         '/captcha': {

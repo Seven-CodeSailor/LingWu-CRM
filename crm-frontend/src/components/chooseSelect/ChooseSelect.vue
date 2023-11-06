@@ -61,10 +61,14 @@ const emit = defineEmits(['update:cid'])
 const reset = () => {
   selectValue.value = ''
 }
+const setVal = (val) => {
+  selectValue.value = val
+}
 // 微调  冰雾
 defineExpose({
   selectValue,
-  reset
+  reset,
+  setVal
 })
 </script>
 

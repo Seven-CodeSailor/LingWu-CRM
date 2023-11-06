@@ -84,7 +84,11 @@ const props = defineProps({
   // 导入弹窗，上传文件的全路径
   action: {
     type: String,
-    default: 'https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15'
+    default: '/'
+  },
+  baseURL: {
+    type: String,
+    default: '/'
   },
   // 点击导入按钮回调，FileUpload组件会传过来一个fileList数组，存放的是文件对象，对象格式{name: '', url: ''}
   importExcel: {

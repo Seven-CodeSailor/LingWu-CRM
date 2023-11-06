@@ -71,15 +71,19 @@
       <el-table-column type="selection" width="55" />
       <el-table-column
         label="供应商名称"
-        prop="supplierName"
+        prop="supplier_name"
         sortable
       ></el-table-column>
-      <el-table-column label="供应商联系人" prop="name"></el-table-column>
-      <el-table-column label="性别" prop="gender"></el-table-column>
+      <el-table-column label="供应商联系人" prop="name"> </el-table-column>
+      <el-table-column label="性别" prop="gender">
+        <template #default="{ row }">
+          {{ row.gender === 0 ? '女' : '男' }}
+        </template>
+      </el-table-column>
       <el-table-column label="职位" prop="position"></el-table-column>
       <el-table-column label="手机" prop="mobile"></el-table-column>
       <el-table-column label="座机" prop="tel"></el-table-column>
-      <el-table-column label="QQ" prop="qq"></el-table-column>
+      <el-table-column label="QQ" prop="qicq"></el-table-column>
       <el-table-column label="邮箱" prop="email"></el-table-column>
       <el-table-column label="操作" fixed="right">
         <template #default="{ row }">
@@ -111,11 +115,7 @@
   <!-- 添加或修改客户信息 -->
   <el-drawer
     v-model="dialogVisible"
-    :title="
-      supplierContact.tempLinkData.linkmanId === ''
-        ? '添加联系人'
-        : '修改联系人'
-    "
+    :title="addOrUpdata === 0 ? '添加联系人' : '修改联系人'"
     size="50%"
   >
     <el-form
@@ -247,7 +247,7 @@ const initLinks = async (
   await getSupplier(currentPage, pageSize, keywords, supplierName, address)
 }
 onMounted(() => {
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 })
 // 下拉列表仓库
 const select = useSelect()
@@ -259,30 +259,42 @@ const currentPage = ref(1)
 const pageSize = ref(5)
 const handleSizeChange = (val) => {
   pageSize.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 const handleCurrentChange = (val) => {
   currentPage.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 
 const customerName = ref()
 const contractGetName = async () => {
-  await getCustomerName(customerName.value.selectValue)
-  console.log()
-  supplierContact.tempLinkData.supplierName =
-    customerName.value.selectValue.label
-  supplierContact.tempLinkData.supplierId = customerName.value.selectValue.value
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
+  supplierContact.tempLinkData.supplier_id =
+    customerName.value.selectValue.value
 }
+const addOrUpdata = ref(0)
 // 点击添加按钮的回调
-const addMyClinet = async () => {
-  await getCustomerName()
+const addMyClinet = () => {
+  addOrUpdata.value = 0
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
   dialogVisible.value = true
 }
 // 添加按钮确定回调
-const save = async () => {
-  if (supplierContact.tempLinkData.linkmanId === '') {
-    await addlinkman(
+const save = () => {
+  if (addOrUpdata.value === 0) {
+    addlinkman(
       supplierContact.tempLinkData,
       () => {
         ElMessage.success('添加成功')
@@ -292,7 +304,7 @@ const save = async () => {
       }
     )
   } else {
-    await modifylinkman(
+    modifylinkman(
       supplierContact.tempLinkData,
       () => {
         ElMessage.success('修改成功')
@@ -308,6 +320,7 @@ const save = async () => {
 }
 // 修改按钮回调
 const modify = async (row) => {
+  addOrUpdata.value = 1
   await getCustomerName()
   supplierContact.tempLinkData.linkmanId = row.linkmanId
   dialogVisible.value = true
@@ -323,9 +336,13 @@ const selectChange = (value) => {
   selectIdArr.value = value
 }
 // 批量删除按钮
-const deleteByQuery = async () => {
-  await removelinkman(
-    selectIdArr.value,
+const deleteByQuery = () => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.customer_id)
+  })
+  removelinkman(
+    data,
     () => {
       ElMessage.success('删除成功')
     },
@@ -334,7 +351,7 @@ const deleteByQuery = async () => {
     }
   )
   // 删除后重新请求数据
-  initLinks()
+  initLinks(currentPage.value, pageSize.value)
 }
 
 // 导出供应商联系人
@@ -387,8 +404,8 @@ let name = ref('')
 let address = ref('')
 const searchDetails = () => {
   initLinks(
-    currentPage,
-    pageSize,
+    currentPage.value,
+    pageSize.value,
     content.value,
     name.value,
     address.value,
@@ -415,7 +432,7 @@ let confirmDelete = ref(false)
 let deleteId = ref()
 // 删除按钮回调
 const Deletes = (row) => {
-  deleteId.value = row.linkmanId
+  deleteId.value = row.linkman_id
   confirmDelete.value = true
 }
 const Confirms = async () => {
@@ -429,6 +446,7 @@ const Confirms = async () => {
     }
   )
   confirmDelete.value = false
+  initLinks(currentPage.value, pageSize.value)
 }
 </script>
 

@@ -8,10 +8,10 @@ const useSupplierList = defineStore('supplierList', () => {
     {
       supplierId: '', // 供应商ID
       supplierName: '', //供应商名称
-      ecoType: '', //经济类型
-      indType: '', //行业类型
-      contact: '', //联系人
-      telephone: '', //电话号码
+      ecitype: '', //经济类型
+      trade: '', //行业类型
+      linkman: '', //联系人
+      tel: '', //电话号码
       fax: '', // 传真
       email: '', //邮箱
       address: '', //联系地址
@@ -23,11 +23,12 @@ const useSupplierList = defineStore('supplierList', () => {
   }
   // 新增或修改供应商信息
   const addOrUpdateSupplier = ref({
-    supplierName: '', //供应商名称
-    ecoType: '', //经济类型
-    indType: '', //行业类型
-    contact: '', //联系人
-    telephone: '', //电话号码
+    supplierId: '', //供应商Id
+    name: '', //供应商名称
+    ecitype: '', //经济类型
+    trade: '', //行业类型
+    linkman: '', //联系人
+    tel: '', //电话号码
     fax: '', // 传真
     email: '', //邮箱
     address: '', //联系地址
@@ -38,11 +39,11 @@ const useSupplierList = defineStore('supplierList', () => {
   const addOrUpdateSupplierReset = () => {
     addOrUpdateSupplier.value = {
       supplierId: '', //供应商Id
-      supplierName: '', //供应商名称
-      ecoType: '', //经济类型
-      indType: '', //行业类型
-      contact: '', //联系人
-      telephone: '', //电话号码
+      name: '', //供应商名称
+      ecitype: '', //经济类型
+      trade: '', //行业类型
+      linkman: '', //联系人
+      tel: '', //电话号码
       fax: '', // 传真
       email: '', //邮箱
       address: '', //联系地址

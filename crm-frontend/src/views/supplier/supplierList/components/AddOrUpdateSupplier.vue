@@ -15,7 +15,7 @@
     >
       <el-form-item label="供应商名称">
         <el-input
-          v-model="supplierList.addOrUpdateSupplier.supplierName"
+          v-model="supplierList.addOrUpdateSupplier.name"
           placeholder="请输入供应商名称"
           style="width: 500px"
         />
@@ -25,7 +25,7 @@
           style="margin-right: 10px; width: 250px"
           des="请选择经济类型"
           :options="select.name"
-          @update:cid="getEcoType()"
+          @update:cid="getEcoType"
           ref="ecoType"
         ></ChooseSelect>
       </el-form-item>
@@ -34,20 +34,20 @@
           style="margin-right: 10px; width: 250px"
           des="请选择行业类型"
           :options="select.name"
-          @update:cid="getIndType()"
+          @update:cid="getIndType"
           ref="indType"
         ></ChooseSelect>
       </el-form-item>
       <el-form-item label="联系人">
         <el-input
-          v-model="supplierList.addOrUpdateSupplier.contact"
+          v-model="supplierList.addOrUpdateSupplier.linkman"
           placeholder="请输入联系人"
           style="width: 500px"
         />
       </el-form-item>
       <el-form-item label="电话">
         <el-input
-          v-model="supplierList.addOrUpdateSupplier.telephone"
+          v-model="supplierList.addOrUpdateSupplier.tel"
           placeholder="请输入电话"
           style="width: 500px"
         />
@@ -110,11 +110,11 @@ const ecoType = ref()
 const indType = ref()
 const getEcoType = async () => {
   await getCustomerName()
-  supplierList.addOrUpdateSupplier.ecoType = ecoType.value.selectValue.label
+  supplierList.addOrUpdateSupplier.ecitype = ecoType.value.selectValue.value
 }
 const getIndType = async () => {
   await getCustomerName()
-  supplierList.addOrUpdateSupplier.indType = indType.value.selectValue.label
+  supplierList.addOrUpdateSupplier.trade = indType.value.selectValue.value
 }
 // 点击添加按钮的回调
 const addMyClinet = () => {
@@ -124,7 +124,8 @@ const addMyClinet = () => {
 // 添加按钮确定回调
 const save = async () => {
   if (supplierList.addOrUpdateSupplier.supplierId === '') {
-    await modifySupplier(
+    console.log(supplierList.addOrUpdateSupplier)
+    await addSupplier(
       supplierList.addOrUpdateSupplier,
       () => {
         ElMessage.success('添加成功')
@@ -134,7 +135,7 @@ const save = async () => {
       }
     )
   } else {
-    await addSupplier(
+    await modifySupplier(
       supplierList.addOrUpdateSupplier,
       () => {
         ElMessage.success('修改成功')

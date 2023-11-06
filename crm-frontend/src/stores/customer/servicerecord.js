@@ -27,7 +27,7 @@ const useServiceRecord = defineStore('serviceRecord', () => {
 
   // 添加或修改数据的暂存区
   let temp = ref({
-    customee_id: '', // 客户id
+    customer_id: '', // 客户id
     linkman_id: '', //联系人id
     services: '', // 服务类型
     servicesmodel: '', //服务方式
@@ -44,7 +44,7 @@ const useServiceRecord = defineStore('serviceRecord', () => {
   const tempReset = () => {
     temp.value = {
       service_id: '', //服务记录id
-      customee_id: '', // 客户id
+      customer_id: '', // 客户id
       linkman_id: '', //联系人id
       services: '', // 服务类型
       servicesmodel: '', //服务方式

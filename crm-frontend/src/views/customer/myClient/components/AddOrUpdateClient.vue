@@ -138,7 +138,7 @@ const getSelect = async () => {
   await getCustomerIndusty()
 }
 // 点击添加按钮的回调
-const addMyClinet = async () => {
+const addMyClinet = () => {
   getSelect()
   dialogVisible.value = true
 }
@@ -168,23 +168,27 @@ const save = () => {
   }
   myclient.customerReset()
   select.resetData()
-  //   initCustomer()
+  belong.value.reset()
+  level.value.reset()
+  industry.value.reset()
 }
 /**
  * 修改
  */
 // 修改按钮回调
-const modify = async (row) => {
+const modify = (row) => {
   flag.value = true
   getSelect()
-  await queryCustomerDetails(
+  queryCustomerDetails(
     row.customer_id,
     (response) => {
       myclient.customerInfo = {
         customer_id: row.customer_id,
         ...response.data
       }
-      console.log(response)
+      belong.value.setVal(myclient.customerInfo.source)
+      level.value.setVal(myclient.customerInfo.grade)
+      industry.value.setVal(myclient.customerInfo.industry)
     },
     () => {
       ElMessage.error('获取数据失败')
