@@ -265,7 +265,6 @@ const handleSubmit = () => {
     }
   })
 }
-
 const handleExport = () => {
   if (!baseDataListRef.value.rows.length) {
     ElMessage.error('请先选择要导出的数据')
@@ -280,7 +279,12 @@ const handleExport = () => {
       const extractedString = originalString.slice(
         startIndex + searchStr.length
       ) // 提取后面的内容
+      // 下载文件
       await downloadFile('/java3-file' + extractedString, '仓库管理')
+      ElMessage({
+        message: '导出成功',
+        type: 'success'
+      })
     })
   }
 }
@@ -305,14 +309,18 @@ const handleManyDelete = async () => {
   }
 }
 const handleImport = () => {
-  let fdParams = new FormData()
-  fdParams.append('excelFile', excelFile.value.raw)
-  console.log('1', fdParams.get('excelFile'))
   importTableData({
     excelFile: excelFile.value.raw
   })
-    .then((res) => {
-      console.log('res', res)
+    .then(async (res) => {
+      ElMessage({
+        message: res.message,
+        type: 'success'
+      })
+      await getTableData({
+        pageIndex: baseDataListRef.value.paginationData.currentPage,
+        pageSize: baseDataListRef.value.paginationData.pageSize
+      })
     })
     .catch((error) => {
       console.log('error', error)

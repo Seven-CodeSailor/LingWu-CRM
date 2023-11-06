@@ -2,7 +2,7 @@
  * @Author: BINGWU
  * @Date: 2023-11-03 23:36:26
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-05 23:10:18
+ * @LastEditTime: 2023-11-06 13:19:05
  * @FilePath: \crm-frontend\src\apis\basic-data\warehouse\warehouse.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -51,7 +51,7 @@ export const exportStore = async (params) => {
 
 export const importStore = async (params) => {
   return await Request.postFile(
-    baseUrl + '/j3-controller-warehouse/export-store',
+    baseUrl + '/j3-controller-warehouse/import-store',
     params
   )
 }
