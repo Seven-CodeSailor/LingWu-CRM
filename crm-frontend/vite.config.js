@@ -2,8 +2,8 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:18:17
  * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-05 23:04:26
- * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
+ * @LastEditTime: 2023-11-06 19:47:39
+ * @FilePath: \crm-frontend\vite.config.js
  * @Description:
  *
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
@@ -33,6 +33,17 @@ export default ({ mode }) =>
           changeOrigin: true,
           target: 'http://1.15.64.225:10032',
           rewrite: (path) => path.replace(/^\/api\/java3-personal-homepage/, '')
+        },
+        '/api/cpp1-dictionary': {
+          changeOrigin: true,
+          target: 'http://8.130.16.24:8090',
+          rewrite: (path) => path.replace(/^\/api\/cpp1-dictionary/, '')
+        },
+        // 库存管理接口的跨域处理
+        '/api/cpp5-inventory': {
+          changeOrigin: true,
+          target: 'http://47.108.95.155:8090',
+          rewrite: (path) => path.replace(/^\/api\/cpp5-inventory/, '')
         },
         '/api/java3-file': {
           changeOrigin: true,
