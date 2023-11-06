@@ -338,6 +338,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .warehouse {
   .content {
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: space-between;
