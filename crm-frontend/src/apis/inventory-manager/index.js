@@ -1,26 +1,42 @@
+/*
+ * @Author: BINGWU
+ * @Date: 2023-10-26 20:52:05
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-06 17:35:13
+ * @FilePath: \crm-frontend\src\apis\inventory-manager\index.js
+ * @Describe:
+ * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
+ */
 import Request from '../request'
 
 // 定义一个功能模块基础url，方便替换
 const currBaseUrl = '/cpp5-inventory'
 /**
- * 获取入库明细项列表
- * @param {*} data 获取入库明细的数据
- * @param {*} success 成功获取数据后的回调
- * @param {*} fail 获取数据失败的回调
+ * @description: 获取入库明细项列表
+ * @param {Object} params
+ * @return {Promise}
  */
-export const queryStorageDetails = async (params, success, fail) => {
-  await Request.requestJson(
+export const queryStorageDetails = async (params) => {
+  return await Request.requestJson(
     Request.GET,
     currBaseUrl + '/inventory-manager/query-storage-details',
     params
   )
-    .then((response) => {
-      success(response)
-    })
-    .catch((error) => {
-      fail(error)
-    })
 }
+
+/**
+ * @description: 查询入库明细
+ * @param {Object} params
+ * @return {Promise}
+ */
+export const queryInventoryList = async (params) => {
+  await Request.requestJson(
+    Request.GET,
+    '/inventory-manager/query-instorage_details',
+    params
+  )
+}
+
 // 以下是mock测试用例,暂时别删
 export const getInventortOutTableList = (theUrl) => {
   return Request.requestJson(Request.GET, theUrl)
@@ -33,21 +49,6 @@ export const getInventortOutTableList = (theUrl) => {
   // })
 }
 
-export const queryInventoryList = async (data, success, fail) => {
-  await Request.requestJson(
-    Request.POST,
-    'https://mock.apifox.cn/m1/3426132-0-default/inventory-manager/query-inventory-list',
-    {
-      params: { ...data }
-    }
-  )
-    .then((response) => {
-      success(response)
-    })
-    .catch((error) => {
-      fail(error)
-    })
-}
 export const getOutTableList = () => {}
 
 //

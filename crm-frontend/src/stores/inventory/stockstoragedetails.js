@@ -2,24 +2,24 @@
  * @Author: seven 1473008948@qq.com
  * @Date: 2023-10-27 22:00:55
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-06 01:15:16
+ * @LastEditTime: 2023-11-06 17:36:37
  * @FilePath: \crm-frontend\src\stores\inventory\stockstoragedetails.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { queryStorageDetails } from '@/apis/inventory-manager/index.js'
+import {
+  queryStorageDetails,
+  queryInventoryList
+} from '@/apis/inventory-manager/index.js'
 export const useStockStorageDetailsStore = defineStore(
   'stockstoragedetails',
   () => {
     const tableData = ref([])
     const tableTotal = ref()
-    // 获取表格数据的方法
-    const getTableData = async (params) => {
-      await queryStorageDetails(
-        params,
-        (res) => {
-          console.log('res', res)
+    const getStorageDetails = async (params) => {
+      await queryStorageDetails(params)
+        .then((res) => {
           const { rows, total } = res.data
           tableTotal.value = total
           tableData.value = rows.map((item) => {
@@ -35,14 +35,13 @@ export const useStockStorageDetailsStore = defineStore(
               supplierName: item.supplier_name
             }
           })
-        },
-        (err) => {
-          console.log('err', err)
-        }
-      )
+        })
+        .catch((error) => {
+          console.log('error', error)
+        })
     }
     return {
-      getTableData,
+      getStorageDetails,
       tableData,
       tableTotal
     }
