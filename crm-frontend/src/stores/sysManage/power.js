@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia'
-import { getPowerList } from '@/apis/sysManage/power.js'
+import {
+  getPowerList,
+  addPower,
+  deletePower,
+  updatePowerList
+} from '@/apis/sysManage/power.js'
 const useSysPower = defineStore('syspower', {
   state: () => ({
     sendData: {
@@ -18,7 +23,7 @@ const useSysPower = defineStore('syspower', {
       useSelectColumn: false,
       useHeader: false,
       usePagination: true,
-      pageSizes: [2, 10, 15, 30],
+      pageSizes: [10, 15, 20, 30],
       total: 10,
       //在树形菜单里显示
       title: ''
@@ -74,17 +79,28 @@ const useSysPower = defineStore('syspower', {
       }
     ],
     pageParams: {
-      pageIndex: '',
-      pageSize: ''
+      pageIndex: 1,
+      pageSize: 10
     }
   }),
 
   actions: {
     async getPowerList(pageParams, searchData) {
       const res = await getPowerList(pageParams, searchData).catch((e) => e)
-      console.log('res', res)
       this.sendData.tableData = res.data.rows
       this.sendData.total = res.data.total
+    },
+    async addPower(data) {
+      const res = await addPower(data).catch((e) => e)
+      return res
+    },
+    async deletePower(id) {
+      const res = await deletePower(id).catch((e) => e)
+      return res
+    },
+    async updatePower(data) {
+      const res = await updatePower(data).catch((e) => e)
+      return res
     }
   }
 })
