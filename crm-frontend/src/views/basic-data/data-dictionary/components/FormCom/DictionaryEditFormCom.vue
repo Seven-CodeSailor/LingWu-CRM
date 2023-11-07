@@ -25,10 +25,10 @@
               v-model="form.typeName"
             ></el-input>
           </el-form-item>
-          <el-form-item label="调用标识" prop="typeTag">
+          <el-form-item label="调用标识" prop="typetag">
             <el-input
               placeholder="请输入调用标识"
-              v-model="form.typeTag"
+              v-model="form.typetag"
               :disabled="props.title === '编辑分类'"
             ></el-input>
           </el-form-item>
@@ -77,7 +77,7 @@ const visible = ref(false)
 
 const initForm = ref({
   typeName: '',
-  typeTag: '',
+  typetag: '',
   intro: '',
   sort: 0,
   visible: false,
@@ -87,7 +87,7 @@ const initForm = ref({
 
 const form = ref({
   typeName: '',
-  typeTag: '',
+  typetag: '',
   intro: '',
   sort: 0,
   visible: false,
@@ -111,7 +111,7 @@ const props = defineProps({
 const formRef = ref(null)
 
 const rules = ref({
-  typeTag: [{ required: true, message: '请输入调用标识', trigger: 'blur' }],
+  typetag: [{ required: true, message: '请输入调用标识', trigger: 'blur' }],
   typeName: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
   intro: [{ required: true, message: '请输入简介', trigger: 'blur' }],
   sort: [{ required: true, message: '请输入排序', trigger: 'change' }],

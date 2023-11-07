@@ -2,7 +2,7 @@
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-05 21:10:25
+ * @LastEditTime: 2023-11-06 22:25:55
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -184,12 +184,12 @@ export const getUserNameList = async (params, success, fail) => {
  * @Author{*} seven(有问题找我)
  * @return {*}
  */
-export const querySalesContractList = async (data) => {
-  return Request.requestJson(
+export const querySalesContractData = async (params) => {
+  return await Request.requestJson(
     Request.GET,
-    'https://mockapi.eolink.com/fhdz9TQ7632232d76db4f62838f5c8793d22b77760ead7b/get-sales-contract-list',
+    '/sales-contract' + '/sales-contract/get-sales-contract-list/{query}',
     {
-      data
+      params
     }
   )
 }
@@ -328,6 +328,59 @@ export const queryStore = async (params, success, fail) => {
     params
   })
     .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
+
+/**
+ * @description: 获取岗位名称列表数据
+ * @param {*} params 请求参数:
+ * {
+ *  positionName(岗位名称)
+ * }
+ * @param {*} success 成功回调
+ * @param {*} fail 失败回调
+ * @Author{*} 暮秋(有问题找我)
+ * @return {*}
+ */
+export const getPostNameList = async (params, success, fail) => {
+  await Request.requestForm(
+    Request.GET,
+    'http://101.34.252.80:10110/orgstructure/position/position/query-name-all',
+    {
+      params
+    }
+  )
+    .then((response) => {
+      // 请求返回的数据就是response,在成功回调函数可以拿到
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
+
+/**
+ * @description: 获取角色名称列表数据(用于输入表单下拉列表)
+ * @param {*} params 请求参数: 没有参数
+ * @param {*} success 成功回调
+ * @param {*} fail 失败回调
+ * @Author{*} 暮秋(有问题找我)
+ * @return {*}
+ */
+export const getRoleNameList = async (params, success, fail) => {
+  await Request.requestForm(
+    Request.GET,
+    'http://101.34.252.80:10110/orgstructure/role/role/query-name-all',
+    {
+      params
+    }
+  )
+    .then((response) => {
+      // 请求返回的数据就是response,在成功回调函数可以拿到
       success(response)
     })
     .catch((error) => {

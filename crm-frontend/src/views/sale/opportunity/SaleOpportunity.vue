@@ -193,7 +193,10 @@ import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 import { ref, onMounted } from 'vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
 import { SoldOut, Plus } from '@element-plus/icons-vue'
-import { useSalesOpportunityStore } from '@/stores/salesmanager/SalesOpportunity.js'
+import { useSalesOpportunityStore } from '@/stores/salesmanager/salesopportunity.js'
+
+// 导入销售机会列表的仓库
+const salesOpportunityStore = useSalesOpportunityStore()
 
 // 搜索的销售合同主题名称
 const searchOpportunityName = ref('')
@@ -216,9 +219,6 @@ const searchDetails = () => {
   }
 }
 
-// 导入销售机会列表的仓库
-const salesOpportunityStore = useSalesOpportunityStore()
-
 const getSalesOpportunityList = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   await salesOpportunityStore.getTableData(params)
@@ -226,13 +226,11 @@ const getSalesOpportunityList = async (params) => {
 }
 // 挂载时获得分页数据
 onMounted(() => {
-  // const bb = JSON.parse(JSON.stringify(Data))
-  // console.log('bb', bb)
-  const params = {
-    pageIndex: 1,
-    pageSize: 5
-  }
-  getSalesOpportunityList(params)
+  // const params = {
+  //   pageIndex: 1,
+  //   pageSize: 5
+  // }
+  getSalesOpportunityList(1, 5)
 })
 
 // 批量删除所选列表
@@ -346,7 +344,7 @@ const tableColumnAttribute = [
     label: '金额'
   },
   {
-    prop: 'status',
+    prop: 'sales_stage',
     label: '当前阶段'
   },
   {

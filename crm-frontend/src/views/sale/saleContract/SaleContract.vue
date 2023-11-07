@@ -256,8 +256,7 @@
   </el-drawer>
   <!-- 详情界面 -->
   <el-drawer v-model="dialogVisible2" title="合同详细" icon="Home" size="70%">
-    <!-- <ContractDetails
-      :contract-money="salesContractStore.money"
+    <!-- :contract-money="salesContractStore.money"
       :zero-out-money="salesContractStore.zero_money"
       :due-money="salesContractStore.owe_money"
       :start-date="salesContractStore.start_date"
@@ -273,9 +272,20 @@
       :third-table-data="sendData.thirdTableData"
       :fourth-table-data="sendData.fourthTableData"
       :purchaseContractUniqueField="sendData.purchaseContractUniqueField"
-      :handle-add-attachment="sendData.handleAddAttachment"
+      :handle-add-attachment="sendData.handleAddAttachment" -->
+    <ContractDetails
+      :contract-id="item.contract_no"
+      :contract-title="item.title"
+      :contract-money="item.money"
+      :zero-out-money="item.zero_money"
+      :due-money="item.owe_money"
+      :sellContractUniqueField="sellContractUniqueField"
+      :start-date="item.start_date"
+      :end-date="item.end_date"
+      :create-date="item.create_date"
+      :our-represent="item.our_represent"
     >
-    </ContractDetails> -->
+    </ContractDetails>
   </el-drawer>
   <!-- 添加商品 -->
   <el-drawer v-model="dialogVisible3" title="添加商品" size="80%">
@@ -371,6 +381,14 @@ const options = ref([
     label: '最近一年'
   }
 ])
+
+const sellContractUniqueField = ref({
+  refundMoney: '',
+  sellerNote: '',
+  customerName: '',
+  customerRepresent: ''
+})
+
 // 控制抽屉的显示与否
 let dialogVisible = ref(false)
 
@@ -538,10 +556,11 @@ const sendData = {
         item.value = {
           ...row
         }
+        sellContractUniqueField.value.refundMoney = item.value.deliver_money
         console.log('1', item)
         console.log('详细界面')
       },
-      actionName: '详细'
+      actionName: '详情'
     },
     {
       command: 'noDeliveryRequired',

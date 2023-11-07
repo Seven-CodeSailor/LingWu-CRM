@@ -25,7 +25,7 @@
       <template #menu>
         <div class="content">
           <div class="left">
-            <el-button type="primary" @click="add">添加数据</el-button>
+            <el-button type="primary" @click="handleAdd">添加数据</el-button>
             <el-button type="danger" @click="handleDelete">批量删除</el-button>
           </div>
           <div class="right">
@@ -49,7 +49,11 @@
               placeholder="请输入搜索名称"
               style="margin: 0 4px; width: 200px"
             />
-            <el-button type="primary" style="margin-left: 4px" @click="search">
+            <el-button
+              type="primary"
+              style="margin-left: 4px"
+              @click="handleSearch"
+            >
               <el-icon style="margin-right: 4px"><icon-search /></el-icon
               >搜索</el-button
             >
@@ -60,7 +64,7 @@
     <DictionaryManageFormCom
       :title="title"
       :options="managementStore.options"
-      :handle-submit="submit"
+      :handle-submit="handleSubmit"
       ref="dictionaryManageFormRef"
     ></DictionaryManageFormCom>
   </div>
@@ -177,7 +181,7 @@ const handleDelete = () => {
   }
 }
 
-const search = () => {
+const handleSearch = () => {
   if (!inputValue.value.length) {
     ElMessage.error('输入不能为空')
   } else {
@@ -200,12 +204,12 @@ const get1 = (state, row) => {
   }, 1000)
 }
 
-const add = () => {
+const handleAdd = () => {
   title.value = '字典添加'
   dictionaryManageFormRef.value.visible = true
 }
 
-const submit = () => {
+const handleSubmit = () => {
   dictionaryManageFormRef.value.visible = false
 }
 
