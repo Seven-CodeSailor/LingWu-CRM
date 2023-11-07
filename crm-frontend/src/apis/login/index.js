@@ -26,7 +26,7 @@ export const login = (data, success, fail) => {
       // 记录Token到本地
       if (data.data) {
         data.data.token =
-          'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTkyOTYzODksImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.ryOHSBH9Lc6noZlmA6S-X_1ACHvcSACLpIwNr7aKOVIW1OJg7fqUKi3NQrln-gdEmp3i6k4l73Kxotl4hygzq-J2SCJr-h15QyqL_Z6c7wDd_QAqi4Jx6idg2mK5jNbB2ZTCoKq4b0k85wFbgk2sdKftjM9-z5Z3O0TWXnyka0-rFG9Jxaw28LGQ3OdrdrTMPfoR9B-GNd0pKj-rlJu6rrjv_mcDO0K1aJaHiV_aecwXiQTv07O8C8oY_VBZ1bq-ctENK2OF6RbDhwW3bcSC7KKbgoQUJ8VsxV-Y9_9VjCuwxfOuOJ8Oj-L6T63WUBaaTI2GgHf4-YPowBjg67Df6g'
+          'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTkzOTI0MzgsImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.VmpFhObsxaAxsyICVIXtl1Ha3gmfj2gKDdeZdmMYltfFDt76QVWCUysB2PcouSOkfo_g9gKv23g8AC6DHOyTm84MxWO45a3rXZAXoDJbWt9jVd3s9dzUmIP02EiaJVgjAmTXwiCkYlfWF0b1-mkiQqNmODrrQkhuSEEcVqotlbB1UDFXEAyPBBagzIjoC2qqYTOqwrtyollw2CuWU8uAvsuhJU1NXuq1hvsPr1glJgytAtv00Va_KUcKW_bBoWR_IRpk5HrFO_kWddOWJMTLn1j8MGTDOHE5aZRHJLeEwf9Q1A_XXu44AagDZWxYh-gdcv3DTjfF-bQbwYr5D72GnQ'
         $store.setToken(data.data)
         // 执行成功回调
         success()

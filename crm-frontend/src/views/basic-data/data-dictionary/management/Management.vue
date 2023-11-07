@@ -100,18 +100,33 @@ const dropdownMenuActionsInfo = [
     command: 'delete',
     // row为当前行的数据
     handleAction: async (row) => {
-      await deleteTableData({ id: row.id }).then(async () => {
-        ElMessage({
-          type: 'success',
-          message: '删除成功'
-        })
-        baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-        await isUseInputValueGetTableData(
-          baseDataListRef.value.paginationData.pageSize,
-          baseDataListRef.value.paginationData.currentPage
-        )
-        baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+      ElMessageBox.confirm('确认要删除吗?', 'Warning', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
+        .then(async () => {
+          await deleteTableData({ id: row.id }).then(async () => {
+            ElMessage({
+              type: 'success',
+              message: '删除成功'
+            })
+            baseDataListRef.value.openLoading =
+              !baseDataListRef.value.openLoading
+            await isUseInputValueGetTableData(
+              baseDataListRef.value.paginationData.pageSize,
+              baseDataListRef.value.paginationData.currentPage
+            )
+            baseDataListRef.value.openLoading =
+              !baseDataListRef.value.openLoading
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '删除已取消'
+          })
+        })
     },
     actionName: '删除'
   },
@@ -185,12 +200,17 @@ const handleManyDelete = async () => {
   }
 }
 
-const handleSearch = () => {
+const handleSearch = async () => {
   if (!inputValue.value.length) {
     ElMessage.error('输入不能为空')
   } else {
-    // 搜索的逻辑
-    console.log('1')
+    // 清空下拉框的选项
+    chooseSelectRef.value.selectValue = selectVal.value = ''
+    await getTableData({
+      pageIndex: 1,
+      pageSize: 5,
+      name: inputValue.value
+    })
   }
 }
 
@@ -247,6 +267,8 @@ const handleAdd = () => {
 }
 // 下拉框事件函数
 const updateCid = async (selectValue) => {
+  // 清空搜索框的值
+  inputValue.value = ''
   selectVal.value = selectValue
   baseDataListRef.value.paginationData.pageSize = 5
   baseDataListRef.value.paginationData.currentPage = 1
@@ -284,14 +306,17 @@ const handleSubmit = () => {
           })
         })
       }
-      // 清空表单
+
       dictionaryManageFormRef.value.visible = false
+      // 清空表单
       dictionaryManageFormRef.value.form = {
         name: '',
         sort: 0,
         visible: false
       }
-      chooseSelectRef.value.selectValue = ''
+      // 清空下拉框的选项
+      chooseSelectRef.value.selectValue = selectVal.value = ''
+      // 清空表单里下拉框的选项
       dictionaryManageFormRef.value.chooseSelectRef.selectValue = ''
       baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
       await isUseInputValueGetTableData(
