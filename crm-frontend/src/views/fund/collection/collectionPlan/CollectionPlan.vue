@@ -10,6 +10,7 @@
         :usePagination="$store.sendData.usePagination"
         :page-sizes="$store.sendData.pageSizes"
         :total="$store.sendData.total"
+        @update-table-data="updateTableData"
       >
         <template #menu>
           <div class="space-between">
@@ -32,7 +33,10 @@
             </div>
             <div class="right">
               <div class="search">
-                <el-input v-model="searchData" placeholder="搜索"></el-input>
+                <el-input
+                  v-model="searchData"
+                  placeholder="搜索(按照计划时间)"
+                ></el-input>
                 <el-button
                   type="primary"
                   :icon="Search"
@@ -305,9 +309,27 @@ const $store = useCollectionPlan()
 
 onMounted(() => {
   //页面初始化，加载数据
-  $store.getCollectionPlanList({ pageIndex: 1, pageSize: 10 })
+  $store.getCollectionPlanList({ pageIndex: 1, pageSize: 2 })
 })
-
+const updateTableData = (pageSize, pageIndex) => {
+  $store.pageParams = [pageIndex, pageSize]
+  $store.getCollectionPlanList({ pageIndex, pageSize })
+}
+const searchData = ref('')
+const handleSearch = () => {
+  searchData.value === ''
+    ? $store.getCollectionPlanList({
+        pageIndex: $store.pageParams.pageIndex,
+        pageSize: $store.pageParams.pageSize
+      })
+    : $store.getCollectionPlanList(
+        {
+          pageIndex: $store.pageParams.pageIndex,
+          pageSize: $store.pageParams.pageSize
+        },
+        { backdate: searchData.value }
+      )
+}
 const handleMsgSend = (title, desc) => {
   console.log(title, desc)
 }
@@ -316,6 +338,16 @@ const handleEmailSend = (title, desc) => {
   console.log(title, desc)
 }
 
+const handleClose = () => {
+  console.log('handleClose')
+  showAddDrawer.value = false
+  showEditDrawer.value = false
+  showDialog.value = false
+}
+
+const handleBatchDelete = () => {
+  console.log('delete')
+}
 const dropdownMenuActionsInfo = [
   {
     command: '回款',

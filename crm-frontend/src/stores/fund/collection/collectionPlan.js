@@ -58,6 +58,10 @@ export const useCollectionPlan = defineStore('collectionPlan', {
       pageSizes: [2, 4, 6, 10],
       total: 10,
       useDropdownMenu: true
+    },
+    pageParams: {
+      pageSize: '',
+      pageIndex: ''
     }
   }),
   getters: {},
@@ -79,10 +83,12 @@ export const useCollectionPlan = defineStore('collectionPlan', {
               tagType: 'danger'
             })
       })
+      this.sendData.total = res.data.total
     },
 
     async updateCollectionPlan(data) {
       const res = await updateCollectionPlan(data).catch((e) => e)
+      //上传参数异常，做不了
       console.log('res', res)
     }
   }
