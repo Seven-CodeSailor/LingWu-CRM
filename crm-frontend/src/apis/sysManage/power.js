@@ -26,9 +26,10 @@ const deletePower = (data) => {
   )
 }
 
-const getPowerList = (pageParams, searchData) => {
-  return Request.requestForm(
-    Request.GET,
+//这里给的是POST，也没办法
+const getPowerList = (pageParams, searchData={}) => {
+  return Request.requestJson(
+    Request.POST,
     '/systemmanagement/fly-sys-method/getMethodList',
     {
       ...pageParams,

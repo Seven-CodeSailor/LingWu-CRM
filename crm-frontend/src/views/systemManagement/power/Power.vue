@@ -11,7 +11,7 @@
         :total="sendData.total"
         :use-header="sendData.useHeader"
         :title="sendData.title"
-        @update-table-data="get"
+        @update-table-data="updateTableData"
         ref="baseDataListRef"
       >
         <template #treeMeau>
@@ -129,10 +129,11 @@ import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import useSysPower from '@/stores/sysManage/power.js'
 import { Refresh, Search, Plus } from '@element-plus/icons-vue'
 import { onMounted, ref, reactive } from 'vue'
+
 const $store = useSysPower()
 
 onMounted(() => {
-  $store.init()
+  $store.getPowerList({ pageIndex: 1, pageSize: 2 })
 })
 const addFormData = reactive({
   mingcheng: '',
@@ -201,10 +202,9 @@ const handleCancel = () => {
   showAddDrawer.value = false
   console.log('取消')
 }
-const get = (pageSize, currentPage) => {
-  console.log('调用父组件的更新数据的函数')
-  console.log('pageSize', pageSize)
-  console.log('currentPage', currentPage)
+const updateTableData = (pageSize, pageIndex) => {
+  $store.pageParams = [pageSize, pageIndex]
+  $store.getPowerList({ pageIndex, pageSize })
 }
 </script>
 

@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:18:17
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-06 22:28:57
+ * @LastEditTime: 2023-11-07 19:52:47
  * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
  * @Description:
  *
@@ -28,6 +28,11 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
+        '/api/systemmanagement/': {
+          changeOrigin: true,
+          target: 'http://8.130.37.147:10300/',
+          rewrite: (path) => path.replace(/^\/api/, '')
+        },
         '/api/collection-man/': {
           changeOrigin: true,
           target: 'http://47.115.229.117:8090',

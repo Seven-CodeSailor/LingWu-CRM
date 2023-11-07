@@ -1,38 +1,25 @@
 import { defineStore } from 'pinia'
-
+import { getPowerList } from '@/apis/sysManage/power.js'
 const useSysPower = defineStore('syspower', {
   state: () => ({
     sendData: {
       tableColumnAttribute: [
         {
-          prop: 'mingcheng',
+          prop: 'name',
           label: '权限名称'
         },
         {
-          prop: 'miaoshu',
+          prop: 'value',
           label: '权限描述'
         }
       ],
-      tableData: [
-        {
-          mingcheng: '系统管理',
-          miaoshu: '系统描述'
-        },
-        {
-          mingcheng: '权限1',
-          miaoshu: 'qwq'
-        },
-        {
-          mingcheng: '权限2',
-          miaoshu: 'qwq'
-        }
-      ],
+      tableData: [],
       useDropdownMenu: false,
       useSelectColumn: false,
       useHeader: false,
       usePagination: true,
-      pageSizes: [2, 10, 15, 200],
-      total: 100,
+      pageSizes: [2, 10, 15, 30],
+      total: 10,
       //在树形菜单里显示
       title: ''
     },
@@ -85,17 +72,19 @@ const useSysPower = defineStore('syspower', {
           }
         ]
       }
-    ]
+    ],
+    pageParams: {
+      pageIndex: '',
+      pageSize: ''
+    }
   }),
 
   actions: {
-    //通过调用此函数改变store数据
-    setSysMenu(data) {
-      console.log('data-in-pinia', data)
-    },
-    //未来在这里发请求
-    init() {
-      console.log('发请求拿数据')
+    async getPowerList(pageParams, searchData) {
+      const res = await getPowerList(pageParams, searchData).catch((e) => e)
+      console.log('res', res)
+      this.sendData.tableData = res.data.rows
+      this.sendData.total = res.data.total
     }
   }
 })
