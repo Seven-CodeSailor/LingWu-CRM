@@ -1,7 +1,7 @@
 <template>
   <div class="IncomeType">
     <Tree
-      :data="treeData"
+      :data="incomeTypeStore.treeData"
       @append="handleAdd"
       @remove="handleRemove"
       @submit="handleSubmit"
@@ -63,8 +63,11 @@
 
 <script setup>
 import Tree from '@/components/Tree/Tree.vue'
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeMount } from 'vue'
+import { useIncomeTypeStore } from '@/stores/basic-data/financial-type/incometype'
+const incomeTypeStore = useIncomeTypeStore()
 const treeRef = ref(null)
+
 const data = ref({
   typeName: '',
   upTypeName: '',
@@ -86,6 +89,10 @@ const data1 = ref({
   visible: true,
   intro: '我是ikun你记住'
 })
+
+const getTreeData = async () => {
+  await incomeTypeStore.queryAllFeeincomeItem()
+}
 
 const handleAdd = (node) => {
   data.value = initData.value
@@ -109,28 +116,7 @@ const handleSubmit = () => {
   console.log('submit')
 }
 
-const treeData = [
-  {
-    id: 1,
-    label: '鸡窝',
-    children: [
-      {
-        id: 4,
-        label: '公鸡窝',
-        children: [
-          {
-            id: 9,
-            label: '鸡蛋'
-          },
-          {
-            id: 10,
-            label: '鸡蛋'
-          }
-        ]
-      }
-    ]
-  }
-]
+const treeData = ref([])
 
 const options = [
   {
@@ -154,6 +140,9 @@ const options = [
     label: 'Option5'
   }
 ]
+onMounted(async () => {
+  await getTreeData()
+})
 </script>
 
 <style lang="scss" scoped>

@@ -267,12 +267,15 @@ export const queryNamePullList = (
  * @return {*}
  */
 export const queryAllFeeincome = async (success, fail) => {
-  await Request.requestJson(Request.GET, 'url')
-    .then((response) => {
-      success(response)
+  await Request.requestJson(
+    Request.GET,
+    '/cpp1-apiv1/financial-management/feeincome/query-all-feeincome'
+  )
+    .then(async (response) => {
+      await success(response)
     })
-    .catch((error) => {
-      fail(error)
+    .catch(async (error) => {
+      await fail(error)
     })
 }
 /**

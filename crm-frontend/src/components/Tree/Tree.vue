@@ -1,9 +1,9 @@
 <!--
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-29 16:46:05
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-30 21:36:46
- * @FilePath: \zero-one-crmsys\crm-frontend\src\components\Tree\Tree.vue
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-07 23:35:05
+ * @FilePath: \crm-frontend\src\components\Tree\Tree.vue
  * @Description: 
  * 
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
@@ -87,7 +87,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const props = defineProps({
   data: {
@@ -96,7 +96,6 @@ const props = defineProps({
   }
 })
 
-console.log('props.whichComponent', props.whichComponent)
 //抽屉的显示状态
 const showDrawer = ref(false)
 
@@ -171,6 +170,10 @@ const handleClose = (done) => {
 defineExpose({
   isEdit,
   showDrawer
+})
+
+onMounted(() => {
+  console.log('dd', props.data)
 })
 </script>
 
