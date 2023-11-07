@@ -12,7 +12,7 @@
 import { defineStore } from 'pinia'
 // import { getCollectionPlanList } from '@/apis/fund/collectionPlan/index.js'
 import {
-  getCollectionList,
+  getCollectionPlanList,
   updateCollectionPlan
 } from '@/apis/fund/collectionPlan/index.js'
 export const useCollectionPlan = defineStore('collectionPlan', {
@@ -62,8 +62,8 @@ export const useCollectionPlan = defineStore('collectionPlan', {
   }),
   getters: {},
   actions: {
-    async getCollectionList(pageParams, searchParams) {
-      const res = await getCollectionList(pageParams, searchParams).catch(
+    async getCollectionPlanList(pageParams, searchParams) {
+      const res = await getCollectionPlanList(pageParams, searchParams).catch(
         (e) => e
       )
       console.log('res', res)

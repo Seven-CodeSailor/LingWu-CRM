@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:59:04
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-07 11:47:15
+ * @LastEditTime: 2023-11-07 12:24:22
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\fund\collectionPlan\index.js
  * @Description:
  *
@@ -10,7 +10,7 @@
  */
 import Request from '@/apis/request'
 
-const getCollectionList = (pageParams, searchParams = {}) => {
+const getCollectionPlanList = (pageParams, searchParams = {}) => {
   return Request.requestForm(
     Request.GET,
     '/collection-man/collectionplans/get-collectionplans',
@@ -28,4 +28,4 @@ const updateCollectionPlan = (data) => {
     data
   )
 }
-export { getCollectionList, updateCollectionPlan }
+export { getCollectionPlanList, updateCollectionPlan }
