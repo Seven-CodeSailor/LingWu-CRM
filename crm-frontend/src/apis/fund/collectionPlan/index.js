@@ -1,8 +1,8 @@
 /*
  * @Author: sayoriqwq 2531600563@qq.com
- * @Date: 2023-10-31 16:01:04
+ * @Date: 2023-11-05 21:59:04
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-02 13:48:59
+ * @LastEditTime: 2023-11-07 11:47:15
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\fund\collectionPlan\index.js
  * @Description:
  *
@@ -10,55 +10,22 @@
  */
 import Request from '@/apis/request'
 
-//获取回款列表
-const getCollectionPlanList = (pageParams) => {
-  return Request.requestJson(
+const getCollectionList = (pageParams, searchParams = {}) => {
+  return Request.requestForm(
     Request.GET,
-    // '/collectionplans/get-collectionplans',
-    'https://www.fastmock.site/mock/8e32bb7d22d2160aa723642e11594457/api/collectionplans/get-collectionplans',
+    '/collection-man/collectionplans/get-collectionplans',
     {
-      ...pageParams
+      ...pageParams,
+      ...searchParams
     }
   )
 }
-//添加回款计划
-const addCollectionPlan = (data) => {
-  return Request.requestJson(
-    Request.POST,
-    '/collectionplans/add-collection',
-    data
-  )
-}
 
-//修改回款计划
 const updateCollectionPlan = (data) => {
   return Request.requestJson(
     Request.PUT,
-    '/collectionplans/update-pay-plan',
+    '/collection-man/update-pay-plan',
     data
   )
 }
-
-//确认回款计划
-const updateConfirmCollectionPlan = (data) => {
-  return Request.requestJson(
-    Request.POST,
-    '/collection-plan/update-confirm-plan',
-    data
-  )
-}
-
-//删除回款计划
-const deleteCollectionPlan = (id) => {
-  return Request.requestJson(Request.DELETE, '/payback-manage/del-payplan', {
-    listid: id
-  })
-}
-
-export {
-  getCollectionPlanList,
-  addCollectionPlan,
-  updateCollectionPlan,
-  updateConfirmCollectionPlan,
-  deleteCollectionPlan
-}
+export { getCollectionList, updateCollectionPlan }

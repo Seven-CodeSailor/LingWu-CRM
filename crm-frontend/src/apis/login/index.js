@@ -31,8 +31,9 @@ export const login = (data, success, fail) => {
         // 冰雾测试接口的token
         // data.data.token =
         //   'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTkyMDQyMzcsImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.inkPd2E0H2DZZrCuhErMp4qXaSrHfaUfX6XN4BGe-1Hfajegeb0RiltDLjaGmDI1WUetI7iy6NaES6PTqquWgNMqJiECJl3iq8ouOS6BNF7zwZ-dtd7hh7iVtFwPUY6opIJEaLqly-Yy4QWyFcWBXg0-cbuIzVSmdFkVFY2jm2Gm2gKzVRxW3Y5G2ioS61uokszlwRMXuGonVb6lZ-Epdce1AH7sBySMUAPv0lqXLfj6H4HVjJ0ZbQNacfJTgjer-H68lSKzPmNmSfyEseXVTUnXtXeqossijuKHEtzfhgfDlQPJMr-yGxzAndsyIiTmJQCUOs3uyMY32oYCGR6KaQ'
-        
-        data.data.token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTkzODExMTAsImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.hu2fShFPnGXIlbwkPxm3vFTNwx8UdBhJaDwxFuiZJyRcC9lYcyqmzyrWkvA6b8PxiPSU957vzHt44feklBt7i_K-aKbCr5HhLx-0xV27W94kBVSscQWfImzRX1-FOJAHe0AxBfs5iT1bKeDgCoOz1kj3eDrBMujAh1P07ro0gbEa0gyttuIw1UTOVnTIgn8qCwQAi2EedVVIk3Hs5PfBbwhsjC5yklHtug7URpTRi0C1HHEOE9cINqCI_x6jmABCYEFypsXzTFgjs8QZJ0KW05Miae6hw0g39n4N2511edrfKvjNiMN8tJWQqmfcY73Dql6jh2JQARD7sEH6Ngv7xw'
+        //qianmeng 回款管理token
+        data.data.token =
+          'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTkzODExMTAsImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.hu2fShFPnGXIlbwkPxm3vFTNwx8UdBhJaDwxFuiZJyRcC9lYcyqmzyrWkvA6b8PxiPSU957vzHt44feklBt7i_K-aKbCr5HhLx-0xV27W94kBVSscQWfImzRX1-FOJAHe0AxBfs5iT1bKeDgCoOz1kj3eDrBMujAh1P07ro0gbEa0gyttuIw1UTOVnTIgn8qCwQAi2EedVVIk3Hs5PfBbwhsjC5yklHtug7URpTRi0C1HHEOE9cINqCI_x6jmABCYEFypsXzTFgjs8QZJ0KW05Miae6hw0g39n4N2511edrfKvjNiMN8tJWQqmfcY73Dql6jh2JQARD7sEH6Ngv7xw'
         $store.setToken(data.data)
         // 执行成功回调
         success()

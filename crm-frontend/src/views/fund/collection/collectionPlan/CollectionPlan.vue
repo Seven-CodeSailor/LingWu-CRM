@@ -129,6 +129,7 @@
       v-model="showAddDrawer"
       :before-close="handleClose"
       direction="rtl"
+      :destroy-on-close="true"
     >
       <template #header>
         <h3>添加回款计划</h3>
@@ -209,6 +210,7 @@
       v-model="showEditDrawer"
       :before-close="handleClose"
       direction="rtl"
+      :destroy-on-close="true"
     >
       <template #header>
         <h3>修改回款计划</h3>
@@ -331,7 +333,7 @@ const dropdownMenuActionsInfo = [
     // row为当前行的数据
     handleAction: (row) => {
       console.log('修改', row)
-      showDialog.value = true
+      showEditDrawer.value = true
     },
     actionName: '修改'
   },
@@ -390,7 +392,9 @@ const editData = ref({
   planBackAmount: 0
 })
 const handleEdit = (row) => {
-  $store.updateCollectionPlan(row)
+  console.log('row', row)
+  console.log('editData', editData)
+  $store.updateCollectionPlan(editData.value)
 }
 //!SECTION
 //SECTION - confirm

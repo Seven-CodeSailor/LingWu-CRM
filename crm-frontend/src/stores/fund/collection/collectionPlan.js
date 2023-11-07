@@ -11,7 +11,10 @@
 //1
 import { defineStore } from 'pinia'
 // import { getCollectionPlanList } from '@/apis/fund/collectionPlan/index.js'
-import { getCollectionList,updateCollectionPlan } from '@/apis/fund/college'
+import {
+  getCollectionList,
+  updateCollectionPlan
+} from '@/apis/fund/collectionPlan/index.js'
 export const useCollectionPlan = defineStore('collectionPlan', {
   state: () => ({
     clientNameList: ['sayoriqwq', 'sayori'],
@@ -59,27 +62,6 @@ export const useCollectionPlan = defineStore('collectionPlan', {
   }),
   getters: {},
   actions: {
-    //发请求拿table表的数据
-    // async getCollectionPlanList(pageParams) {
-    //   const data = await getCollectionPlanList(pageParams).catch((e) => {
-    //     ElMessage.warn(e.message)
-    //   })
-    //   if (!data.data) return
-    //   this.sendData.tableData = data.data.rows
-    //   //处理tag列数据
-    //   this.sendData.tableData.map((item) => {
-    //     item.weather === '已回款'
-    //       ? (item.data = {
-    //           value: '已回款',
-    //           tagType: 'success'
-    //         })
-    //       : (item.data = {
-    //           value: '未回款',
-    //           tagType: 'danger'
-    //         })
-    //   })
-    //   this.sendData.tableData = data.data.rows
-    // }
     async getCollectionList(pageParams, searchParams) {
       const res = await getCollectionList(pageParams, searchParams).catch(
         (e) => e
@@ -99,7 +81,7 @@ export const useCollectionPlan = defineStore('collectionPlan', {
       })
     },
 
-    async updateCollectionPlan(data){
+    async updateCollectionPlan(data) {
       const res = await updateCollectionPlan(data).catch((e) => e)
       console.log('res', res)
     }
