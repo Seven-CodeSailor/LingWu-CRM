@@ -43,13 +43,66 @@
           placeholder="输入供应商联系人"
           style="margin-right: 4px; width: 200px"
         />
-        <DropDown
-          :inputValue1="name"
-          inputTitle1="供应商名称"
-          :inputValue2="address"
-          inputTitle2="通信地址"
-          @handleSearch="handleSearch"
-        ></DropDown>
+        <div class="drop_down">
+          <el-dropdown
+            trigger="click"
+            ref="dropdownRef"
+            @visible-change="clearValue"
+          >
+            <el-button type="primary">
+              <el-icon><icon-caret-bottom /></el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-form>
+                <!-- 输入框1 -->
+                <el-form-item class="el-form-items">
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      供应商名称
+                    </h4>
+                    <el-input v-model="name" placeholder="搜索供应商名称" />
+                  </div>
+                </el-form-item>
+                <!-- 输入框2 -->
+                <el-form-item class="el-form-items">
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      通讯地址
+                    </h4>
+                    <el-input v-model="address" placeholder="搜索通信地址" />
+                  </div>
+                </el-form-item>
+                <!-- 搜索按钮 -->
+                <el-form-item class="el-form-items">
+                  <div
+                    style="
+                      padding: 10px;
+                      display: flex;
+                      justify-content: flex-end;
+                      width: 100%;
+                    "
+                  >
+                    <el-button type="primary" @click="search">搜索</el-button>
+                  </div>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-dropdown>
+        </div>
         <el-button
           type="primary"
           style="margin-left: 4px"
@@ -100,6 +153,9 @@
           </el-dropdown>
         </template>
       </el-table-column>
+      <template #empty>
+        <el-empty description="没有数据"></el-empty>
+      </template>
     </el-table>
     <!-- 分页器 -->
     <el-pagination
@@ -159,7 +215,7 @@
       </el-form-item>
       <el-form-item label="QQ">
         <el-input
-          v-model="supplierContact.tempLinkData.qq"
+          v-model="supplierContact.tempLinkData.qicq"
           placeholder="请输入QQ"
           style="width: 500px"
         />
@@ -220,7 +276,6 @@ import useSelect from '@/stores/customer/select.js'
 import { getCustomerName } from '@/apis/publicInterface.js'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
-import DropDown from '@/components/DropDown/DropDown.vue'
 import { ArrowDown } from '@element-plus/icons-vue'
 
 import {
@@ -298,6 +353,7 @@ const save = () => {
       supplierContact.tempLinkData,
       () => {
         ElMessage.success('添加成功')
+        initLinks(currentPage.value, pageSize.value)
       },
       () => {
         ElMessage.error('添加失败')
@@ -339,7 +395,7 @@ const selectChange = (value) => {
 const deleteByQuery = () => {
   let data = []
   selectIdArr.value.forEach((item) => {
-    data.push(item.customer_id)
+    data.push(item.linkman_id)
   })
   removelinkman(
     data,
@@ -418,11 +474,19 @@ const searchDetails = () => {
   )
   content.value = ''
 }
+const dropdownRef = ref(null)
+const clearValue = () => {
+  name.value = address.value = ''
+}
 // 下拉框搜索按钮回调
-const handleSearch = () => {
-  searchDetails()
-  name.value = ''
-  address.value = ''
+const search = () => {
+  if (!name.value || !address.value) {
+    ElMessage.error('输入不能为空')
+  } else {
+    searchDetails()
+    // 调用搜索函数后 关闭下拉菜单
+    dropdownRef.value.$el.click()
+  }
 }
 
 /**
@@ -466,5 +530,8 @@ header {
 .dialog-footer {
   display: flex;
   justify-content: space-around;
+}
+:deep(.el-form-items) {
+  margin-bottom: 0;
 }
 </style>

@@ -67,16 +67,82 @@
           placeholder="输入客户名称关键词"
           style="margin-right: 4px; width: 200px"
         />
-        <DropDown
-          :inputValue1="tel"
-          inputTitle1="座机"
-          :inputValue2="mobile"
-          inputTitle2="手机号"
-          :inputValue3="address"
-          inputTitle3="通信地址"
-          @handleSearch="handleSearch"
-          ref="dropdown"
-        ></DropDown>
+        <div class="drop_down">
+          <el-dropdown
+            trigger="click"
+            ref="dropdownRef"
+            @visible-change="clearValue"
+          >
+            <el-button type="primary">
+              <el-icon><icon-caret-bottom /></el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-form>
+                <!-- 输入框1 -->
+                <el-form-item class="el-form-items">
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      座机
+                    </h4>
+                    <el-input v-model="tel" placeholder="搜索座机" />
+                  </div>
+                </el-form-item>
+                <!-- 输入框2 -->
+                <el-form-item class="el-form-items">
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      手机号
+                    </h4>
+                    <el-input v-model="mobile" placeholder="搜索手机号" />
+                  </div>
+                </el-form-item>
+                <!-- 输入框3 -->
+                <el-form-item class="el-form-items">
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      通讯地址
+                    </h4>
+                    <el-input v-model="address" placeholder="搜索通讯地址" />
+                  </div>
+                </el-form-item>
+                <!-- 搜索按钮 -->
+                <el-form-item class="el-form-items">
+                  <div
+                    style="
+                      padding: 10px;
+                      display: flex;
+                      justify-content: flex-end;
+                      width: 100%;
+                    "
+                  >
+                    <el-button type="primary" @click="search">搜索</el-button>
+                  </div>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-dropdown>
+        </div>
         <el-button
           type="primary"
           style="margin-left: 4px"
@@ -187,7 +253,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, provide } from 'vue'
 import useMyClient from '@/stores/customer/myclient.js'
 import {
   getCustomer,
@@ -198,7 +264,6 @@ import {
 } from '@/apis/customer/index.js'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
-import DropDown from '@/components/DropDown/DropDown.vue'
 import { ArrowDown } from '@element-plus/icons-vue'
 import AddOrUpdateClient from './components/AddOrUpdateClient.vue'
 import AddContact from './components/AddContact.vue'
@@ -261,6 +326,12 @@ const initCustomer = async (
 onMounted(() => {
   initCustomer(currentPage.value, pageSize.value)
 })
+
+const inits = () => {
+  initCustomer(currentPage.value, pageSize.value)
+}
+
+provide('inits', inits)
 // 我的客户store仓库
 const myclient = useMyClient()
 // 当前页数
@@ -362,8 +433,8 @@ const coon = ref('')
 const nexts = ref('')
 const searchDetails = () => {
   initCustomer(
-    currentPage,
-    pageSize,
+    currentPage.value,
+    pageSize.value,
     coon.value,
     nexts.value,
     name.value,
@@ -377,16 +448,23 @@ const searchDetails = () => {
   nexts.value = ''
   name.value = ''
 }
-const dropdown = ref()
 const tel = ref('')
 const mobile = ref('')
 const address = ref('')
+
+const dropdownRef = ref(null)
+const clearValue = () => {
+  tel.value = address.value = mobile.value = ''
+}
 // 下拉框搜索按钮回调
-const handleSearch = () => {
-  searchDetails()
-  tel.value = ''
-  mobile.value = ''
-  address.value = ''
+const search = () => {
+  if (tel.value !== '' && mobile.value !== '' && address.value !== '') {
+    ElMessage.error('输入不能为空')
+  } else {
+    searchDetails()
+    // 调用搜索函数后 关闭下拉菜单
+    dropdownRef.value.$el.click()
+  }
 }
 
 /**
@@ -484,5 +562,8 @@ header {
 }
 .padding-bottom-5 {
   padding-bottom: 5px;
+}
+:deep(.el-form-items) {
+  margin-bottom: 0;
 }
 </style>

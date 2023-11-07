@@ -735,6 +735,26 @@ export const importCustomer = (str, success = () => {}, fail = () => {}) => {
 }
 
 /**
+ * 导入客户
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @returns
+ */
+export const receiveCustomer = (list, success = () => {}, fail = () => {}) => {
+  Request.requestJson(
+    Request.PUT,
+    '/crm-c2-customer-mycustomer/receive-custormer',
+    list
+  )
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
+
+/**
  * 获取联系人名称
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调

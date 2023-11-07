@@ -90,7 +90,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import useMyClient from '@/stores/customer/myclient.js'
 import useSelect from '@/stores/customer/select.js'
 import {
@@ -142,6 +142,7 @@ const addMyClinet = () => {
   getSelect()
   dialogVisible.value = true
 }
+const inits = inject('inits')
 // 添加或修改客户按钮确定回调
 const save = () => {
   dialogVisible.value = false
@@ -150,6 +151,7 @@ const save = () => {
       myclient.customerInfo,
       () => {
         ElMessage.success('添加成功')
+        inits()
       },
       () => {
         ElMessage.error('添加失败')
@@ -160,6 +162,7 @@ const save = () => {
       myclient.customerInfo,
       () => {
         ElMessage.success('修改成功')
+        inits()
       },
       () => {
         ElMessage.error('修改失败')
@@ -202,6 +205,9 @@ const flag = ref(false)
 const close = () => {
   if (flag.value) {
     myclient.customerReset()
+    belong.value.reset()
+    level.value.reset()
+    industry.value.reset()
     flag.value = false
   }
 }

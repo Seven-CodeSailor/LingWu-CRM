@@ -1,11 +1,8 @@
 <template>
   <el-drawer
     v-model="dialogVisible"
-    :title="
-      supplierList.addOrUpdateSupplier.supplierId === ''
-        ? '添加供应商'
-        : '修改供应商'
-    "
+    :title="!flag ? '添加供应商' : '修改供应商'"
+    @close="close"
     size="50%"
   >
     <el-form
@@ -40,7 +37,7 @@
       </el-form-item>
       <el-form-item label="联系人">
         <el-input
-          v-model="supplierList.addOrUpdateSupplier.linkman"
+          v-model="supplierList.addOrUpdateSupplier.linkman_name"
           placeholder="请输入联系人"
           style="width: 500px"
         />
@@ -91,7 +88,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import useSelect from '@/stores/customer/select.js'
 import { getCustomerName } from '@/apis/publicInterface.js'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
@@ -100,6 +97,8 @@ import useSupplierList from '@/stores/supplier/list/list.js'
 import { addSupplier, modifySupplier } from '@/apis/supplier/supplierList.js'
 
 const supplierList = useSupplierList()
+
+const inits = inject('inits')
 
 // 控制添加或修改客户信息对话框的显示与隐藏
 let dialogVisible = ref(false)
@@ -110,7 +109,7 @@ const ecoType = ref()
 const indType = ref()
 const getEcoType = async () => {
   await getCustomerName()
-  supplierList.addOrUpdateSupplier.ecitype = ecoType.value.selectValue.value
+  supplierList.addOrUpdateSupplier.ecotype = ecoType.value.selectValue.value
 }
 const getIndType = async () => {
   await getCustomerName()
@@ -118,16 +117,15 @@ const getIndType = async () => {
 }
 // 点击添加按钮的回调
 const addMyClinet = () => {
-  getEcoType()
   dialogVisible.value = true
 }
 // 添加按钮确定回调
 const save = async () => {
-  if (supplierList.addOrUpdateSupplier.supplierId === '') {
-    console.log(supplierList.addOrUpdateSupplier)
+  if (!flag.value) {
     await addSupplier(
       supplierList.addOrUpdateSupplier,
       () => {
+        inits()
         ElMessage.success('添加成功')
       },
       () => {
@@ -150,12 +148,23 @@ const save = async () => {
   indType.value.reset()
   select.resetData()
   dialogVisible.value = false
+  flag.value = false
+}
+const flag = ref(false)
+const close = () => {
+  if (flag.value) {
+    supplierList.addOrUpdateSupplierReset()
+    flag.value = false
+  }
 }
 // 修改按钮回调
-const modify = async (row) => {
-  await getCustomerName(row.supplierId)
-  supplierList.addOrUpdateSupplierReset.supplierId = row.supplierId
+const modify = (row) => {
+  const item = supplierList.tableData.find((item) => {
+    return item.supplier_id === row.supplier_id
+  })
+  supplierList.addOrUpdateSupplier = item
   dialogVisible.value = true
+  flag.value = true
 }
 
 defineExpose({
