@@ -28,10 +28,10 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
-        '/api/cpp1-dictionary': {
+        '/api/cpp1-apiv1': {
           changeOrigin: true,
           target: 'http://8.130.16.24:8090',
-          rewrite: (path) => path.replace(/^\/api\/cpp1-dictionary/, '')
+          rewrite: (path) => path.replace(/^\/api\/cpp1-apiv1/, '')
         },
         // 库存管理接口的跨域处理
         '/api/cpp5-inventory': {

@@ -9,11 +9,13 @@
           <el-form-item label="名称" prop="name">
             <el-input placeholder="请输入名称" v-model="form.name"></el-input>
           </el-form-item>
-          <el-form-item label="父级栏目" prop="selectValue">
+          <el-form-item label="父级栏目">
             <el-tree-select
-              v-model="form.selectValue"
+              v-model="form.parentID"
               :data="props.areaTreeData"
               :render-after-expand="false"
+              check-strictly
+              default-expand-all
             />
           </el-form-item>
           <el-form-item label="排序" prop="sort">
@@ -53,7 +55,7 @@ const form = ref({
   sort: 0,
   visible: false,
   intro: '',
-  selectValue: ''
+  parentID: ''
 })
 
 const props = defineProps({
@@ -80,7 +82,6 @@ const formRef = ref(null)
 const rules = ref({
   name: [{ required: true, message: '请输入地区名称', trigger: 'blur' }],
   intro: [{ required: true, message: '请输入地区描述', trigger: 'blur' }],
-  selectValue: [{ required: true, message: '请选择父级栏目', trigger: 'blur' }],
   sort: [{ required: true, message: '', trigger: 'change' }]
 })
 
@@ -91,7 +92,7 @@ const handleClear = () => {
       sort: 0,
       visible: false,
       intro: '',
-      selectValue: ''
+      parentID: ''
     }
   }
   visible.value = false
