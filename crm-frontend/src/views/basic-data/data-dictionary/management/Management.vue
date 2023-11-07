@@ -247,18 +247,18 @@ const updateSwitchState = async (state, row) => {
   baseDataListRef.value.openSwitchLoading =
     !baseDataListRef.value.openSwitchLoading
   row.visible = state ? 1 : 0
-  await modifyTableData({ ...row }).then(() => {
+  await modifyTableData({ ...row }).then(async () => {
     ElMessage({
       message: '操作成功',
       type: 'success'
     })
+    await isUseInputValueGetTableData(
+      baseDataListRef.value.paginationData.pageSize,
+      baseDataListRef.value.paginationData.currentPage
+    )
+    baseDataListRef.value.openSwitchLoading =
+      !baseDataListRef.value.openSwitchLoading
   })
-  await isUseInputValueGetTableData(
-    baseDataListRef.value.paginationData.pageSize,
-    baseDataListRef.value.paginationData.currentPage
-  )
-  baseDataListRef.value.openSwitchLoading =
-    !baseDataListRef.value.openSwitchLoading
 }
 
 const handleAdd = () => {

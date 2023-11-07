@@ -178,11 +178,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useSalesContractStore } from '@/stores/salesmanager/SalesContract.js'
-
-// 导入销售合同列表的仓库
-const useSalesContractStore1 = useSalesContractStore()
+import { ref } from 'vue'
 
 const props = defineProps({
   // 标题
@@ -353,20 +349,6 @@ defineExpose({
   paginationData,
   // 开关的loading
   openSwitchLoading
-})
-
-const getSalesContractList = async (params) => {
-  await useSalesContractStore1.getTableData(params)
-}
-// 挂载时获得分页数据
-onMounted(() => {
-  // const bb = JSON.parse(JSON.stringify(Data))
-  // console.log('bb', bb)
-  const params = {
-    pageIndex: 1,
-    pageSize: 5
-  }
-  getSalesContractList(params)
 })
 </script>
 
