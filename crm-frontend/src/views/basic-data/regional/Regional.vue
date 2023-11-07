@@ -27,8 +27,7 @@
             </div>
           </template>
           <el-tree
-            :data="treeData.treeArr"
-            :props="treeData.defaultProps"
+            :data="regionalStore.areaTreeData"
             highlight-current="true"
             default-expand-all="true"
             draggable
@@ -40,7 +39,7 @@
       <template #menu
         ><div class="content">
           <div class="left">
-            <el-button type="primary" @click="addArea">添加数据</el-button>
+            <el-button type="primary" @click="handleAdd">添加数据</el-button>
           </div>
           <div class="right">
             <el-input
@@ -48,7 +47,11 @@
               placeholder="请输入搜索名称"
               style="margin: 0 4px; width: 200px"
             />
-            <el-button type="primary" style="margin-left: 4px">
+            <el-button
+              type="primary"
+              style="margin-left: 4px"
+              @click="handleSearch"
+            >
               <el-icon style="margin-right: 4px"><icon-search /></el-icon
               >搜索</el-button
             >
@@ -72,87 +75,6 @@ import { useRegionalStore } from '@/stores/basic-data/regional/regional'
 import { ref, onMounted } from 'vue'
 const regionalFormRef = ref(null)
 const regionalStore = useRegionalStore()
-// const sendData = {
-//   tableColumnAttribute: [
-//     {
-//       prop: 'areaName',
-//       label: '地区名称'
-//     },
-//     {
-//       prop: 'areaInfo',
-//       label: '地区描述'
-//     },
-//     {
-//       prop: 'sort',
-//       label: '排序',
-//       sortable: true
-//     },
-//     {
-//       prop: 'visible',
-//       label: '是否启用',
-//       useSwitch: true
-//     }
-//   ],
-//   tableData: [
-//     {
-//       areaName: '鸡场',
-//       areaInfo: 'ikun集中营',
-//       sort: 250,
-//       visible: false
-//     },
-//     {
-//       areaName: '鸡场',
-//       areaInfo: 'ikun集中营',
-//       sort: 251,
-//       visible: true
-//     },
-//     {
-//       areaName: '鸡场',
-//       areaInfo: 'ikun集中营',
-//       sort: 252,
-//       visible: true
-//     }
-//   ],
-//   // 传入删除操作的函数就会显示删除按钮
-//   handleDelete: (row) => {
-//     console.log('删除', row)
-//   },
-//   handleEdit: (row) => {
-//     console.log('编辑', row)
-//     regionalFormRef.value.visible = true
-//     title.value = '修改'
-//     regionalFormRef.value.form = { ...row }
-//     // setTimeout(() => {
-//     //   regionalFormRef.value.chooseSelectRef.selectValue =
-//     // })
-//   },
-//   pageSizes: [5, 10, 15],
-//   total: 100,
-//   usePagination: true
-// }
-
-const treeData = {
-  treeArr: [
-    {
-      label: '鸡窝',
-      children: [
-        {
-          label: '🐓公鸡',
-          children: [
-            {
-              label: '鸡蛋'
-            }
-          ]
-        }
-      ]
-    }
-  ],
-
-  defaultProps: {
-    children: 'children',
-    label: 'label'
-  }
-}
 
 const title = ref('')
 const rowId = ref('')
@@ -224,13 +146,19 @@ const handleDelete = (row) => {
 }
 const handleEdit = (row) => {
   const { name, intro, sort, visible, id } = row
+  console.log('row', intro)
   rowId.value = id
   regionalFormRef.value.visible = true
   // treeData的数据回显
   const data = findObjectById(regionalStore.areaTreeData, id)
   title.value = '修改'
   // 数据回显
-  regionalFormRef.value.form = { name, intro, sort, visible }
+  regionalFormRef.value.form = {
+    name,
+    intro,
+    sort,
+    visible: visible ? true : false
+  }
 }
 
 const findObjectById = (arr, parentID) => {

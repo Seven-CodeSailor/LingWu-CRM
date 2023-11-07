@@ -1,8 +1,8 @@
 <!--
  * @Author: BINGWU
  * @Date: 2023-10-30 18:29:35
- * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-05 15:00:38
+ * @LastEditors: setti5 2283356040@qq.com
+ * @LastEditTime: 2023-11-05 23:27:55
  * @FilePath: \crm-frontend\src\views\basic-data\warehouse\WarehouseFrom.vue
  * @Describe: 
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა

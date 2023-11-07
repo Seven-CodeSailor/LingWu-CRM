@@ -1,3 +1,13 @@
+<!--
+ * @Author: setti5 2283356040@qq.com
+ * @Date: 2023-10-28 21:29:26
+ * @LastEditors: setti5 2283356040@qq.com
+ * @LastEditTime: 2023-11-06 21:05:33
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\views\person-homepage\notice\Notice.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!-- :total="noticeStore.total" -->
+
 <template>
   <div class="notice">
     <BaseDataList
@@ -5,17 +15,12 @@
       :table-column-attribute="tableColumnAttribute"
       :use-operate-column="true"
       :page-sizes="[5, 10, 15]"
-      :total="stockStorageDetailsStore.tableTotal"
-      :table-data="noticeStore.data"
+      :total="noticeStore.total"
+      :table-data="noticeStore.tableData"
       :dropdown-menu-actions-info="dropdownMenuActionsInfo"
       :useDropdownMenu="true"
-      @update-table-data="
-        (pageSize, currentPage) =>
-          getStockStorageList({
-            pageSize,
-            pageIndex: currentPage
-          })
-      "
+      @updateTableData="handelPageChange"
+      
       ref="baseDataListRef"
     >
       <!-- 导航图标 -->
@@ -69,33 +74,35 @@
     </BaseDataList>
 
     <!-- 添加的抽屉内容 -->
-    <el-drawer v-model="addDrawer" title="添加通知" direction="rtl">
+    <el-drawer v-model="addDrawer" title="添加通知" >
       <el-form
-        ref="ruleFormRef"
-        :model="ruleForm"
+        ref="formRef"
+        :model="form"
         :rules="rules"
         label-width="120px"
-        class="demo-ruleForm"
+        class="demo-form"
       >
-        <el-form-item label="通知标题" prop="toTitle">
-          <el-input v-model="ruleForm.name" placeholder="输入标题" />
+        <el-form-item label="通知标题" prop="Title">
+          <el-input v-model="form.title" placeholder="输入标题" />
         </el-form-item>
         <el-form-item label="通知对象" prop="toDepartment">
           <ChooseSelect
+          v-model="form.ownerDeptId"
             :options="options"
             des="请选通知部门"
             style="width: 60%"
           ></ChooseSelect>
         </el-form-item>
-        <el-form-item label="指定对象" prop="toPerson">
+        <el-form-item label="指定对象" prop="Person">
           <ChooseSelect
-            :options="options"
+          v-model="form.ownerUserId"
+            :options="noticeStore.optionsUserName"
             des="请选指定对象"
             style="width: 60%"
           ></ChooseSelect>
         </el-form-item>
-        <el-form-item label="通知内容">
-          <el-input v-model="textarea" :rows="2" type="textarea" />
+        <el-form-item label="通知内容" prop="Intro">
+          <el-input v-model="form.content" :rows="2" type="textarea" />
         </el-form-item>
         <el-form-item margin-top="20px">
           <el-button>取消</el-button>
@@ -130,10 +137,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useStockStorageDetailsStore } from '@/stores/inventory/stockstoragedetails.js'
-import { ElMessage } from 'element-plus'
-import { useNotice } from '../../../stores/inventory/notice'
+import { useNoticeStore } from '@/stores/person-homepage/notice.js'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
+
+const addDrawerData = async (params) => {
+  return await noticeStore.postNoticeStore(params)
+}
 
 // 批量删除的逻辑
 const deleteBatches = () => {
@@ -153,7 +163,7 @@ const readBatches = () => {
 }
 
 // 表格数据引入
-const noticeStore = useNotice()
+const noticeStore = useNoticeStore()
 
 // 操作栏下拉菜单选项
 const dropdownMenuActionsInfo = [
@@ -183,39 +193,25 @@ const dropdownMenuActionsInfo = [
     },
     actionName: '删除'
   },
-  {
-    command: 'edit',
-    handleAction: (row) => {
-      console.log('修改的回调函数', row)
-    },
-    actionName: '修改'
-  },
-  {
-    command: 'add',
-    handleAction: (row) => {
-      console.log('添加的回调函数', row)
-    },
-    actionName: '添加'
-  }
 ]
 
 // 表格标题栏
 const tableColumnAttribute = [
   {
-    prop: 'headline',
+    prop: 'title',
     label: '标题'
   },
   {
-    prop: 'publishing_content',
+    prop: 'content',
     label: '发布内容'
   },
   {
-    prop: 'publisher',
-    label: '发布人'
+    prop: 'createTime',
+    label: '发布时间'
   },
   {
-    prop: 'release_time',
-    label: '发布时间'
+    prop: 'createUserId',
+    label: '发布人'
   },
   {
     prop: 'status',
@@ -223,7 +219,7 @@ const tableColumnAttribute = [
     useTag: true
   },
   {
-    prop: 'recipient',
+    prop: 'ownerUserId',
     label: '接收人'
   }
 ]
@@ -238,10 +234,11 @@ const addDrawer = ref(false)
 const addEvent = () => {
   addDrawer.value = true
 }
-const ruleForm = ref({
-  toTitle: '',
-  toDepartment: '',
-  toPerson: ''
+const form = ref({
+  title: '',
+  ownerDeptId: '',
+  ownerUserId: '',
+  content: '',
 })
 // 通知中的部门选项
 const options = ref([
@@ -297,27 +294,27 @@ const rules = {
 
 // 搜索框条件
 const stockStorageDetailsStore = useStockStorageDetailsStore()
-const searchDetails = () => {
-  console.log('t', stockStorageDetailsStore.tableData)
-  if (!inputValue.value) {
-    ElMessage.error('输入不能为空')
-  } else {
-    console.log('pp', baseDataListRef.value.paginationData)
-    baseDataListRef.value.paginationData.pageSize = 5
-    baseDataListRef.value.paginationData.currentPage = 1
-    // 搜索数据的时候就重新初始化页面容量和当前页的页码
-    const params = {
-      pageSize: 5,
-      pageIndex: 1
-    }
-    getStockStorageList(params)
-  }
-}
-const getStockStorageList = async (params) => {
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  await stockStorageDetailsStore.getTableData(params)
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-}
+// const searchDetails = () => {
+//   console.log('t', stockStorageDetailsStore.tableData)
+//   if (!inputValue.value) {
+//     ElMessage.error('输入不能为空')
+//   } else {
+//     console.log('pp', baseDataListRef.value.paginationData)
+//     baseDataListRef.value.paginationData.pageSize = 5
+//     baseDataListRef.value.paginationData.currentPage = 1
+//     // 搜索数据的时候就重新初始化页面容量和当前页的页码
+//     const params = {
+//       pageSize: 5,
+//       pageIndex: 1
+//     }
+//     getStockStorageList(params)
+//   }
+// }
+// const getStockStorageList = async (params) => {
+//   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+//   await stockStorageDetailsStore.getTableData(params)
+//   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+// }
 
 // 查看公告
 const detail = ref({
@@ -355,14 +352,20 @@ const operateData = ref([
 ])
 
 //表单提交逻辑
-const props = defineProps({
-  handleSubmit: {
-    type: Function,
-    default: () => {
-      console.log('sumbit')
-    }
+const handleSubmit= () => {
+  console.log('sumbit')
+  console.log(form.value);
+  const params = {
+    ...form.value
   }
-})
+  params.ownerDeptId = 
+  addDrawer.value = false
+}
+  
+// 分页器的数据方法-暮秋
+// const handelPageChange = (currentPage, pageSize) => {
+//   console.log(currentPage, pageSize);
+// }
 
 // 分页逻辑
 onMounted(() => {
@@ -370,8 +373,17 @@ onMounted(() => {
     pageIndex: 1,
     pageSize: 5
   }
-  getStockStorageList(params)
-  noticeStore.getData()
+  // getStockStorageList(params)
+  noticeStore.getNoticeStore(params)
+  noticeStore.getOptionsUserName()
+
+  // 暮秋的逻辑
+  // noticeStore.getNoticeApi({
+  //     content,
+  //     pageIndex,
+  //     pageSize,
+  //     title
+  // })
 })
 </script>
 
