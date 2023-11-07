@@ -127,37 +127,59 @@ const modifyTableData = async (params) => {
   return await regionalStore.modifyAreaItem(params)
 }
 
+function findObjectById(arr, id) {
+  for (const item of arr) {
+    if (item.id === id) {
+      return item
+    }
+    if (item.children && item.children.length > 0) {
+      const foundInChildren = findObjectById(item.children, id)
+      if (foundInChildren) {
+        return foundInChildren
+      }
+    }
+  }
+  return null
+}
+
 const handleDelete = (row) => {
-  ElMessageBox.confirm('确认要删除吗?', 'Warning', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    type: 'warning'
-  })
-    .then(async () => {
-      await deleteTableData({ id: row.id })
-        .then(async (res) => {
-          ElMessage({
-            message: res.message,
-            type: 'success'
+  const option = findObjectById(regionalStore.areaTreeData, row.id)
+  if (option.children.length > 0) {
+    ElMessage.error('禁止删除根节点')
+  } else {
+    ElMessageBox.confirm('确认要删除吗?', 'Warning', {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+      .then(async () => {
+        await deleteTableData({ id: row.id })
+          .then(async (res) => {
+            ElMessage({
+              message: res.message,
+              type: 'success'
+            })
+            baseDataListRef.value.openLoading =
+              !baseDataListRef.value.openLoading
+            await isUseInputValueGetTableData(
+              baseDataListRef.value.paginationData.pageSize,
+              baseDataListRef.value.paginationData.currentPage
+            )
+            baseDataListRef.value.openLoading =
+              !baseDataListRef.value.openLoading
+            await getTreeData()
           })
-          baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-          await isUseInputValueGetTableData(
-            baseDataListRef.value.paginationData.pageSize,
-            baseDataListRef.value.paginationData.currentPage
-          )
-          baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-          await getTreeData()
-        })
-        .catch((err) => {
-          console.log('error', err)
-        })
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '删除取消'
+          .catch((err) => {
+            console.log('error', err)
+          })
       })
-    })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '删除取消'
+        })
+      })
+  }
 }
 const handleEdit = (row) => {
   regionalFormRef.value.visible = true
@@ -210,7 +232,7 @@ const isUseInputValueGetTableData = async (pageSize, pageIndex) => {
       queryCondition: inputValue.value
     })
   } else if (nodeId.value) {
-    // 如果右边选中了tree
+    // 如果左边选中了tree
     await regionalStore.getListAreaItem({
       pageSize,
       pageIndex,
