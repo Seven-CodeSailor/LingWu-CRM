@@ -216,9 +216,9 @@
       <template #default>
         <div>
           <el-form v-model="editData">
-            <el-form-item label="客户名称" prop="supplierName">
+            <el-form-item label="客户名称" prop="clientName">
               <el-select
-                v-model="confirmData.supplierName"
+                v-model="editData.clientName"
                 placeholder="请选择客户名称"
                 @change="handleClientNameChange"
               >
@@ -232,7 +232,7 @@
             </el-form-item>
             <el-form-item label="销售合同" prop="purchaseOrder">
               <el-select
-                v-model="confirmData.purchaseOrder"
+                v-model="editData.saleContract"
                 placeholder="请选择客户销售合同"
               >
                 <el-option
@@ -255,7 +255,12 @@
             <el-form-item label="已开发票金额">
               <el-input v-model="invoiceAmount" disabled></el-input>
             </el-form-item>
-            <el-form-item label="回款日期" prop="planBackDate"></el-form-item>
+            <el-form-item label="回款日期" prop="planBackDate">
+              <el-date-picker
+                type="datetime"
+                v-model="editData.planBackDate"
+              ></el-date-picker>
+            </el-form-item>
             <el-form-item label="期次" prop="period">
               <el-input v-model="totalAmount" disabled></el-input>
             </el-form-item>
@@ -298,7 +303,8 @@ const $store = useCollectionPlan()
 
 onMounted(() => {
   //页面初始化，加载数据
-  $store.getCollectionPlanList({ pageIndex: 1, pageSize: 10 })
+  // $store.getCollectionPlanList({ pageIndex: 1, pageSize: 10 })
+  $store.getCollectionList({ pageIndex: 1, pageSize: 10 })
 })
 
 const handleMsgSend = (title, desc) => {
@@ -383,7 +389,9 @@ const editData = ref({
   period: 0,
   planBackAmount: 0
 })
-
+const handleEdit = (row) => {
+  $store.updateCollectionPlan(row)
+}
 //!SECTION
 //SECTION - confirm
 const showDialog = ref(false)
