@@ -4,18 +4,19 @@
       title="消息通知"
       :table-column-attribute="tableColumnAttribute"
       :use-operate-column="true"
+      :dropdown-menu-actions-info="dropdownMenuActionsInfo"
       :page-sizes="[5, 10, 15]"
-      :total="stockStorageDetailsStore.tableTotal"
-      :table-data="noticeStore.data"
+      :total="messageStore.total"
+      :table-data="messageStore.tableData"
       :handle-delete="handleDelete"
+      ref="baseDataListRef"
       @update-table-data="
         (pageSize, currentPage) =>
-          getStockStorageList({
+        queryMessageStore({
             pageSize,
             pageIndex: currentPage
           })
       "
-      ref="baseDataListRef"
     >
       <!-- 导航图标 -->
       <template #ico>
@@ -42,7 +43,8 @@
             <el-input
               v-model="inputValue"
               placeholder="输入关键字搜索"
-              style="margin-right: 4px; width: auto"
+              style="margin-right: 4px; width: 224px"
+              clearable
             />
             <!-- 搜索按钮还差读取数据逻辑和加载动画 -->
             <el-button
@@ -100,18 +102,30 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useStockStorageDetailsStore } from '@/stores/inventory/stockstoragedetails.js'
-import { ElMessage, ElMessageBox  } from 'element-plus'
-import { useNotice } from '../../../stores/inventory/notice'
+import { useMessageStore } from '@/stores/person-homepage/message.js'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
+// import { queryMessage } from '../../../apis/personal-homapage/message'
 
 // 批量删除的逻辑
-const deleteBatches = () => {
+const deleteBatches = async () => {
   if (!baseDataListRef.value.rows.length) {
-    ElMessage.error('请先选择')
+    ElMessage.error('请先选择将要删除的选项')
   } else {
-    console.log('1')
+    const ids = baseDataListRef.value.rows.map((row) => {
+      return rows.storeId
+    })
+    await deleteBatches({ ids }).then((res) => {
+      ElMessage({
+        message: res.message,
+        type: 'success'
+      })
+    })
+    await getTableData({
+      pageIndex: baseDataListRef.value.paginationData.currentPage,
+      pageSize: baseDataListRef.value.paginationData.pageSize
+    })
+    // console.log('1')
   }
 }
 // 批量已读的逻辑(批量已读的逻辑未定)
@@ -124,38 +138,86 @@ const readBatches = () => {
 }
 
 // 表格数据引入（必须
-const noticeStore = useNotice()
+const messageStore = useMessageStore()
 
 // 表格标题栏
-const tableColumnAttribute = [
+const tableColumnAttribute = ref([
   {
-    prop: 'message_type',
+    prop: 'id',
+    label: '序号',
+  },
+  {
+    prop: 'msgType',
     label: '消息类型'
   },
   {
-    prop: 'reminder_content',
-    label: '提醒内容'
+    prop: 'msgTitle',
+    label: '消息主题'
   },
   {
-    prop: 'reminder_time',
-    label: '提醒时间'
-  },
-  {
-    prop: 'creation_time',
-    label: '创建时间'
-  },
-  {
-    prop: 'status',
-    label: '状态',
+    prop: 'flag',
+    label: '消息状态',
     useTag: true
   },
+  {
+    prop: 'urlType',
+    label: 'Url类型'
+  },
+  {
+    prop: 'urlId',
+    label: 'Url编号',
+  },
+  {
+    prop: 'ownerUserId',
+    label: '所属用户编号',
+  },
+  {
+    prop: 'createTime',
+    label: '创建时间',
+  },
+  {
+    prop: 'remindTime',
+    label: '提醒时间',
+  },
+])
+const dropdownMenuActionsInfo = [
+  {
+    command: 'delete',
+    handleAction: async (row) => {
+      ElMessageBox.confirm('您确定要删除该条数据吗?', '警告', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          deleteTableData({ ids: [row.storeId] }).then((res) => {
+            ElMessage({
+              message: res.message,
+              type: 'success'
+            })
+          })
+          getTableData({
+            pageIndex: baseDataListRef.value.paginationData.currentPage,
+            pageSize: baseDataListRef.value.paginationData.pageSize
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '删除已取消'
+          })
+        })
+    },
+    actionName: '删除'
+  },
 ]
+
 // 批量删除和已读的逻辑需要
 const baseDataListRef = ref(null)
 const inputValue = ref('')
 
-// 搜索框条件
-const stockStorageDetailsStore = useStockStorageDetailsStore()
+//搜索框条件
+// const messageStore = useMessageStore()
 const searchDetails = () => {
   console.log('t', stockStorageDetailsStore.tableData)
   if (!inputValue.value) {
@@ -169,10 +231,11 @@ const searchDetails = () => {
       pageSize: 5,
       pageIndex: 1
     }
-    getStockStorageList(params)
+    // queryMessageStore(params)
   }
 }
-const getStockStorageList = async (params) => {
+
+const queryMessageStore = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   await stockStorageDetailsStore.getTableData(params)
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
@@ -184,8 +247,8 @@ onMounted(() => {
     pageIndex: 1,
     pageSize: 5
   }
-  getStockStorageList(params)
-  noticeStore.getData()
+  messageStore.getMessageStore(params)
+  // noticeStore.getData()
 })
 
 // 删除单条数据
@@ -276,15 +339,7 @@ const rules = {
     }
   ]
 }
-//表单提交逻辑
-const props = defineProps({
-  handleSubmit: {
-    type: Function,
-    default: () => {
-      console.log('sumbit')
-    }
-  }
-})
+
 </script>
 
 <style lang="scss" scoped>

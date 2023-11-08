@@ -9,7 +9,7 @@
       <el-form
       :model="form"
       label-width="120px"
-      style="margin: 18px 40px"
+      style="margin: 18px 20px"
       ref="ruleFormRef"
       :rules="rules"
       class="demo-ruleForm"
@@ -23,16 +23,13 @@
           style="margin: 18px 40px"
           ref="ruleFormRef"
           :rules="rules"
-          class="demo-ruleForm"
-          :size="formSize"
-          status-icon
         >
           <div class="group1">
             <el-row>
               <el-col :span="7">
                 <div class="grid-content ep-bg-purple">
                   <el-form-item label="地址" prop="address">
-                    <el-input v-model="form.address" style="width: 400px" />
+                    <el-input v-model="form.address" style="width: 400px" clearable />
                   </el-form-item>
                 </div>
               </el-col>
@@ -40,7 +37,7 @@
               <el-col :span="7">
                 <div class="grid-content ep-bg-purple">
                   <el-form-item label="电子邮箱" prop="email">
-                    <el-input v-model="form.email" style="width: 300px" />
+                    <el-input v-model="form.email" style="width: 300px" clearable />
                   </el-form-item>
                 </div>
               </el-col>
@@ -91,7 +88,7 @@
               <el-col :span="16" style="margin-top: -230px"
                 ><div class="grid-content ep-bg-purple-light">
                   <el-form-item label="身份" prop="identity">
-                    <el-input v-model="form.identity" style="width: 224px" />
+                    <el-input v-model="form.identity" style="width: 224px" clearable />
                   </el-form-item>
                 </div>
               </el-col>
@@ -116,7 +113,7 @@
               <el-col :span="14" style="margin-top: -70px">
                 <div>
                   <el-form-item label="固定电话" prop="mobile">
-                    <el-input v-model="form.mobile" style="width: 224px" />
+                    <el-input v-model="form.mobile" style="width: 224px" clearable />
                   </el-form-item>
                 </div>
               </el-col>
@@ -124,7 +121,7 @@
               <el-col :span="12" style="margin-top: -20px">
                 <div>
                   <el-form-item label="姓名" prop="name">
-                    <el-input v-model="form.name" style="width: 204px" />
+                    <el-input v-model="form.name" style="width: 204px" clearable />
                   </el-form-item>
                 </div>
               </el-col>
@@ -136,7 +133,7 @@
               <el-col :span="7">
                 <div class="grid-content ep-bg-purple">
                   <el-form-item label="QQ" prop="qicq">
-                    <el-input v-model="form.qicq" style="width: 224px" />
+                    <el-input v-model="form.qicq" style="width: 224px" clearable />
                   </el-form-item>
                 </div>
               </el-col>
@@ -144,7 +141,7 @@
               <el-col :span="7">
                 <div class="grid-content ep-bg-purple">
                   <el-form-item label="电话号码" prop="tel">
-                    <el-input v-model="form.tel" style="width: 400px" />
+                    <el-input v-model="form.tel" style="width: 400px" clearable />
                   </el-form-item>
                 </div>
               </el-col>
@@ -156,7 +153,7 @@
               <el-col :span="7">
                 <div>
                   <el-form-item label="邮政编码" prop="zipcode">
-                    <el-input v-model="form.zipcode" style="width: 50%" />
+                    <el-input v-model="form.zipcode" style="width: 50%" clearable />
                   </el-form-item>
                 </div>
               </el-col>
@@ -167,7 +164,7 @@
           <el-form-item style="margin-top: 2px">
             <el-button type="primary" @click="submitForm">保存修改</el-button>
             <!-- 重置还差逻辑，并且需要id表单里的data -->
-            <el-button type="info" @click="resetForm">重置</el-button>
+            <el-button type="info" @click="resetForm(ruleFormRef)">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -256,7 +253,10 @@ const submitForm = () => {
     type: 'success'
   })
 }
-const resetForm = () => {}
+// 表单重置逻辑(未完成)
+const resetForm = ref({
+
+})
 
 //两次密码需要相同的校验
 </script>

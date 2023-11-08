@@ -2,11 +2,10 @@
  * @Author: setti5 2283356040@qq.com
  * @Date: 2023-10-28 21:29:26
  * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-06 21:05:33
+ * @LastEditTime: 2023-11-08 15:08:26
  * @FilePath: \zero-one-crmsys\crm-frontend\src\views\person-homepage\notice\Notice.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
-<!-- :total="noticeStore.total" -->
 
 <template>
   <div class="notice">
@@ -19,9 +18,8 @@
       :table-data="noticeStore.tableData"
       :dropdown-menu-actions-info="dropdownMenuActionsInfo"
       :useDropdownMenu="true"
-      @updateTableData="handelPageChange"
-      
       ref="baseDataListRef"
+      @update-table-data="handelPageChange"
     >
       <!-- 导航图标 -->
       <template #ico>
@@ -57,7 +55,8 @@
             <el-input
               v-model="inputValue"
               placeholder="输入关键字搜索"
-              style="margin-right: 4px; width: auto"
+              style="margin-right: 4px; width: 224px"
+              clearable
             />
             <!-- 搜索按钮：还差数据读取逻辑和加载loading动画 -->
             <el-button
@@ -74,34 +73,34 @@
     </BaseDataList>
 
     <!-- 添加的抽屉内容 -->
-    <el-drawer v-model="addDrawer" title="添加通知" >
+    <el-drawer v-model="addDrawer" title="添加通知">
       <el-form
-        ref="formRef"
+        ref="noticeFormRef"
         :model="form"
         :rules="rules"
         label-width="120px"
-        class="demo-form"
       >
-        <el-form-item label="通知标题" prop="Title">
+        <el-form-item label="通知标题" prop="title">
           <el-input v-model="form.title" placeholder="输入标题" />
         </el-form-item>
-        <el-form-item label="通知对象" prop="toDepartment">
+        <el-form-item label="通知对象" prop="ownerDeptId">
           <ChooseSelect
-          v-model="form.ownerDeptId"
+            v-model="form.ownerDeptId"
             :options="options"
             des="请选通知部门"
             style="width: 60%"
           ></ChooseSelect>
         </el-form-item>
-        <el-form-item label="指定对象" prop="Person">
+        <el-form-item label="指定对象" prop="ownerUserId">
           <ChooseSelect
-          v-model="form.ownerUserId"
-            :options="noticeStore.optionsUserName"
+            v-model="form.ownerUserId"
+            :options="noticeStore.ownerUserId"
             des="请选指定对象"
             style="width: 60%"
-          ></ChooseSelect>
+          >
+          </ChooseSelect>
         </el-form-item>
-        <el-form-item label="通知内容" prop="Intro">
+        <el-form-item label="通知内容" prop="content">
           <el-input v-model="form.content" :rows="2" type="textarea" />
         </el-form-item>
         <el-form-item margin-top="20px">
@@ -112,20 +111,22 @@
     </el-drawer>
 
     <!-- 查看公告的抽屉内容 -->
-    <el-drawer v-model="dialogVisible1" title="查看通知" size="40%">
+    <el-drawer v-model="dialogVisible" title="查看通知" size="40%">
       <el-card>
         <template #header>
           <div class="card-header" style="text-align: center">
-            <span style="font-size: 24px; font-weight: 700">{{
-              detail.title
-            }}</span>
+            <span style="font-size: 24px; font-weight: 700">
+              {{ detail.title }}
+            </span>
           </div>
         </template>
-        <section style="margin-top: 20px">{{ detail.content }}</section>
+        <div class="card-body" style="margin-top: 20px">
+          {{ detail.content }}
+        </div>
       </el-card>
       <template #footer>
         <span class="dialog-footer">
-          <el-button type="primary" @click="dialogVisible1 = false"
+          <el-button type="primary" @click="dialogVisible = false"
             >确定</el-button
           >
         </span>
@@ -136,65 +137,14 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useStockStorageDetailsStore } from '@/stores/inventory/stockstoragedetails.js'
 import { useNoticeStore } from '@/stores/person-homepage/notice.js'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
-
-const addDrawerData = async (params) => {
-  return await noticeStore.postNoticeStore(params)
-}
-
-// 批量删除的逻辑
-const deleteBatches = () => {
-  if (!baseDataListRef.value.rows.length) {
-    ElMessage.error('请先选择')
-  } else {
-    console.log('1')
-  }
-}
-// 批量已读的逻辑(批量已读的逻辑未定)
-const readBatches = () => {
-  if (!baseDataListRef.value.rows.length) {
-    ElMessage.success('全部已读')
-  } else {
-    console.log('1')
-  }
-}
-
 // 表格数据引入
 const noticeStore = useNoticeStore()
-
-// 操作栏下拉菜单选项
-const dropdownMenuActionsInfo = [
-  {
-    command: 'check',
-    // row为当前行的数据
-    handleAction: (row) => {
-      dialogVisible1.value = true
-      console.log('查看的回调函数', row)
-    },
-    actionName: '查看'
-  },
-  {
-    command: 'delete',
-    handleAction: (row) => {
-      ElMessageBox.confirm('您确定要删除该条数据吗?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        ElMessage({
-          type: 'success',
-          message: '删除成功'
-        })
-      })
-      console.log('删除的回调函数', row)
-    },
-    actionName: '删除'
-  },
-]
-
+// 放入值的逻辑
+const baseDataListRef = ref(null)
+const noticeFormRef = ref(null)
 // 表格标题栏
 const tableColumnAttribute = [
   {
@@ -224,12 +174,83 @@ const tableColumnAttribute = [
   }
 ]
 
-// 放入值的逻辑
-const baseDataListRef = ref(null)
-const inputValue = ref('')
+// 操作栏下拉菜单选项
+const dropdownMenuActionsInfo = [
+  {
+    command: 'check',
+    // row为当前行的数据
+    handleAction: (row) => {
+      dialogVisible.value = true
+      console.log('查看的回调函数', row)
+    },
+    actionName: '查看'
+  },
+  {
+    command: 'delete',
+    handleAction: async (row) => {
+      ElMessageBox.confirm('您确定要删除该条数据吗?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        await deleteTableData({ ids: [row.storeId] }).then((res) => {
+          ElMessage({
+            type: 'success',
+            message: res.message
+          })
+        })
+        await getTableData({
+          pageIndex: baseDataListRef.value.paginationData.currentPage,
+          pageSize: baseDataListRef.value.paginationData.pageSize
+        })
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '删除已取消'
+        })
+      })
+    },
+    actionName: '删除'
+  }
+]
 
-// 添加抽屜表单
+const inputValue = ref('')
+// const storeId = ref('')  
+const getTableData = async (params) => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  await noticeStore.getStoreList(params)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+const deleteTableData = async (params) => {
+  return await warehouseStore.deleteStoreItem(params)
+}
+
+
+const addDrawerData = async (params) => {
+  return await noticeStore.postNoticeStore(params)
+}
+
+// 批量删除的逻辑
+const deleteBatches = () => {
+  if (!baseDataListRef.value.rows.length) {
+    ElMessage.error('请先选择')
+  } else {
+    console.log('1')
+  }
+}
+// 批量已读的逻辑(批量已读的逻辑未定)
+const readBatches = () => {
+  if (!baseDataListRef.value.rows.length) {
+    ElMessage.success('全部已读')
+  } else {
+    console.log('1')
+  }
+}
+
+// 添加公告抽屜表单
 const addDrawer = ref(false)
+const formRef = ref(null)
 // 添加公告逻辑
 const addEvent = () => {
   addDrawer.value = true
@@ -238,99 +259,84 @@ const form = ref({
   title: '',
   ownerDeptId: '',
   ownerUserId: '',
-  content: '',
+  content: ''
 })
-// 通知中的部门选项
+// 添加公告中的部门下拉选项
 const options = ref([
   {
     value: 'Option1',
-    label: '部门1'
+    label: '零起飞工作室'
   },
   {
     value: 'Option2',
-    label: '部门2'
+    label: '商务部'
   },
   {
     value: 'Option3',
-    label: '部门3'
+    label: '技术部'
   }
 ])
-
-// 提交表单校验规则逻辑（未完待研究
+// 添加公告提交表单校验规则
 const rules = {
-  toTitle: [
-    { required: true, message: '请输入标题', trigger: 'blur' },
+  title: [
     {
-      pattern: /^\S{1,10}$/,
-      message: '分类名必须是1-10位非空字符',
+      required: true,
+      message: '请输入标题',
       trigger: 'blur'
     }
   ],
-  toDepartment: [
+  ownerDeptId: [
     {
       required: true,
-      message: '通知需要下发的团队员及成员，默认为当前用户及下级成员',
-      trigger: 'blur'
-    },
-    {
-      pattern: /^\S{1,10}$/,
-      message: '部门名必须是1-10位非空字符',
+      message: '通知需要下发的团队员及成员，默认当前用户及下级成员',
       trigger: 'blur'
     }
   ],
-  toPerson: [
+  ownerUserId: [
     {
       required: true,
-      message: '请输入分此功能针对单独一个用户通知类别名',
+      message: '请指定接收对象',
       trigger: 'blur'
-    },
+    }
+  ],
+  content: [
     {
-      pattern: /^\S{1,10}$/,
-      message: '用户名必须是1-10位的非空字符',
+      message: '请输入内容',
       trigger: 'blur'
     }
   ]
 }
+//添加公告表单提交逻辑
+const handleSubmit = () => {
+  noticeFormRef.value.validate((valid) => {
+    if (valid) {
+      console.log(valid)
+      addDrawer.value = false
+    }
+  })
+  // 以下作为参考，可有可无
+  console.log('sumbit')
+  console.log(form.value)
+  const params = {
+    ...form.value
+  }
+}
 
-// 搜索框条件
-const stockStorageDetailsStore = useStockStorageDetailsStore()
-// const searchDetails = () => {
-//   console.log('t', stockStorageDetailsStore.tableData)
-//   if (!inputValue.value) {
-//     ElMessage.error('输入不能为空')
-//   } else {
-//     console.log('pp', baseDataListRef.value.paginationData)
-//     baseDataListRef.value.paginationData.pageSize = 5
-//     baseDataListRef.value.paginationData.currentPage = 1
-//     // 搜索数据的时候就重新初始化页面容量和当前页的页码
-//     const params = {
-//       pageSize: 5,
-//       pageIndex: 1
-//     }
-//     getStockStorageList(params)
-//   }
-// }
-// const getStockStorageList = async (params) => {
-//   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-//   await stockStorageDetailsStore.getTableData(params)
-//   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-// }
-
-// 查看公告
+// 查看公告抽屉罗辑
 const detail = ref({
   id: '',
   title: '',
   content: ''
 })
-const dialogVisible1 = ref(false)
+const dialogVisible = ref(false)
 const look = (row) => {
   ;(detail.value.id = row.id),
     (detail.value.title = row.title),
     (detail.value.content = row.content),
-    (dialogVisible1.value = true)
+    (dialogVisible.value = true)
 }
 
-// 操作下拉菜单的数据
+// 表格标题栏操作下拉菜单的数据
 const operateData = ref([
   {
     command: '查看',
@@ -351,22 +357,6 @@ const operateData = ref([
   }
 ])
 
-//表单提交逻辑
-const handleSubmit= () => {
-  console.log('sumbit')
-  console.log(form.value);
-  const params = {
-    ...form.value
-  }
-  params.ownerDeptId = 
-  addDrawer.value = false
-}
-  
-// 分页器的数据方法-暮秋
-// const handelPageChange = (currentPage, pageSize) => {
-//   console.log(currentPage, pageSize);
-// }
-
 // 分页逻辑
 onMounted(() => {
   const params = {
@@ -374,16 +364,8 @@ onMounted(() => {
     pageSize: 5
   }
   // getStockStorageList(params)
-  noticeStore.getNoticeStore(params)
+  noticeStore.getStoreList(params)
   noticeStore.getOptionsUserName()
-
-  // 暮秋的逻辑
-  // noticeStore.getNoticeApi({
-  //     content,
-  //     pageIndex,
-  //     pageSize,
-  //     title
-  // })
 })
 </script>
 

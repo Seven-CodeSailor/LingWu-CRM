@@ -2,7 +2,7 @@
  * @Author: pipazi 2283356040@qq.com
  * @Date: 2023-11-01 21:29:40
  * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-06 20:44:47
+ * @LastEditTime: 2023-11-07 12:13:51
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\personal-homapage\notice.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,17 +11,6 @@ import Request from '@/apis/request.js'
 const baseUrl = '/java3-personal-homepage'
 
 // 获取系统公告
-// /**
-//  * 请求参数：
-//  * @param {*} params {
-//  *  content: 公告内容，
-//  *  pageIndex： 查询页码
-//  *  pageSize： 查询条数
-//  *  title： 公告标题
-//  * }
-//  * @returns 
-//  */
-
 export const queryNotion = async (params) => {
   return await Request.requestForm(
     Request.GET,

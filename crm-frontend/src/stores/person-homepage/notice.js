@@ -1,38 +1,31 @@
-/*
- * @Author: setti5 2283356040@qq.com
- * @Date: 2023-11-01 21:29:40
- * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-06 21:03:36
- * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\person-homepage\notice.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-// import { test } from '@/apis/inventory-manager/index.js'
-import { 
-  addNotice,
-  getNotice,
-  queryNotion,
-  removeNotice,
-  updateNotice
+import {
+  // addNotice,
+  // getNotice,
+  queryNotion
+  // removeNotice,
+  // updateNotice
 } from '@/apis/personal-homapage/notice.js'
-import {getUserNameList } from '@/apis/publicInterface.js'
+// 公共接口，获取用户列表
+import { getUserNameList } from '@/apis/publicInterface.js'
+
 export const useNoticeStore = defineStore('notice', () => {
   const tableData = ref([])
-  const total = ref(0)
+  const total = ref()
   const optionsUserName = ref([])
-  const getNoticeStore = async (params) => {
-    console.log('getNoticeStore', params)
+  const getStoreList = async (params) => {
+    console.log('getStoreList', params)
     await queryNotion(params)
     .then((res) => {
-      tableData.value = res.data.rows.map((row)=>{
+      tableData.value = res.data.rows.map((row) => {
         row.status = {
-          value:row.status?'已读':"未读",
-          tagType:row.status?'info':'danger'
+          value: row.status ? '已读' : "未读",
+          tagType: row.status ? 'info' : 'danger'
         }
+        total.value = res.data.total
         return row
       })
-      total.value = 100
     })
     .catch((err) => {
       console.log('err', err)
@@ -49,18 +42,29 @@ export const useNoticeStore = defineStore('notice', () => {
       })
     })
   }
-  const useAddNotice = async (params)=>{
-    return await addNotice(params)
-  }
+  // const addNoticeItem = async (params)=>{
+  //   return await addNotice(params)
+  // }
+  // const getNoticeItem = async (params)=>{
+  //   return await getNotice(params)
+  // }
+  // const removeNoticeItem = async (params)=>{
+  //   return await removeNotice(params)
+  // }
+  // const updateNoticeItem = async (params)=>{
+  //   return await updateNotice(params)
+  // }
 
   return {
-      getNoticeStore,
+      getStoreList,
       tableData,
       total,
-      useAddNotice,
       getOptionsUserName,
-      optionsUserName
-
+      optionsUserName,
+      // addNoticeItem,
+      // getNoticeItem,
+      // removeNoticeItem,
+      // updateNoticeItem
       // getNoticeDetails
   }
 })
