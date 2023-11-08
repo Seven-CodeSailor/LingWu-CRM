@@ -1,8 +1,8 @@
 /*
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:18:17
- * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-08 13:58:37
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-08 22:06:53
  * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
  * @Description:
  *
@@ -122,8 +122,6 @@ export default ({ mode }) =>
           },
           '/api': {
             changeOrigin: true,
-            // target: 'http://localhost:10100',
-            // rewrite: (path) => path.replace(/^\/api/, '')
             target: 'http://8.130.30.150:10001',
             rewrite: (path) => path.replace(/^\/api/, '')
           },
