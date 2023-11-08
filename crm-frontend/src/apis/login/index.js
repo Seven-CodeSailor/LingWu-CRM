@@ -18,7 +18,7 @@ export const login = (data, success, fail) => {
       if (data.data) {
         // seven 测试销售机会接口的token
         data.data.token =
-          'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTkzNjg1MzMsImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.DkSnoba1HLvVhDr8GvQ-EO7DvF6tpGTBFS75_52ure1QUZWGBUrZ0dcF-SnheoEDMh991mrO-KRohWBKG2uuCGdbGb2o8O5rEQs8AM9rMU2ybYjqLgNG7BsYrLQL-d8D43MwSBMDWMg3tf7uG3ugtjWFbAhZ3qVmBQpDZodcCOaIYz-558LeuCTlqzL5oe5fKozws1Vns7A8BEZXssj2D5454qWVpRnQQm-a8WOw8rqneWgXj0X5YDeSFrhXnUb-4KiVn4gKLmQbijpUL8wMFgq18scf-bXGHUF_RNyQnl-vv-MfyOiXsCKCWRdRi-79s43zpaEF20zbxoUs3B_4dw'
+          'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTk0NzExNzQsImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.fnN07fxG9y29XvFHwwI_nZ0LEgJW-ay9G8antBtAUPT9Jq3z35ku6y_LuBb-ycP0lw9u5lmCT9AjimyGKua9wXNgRSj499CBnz5YoowcHS4V0fbPwTcR1tesS6Cta1wlC3fW_fiLAml-2SKQVoBTCRnHYnXKzKZL_ZxRkJ-Ww57X6IaA-pXTzMK6w_WJtvq6tB9FMzzQrYFqimxAFxCuLVopAefEApkaL3pnlPuD5mjDCC_NvaBneTQj1GO08ZFgcBcyAgQK-UkkOM6vn8hXFXYgytFoqPLHqCKwDfsoqxjrQlFL6hfGBXsfONwIiMxEeLxPr12anaEuZdOu-4uUBg'
         // 冰雾测试接口的token
         // data.data.token =
         //   'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTkyMDQyMzcsImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.inkPd2E0H2DZZrCuhErMp4qXaSrHfaUfX6XN4BGe-1Hfajegeb0RiltDLjaGmDI1WUetI7iy6NaES6PTqquWgNMqJiECJl3iq8ouOS6BNF7zwZ-dtd7hh7iVtFwPUY6opIJEaLqly-Yy4QWyFcWBXg0-cbuIzVSmdFkVFY2jm2Gm2gKzVRxW3Y5G2ioS61uokszlwRMXuGonVb6lZ-Epdce1AH7sBySMUAPv0lqXLfj6H4HVjJ0ZbQNacfJTgjer-H68lSKzPmNmSfyEseXVTUnXtXeqossijuKHEtzfhgfDlQPJMr-yGxzAndsyIiTmJQCUOs3uyMY32oYCGR6KaQ'

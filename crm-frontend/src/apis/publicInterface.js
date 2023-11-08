@@ -162,9 +162,8 @@ export const getUserNameList = async (params, success, fail) => {
   await Request.requestJson(
     Request.GET,
     'http://101.34.252.80:10110/orgstructure/user/user/get-userName-list',
-    {
-      params
-    }
+
+    params
   )
     .then((response) => {
       // 请求返回的数据就是response,在成功回调函数可以拿到
@@ -176,23 +175,6 @@ export const getUserNameList = async (params, success, fail) => {
     })
 }
 
-/**
- * @description: 获取销售合同数据列表  参数字段配置的路径:  crm-frontend\src\stores\salesmanager\SalesContract.js
- * @param {*} data 请求参数:{name(String)}
- * @param {*} success 成功回调 这里直接返回一个promise对象去store里处理了 store地址如上
- * @param {*} fail 失败回调
- * @Author{*} seven(有问题找我)
- * @return {*}
- */
-export const querySalesContractData = async (params) => {
-  return await Request.requestJson(
-    Request.GET,
-    '/sales-contract' + '/sales-contract/get-sales-contract-list/{query}',
-    {
-      params
-    }
-  )
-}
 /*
  * 获取供应商名称列表
  * @param {*} name 名称关键字
@@ -341,10 +323,22 @@ export const queryStore = async (params, success, fail) => {
  * @returns promise对象
  */
 export const querySalesOpportunityNameList = async (params) => {
-  //TODO 这里是否该用form请求方式
   return await Request.requestJson(
     Request.GET,
     '/sales-opportunities' + '/sales-opportunities/sales-oppo-name-list',
+    params
+  )
+}
+
+/**
+ * 获取销售合同数据列表(用于下拉列表查询数据)
+ * @param {*} params 传递的参数
+ * @returns
+ */
+export const getSalesContractDataForSelectAPI = async (params) => {
+  return await Request.requestJson(
+    Request.GET,
+    '/sales-contract' + '/sales-contract/sales-cont-list',
     params
   )
 }
