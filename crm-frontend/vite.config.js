@@ -31,24 +31,72 @@ export default ({ mode }) =>
         '/api/login/': {
           changeOrigin: true,
           target: 'http://39.101.76.24:10200/',
-          // 销售合同
-          '/api/sales-contract': {
+          rewrite: (path) => path.replace(/^\/api/, '')
+        },
+        // 销售合同
+        '/api/sales-contract': {
+          changeOrigin: true,
+          target: 'http://43.138.164.141:8090',
+          rewrite: (path) => path.replace(/^\/api\/sales-contract/, '')
+        },
+        // 销售机会本地测试
+        '/api/sales-opportunities': {
+          changeOrigin: true,
+          target: 'http://124.221.254.153:8090',
+          rewrite: (path) => path.replace(/^\/api\/sales-opportunities/, '')
+        },
+        // 本地测试用
+        '/api/java3-personalhomepage': {
+          changeOrigin: true,
+          target: 'http://1.15.64.225:10032',
+          rewrite: (path) => path.replace(/^\/api\/java3-personalhomepage/, '')
+        },
+        '/api/java3-file': {
+          changeOrigin: true,
+          target: 'http://8.130.45.222:8888',
+          rewrite: (path) => path.replace(/^\/api\/java3-file/, '')
+        },
+        '/api/java3-warehouse': {
+          changeOrigin: true,
+          target: 'http://8.130.82.226:10033',
+          rewrite: (path) => path.replace(/^\/api\/java3-warehouse/, '')
+        },
+        '/api/java3-area': {
+          changeOrigin: true,
+          target: 'http://118.31.61.96:10031',
+          rewrite: (path) => path.replace(/^\/api\/java3-area/, '')
+        },
+        '/api/systemmanagement/': {
+          changeOrigin: true,
+          target: 'http://8.130.37.147:10300/',
+          rewrite: (path) => path.replace(/^\/api/, '')
+        },
+        '/api/collection-man/': {
+          changeOrigin: true,
+          target: 'http://47.115.229.117:8090',
+          rewrite: (path) => path.replace(/^\/api/, '')
+        },
+        '/api/java3-personal-homepage': {
+          changeOrigin: true,
+          target: 'http://1.15.64.225:10032',
+          rewrite: (path) => path.replace(/^\/api\/java3-personal-homepage/, '')
+        },
+        '/api/cpp1-dictionary': {
+          '/api/java4-apiv1': {
             changeOrigin: true,
-            target: 'http://43.138.164.141:8090',
-            rewrite: (path) => path.replace(/^\/api\/sales-contract/, '')
+            target: 'http://47.115.221.50:10086',
+            rewrite: (path) => path.replace(/^\/api\/java4-apiv1/, '')
           },
-          // 销售机会本地测试
-          '/api/sales-opportunities': {
+          '/api/cpp1-apiv1': {
             changeOrigin: true,
-            target: 'http://124.221.254.153:8090',
-            rewrite: (path) => path.replace(/^\/api\/sales-opportunities/, '')
+            target: 'http://8.130.16.24:8090',
+            rewrite: (path) => path.replace(/^\/api\/cpp1-apiv1/, '')
           },
-          // 本地测试用
-          '/api/java3-personalhomepage': {
+          // 库存管理接口的跨域处理
+          '/api/cpp5-inventory': {
             changeOrigin: true,
-            target: 'http://1.15.64.225:10032',
-            rewrite: (path) =>
-              path.replace(/^\/api\/java3-personalhomepage/, '')
+            target: 'http://47.108.95.155:8090',
+            rewrite: (path) => path.replace(/^\/api\/cpp5-inventory/, '')
           },
           '/api/java3-file': {
             changeOrigin: true,
@@ -65,68 +113,19 @@ export default ({ mode }) =>
             target: 'http://118.31.61.96:10031',
             rewrite: (path) => path.replace(/^\/api\/java3-area/, '')
           },
-          '/api/systemmanagement/': {
+          '/api': {
             changeOrigin: true,
-            target: 'http://8.130.37.147:10300/',
-            rewrite: (path) => path.replace(/^\/api/, '')
-          },
-          '/api/collection-man/': {
-            changeOrigin: true,
-            target: 'http://47.115.229.117:8090',
-            rewrite: (path) => path.replace(/^\/api/, '')
-          },
-          '/api/java3-personal-homepage': {
-            changeOrigin: true,
-            target: 'http://1.15.64.225:10032',
-            rewrite: (path) =>
-              path.replace(/^\/api\/java3-personal-homepage/, '')
-          },
-          '/api/cpp1-dictionary': {
-            '/api/java4-apiv1': {
-              changeOrigin: true,
-              target: 'http://47.115.221.50:10086',
-              rewrite: (path) => path.replace(/^\/api\/java4-apiv1/, '')
-            },
-            '/api/cpp1-apiv1': {
-              changeOrigin: true,
-              target: 'http://8.130.16.24:8090',
-              rewrite: (path) => path.replace(/^\/api\/cpp1-apiv1/, '')
-            },
-            // 库存管理接口的跨域处理
-            '/api/cpp5-inventory': {
-              changeOrigin: true,
-              target: 'http://47.108.95.155:8090',
-              rewrite: (path) => path.replace(/^\/api\/cpp5-inventory/, '')
-            },
-            '/api/java3-file': {
-              changeOrigin: true,
-              target: 'http://8.130.45.222:8888',
-              rewrite: (path) => path.replace(/^\/api\/java3-file/, '')
-            },
-            '/api/java3-warehouse': {
-              changeOrigin: true,
-              target: 'http://8.130.82.226:10033',
-              rewrite: (path) => path.replace(/^\/api\/java3-warehouse/, '')
-            },
-            '/api/java3-area': {
-              changeOrigin: true,
-              target: 'http://118.31.61.96:10031',
-              rewrite: (path) => path.replace(/^\/api\/java3-area/, '')
-            },
-            '/api': {
-              changeOrigin: true,
-              // target: 'http://localhost:10100',
-              // rewrite: (path) => path.replace(/^\/api/, '')
+            // target: 'http://localhost:10100',
+            // rewrite: (path) => path.replace(/^\/api/, '')
 
-              //TODO[TEST_CODE]:使用ApiPost云MOCK
-              target: 'http://8.130.30.150:10001',
-              rewrite: (path) => path.replace(/^\/api/, '')
-            },
-            '/captcha': {
-              changeOrigin: true,
-              target: 'http://localhost:10680',
-              rewrite: (path) => path.replace(/^\/captcha/, '')
-            }
+            //TODO[TEST_CODE]:使用ApiPost云MOCK
+            target: 'http://8.130.30.150:10001',
+            rewrite: (path) => path.replace(/^\/api/, '')
+          },
+          '/captcha': {
+            changeOrigin: true,
+            target: 'http://localhost:10680',
+            rewrite: (path) => path.replace(/^\/captcha/, '')
           }
         }
       }
