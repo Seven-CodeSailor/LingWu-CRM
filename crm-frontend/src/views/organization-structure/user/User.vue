@@ -386,7 +386,6 @@ onMounted(async () => {
       baseDataListRef.value.openLoading = false
     },
     (error) => {
-      baseDataListRef.value.openLoading = false
       if (error) {
         console.log(error)
       }

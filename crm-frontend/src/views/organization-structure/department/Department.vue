@@ -384,6 +384,25 @@ const sendData = ref({
   pageSizes: [5, 10, 15],
   total: 100
 })
+
+/**
+ * 定义递归方法,用于遍历数组的每个子节点
+ */
+// 递归函数用于遍历包含对象的数组
+// function traverseArray(arr) {
+//   arr.forEach((item) => {
+//     console.log('当前节点：', item)
+//     if (item.nodes !== []) {
+//       console.log('处理子节点：', item.nodes)
+//       traverseArray(item.nodes) // 递归调用遍历子节点
+//     }
+//     if (item.subNodes) {
+//       console.log('处理子节点的子节点：', item.subNodes)
+//       traverseArray(item.subNodes) // 递归调用遍历子节点的子节点
+//     }
+//   })
+// }
+
 // 操作菜单的数据和处理函数
 const dropdownMenuActionsInfo = ref([
   {
@@ -400,7 +419,7 @@ const dropdownMenuActionsInfo = ref([
       await getDepartmentTree(
         {
           depth: 0,
-          pid: 0
+          pid: row.parentID
         },
         (res) => {
           const { data } = res

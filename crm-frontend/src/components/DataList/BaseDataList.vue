@@ -178,11 +178,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useSalesContractStore } from '@/stores/salesmanager/SalesContract.js'
+import { ref } from 'vue'
+// import { useSalesContractStore } from '@/stores/salesmanager/SalesContract.js'
 
 // 导入销售合同列表的仓库
-const useSalesContractStore1 = useSalesContractStore()
+// const useSalesContractStore1 = useSalesContractStore()
 
 const props = defineProps({
   // 标题
@@ -355,19 +355,19 @@ defineExpose({
   openSwitchLoading
 })
 
-const getSalesContractList = async (params) => {
-  await useSalesContractStore1.getTableData(params)
-}
+// const getSalesContractList = async (params) => {
+//   await useSalesContractStore1.getTableData(params)
+// }
 // 挂载时获得分页数据
-onMounted(() => {
-  // const bb = JSON.parse(JSON.stringify(Data))
-  // console.log('bb', bb)
-  const params = {
-    pageIndex: 1,
-    pageSize: 5
-  }
-  getSalesContractList(params)
-})
+// onMounted(() => {
+//   // const bb = JSON.parse(JSON.stringify(Data))
+//   // console.log('bb', bb)
+//   const params = {
+//     pageIndex: 1,
+//     pageSize: 5
+//   }
+//   getSalesContractList(params)
+// })
 </script>
 
 <style lang="scss" scoped>

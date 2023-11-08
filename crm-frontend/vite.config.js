@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:18:17
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-08 10:18:47
+ * @LastEditTime: 2023-11-08 13:58:37
  * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
  * @Description:
  *
@@ -60,11 +60,16 @@ export default ({ mode }) =>
           rewrite: (path) => path.replace(/^\/api\/java3-area/, '')
         },
         // 资金注入抽取=>暮秋
-        '/api/fin-capital-record/query-data': {
+        '/api/fin-capital-record': {
           changeOrigin: true,
           target: 'http://8.130.119.183:8090',
-          rewrite: (path) =>
-            path.replace(/^\/api\/fin-capital-record\/query-data/, '')
+          rewrite: (path) => path.replace(/^\/api\/fin-capital-record/, '')
+        },
+        // c1的银行账号管理
+        '/api/cpp1-apiv1': {
+          changeOrigin: true,
+          target: 'http://8.130.16.24:8090',
+          rewrite: (path) => path.replace(/^\/api\/cpp1-apiv1/, '')
         },
         '/api': {
           changeOrigin: true,
