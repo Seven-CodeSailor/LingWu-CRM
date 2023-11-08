@@ -7,7 +7,7 @@
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from '@/apis/request.js'
-const baseUrl = '/java3-warehouse'
+const baseUrl = ''
 
 export const queryStore = async (params) => {
   return await Request.requestJson(

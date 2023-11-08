@@ -91,7 +91,7 @@ export const queryContactName = (
 export const getDictclassifylist = async (params, success, fail) => {
   await Request.requestJson(
     Request.GET,
-    '/cpp1-apiv1/data-dictionary/dictclassify/get-dictclassifylist',
+    '/data-dictionary/dictclassify/get-dictclassifylist',
     {
       params
     }
@@ -170,7 +170,7 @@ export const getDictclassifylist = async (params, success, fail) => {
 export const getUserNameList = async (params, success, fail) => {
   await Request.requestJson(
     Request.GET,
-    'http://101.34.252.80:10110/orgstructure/user/user/get-userName-list',
+    '/orgstructure/user/user/get-userName-list',
 
     params
   )
@@ -215,11 +215,7 @@ export const querySupplierName = (
  * @return {void}
  */
 export const selectArea = async (params, success, fail) => {
-  await Request.requestJson(
-    Request.GET,
-    '/java3-area/j3-area/select-area',
-    params
-  )
+  await Request.requestJson(Request.GET, '/j3-area/select-area', params)
     .then((response) => {
       success(response)
     })
@@ -260,7 +256,7 @@ export const queryNamePullList = (
 export const queryAllFeeincome = async (success, fail) => {
   await Request.requestJson(
     Request.GET,
-    '/cpp1-apiv1/financial-management/feeincome/query-all-feeincome'
+    '/financial-management/feeincome/query-all-feeincome'
   )
     .then(async (response) => {
       await success(response)
@@ -340,7 +336,7 @@ export const queryStore = async (params, success, fail) => {
 export const querySalesOpportunityNameList = async (params) => {
   return await Request.requestJson(
     Request.GET,
-    'http://101.34.252.80:10110/orgstructure/position/position/query-name-all',
+    '/orgstructure/position/position/query-name-all',
 
     params
   )
@@ -357,7 +353,7 @@ export const querySalesOpportunityNameList = async (params) => {
 export const getRoleNameList = async (params, success, fail) => {
   await Request.requestForm(
     Request.GET,
-    'http://101.34.252.80:10110/orgstructure/role/role/query-name-all',
+    '/orgstructure/role/role/query-name-all',
     {
       params
     }
@@ -382,7 +378,7 @@ export const getRoleNameList = async (params, success, fail) => {
 export const getDepartmentList = async (params, success) => {
   await Request.requestForm(
     Request.GET,
-    'http://101.34.252.80:10110/orgstructure/dept/dept/list-name-all',
+    '/orgstructure/dept/dept/list-name-all',
     {
       ...params
     }
@@ -409,7 +405,7 @@ export const getDepartmentList = async (params, success) => {
 export const getBankaccountlist = async (success, fail) => {
   await Request.requestJson(
     Request.GET,
-    '/cpp1-apiv1/financial-management/bankaccount/get-bankaccountlist'
+    '/financial-management/bankaccount/get-bankaccountlist'
   )
     .then((response) => {
       success(response)

@@ -9,7 +9,7 @@
  */
 
 import Request from '@/apis/request.js'
-const baseUrl = '/cpp1-apiv1'
+const baseUrl = ''
 
 export const queryBankaccount = async (params) => {
   return await Request.requestJson(

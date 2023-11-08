@@ -9,7 +9,7 @@
  */
 
 import Request from '@/apis/request.js'
-const baseUrl = '/java4-apiv1'
+const baseUrl = ''
 /**
  * @description: 新增商品分类
  * @param {Object} params
