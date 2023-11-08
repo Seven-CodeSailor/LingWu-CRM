@@ -8,7 +8,7 @@
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from '@/apis/request.js'
-const baseUrl = ''
+const baseUrl = '/java4-apiv1'
 /**
  * @description: 添加类型
  * @param {Object} params

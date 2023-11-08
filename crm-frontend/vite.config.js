@@ -28,6 +28,11 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
+        '/api/java4-apiv1': {
+          changeOrigin: true,
+          target: 'http://47.115.221.50:10086',
+          rewrite: (path) => path.replace(/^\/api\/java4-apiv1/, '')
+        },
         '/api/cpp1-apiv1': {
           changeOrigin: true,
           target: 'http://8.130.16.24:8090',

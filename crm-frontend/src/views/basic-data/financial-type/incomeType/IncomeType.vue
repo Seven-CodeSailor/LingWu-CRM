@@ -63,8 +63,9 @@
 
 <script setup>
 import Tree from '@/components/Tree/Tree.vue'
-import { ref, onMounted, onBeforeMount } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useIncomeTypeStore } from '@/stores/basic-data/financial-type/incometype'
+import { queryBrand } from '@/apis/basic-data/product/productbrand'
 const incomeTypeStore = useIncomeTypeStore()
 const treeRef = ref(null)
 
@@ -116,8 +117,6 @@ const handleSubmit = () => {
   console.log('submit')
 }
 
-const treeData = ref([])
-
 const options = [
   {
     value: 'Option1',
@@ -142,6 +141,10 @@ const options = [
 ]
 onMounted(async () => {
   await getTreeData()
+  queryBrand({
+    pageIndex: 1,
+    pageSize: 10
+  })
 })
 </script>
 

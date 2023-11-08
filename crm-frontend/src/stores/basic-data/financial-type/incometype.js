@@ -21,56 +21,11 @@ function traverseArray(arr) {
   }
 }
 export const useIncomeTypeStore = defineStore('incometype', () => {
-  const treeData = ref([
-    {
-      label: 'Level one qqqqq',
-      children: [
-        {
-          label: 'Level two 2-1',
-          children: [
-            {
-              label: 'Level three 2-1-1'
-            }
-          ]
-        },
-        {
-          label: 'Level two 2-2',
-          children: [
-            {
-              label: 'Level three 2-2-1'
-            }
-          ]
-        }
-      ]
-    }
-  ])
-  const test =
+  const treeData = ref([])
   const queryAllFeeincomeItem = async () => {
     await queryAllFeeincome(
       (res) => {
-        treeData.value = [
-          {
-            label: 'Level one 21111',
-            children: [
-              {
-                label: 'Level two 2-1',
-                children: [
-                  {
-                    label: 'Level three 2-1-1'
-                  }
-                ]
-              },
-              {
-                label: 'Level two 2-2',
-                children: [
-                  {
-                    label: 'Level three 2-2-1'
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+        treeData.value = res.data
         traverseArray(treeData.value)
       },
       (err) => {
@@ -80,6 +35,7 @@ export const useIncomeTypeStore = defineStore('incometype', () => {
   }
   return {
     treeData,
+
     queryAllFeeincomeItem
   }
 })

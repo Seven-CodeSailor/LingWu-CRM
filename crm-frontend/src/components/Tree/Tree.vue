@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-29 16:46:05
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-07 23:35:05
+ * @LastEditTime: 2023-11-08 11:55:23
  * @FilePath: \crm-frontend\src\components\Tree\Tree.vue
  * @Description: 
  * 
@@ -18,7 +18,7 @@
         <!-- body -->
         <div class="body">
           <el-tree
-            :data="data"
+            :data="props.data"
             :props="defaultProps"
             node-key="id"
             @node-click="handleNodeClick"
@@ -87,7 +87,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 
 const props = defineProps({
   data: {
@@ -110,7 +110,6 @@ const handleNodeClick = (data) => {
 }
 
 //这里默认传过来的data就是树形的，如果不是还需要联系后端协调，处理扁平数组为树形的函数网上也很容易搜到
-const data = ref(...[props.data])
 
 const defaultProps = {
   children: 'children',
@@ -171,7 +170,9 @@ defineExpose({
   isEdit,
   showDrawer
 })
-
+nextTick(() => {
+  console.log('dddddd', props.data)
+})
 onMounted(() => {
   console.log('dd', props.data)
 })
