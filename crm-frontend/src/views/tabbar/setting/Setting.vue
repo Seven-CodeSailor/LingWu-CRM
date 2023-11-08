@@ -36,8 +36,8 @@
     <el-form>
       <el-form-item label="暗黑模式">
         <el-switch
-          @change="changeDark"
-          v-model="dark"
+          @change="setTheme(activeThemeName)"
+          v-model="isDark"
           class="mt-2"
           style="margin-left: 24px"
           inline-prompt
@@ -52,32 +52,21 @@
   </el-popover>
   <!-- 消息通知 -->
 
-  <el-button
-    small="small"
-    icon="IconBell"
-    circle
-    @click="message = true"
-  ></el-button>
+  <el-badge
+    :value="messageInfo.index === 0 ? '' : messageInfo.index"
+    class="item"
+    style="margin-left: 12px"
+  >
+    <el-button
+      small="small"
+      icon="IconBell"
+      circle
+      @click="message = true"
+    ></el-button>
+  </el-badge>
+
   <el-drawer v-model="message" title="消息提醒" append-to-body="true">
     <MessageInfo></MessageInfo>
-  </el-drawer>
-
-  <!-- 客户和商机统计信息 -->
-  <el-button
-    small="small"
-    icon="IconHistogram"
-    circle
-    @click="business = true"
-  ></el-button>
-  <el-drawer
-    v-model="business"
-    title="商机统计"
-    append-to-body="true"
-    size="50%"
-  >
-    <div style="width: 100%; height: 100%">
-      <Statistics></Statistics>
-    </div>
   </el-drawer>
 
   <!-- 用户昵称 -->
@@ -88,9 +77,6 @@
     </span>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item>修改密码</el-dropdown-item>
-      </el-dropdown-menu>
-      <el-dropdown-menu>
         <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
       </el-dropdown-menu>
     </template>
@@ -98,12 +84,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { userStore } from '@/stores/user'
 import useLayOutSettingStore from '@/stores/setting.js'
 import { useRouter } from 'vue-router'
 import MessageInfo from './components/MessageInfo.vue'
-import Statistics from './components/Statistics.vue'
+import useMessageInfo from '@/stores/system-page/messageInfo.js'
+
+const messageInfo = useMessageInfo()
 
 const $router = useRouter()
 const user = userStore()
@@ -121,9 +109,6 @@ const updateRefsh = () => {
 
 // 退出登录点击回调
 const logout = async () => {
-  // 第一件事：向服务器发请求[退出登录接口]
-  // 第二件事：仓库中关于用户相关的数据清空
-  // 第三件事：跳转到登录页面
   await user.resetSaveData()
   $router.push({ path: '/' })
 }
@@ -139,19 +124,21 @@ const fullScreen = () => {
   }
 }
 //收集开关的数据
-let dark = ref(false)
+// let dark = ref(false)
 //switch开关的chang事件进行暗黑模式的切换
-const changeDark = () => {
-  //获取HTML根节点
-  let html = document.documentElement
-  //判断HTML标签是否有类名dark
-  dark.value ? (html.className = 'dark') : (html.className = '')
-}
+// const changeDark = () => {
+//   //获取HTML根节点
+//   let html = document.documentElement
+//   //判断HTML标签是否有类名dark
+//   dark.value ? (html.className = 'dark') : (html.className = '')
+// }
+import { useTheme } from '@/hooks/useTheme'
+const { activeThemeName, setTheme } = useTheme()
+const isDark = computed(() => {
+  return activeThemeName.value === 'dark'
+})
 // 消息提醒
 const message = ref(false)
-
-// 商机统计
-const business = ref(false)
 </script>
 
 <style lang="scss" scoped></style>

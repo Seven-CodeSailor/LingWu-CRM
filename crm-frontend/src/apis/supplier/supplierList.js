@@ -1,79 +1,79 @@
-// import Request from '../request'
+import Request from '../request'
 
 import useSupplierList from '@/stores/supplier/list/list'
 
 const supplierList = useSupplierList()
 
 /**
- *
- * @param {*} pageIndex 查询页码
- * @param {*} pageSize 查询条数
- * @param {*} name 查询关键字
- * @param {*} telephone 座机号码
- * @param {*} mombile 手机号码
- * @param {*} address 联系地址
- * @param {*} success 成功的回调
- * @param {*} fail 失败的回调
- * @returns
+ * 获取供应商名称列表
  */
-export const getSupplier = (
+export const querySupplierName = async (
+  name,
+  success = () => {},
+  fail = () => {}
+) => {
+  await Request.requestJson(
+    Request.GET,
+    '/supplier-manage/supplier/query-supplier-name',
+    {
+      name
+    }
+  )
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
+
+// 过滤对象中值为null '' undefined 0 的值
+export const delEmptyQueryNodes = (obj = {}) => {
+  Object.keys(obj).forEach((key) => {
+    let value = obj[key]
+    value && typeof value === 'object' && delEmptyQueryNodes(value)
+    ;(value === '' ||
+      value === null ||
+      value === undefined ||
+      value.length === 0 ||
+      Object.keys(value).length === 0) &&
+      delete obj[key]
+  })
+  return obj
+}
+
+/**
+ * 获取供应商列表
+ */
+export const getSupplier = async (
   pageIndex,
   pageSize,
   name,
   telephone,
-  mombile,
+  mobile,
   address,
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ pageIndex, pageSize, name, telephone, mombile, address })
-    }, 0)
-  })
-    .then(() => {
-      supplierList.setTableData([
-        {
-          supplierId: '1', // 供应商ID
-          supplierName: '供应商', //供应商名称
-          ecoType: '经济类型', //经济类型
-          indType: '行业类型', //行业类型
-          contact: '联系人', //联系人
-          telephone: '110', //电话号码
-          fax: '10', // 传真
-          email: '@.com', //邮箱
-          address: '地球', //联系地址
-          intro: '无' //介绍
-        },
-        {
-          supplierId: '2', // 供应商ID
-          supplierName: '供应商', //供应商名称
-          ecoType: '经济类型', //经济类型
-          indType: '行业类型', //行业类型
-          contact: '联系人', //联系人
-          telephone: '110', //电话号码
-          fax: '10', // 传真
-          email: '@.com', //邮箱
-          address: '地球', //联系地址
-          intro: '无' //介绍
-        },
-        {
-          supplierId: '3', // 供应商ID
-          supplierName: '供应商', //供应商名称
-          ecoType: '经济类型', //经济类型
-          indType: '行业类型', //行业类型
-          contact: '联系人', //联系人
-          telephone: '110', //电话号码
-          fax: '10', // 传真
-          email: '@.com', //邮箱
-          address: '地球', //联系地址
-          intro: '无' //介绍
-        }
-      ])
-      success()
+  let data = { name, telephone, mobile, address }
+  const params = delEmptyQueryNodes(delEmptyQueryNodes(data))
+  console.log(params)
+  await Request.requestForm(
+    Request.GET,
+    '/supplier-manage/supplier/get-supplier',
+    {
+      pageIndex,
+      pageSize,
+      ...params
+    }
+  )
+    .then((response) => {
+      supplierList.pageTotal = response.data.total
+      supplierList.setTableData(response.data.rows)
+      success(response)
     })
-    .catch(() => {
-      fail()
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -83,17 +83,23 @@ export const getSupplier = (
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调
  */
-export const addSupplier = (params, success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(params)
-    }, 0)
-  })
-    .then(() => {
-      success()
+export const addSupplier = async (
+  params,
+  success = () => {},
+  fail = () => {}
+) => {
+  delete params['supplier_id']
+  console.log(params)
+  await Request.requestJson(
+    Request.POST,
+    '/supplier-manage/supplier/add-supplier',
+    params
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch(() => {
-      fail()
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -103,17 +109,34 @@ export const addSupplier = (params, success = () => {}, fail = () => {}) => {
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调
  */
-export const modifySupplier = (params, success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(params)
-    }, 0)
-  })
-    .then(() => {
-      success()
+export const modifySupplier = async (
+  params,
+  success = () => {},
+  fail = () => {}
+) => {
+  const data = {
+    supplierId: params.supplier_id,
+    supplierName: params.name,
+    ecoType: params.ecotype,
+    trade: params.trade,
+    address: params.address,
+    linkman: params.linkman,
+    telephone: params.tel,
+    fax: params.fax,
+    email: params.email,
+    intro: params.intro
+  }
+  console.log(data)
+  await Request.requestJson(
+    Request.PUT,
+    '/supplier-manage/supplier/modify-supplier',
+    data
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch(() => {
-      fail()
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -123,20 +146,25 @@ export const modifySupplier = (params, success = () => {}, fail = () => {}) => {
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调
  */
-export const removeSupplier = (
+export const removeSupplier = async (
   list = [],
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(list)
-    }, 0)
+  const rows = []
+  list.forEach((item) => {
+    rows.push(item)
   })
-    .then(() => {
-      success()
+  console.log(rows)
+  await Request.requestJson(
+    Request.DELETE,
+    '/supplier-manage/supplier/remove-supplier',
+    { rows }
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch(() => {
-      fail()
+    .catch((error) => {
+      fail(error)
     })
 }

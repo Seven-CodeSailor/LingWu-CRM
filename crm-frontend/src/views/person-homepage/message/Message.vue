@@ -4,18 +4,19 @@
       title="消息通知"
       :table-column-attribute="tableColumnAttribute"
       :use-operate-column="true"
+      :dropdown-menu-actions-info="dropdownMenuActionsInfo"
       :page-sizes="[5, 10, 15]"
-      :total="stockStorageDetailsStore.tableTotal"
-      :table-data="noticeStore.data"
+      :total="messageStore.total"
+      :table-data="messageStore.tableData"
       :handle-delete="handleDelete"
+      ref="baseDataListRef"
       @update-table-data="
         (pageSize, currentPage) =>
-          getStockStorageList({
+          queryMessageStore({
             pageSize,
             pageIndex: currentPage
           })
       "
-      ref="baseDataListRef"
     >
       <!-- 导航图标 -->
       <template #ico>
@@ -42,7 +43,8 @@
             <el-input
               v-model="inputValue"
               placeholder="输入关键字搜索"
-              style="margin-right: 4px; width: auto"
+              style="margin-right: 4px; width: 224px"
+              clearable
             />
             <!-- 搜索按钮还差读取数据逻辑和加载动画 -->
             <el-button
@@ -58,60 +60,57 @@
       </template>
     </BaseDataList>
 
-    <!-- 添加的抽屉内容 -->
-    <el-drawer v-model="addDrawer" title="添加通知" direction="rtl">
-      <el-form
-        ref="ruleFormRef"
-        :model="ruleForm"
-        :rules="rules"
-        label-width="120px"
-        class="demo-ruleForm"
-      >
-        <el-form-item label="通知标题" prop="toTitle">
-          <el-input v-model="ruleForm.name" placeholder="输入标题" />
-        </el-form-item>
-        <!-- 输入规则还没改，需要添加 -->
-        <el-form-item label="通知对象" prop="toDepartment">
-          <!-- 下拉选择框 -->
-          <ChooseSelect
-            :options="options"
-            des="请选通知部门"
-            style="width: 60%"
-          ></ChooseSelect>
-        </el-form-item>
-        <el-form-item label="指定对象" prop="toPerson">
-          <ChooseSelect
-            :options="options"
-            des="请选指定对象"
-            style="width: 60%"
-          ></ChooseSelect>
-        </el-form-item>
-        <el-form-item label="通知内容">
-          <el-input v-model="textarea" :rows="2" type="textarea" />
-        </el-form-item>
-        <el-form-item margin-top="20px">
-          <el-button>取消</el-button>
-          <el-button type="primary" @click="handleSubmit">提交</el-button>
-        </el-form-item>
-      </el-form>
+    <!-- 查看消息详情的的抽屉内容 -->
+    <el-drawer v-model="dialogVisible" title="查看通知">
+      <el-card>
+        <template #header>
+          <div class="card-header" style="text-align: center">
+            <span style="font-size: 24px; font-weight: 150">
+              <!-- {{ detail.title }} -->聚餐
+            </span>
+          </div>
+        </template>
+        <div class="card-body" style="margin-top: 20px">
+          <!-- {{ detail.content }} -->七点半, 01烧烤店集合
+        </div>
+      </el-card>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="dialogVisible = false"
+            >确定</el-button
+          >
+        </span>
+      </template>
     </el-drawer>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useStockStorageDetailsStore } from '@/stores/inventory/stockstoragedetails.js'
-import { ElMessage, ElMessageBox  } from 'element-plus'
-import { useNotice } from '../../../stores/inventory/notice'
+import { useMessageStore } from '@/stores/person-homepage/message.js'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
+// import { queryMessage } from '@/apis/personal-homapage/message.js'
 
 // 批量删除的逻辑
-const deleteBatches = () => {
+const deleteBatches = async () => {
   if (!baseDataListRef.value.rows.length) {
-    ElMessage.error('请先选择')
+    ElMessage.error('请先选择将要删除的选项')
   } else {
-    console.log('1')
+    const ids = baseDataListRef.value.rows.map((row) => {
+      return row.storeId
+    })
+    await deleteBatches({ ids }).then((res) => {
+      ElMessage({
+        message: res.message,
+        type: 'success'
+      })
+    })
+    await getTableData({
+      pageIndex: baseDataListRef.value.paginationData.currentPage,
+      pageSize: baseDataListRef.value.paginationData.pageSize
+    })
+    // console.log('1')
   }
 }
 // 批量已读的逻辑(批量已读的逻辑未定)
@@ -124,40 +123,81 @@ const readBatches = () => {
 }
 
 // 表格数据引入（必须
-const noticeStore = useNotice()
+const messageStore = useMessageStore()
 
 // 表格标题栏
-const tableColumnAttribute = [
+const tableColumnAttribute = ref([
   {
-    prop: 'message_type',
+    prop: 'msgType',
     label: '消息类型'
   },
   {
-    prop: 'reminder_content',
+    prop: 'msgTitle',
     label: '提醒内容'
   },
   {
-    prop: 'reminder_time',
+    prop: 'remindTime',
     label: '提醒时间'
   },
   {
-    prop: 'creation_time',
+    prop: 'createTime',
     label: '创建时间'
   },
   {
     prop: 'status',
     label: '状态',
     useTag: true
+  }
+])
+const dropdownMenuActionsInfo = [
+  {
+    command: 'check',
+    // row为当前行的数据
+    handleAction: (row) => {
+      dialogVisible.value = true
+      console.log('查看的回调函数', row)
+    },
+    actionName: '查看'
   },
+  {
+    command: 'delete',
+    handleAction: async (row) => {
+      ElMessageBox.confirm('您确定要删除该条数据吗?', '警告', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          deleteTableData({ ids: [row.storeId] }).then((res) => {
+            ElMessage({
+              message: res.message,
+              type: 'success'
+            })
+          })
+          getTableData({
+            pageIndex: baseDataListRef.value.paginationData.currentPage,
+            pageSize: baseDataListRef.value.paginationData.pageSize
+          })
+        })
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '删除已取消'
+          })
+        })
+    },
+    actionName: '删除'
+  }
 ]
+
 // 批量删除和已读的逻辑需要
 const baseDataListRef = ref(null)
 const inputValue = ref('')
 
-// 搜索框条件
-const stockStorageDetailsStore = useStockStorageDetailsStore()
+//搜索框条件
+// const messageStore = useMessageStore()
 const searchDetails = () => {
-  console.log('t', stockStorageDetailsStore.tableData)
+  console.log('t', messageStore.tableData)
   if (!inputValue.value) {
     ElMessage.error('输入不能为空')
   } else {
@@ -169,13 +209,30 @@ const searchDetails = () => {
       pageSize: 5,
       pageIndex: 1
     }
-    getStockStorageList(params)
+    // queryMessageStore(params)
   }
 }
-const getStockStorageList = async (params) => {
+
+const getTableData = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  await stockStorageDetailsStore.getTableData(params)
+  await messageStore.getMessageList(params)
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+
+const getItemData = async (params) => {
+  return await messageStore.getMessageIdList(params)
+}
+
+const markTableData = async (params) => {
+  return await messageStore.markMessageItem(params)
+}
+
+const publishTableData = async (params) => {
+  return await messageStore.publishMessageItem(params)
+}
+
+const deleteTableData = async (params) => {
+  return await messageStore.deleteMessageItem(params)
 }
 
 // 分页逻辑
@@ -184,107 +241,38 @@ onMounted(() => {
     pageIndex: 1,
     pageSize: 5
   }
-  getStockStorageList(params)
-  noticeStore.getData()
+  messageStore.getMessageList(params)
 })
 
 // 删除单条数据
 const handleDelete = (row) => {
   console.log('删除', row)
-  ElMessageBox.confirm(
-    '你确定要删除这条数据吗?',
-    '警告',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  )
-    .then(() => {
-      ElMessage({
-        type: 'success',
-        message: '删除成功',
-      })
+  ElMessageBox.confirm('你确定要删除这条数据吗?', '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    ElMessage({
+      type: 'success',
+      message: '删除成功'
     })
+  })
 }
 
-// 添加抽屜表单
-const addDrawer = ref(false)
-// 添加通知逻辑
-const addEvent = () => {
-  addDrawer.value = true
-}
-// 抽屉中表单逻辑
-const ruleForm = ref({
-  name: '',
-  region: '',
-  date1: '',
-  date2: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: ''
+// 查看公告抽屉罗辑
+const detail = ref({
+  id: '',
+  title: '',
+  content: ''
 })
-// 添加通知中的部门选项
-const options = ref([
-  {
-    value: 'Option1',
-    label: '部门1'
-  },
-  {
-    value: 'Option2',
-    label: '部门2'
-  },
-  {
-    value: 'Option3',
-    label: '部门3'
-  }
-])
+const dialogVisible = ref(false)
+const look = (row) => {
+  ;(detail.value.id = row.id),
+    (detail.value.title = row.title),
+    (detail.value.content = row.content),
+    (dialogVisible.value = true)
+}
 
-// 提交表单校验规则逻辑（未完待研究
-const rules = {
-  toTitle: [
-    { required: true, message: '请输入标题', trigger: 'blur' },
-    {
-      pattern: /^\S{1,10}$/,
-      message: '分类名必须是1-10位非空字符',
-      trigger: 'blur'
-    }
-  ],
-  toDepartment: [
-    {
-      required: true,
-      message: '通知需要下发的团队员及成员，默认为当前用户及下级成员',
-      trigger: 'blur'
-    },
-    {
-      pattern: /^\S{1,10}$/,
-      message: '部门名必须是1-10位非空字符',
-      trigger: 'blur'
-    }
-  ],
-  toPerson: [
-    {
-      required: true,
-      message: '请输入分此功能针对单独一个用户通知类别名',
-      trigger: 'blur'
-    },
-    {
-      pattern: /^\S{1,10}$/,
-      message: '用户名必须是1-10位的非空字符',
-      trigger: 'blur'
-    }
-  ]
-}
-//表单提交逻辑
-const props = defineProps({
-  handleSubmit: {
-    type: Function,
-    default: () => {
-      console.log('sumbit')
-    }
-  }
-})
 </script>
 
 <style lang="scss" scoped>

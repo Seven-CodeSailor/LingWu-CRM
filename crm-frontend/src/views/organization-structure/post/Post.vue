@@ -179,7 +179,25 @@ import BaseDataList from '@/components/DataList/BaseDataList.vue'
 // import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
 import { Operation, Plus, Search } from '@element-plus/icons-vue'
 // import { ElMessage } from 'element-plus'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { getRoleTree } from '../../../apis/organizationStructure/postManagement'
+
+onMounted(async () => {
+  await getRoleTree(
+    {
+      depth: 0,
+      pid: 0
+    },
+    (res) => {
+      console.log('获取岗位名称结构树成功回调:', res)
+      ElMessage({
+        message: '获取成功',
+        type: 'success'
+      })
+    }
+  )
+})
+
 // 树形菜单的数据
 const treeData = ref([
   {

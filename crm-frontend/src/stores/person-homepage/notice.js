@@ -1,75 +1,127 @@
+/*
+ * @Author: setti5 2283356040@qq.com
+ * @Date: 2023-11-01 21:29:40
+ * @LastEditors: setti5 2283356040@qq.com
+ * @LastEditTime: 2023-11-08 18:07:03
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\person-homepage\notice.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { test } from '@/apis/inventory-manager/index.js'
-import {list_test}  from "@/apis/personal-homapage/notice.js"
+import {
+  addNotice,
+  getNotice,
+  queryNotion,
+  removeNotice,
+  updateNotice
+} from '@/apis/personal-homepage/notice.js'
 
-export const useNotice = defineStore(
-  'notice',
-  () => {
-state 
-   const data = ref([
+// 公共接口，获取用户列表
+import { getUserNameList } from '@/apis/publicInterface.js'
+import { getDepartmentList } from '@/apis/publicInterface.js'
+
+export const useNoticeStore = defineStore('notice', () => {
+  const tableData = ref([])
+  const total = ref()
+  // 公共接口——获取成员列表
+  const optionsUserName = ref([
     {
-        headline:"雨",
-        publishing_content:"哈哈哈",
-        publisher:'小明',
-        release_time:'2023-01-01 22:32:19',
-        status:
-        {
-            value:'未读',
-            tagType:'danger'
-        },
-        recipient:"小红",
-        // 以下内容引入但没有展示，研究中
-        // operations: 
-        // {
-        //     value: '查看',
-        // },
-        // {
-        //     value: '删除',
-        // },
+      value: 'Option1',
+      label: '零起飞工作室111111'
     },
     {
-        headline:"雨",
-        publishing_content:"哈哈哈",
-        publisher:'小明',
-        release_time:'2023-01-01 12:29:39',
-        status:{
-            value:'已查看',
-            tagType:'info'
-        },
-        recipient:"小红"
+      value: 'Option2',
+      label: '商务部'
+    },
+    {
+      value: 'Option3',
+      label: '技术部'
     }
-   ])
-   const d1 = ref([])
-   const str = ref('')
-   // action 处理state的数据
-   const getData = ()=>{
-        test({},(response)=>{
-            console.log('res',response);
-            str.value = response.data.data.str
-        },(error)=>{
-            console.log('error',error);
-        })
-   }
-   
-   const getD1 = ()=>{
-    console.log(111);
-    list_test({},(response)=>{
-        console.log('res',response);
-        d1.value = response.data
-        // console.log('d1',response.data);
-    },(error)=>{
-        console.log('error',error);
+  ])
+  // 公共接口——获取部门列表
+  const optionsDepartmentName = ref([
+    {
+      value: 'Option1',
+      label: '零起飞工作室111111'
+    },
+    {
+      value: 'Option2',
+      label: '商务部'
+    },
+    {
+      value: 'Option3',
+      label: '技术部'
+    }
+  ])
+  const getStoreList = async (params) => {
+    console.log('getStoreList', params)
+    await queryNotion(params)
+    .then((res) => {
+      tableData.value = res.data.rows.map((row) => {
+        row.status = {
+          value: row.status ? '已读' : "未读",
+          tagType: row.status ? 'info' : 'danger'
+        }
+        total.value = res.data.total
+        return row
+      })
     })
-   }
-
-    return {
-     data,
-     str,
-     getData,
-     getD1,
-     d1
-    }
+    .catch((err) => {
+      console.log('err', err)
+    })
   }
-)
+
+  const getOptionsUserName = ()=>{
+  getUserNameList({}, (res) => {
+      optionsUserName.value = res.data.map((row)=>{
+        return {
+          label:row.name,
+          value:row.id
+        }
+      })
+    })
+  }
+  const getOptionsDepartName = () => {
+    getDepartmentList({}, (res) => {
+      optionsDepartmentName.value = res.data.map((row)=>{
+        return {
+          label:row.name,
+          value:row.id
+        }
+      })
+    })
+  }
+
+  const addNoticeItem = async (params)=>{
+    console.log('addNoticeItem', params)
+    return await addNotice(params)
+  }
+  // 获取指定公告详情
+  const getNoticeItem = async (params)=>{
+    console.log('getNoticeItem', params)
+    return await getNotice(params)
+  }
+  const removeNoticeItem = async (params)=>{
+    console.log('removeNoticeItem', params)
+    return await removeNotice(params)
+  }
+  const updateNoticeItem = async (params)=>{
+    console.log('updateNoticeItem', params)
+    return await updateNotice(params)
+  }
+
+  return {
+      getStoreList,
+      tableData,
+      total,
+      getOptionsDepartName,
+      optionsDepartmentName,
+      getOptionsUserName,
+      optionsUserName,
+      addNoticeItem,
+      getNoticeItem,
+      removeNoticeItem,
+      updateNoticeItem
+  }
+})
 

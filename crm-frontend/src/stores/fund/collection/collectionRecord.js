@@ -9,7 +9,7 @@
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
  */
 import { defineStore } from 'pinia'
-
+import { getCollectionRecordList } from '@/apis/fund/collectionRecord/index.js'
 export const useCollectionRecord = defineStore('collectionRecord', {
   state: () => ({
     clientNameList: ['sayoriqwq', 'sayori'],
@@ -85,5 +85,12 @@ export const useCollectionRecord = defineStore('collectionRecord', {
     }
   }),
   getters: {},
-  actions: {}
+  actions: {
+    async getCollectionRecordList(pageParams, searchParams) {
+      const res = await getCollectionRecordList(pageParams, searchParams).catch(
+        (e) => e
+      )
+      console.log('res', res)
+    }
+  }
 })

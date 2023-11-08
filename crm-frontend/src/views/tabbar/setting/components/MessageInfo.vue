@@ -8,7 +8,7 @@
       :key="item.id"
     >
       <div style="display: flex; justify-content: space-between">
-        <span class="title" :class="item.flag === 0 ? 'read' : ''">
+        <span class="title" :class="item.flag === 1 ? 'read' : ''">
           {{ item.msgTitle }}
         </span>
         <el-tooltip
@@ -16,19 +16,19 @@
           effect="dark"
           content="标记为已读"
           placement="bottom"
-          v-if="item.flag === -1"
+          v-if="item.flag !== 1"
         >
           <el-button
             small="small"
             icon="IconCheck"
             circle
             @click="signRead(item)"
-            v-if="item.flag === -1"
+            v-if="item.flag !== 1"
           ></el-button>
         </el-tooltip>
       </div>
-      <div class="content" :class="item.flag === 0 ? 'read' : ''">
-        {{ item.message }}
+      <div class="content" :class="item.flag === 1 ? 'read' : ''">
+        {{ item.remindTime }}
       </div>
     </el-card>
   </div>
@@ -36,19 +36,16 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import {
-  queryMessageNotices,
-  markAsRead,
-  addMessageNotices
-} from '@/apis/systemPage/index.js'
+import { queryMessageNotices, markAsRead } from '@/apis/systemPage/index.js'
 
 import useMessageInfo from '@/stores/system-page/messageInfo.js'
+import { ElMessage } from 'element-plus'
 
 const messageInfo = useMessageInfo()
 
 // 初始化数据
-const getMessageInfo = async () => {
-  await queryMessageNotices()
+const getMessageInfo = () => {
+  queryMessageNotices()
 }
 // 触发提示音
 const handlePlay = (id) => {
@@ -58,14 +55,29 @@ const handlePlay = (id) => {
 onMounted(() => {
   getMessageInfo()
   setInterval(async () => {
-    await addMessageNotices()
-    // handlePlay('audio')
-  }, 5000)
+    getMessageInfo()
+    const flag = messageInfo.messageInfo.find((item) => {
+      return item.flag === 1
+    })
+    if (!flag) {
+      // handlePlay('audio')
+    }
+  }, 10000)
 })
 
 // 标记为已读
-const signRead = async (item) => {
-  await markAsRead(item.id)
+const signRead = (item) => {
+  markAsRead(
+    item.id,
+    0,
+    (response) => {
+      getMessageInfo()
+      ElMessage.success(response.data)
+    },
+    (error) => {
+      ElMessage.error(error)
+    }
+  )
 }
 </script>
 

@@ -1,8 +1,8 @@
 /*
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-25 21:31:59
- * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-10-31 21:39:55
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-05 22:33:06
  * @FilePath: \zero-one-crmsys\crm-frontend\src\plugins\el-icon.js
  * @Description:
  *
@@ -11,16 +11,21 @@
 // 这里导入你要使用的图标
 // 写成多行避免解决冲突麻烦
 import {
+  Avatar,
   Bell,
   ChatDotRound,
   Check,
+  CollectionTag,
   FullScreen,
   Histogram,
   Menu,
   MoonNight,
   Plus,
+  Postcard,
   Refresh,
-  Sunny
+  ShoppingCart,
+  Sunny,
+  Van
 } from '@element-plus/icons-vue'
 import { Setting } from '@element-plus/icons-vue'
 import { User } from '@element-plus/icons-vue'
@@ -41,9 +46,9 @@ import { CreditCard } from '@element-plus/icons-vue'
 import { Comment } from '@element-plus/icons-vue'
 import { View } from '@element-plus/icons-vue'
 import { FolderChecked } from '@element-plus/icons-vue'
-
-
+import { Upload } from '@element-plus/icons-vue'
 export default (app) => {
+  app.component('IconUpload', Upload)
   app.component('IconMenu', Menu)
   app.component('IconSetting', Setting)
   app.component('IconUser', User)
@@ -76,4 +81,9 @@ export default (app) => {
   app.component('IconFolderChecked', FolderChecked)
   app.component('IconCheck', Check)
   app.component('IconHistogram', Histogram)
+  app.component('IconPostCard', Postcard)
+  app.component('IconAvatar', Avatar)
+  app.component('IconCollectionTag', CollectionTag)
+  app.component('IconShop', ShoppingCart)
+  app.component('IconVan', Van)
 }

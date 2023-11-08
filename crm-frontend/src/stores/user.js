@@ -52,10 +52,9 @@ export const userStore = defineStore('user', {
       // 发送获取当前用户信息请求
       let data = await Request.requestForm(
         Request.GET,
-        '/login/current-user',
-        null
-      )
-      this.user = data.data
+        '/login/current-user'
+      ).catch((e) => e)
+      console.log('loaduser', data)
     },
     // 加载菜单
     async loadMenus() {
@@ -63,12 +62,9 @@ export const userStore = defineStore('user', {
       //this.menus = testMenus
 
       // 发送获取菜单请求
-      let data = await Request.requestForm(
-        Request.GET,
-        '/login/get-menus',
-        null
-      )
-      this.menus = data.data
+      let data = await Request.requestForm(Request.GET, '/login/get-menus')
+      // this.menus = data.data
+      console.log('loadmenu', data)
     },
     // 加载刷新凭证
     loadRefreshToken() {
@@ -102,6 +98,7 @@ export const userStore = defineStore('user', {
       localStorage.setItem('token', this.token)
       localStorage.setItem('refreshToken', this.refreshToken)
     },
+
     // 重置数据
     resetSaveData() {
       this.loaded = false

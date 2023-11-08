@@ -144,10 +144,10 @@
       </div>
       <template v-if="props?.useCalculate">
         <div>
-          合同金额统计：￥{{
-            totalMoney
+          合同金额统计：￥{{ props.totalMoney }} 回款金额统计：￥{{
+            props.totalBackMoney
           }}
-          回款金额统计：￥{{}} 欠款金额统计：￥{{}}
+          欠款金额统计：￥{{ props.totalOweMoney }}
         </div>
       </template>
 
@@ -178,11 +178,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from 'vue'
-import { useSalesContractStore } from '@/stores/salesmanager/SalesContract.js'
-
-// 导入销售合同列表的仓库
-const useSalesContractStore1 = useSalesContractStore()
+import { ref } from 'vue'
 
 const props = defineProps({
   // 标题
@@ -280,6 +276,18 @@ const props = defineProps({
   useOperateColumn: {
     type: Boolean,
     default: true
+  },
+  totalMoney: {
+    type: Number,
+    default: -1
+  },
+  totalBackMoney: {
+    type: Number,
+    default: -1
+  },
+  totalOweMoney: {
+    type: Number,
+    default: -1
   }
 })
 
@@ -287,24 +295,6 @@ const paginationData = ref({
   currentPage: 1,
   pageSize: props.pageSizes ? props.pageSizes[0] : 5
 })
-
-// const tableDataList = ref(useSalesContractStore1.tableData)
-
-let MoneyList = ref([])
-// let totalMoney = ref(0)
-// 计算合同总金额
-let totalMoney = computed(() => {
-  // MoneyList.value = useSalesContractStore1.tableData
-  // console.log('moneyList', MoneyList.value[0].money)
-  // console.log(useSalesContractStore1.tableData)
-  // 循环遍历得到tableData中的所有money值
-  // for (let i = 0; i < 5; i++) {
-  //   totalMoney.value += MoneyList.value[i].money
-  // }
-  // return totalMoney.value
-})
-let totalBackMoney = ref(0)
-let totalOweMoney = ref(0)
 
 const rows = ref([])
 
@@ -321,12 +311,20 @@ const handleCommand = (command, row) => {
   })
   item.handleAction(row)
 }
+// 这里是用来处理当表格的选择框发生变化时的回调函数
 const handleSelectionChange = (newRows) => {
   rows.value = newRows
+  // console.log(2)
+  // 通过emit向父组件传递数据，这里是向父组件传递一个数组，数组中存放的是被选中的行的数组长度
+  emits('selectFuckingChange', newRows.length)
 }
 // 调用父组件更新表格数据的函数
 //  updateSwitchState 调用父组件的修改开关状态的函数
-const emits = defineEmits(['updateTableData'], ['updateSwitchState'])
+const emits = defineEmits(
+  ['updateTableData'],
+  ['updateSwitchState'],
+  ['selectFuckingChange']
+)
 
 const handleSizeChange = (pageSize) => {
   // 当前页的数据容量改变，重置页码为1
@@ -351,20 +349,6 @@ defineExpose({
   paginationData,
   // 开关的loading
   openSwitchLoading
-})
-
-const getSalesContractList = async (params) => {
-  await useSalesContractStore1.getTableData(params)
-}
-// 挂载时获得分页数据
-onMounted(() => {
-  // const bb = JSON.parse(JSON.stringify(Data))
-  // console.log('bb', bb)
-  const params = {
-    pageIndex: 1,
-    pageSize: 5
-  }
-  getSalesContractList(params)
 })
 </script>
 

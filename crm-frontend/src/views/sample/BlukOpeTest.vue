@@ -1,9 +1,18 @@
+<!--
+ * @Author: BINGWU
+ * @Date: 2023-10-26 20:52:05
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-05 16:31:18
+ * @FilePath: \crm-frontend\src\views\sample\BlukOpeTest.vue
+ * @Describe: 
+ * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
+-->
 <template>
   <BulkOPe
     :excelData="excel"
     tableName="入库表"
     excelName="入库表格.xlsx"
-    :getOpt="() => [0, 1, 2]"
+    :getOpt="() => [0, 1, 2, 3, 4]"
     path="/file/upload"
     baseURL="http://localhost:8090"
     StreamPath="/user/modify-user?nickname=莉莉丝&age=10"

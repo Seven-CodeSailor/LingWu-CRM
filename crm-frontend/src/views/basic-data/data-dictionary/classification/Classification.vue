@@ -2,7 +2,7 @@
  * @Author: BINGWU
  * @Date: 2023-10-26 21:33:34
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-03 17:35:23
+ * @LastEditTime: 2023-11-06 19:09:54
  * @FilePath: \crm-frontend\src\views\basic-data\data-dictionary\classification\Classification.vue
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
 -->
@@ -14,8 +14,9 @@
       :handle-delete="handleDelete"
       :handle-edit="handleEdit"
       :table-data="classficationStore.tableData"
-      :page-size="[5, 10, 15]"
+      :page-sizes="[5, 10, 15]"
       :total="classficationStore.total"
+      :useSelectColumn="false"
       @update-table-data="
         (pageSize, pageIndex) => {
           getTableData({
@@ -30,14 +31,14 @@
         <el-icon><icon-message-box /></el-icon
       ></template>
       <template #menu>
-        <el-button type="primary" @click="addType">添加</el-button>
+        <el-button type="primary" @click="handleAdd">添加</el-button>
       </template>
     </BaseDataList>
     <!-- 表单组件 -->
     <DictionaryEditFormCom
       ref="DictionaryEditFormRef"
       :title="title"
-      :handle-submit="submitType"
+      :handle-submit="handleSubmit"
     ></DictionaryEditFormCom>
   </div>
 </template>
@@ -54,7 +55,7 @@ const tableColumnAttribute = ref([
     label: '分类名称'
   },
   {
-    prop: 'typeTag',
+    prop: 'typetag',
     label: '调用标识'
   },
   {
@@ -70,6 +71,7 @@ const tableColumnAttribute = ref([
 const DictionaryEditFormRef = ref(null)
 const title = ref('')
 const baseDataListRef = ref(null)
+const rowId = ref('')
 const getTableData = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   await classficationStore.getDictclassify(params)
@@ -94,10 +96,10 @@ const handleDelete = (row) => {
   })
     .then(() => {
       const { id } = row
-      deleteTableData({ id }).then(async (res) => {
+      deleteTableData({ id }).then(async () => {
         ElMessage({
           type: 'success',
-          message: res.message
+          message: '删除成功'
         })
         // 更新表格数据
         await getTableData({
@@ -116,21 +118,22 @@ const handleDelete = (row) => {
 
 const handleEdit = (row) => {
   DictionaryEditFormRef.value.visible = true
+  // 获取id
+  rowId.value = row.id
   // 数据回显
-  const newRow = { ...row }
-  newRow.visible = newRow.visible ? true : false
+  row.visible = row.visible ? true : false
   DictionaryEditFormRef.value.form = {
-    ...newRow
+    ...row
   }
   title.value = '编辑分类'
 }
 
-const addType = () => {
+const handleAdd = () => {
   DictionaryEditFormRef.value.visible = true
   title.value = '添加分类'
 }
 
-const submitType = async () => {
+const handleSubmit = async () => {
   await DictionaryEditFormRef.value.formRef.validate(async (valid) => {
     if (valid) {
       const params = {
@@ -139,23 +142,24 @@ const submitType = async () => {
       params.visible = params.visible ? 1 : 0
       if (title.value === '添加分类') {
         // 接口函数
-        const res = await addTableData(params)
+        await addTableData(params)
         ElMessage({
           type: 'success',
-          message: res.message
+          message: '添加成功'
         })
       } else {
         // 修改的接口函数
-        const res = await modifyTableData(params)
+        params.id = rowId.value
+        await modifyTableData(params)
         ElMessage({
           type: 'success',
-          message: res.message
+          message: '修改成功'
         })
       }
       // 清空表单
       DictionaryEditFormRef.value.form = {
         typeName: '',
-        typeTag: '',
+        typetag: '',
         intro: '',
         sort: 0,
         visible: false,
@@ -173,10 +177,7 @@ const submitType = async () => {
 }
 
 onMounted(() => {
-  // 测试
   getTableData({ pageSize: 5, pageIndex: 1 })
-  addTableData()
-  modifyTableData()
 })
 </script>
 

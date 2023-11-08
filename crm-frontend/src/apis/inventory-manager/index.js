@@ -1,62 +1,56 @@
+/*
+ * @Author: BINGWU
+ * @Date: 2023-10-26 20:52:05
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-06 17:35:13
+ * @FilePath: \crm-frontend\src\apis\inventory-manager\index.js
+ * @Describe:
+ * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
+ */
 import Request from '../request'
 
 // 定义一个功能模块基础url，方便替换
-// const currBaseUrl = '/inventory-manager/'
+const currBaseUrl = '/cpp5-inventory'
 /**
- * 获取入库明细项列表
- * @param {*} data 获取入库明细的数据
- * @param {*} success 成功获取数据后的回调
- * @param {*} fail 获取数据失败的回调
+ * @description: 获取入库明细项列表
+ * @param {Object} params
+ * @return {Promise}
  */
-export const queryStorageDetails = async (data, success, fail) => {
-  // 当有接口就直接使用下面的
-  // Request.requestJson(Request.GET, currBaseUrl + 'query-storage-details', {
-  //   params: {
-  //     ...data
-  //   }
-  // })
-  //   .then((response) => {
-  //      success(response)
-  //   })
-  //   .catch((error) => {
-  //     fail(error)
-  //   })
-  // 没有接口就使用下面mock模拟的数据
-  await Request.requestJson(
+export const queryStorageDetails = async (params) => {
+  return await Request.requestJson(
     Request.GET,
-    'https://mockapi.eolink.com/KnVGhupeb89500c132462100d3745b0046ecd1264eeb224/inventory-manager/query-storage-details1',
-    {
-      params: {
-        ...data
-      }
-    }
+    currBaseUrl + '/inventory-manager/query-storage-details',
+    params
   )
-    .then((response) => {
-      success(response)
-    })
-    .catch((error) => {
-      fail(error)
-    })
-}
-// 以下是mock测试用例,暂时别删
-export const getInventortOutTableList = (theUrl) => {
-  return Request.requestJson(Request.GET, theUrl)
-  // return new Promise((resolve) => {
-  //   resolve(data)
-  // }).then((res) => {
-  //   // 写死数据
-  //   // 将数据存储在pinia
-  //   console.log(res)
-  // })
 }
 
-export const queryInventoryList = async (data, success, fail) => {
+/**
+ * @description: 查询入库明细
+ * @param {Object} params
+ * @return {Promise}
+ */
+export const queryInventoryList = async (params) => {
   await Request.requestJson(
+    Request.GET,
+    '/inventory-manager/query-instorage_details',
+    params
+  )
+}
+
+// 导出入库明细
+export const exportStorageDetails = async (
+  list_id = [],
+  success = () => {},
+  fail = () => {}
+) => {
+  let data = []
+  list_id.forEach((item) => {
+    data.push({ list_id: item })
+  })
+  Request.requestJson(
     Request.POST,
-    'https://mock.apifox.cn/m1/3426132-0-default/inventory-manager/query-inventory-list',
-    {
-      params: { ...data }
-    }
+    '/inventory-manager/export-storage-details',
+    data
   )
     .then((response) => {
       success(response)
@@ -65,16 +59,40 @@ export const queryInventoryList = async (data, success, fail) => {
       fail(error)
     })
 }
-export const getOutTableList = () => {}
 
-// 
-export const test = async (data, success, fail) => {
-  await Request.requestJson(
-    Request.GET,
-    'https://mockapi.eolink.com/69jekXFeb89500c132462100d3745b0046ecd1264eeb224/test',
-    {
-      
-    }
+// 确认入库
+export const modifyConfirmStorage = async (
+  id,
+  into_user_id,
+  success = () => {},
+  fail = () => {}
+) => {
+  Request.requestJson(Request.PUT, '/inventory-manager/modify-ConfirmStorage', {
+    id,
+    into_user_id
+  })
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
+
+// 删除入库单
+export const deleteStorage = async (
+  id = [],
+  success = () => {},
+  fail = () => {}
+) => {
+  let data = []
+  id.forEach((item) => {
+    data.push({ id: item })
+  })
+  Request.requestJson(
+    Request.DELETE,
+    '/inventory-manager/modify-ConfirmStorage',
+    data
   )
     .then((response) => {
       success(response)

@@ -10,6 +10,7 @@
         :usePagination="$store.sendData.usePagination"
         :page-sizes="$store.sendData.pageSizes"
         :total="$store.sendData.total"
+        @update-table-data="updateTableData"
       >
         <template #menu>
           <div class="space-between">
@@ -32,7 +33,10 @@
             </div>
             <div class="right">
               <div class="search">
-                <el-input v-model="searchData" placeholder="搜索"></el-input>
+                <el-input
+                  v-model="searchData"
+                  placeholder="搜索(按照计划时间)"
+                ></el-input>
                 <el-button
                   type="primary"
                   :icon="Search"
@@ -129,6 +133,7 @@
       v-model="showAddDrawer"
       :before-close="handleClose"
       direction="rtl"
+      :destroy-on-close="true"
     >
       <template #header>
         <h3>添加回款计划</h3>
@@ -209,6 +214,7 @@
       v-model="showEditDrawer"
       :before-close="handleClose"
       direction="rtl"
+      :destroy-on-close="true"
     >
       <template #header>
         <h3>修改回款计划</h3>
@@ -216,9 +222,9 @@
       <template #default>
         <div>
           <el-form v-model="editData">
-            <el-form-item label="客户名称" prop="supplierName">
+            <el-form-item label="客户名称" prop="clientName">
               <el-select
-                v-model="confirmData.supplierName"
+                v-model="editData.clientName"
                 placeholder="请选择客户名称"
                 @change="handleClientNameChange"
               >
@@ -232,7 +238,7 @@
             </el-form-item>
             <el-form-item label="销售合同" prop="purchaseOrder">
               <el-select
-                v-model="confirmData.purchaseOrder"
+                v-model="editData.saleContract"
                 placeholder="请选择客户销售合同"
               >
                 <el-option
@@ -255,7 +261,12 @@
             <el-form-item label="已开发票金额">
               <el-input v-model="invoiceAmount" disabled></el-input>
             </el-form-item>
-            <el-form-item label="回款日期" prop="planBackDate"></el-form-item>
+            <el-form-item label="回款日期" prop="planBackDate">
+              <el-date-picker
+                type="datetime"
+                v-model="editData.planBackDate"
+              ></el-date-picker>
+            </el-form-item>
             <el-form-item label="期次" prop="period">
               <el-input v-model="totalAmount" disabled></el-input>
             </el-form-item>
@@ -298,9 +309,27 @@ const $store = useCollectionPlan()
 
 onMounted(() => {
   //页面初始化，加载数据
-  $store.getCollectionPlanList({ pageIndex: 1, pageSize: 10 })
+  $store.getCollectionPlanList({ pageIndex: 1, pageSize: 2 })
 })
-
+const updateTableData = (pageSize, pageIndex) => {
+  $store.pageParams = [pageIndex, pageSize]
+  $store.getCollectionPlanList({ pageIndex, pageSize })
+}
+const searchData = ref('')
+const handleSearch = () => {
+  searchData.value === ''
+    ? $store.getCollectionPlanList({
+        pageIndex: $store.pageParams.pageIndex,
+        pageSize: $store.pageParams.pageSize
+      })
+    : $store.getCollectionPlanList(
+        {
+          pageIndex: $store.pageParams.pageIndex,
+          pageSize: $store.pageParams.pageSize
+        },
+        { backdate: searchData.value }
+      )
+}
 const handleMsgSend = (title, desc) => {
   console.log(title, desc)
 }
@@ -309,6 +338,16 @@ const handleEmailSend = (title, desc) => {
   console.log(title, desc)
 }
 
+const handleClose = () => {
+  console.log('handleClose')
+  showAddDrawer.value = false
+  showEditDrawer.value = false
+  showDialog.value = false
+}
+
+const handleBatchDelete = () => {
+  console.log('delete')
+}
 const dropdownMenuActionsInfo = [
   {
     command: '回款',
@@ -325,7 +364,7 @@ const dropdownMenuActionsInfo = [
     // row为当前行的数据
     handleAction: (row) => {
       console.log('修改', row)
-      showDialog.value = true
+      showEditDrawer.value = true
     },
     actionName: '修改'
   },
@@ -383,7 +422,11 @@ const editData = ref({
   period: 0,
   planBackAmount: 0
 })
-
+const handleEdit = (row) => {
+  console.log('row', row)
+  console.log('editData', editData)
+  $store.updateCollectionPlan(editData.value)
+}
 //!SECTION
 //SECTION - confirm
 const showDialog = ref(false)

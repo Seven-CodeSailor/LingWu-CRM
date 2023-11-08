@@ -1,76 +1,76 @@
 const fund = {
   text: '资金管理',
   href: '/fund',
-  icon: 'IconHouse',
+  icon: 'IconCollectionTag',
   children: [
     {
       text: '资金注入抽取',
       href: '/fund/injectionExtraction',
-      icon: 'IconHouse'
+      icon: 'IconCollectionTag'
     },
     {
       text: '回款管理',
       href: '/fund/collection',
-      icon: 'IconHouse',
+      icon: 'IconCollectionTag',
       children: [
         {
           text: '回款计划',
           href: '/fund/collection/collectionPlan',
-          icon: 'IconHouse'
+          icon: 'IconCollectionTag'
         },
         {
           text: '回款记录',
           href: '/fund/collection/collectionRecords',
-          icon: 'IconHouse'
+          icon: 'IconCollectionTag'
         },
         {
           text: '开票记录',
           href: '/fund/collection/invoiceRecords',
-          icon: 'IconHouse'
+          icon: 'IconCollectionTag'
         }
       ]
     },
     {
       text: '收入开支',
       href: '/fund/incomeExpense',
-      icon: 'IconHouse',
+      icon: 'IconCollectionTag',
       children: [
         {
           text: '其他收入单',
           href: '/fund/incomeExpense/income',
-          icon: 'IconHouse'
+          icon: 'IconCollectionTag'
         },
         {
           text: '费用支出单',
           href: '/fund/incomeExpense/expense',
-          icon: 'IconHouse'
+          icon: 'IconCollectionTag'
         }
       ]
     },
     {
       text: '账户流水记录',
       href: '/fund/records',
-      icon: 'IconHouse'
+      icon: 'IconCollectionTag'
     },
     {
       text: '付款管理',
       href: '/fund/payment',
-      icon: 'IconHouse',
+      icon: 'IconCollectionTag',
       children: [
         {
           text: '付款计划',
           href: '/fund/payment/plan',
-          icon: 'IconHouse'
+          icon: 'IconCollectionTag'
         },
         {
           text: '付款记录',
           href: '/fund/payment/paymentRecords',
-          icon: 'IconHouse'
+          icon: 'IconCollectionTag'
         },
         {
           text: '收票记录',
           href: '/fund/payment/ticketRecords',
-          icon: 'IconHouse'
+          icon: 'IconCollectionTag'
         }
       ]
     }

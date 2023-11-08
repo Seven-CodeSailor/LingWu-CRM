@@ -2,7 +2,7 @@
  * @Author: BINGWU
  * @Date: 2023-11-04 00:24:28
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-04 21:15:42
+ * @LastEditTime: 2023-11-04 22:34:03
  * @FilePath: \crm-frontend\src\apis\basic-data\regional\regional.js
  * @Describe:
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
@@ -39,7 +39,7 @@ export const deleteArea = async (params) => {
  * @return {Promise}
  */
 export const insertArea = async (params) => {
-  return await Request.requestJson(
+  return await Request.requestForm(
     Request.POST,
     baseUrl + '/j3-area/insertArea',
     params
@@ -51,7 +51,7 @@ export const insertArea = async (params) => {
  * @return {Promise}
  */
 export const modifyArea = async (params) => {
-  return await Request.requestJson(
+  return await Request.requestForm(
     Request.POST,
     baseUrl + '/j3-area/modifyArea',
     params
@@ -63,14 +63,4 @@ export const modifyArea = async (params) => {
  */
 export const queryTree = async () => {
   return await Request.requestJson(Request.GET, baseUrl + '/j3-area/query-tree')
-}
-/**
- * @description: 获取区域下拉列表
- * @return {Promise}
- */
-export const selectArea = async () => {
-  return await Request.requestJson(
-    Request.GET,
-    baseUrl + '/j3-area/select-area'
-  )
 }

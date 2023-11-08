@@ -149,6 +149,7 @@ const search = () => {
     dropdownRef.value.$el.click()
   }
 }
+defineExpose({ inputVal1, inputVal2, inputVal3 })
 </script>
 
 <style lang="scss" scoped>

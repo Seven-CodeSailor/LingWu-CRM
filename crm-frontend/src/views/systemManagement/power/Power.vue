@@ -11,7 +11,7 @@
         :total="sendData.total"
         :use-header="sendData.useHeader"
         :title="sendData.title"
-        @update-table-data="get"
+        @update-table-data="updateTableData"
         ref="baseDataListRef"
       >
         <template #treeMeau>
@@ -67,6 +67,7 @@
       v-model="showEditDrawer"
       direction="rtl"
       :before-close="handleClose"
+      ref="editDrawerRef"
     >
       <template #header>
         <h3>信息</h3>
@@ -74,11 +75,11 @@
       <template #default>
         <div>
           <el-form v-model="editFormData">
-            <el-form-item label="权限名称" prop="mingcheng"
-              ><el-input v-model="editFormData.mingcheng"></el-input
+            <el-form-item label="权限名称" prop="name"
+              ><el-input v-model="editFormData.name"></el-input
             ></el-form-item>
-            <el-form-item label="权限描述" prop="miaoshu"
-              ><el-input v-model="editFormData.miaoshu"></el-input
+            <el-form-item label="权限描述" prop="value"
+              ><el-input v-model="editFormData.value"></el-input
             ></el-form-item>
           </el-form>
         </div>
@@ -105,11 +106,11 @@
             ref="addDrawerRef"
             :model="addFormData"
           >
-            <el-form-item label="权限名称" prop="mingcheng"
-              ><el-input v-model="addFormData.mingcheng"></el-input
+            <el-form-item label="权限名称" prop="name"
+              ><el-input v-model="addFormData.name"></el-input
             ></el-form-item>
-            <el-form-item label="权限描述" prop="miaoshu"
-              ><el-input v-model="addFormData.miaoshu"></el-input
+            <el-form-item label="权限描述" prop="value"
+              ><el-input v-model="addFormData.value"></el-input
             ></el-form-item>
           </el-form>
         </div>
@@ -129,22 +130,21 @@ import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import useSysPower from '@/stores/sysManage/power.js'
 import { Refresh, Search, Plus } from '@element-plus/icons-vue'
 import { onMounted, ref, reactive } from 'vue'
+
 const $store = useSysPower()
 
 onMounted(() => {
-  $store.init()
+  $store.getPowerList({ pageIndex: 1, pageSize: 10 })
 })
 const addFormData = reactive({
-  mingcheng: '',
-  miaoshu: ''
+  name: '',
+  value: ''
 })
 
 const editFormData = ref({
-  mingcheng: '',
-  miaoshu: ''
+  name: '',
+  value: ''
 })
-
-const searchData = ref('')
 
 const sendData = reactive($store.sendData)
 const sendTreeData = $store.sendTreeData
@@ -152,6 +152,7 @@ const showAddDrawer = ref(false)
 const showEditDrawer = ref(false)
 
 const addDrawerRef = ref()
+const editDrawerRef = ref()
 const handleAdd = () => {
   showAddDrawer.value = true
 }
@@ -163,8 +164,14 @@ const handleEdit = (row) => {
   editFormData.value = row
 }
 
-const handleDelete = (row) => {
+const handleDelete = async (row) => {
   console.log('删除', row)
+  const res = await $store.deletePower(row.id)
+  console.log('res-in-delete', res)
+  $store.getPowerList({
+    pageIndex: $store.pageParams.pageIndex,
+    pageSize: $store.pageParams.pageSize
+  })
 }
 
 const handleSearch = () => {
@@ -175,18 +182,38 @@ const handleRefresh = () => {
   console.log('发请求刷新页面')
   // $store.loadTableData()
 }
-const saveAddData = () => {
-  console.log('带着data', addFormData, '发add请求')
-  showAddDrawer.value = false
-  //解promise之后:
-  ElMessage.success('添加成功')
-  console.log('addDrawerRef', addDrawerRef.value)
-  addDrawerRef.value.resetFields()
+const saveAddData = async () => {
+  const res = await $store.addPower(addFormData)
+
+  if (res.code !== 10000) {
+    ElMessage.error('失败message', res.message)
+    return
+  } else {
+    ElMessage.success('添加成功')
+    showAddDrawer.value = false
+    $store.getPowerList({
+      pageIndex: 1,
+      pageSize: $store.pageParams.pageSize
+    })
+    addDrawerRef.value.resetFields()
+  }
 }
 
 const saveEditData = () => {
-  console.log('带着data', editFormData, '发edit请求')
-  showEditDrawer.value = false
+  const res = $store.updatePower(editFormData.value)
+
+  if (res.code !== 10000) {
+    ElMessage.error('失败message', res.message)
+    return
+  } else {
+    ElMessage.success('添加成功')
+    showEditDrawer.value = false
+    $store.getPowerList({
+      pageIndex: 1,
+      pageSize: $store.pageParams.pageSize
+    })
+    editDrawerRef.value.resetFields()
+  }
 }
 const handleClose = (done) => {
   console.log('关闭前的confirm')
@@ -201,10 +228,9 @@ const handleCancel = () => {
   showAddDrawer.value = false
   console.log('取消')
 }
-const get = (pageSize, currentPage) => {
-  console.log('调用父组件的更新数据的函数')
-  console.log('pageSize', pageSize)
-  console.log('currentPage', currentPage)
+const updateTableData = (pageSize, pageIndex) => {
+  $store.pageParams = [pageSize, pageIndex]
+  $store.getPowerList({ pageIndex, pageSize })
 }
 </script>
 

@@ -1,4 +1,4 @@
-// import Request from '../request'
+import Request from '../request'
 import useMessageInfo from '@/stores/system-page/messageInfo.js'
 
 const messageInfo = useMessageInfo()
@@ -10,150 +10,44 @@ const messageInfo = useMessageInfo()
  * @returns
  */
 export const queryMessageNotices = (success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-    .then(() => {
-      let data = [
-        {
-          id: '1', //消息id
-          msgTitle: '消息标题1', //消息标题
-          message: '消息内容1', //消息内容
-          msgType: '消息类型', //消息类型
-          urlId: '/dashboard', //跳转链接
-          urlType: '1', //链接类型
-          remindTime: '10-29', // 提醒时间
-          flag: -1 // 消息状态，是否已读
-        },
-        {
-          id: '2', //消息id
-          msgTitle: '消息标题2', //消息标题
-          message: '消息内容2', //消息内容
-          msgType: '消息类型', //消息类型
-          urlId: '/dashboard', //跳转链接
-          urlType: '1', //链接类型
-          remindTime: '10-29', // 提醒时间
-          flag: -1 // 消息状态，是否已读
-        },
-        {
-          id: '3', //消息id
-          msgTitle: '消息标题3', //消息标题
-          message: '消息内容3', //消息内容
-          msgType: '消息类型', //消息类型
-          urlId: '/dashboard', //跳转链接
-          urlType: '1', //链接类型
-          remindTime: '10-29', // 提醒时间
-          flag: -1 // 消息状态，是否已读
+  Request.requestForm(
+    Request.GET,
+    '/sysindex/system-message-remind/query-message-notices'
+  )
+    .then((response) => {
+      messageInfo.setMessageInfo(response.data)
+      let index = 0
+      response.data.forEach((item) => {
+        if (item.flag === 0) {
+          index++
         }
-      ]
-      if (data) {
-        messageInfo.setMessageInfo(data)
-        success()
-        return
-      }
-      fail()
+      })
+      messageInfo.setIndex(index)
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
-    })
+    .catch((error) => fail(error))
 }
 
-/**
- * 标记为已读
- * @param {*} success 成功的回调
- * @param {*} fail 失败的回调
- * @returns
- */
-export const markAsRead = (
+// 标记通知为已读
+export const markAsRead = async (
   id,
   messageType,
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-    .then(() => {
-      if (typeof id !== 'undefined') {
-        console.log(id)
-        messageInfo.markAsRead(id)
-        success()
-        return
-      }
-      fail()
+  Request.requestForm(
+    Request.PUT,
+    '/sysindex/system-message-remind/mark-as-read',
+    {
+      id,
+      messageType
+    }
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
-    })
-}
-
-/**
- * 查询公告通知提醒列表
- * @param {*} success 成功的回调
- * @param {*} fail 失败的回调
- * @returns
- */
-export const queryAnnouncementNotices = (
-  success = () => {},
-  fail = () => {}
-) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-    .then(() => {
-      let data = []
-      if (data) {
-        success()
-        return
-      }
-
-      fail()
-    })
-    .catch((err) => {
-      fail(err)
-    })
-}
-
-/**
- * 添加消息通知
- * @param {*} success 成功的回调
- * @param {*} fail 失败的回调
- * @returns
- */
-let i = 3
-
-export const addMessageNotices = (success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-    .then(() => {
-      let data = {
-        id: ++i, //消息id
-        msgTitle: `消息标题` + i, //消息标题
-        message: `消息内容` + i, //消息内容
-        msgType: '消息类型', //消息类型
-        urlId: '/dashboard', //跳转链接
-        urlType: '1', //链接类型
-        remindTime: '10-29', // 提醒时间
-        flag: -1 // 消息状态，是否已读
-      }
-      if (data) {
-        messageInfo.messageInfo = [...messageInfo.messageInfo, data]
-        success()
-        return
-      }
-      fail()
-    })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -164,27 +58,22 @@ export const addMessageNotices = (success = () => {}, fail = () => {}) => {
  * @returns
  */
 
-export const countBusinessMoney = (
+export const countBusinessMoney = async (
   firstData,
   secondData,
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-    .then(() => {
-      let data = {}
-      if (data) {
-        success()
-        return
-      }
-      fail()
+  await Request.requestForm(
+    Request.GET,
+    '/systemindex/businessstatistics/count-business-money',
+    { firstData, secondData }
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -195,22 +84,19 @@ export const countBusinessMoney = (
  * @returns
  */
 
-export const countBusinessNumber = (success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-    .then(() => {
-      let data = {}
-      if (data) {
-        success()
-        return
-      }
-      fail()
+export const countBusinessNumber = async (
+  success = () => {},
+  fail = () => {}
+) => {
+  await Request.requestForm(
+    Request.GET,
+    '/systemindex/businessstatistics/count-business-number'
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -221,22 +107,19 @@ export const countBusinessNumber = (success = () => {}, fail = () => {}) => {
  * @returns
  */
 
-export const countBusinessSalestage = (success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-    .then(() => {
-      let data = {}
-      if (data) {
-        success()
-        return
-      }
-      fail()
+export const countBusinessSalestage = async (
+  success = () => {},
+  fail = () => {}
+) => {
+  await Request.requestForm(
+    Request.GET,
+    '/systemindex/businessstatistics/count-business-salestage'
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -247,27 +130,22 @@ export const countBusinessSalestage = (success = () => {}, fail = () => {}) => {
  * @returns
  */
 
-export const countBusinessSuccessrate = (
+export const countBusinessSuccessrate = async (
   firstData,
   secondData,
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-    .then(() => {
-      let data = {}
-      if (data) {
-        success()
-        return
-      }
-      fail()
+  await Request.requestForm(
+    Request.GET,
+    '/systemindex/businessstatistics/count-business-successrate',
+    { firstData, secondData }
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -278,27 +156,19 @@ export const countBusinessSuccessrate = (
  * @returns
  */
 
-export const countCustomerGrade = (
-  firstData,
-  secondData,
+export const countCustomerGrade = async (
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-    .then(() => {
-      let data = {}
-      if (data) {
-        success()
-        return
-      }
-      fail()
+  await Request.requestForm(
+    Request.GET,
+    '/systemindex/customerstatistics/count-customer-grade'
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -309,22 +179,19 @@ export const countCustomerGrade = (
  * @returns
  */
 
-export const countCustomerIndustry = (success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-    .then(() => {
-      let data = {}
-      if (data) {
-        success()
-        return
-      }
-      fail()
+export const countCustomerIndustry = async (
+  success = () => {},
+  fail = () => {}
+) => {
+  await Request.requestForm(
+    Request.GET,
+    '/systemindex/customerstatistics/count-customer-industry'
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -335,22 +202,19 @@ export const countCustomerIndustry = (success = () => {}, fail = () => {}) => {
  * @returns
  */
 
-export const countCustomerNumber = (success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-    .then(() => {
-      let data = {}
-      if (data) {
-        success()
-        return
-      }
-      fail()
+export const countCustomerNumber = async (
+  success = () => {},
+  fail = () => {}
+) => {
+  await Request.requestForm(
+    Request.GET,
+    '/systemindex/customerstatistics/count-customer-number'
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -361,21 +225,18 @@ export const countCustomerNumber = (success = () => {}, fail = () => {}) => {
  * @returns
  */
 
-export const countCustomerSource = (success = () => {}, fail = () => {}) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, 0)
-  })
-    .then(() => {
-      let data = {}
-      if (data) {
-        success()
-        return
-      }
-      fail()
+export const countCustomerSource = async (
+  success = () => {},
+  fail = () => {}
+) => {
+  await Request.requestForm(
+    Request.GET,
+    '/systemindex/customerstatistics/count-customer-source'
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }

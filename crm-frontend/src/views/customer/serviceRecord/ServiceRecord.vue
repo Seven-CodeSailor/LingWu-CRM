@@ -6,13 +6,6 @@
         <slot name="ico"></slot>
         <div style="margin-left: 8px">服务记录</div>
       </h3>
-      <el-button
-        class="button"
-        @click="operatingInstructionDialogVisible = true"
-      >
-        <el-icon style="margin-right: 4px"> <icon-question /></el-icon
-        >操作说明</el-button
-      >
     </header>
     <!-- 操作搜索栏 -->
     <section class="menu">
@@ -69,7 +62,7 @@
       <el-table-column type="selection" width="55" />
       <el-table-column
         label="客户名称"
-        prop="customerName"
+        prop="customer_name"
         sortable
       ></el-table-column>
       <el-table-column label="服务类型" prop="services"></el-table-column>
@@ -98,7 +91,7 @@
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
       :page-sizes="[5, 10, 20, 50]"
-      :total="serviceRecord.tableData.length"
+      :total="serviceRecord.total"
       layout="prev, pager, next, jumper, ->, total, sizes"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -107,17 +100,17 @@
   <!-- 添加或修改客户信息 -->
   <el-drawer
     v-model="dialogVisible"
-    :title="
-      serviceRecord.temp.linkmanId === -1 ? '添加服务记录' : '修改服务记录'
-    "
+    :title="!flag ? '添加服务记录' : '修改服务记录'"
     size="50%"
+    @close="close"
   >
     <el-form
       :model="serviceRecord.temp"
       label-width="120px"
       label-position="right"
+      :rules="rules"
     >
-      <el-form-item label="服务类型">
+      <el-form-item label="服务类型" prop="type">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择服务类型"
@@ -126,7 +119,7 @@
           ref="serviceType"
         ></ChooseSelect>
       </el-form-item>
-      <el-form-item label="服务方式">
+      <el-form-item label="服务方式" prop="way">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择服务方式"
@@ -135,26 +128,26 @@
           ref="serviceWay"
         ></ChooseSelect>
       </el-form-item>
-      <el-form-item label="服务日期">
+      <el-form-item label="服务日期" prop="service_time">
         <el-col :span="11">
           <el-date-picker
-            v-model="serviceRecord.temp.linkName"
+            v-model="serviceRecord.temp.service_time"
             type="date"
             placeholder="请选择服务日期"
           />
         </el-col>
       </el-form-item>
-      <el-form-item label="花费时间(分钟)">
+      <el-form-item label="花费时间(分钟)" prop="tlen">
         <el-input-number v-model="serviceRecord.temp.tlen" min="0" />
       </el-form-item>
-      <el-form-item label="服务内容">
+      <el-form-item label="服务内容" prop="content">
         <el-input
           v-model="serviceRecord.temp.content"
           type="textarea"
           style="width: 650px"
         />
       </el-form-item>
-      <el-form-item label="客户名称">
+      <el-form-item label="客户名称" prop="cus">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户名称"
@@ -167,17 +160,12 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="save"> 添加 </el-button>
+        <el-button type="primary" @click="save"> 确定 </el-button>
       </span>
     </template>
   </el-drawer>
   <!-- 删除确认 -->
-  <el-dialog
-    v-model="confirmDelete"
-    title="删除"
-    width="30%"
-    :before-close="(deleteId = null)"
-  >
+  <el-dialog v-model="confirmDelete" title="删除" width="30%">
     <span style="color: red; margin-left: 33%; font-size: 24px"
       >是否确认删除</span
     >
@@ -208,13 +196,25 @@ import {
   sendsmsService,
   sendEmailService
 } from '@/apis/customer/index.js'
+import { ElMessage } from 'element-plus'
 
 // 初始化数据
-const initLinks = async (currentPage, pageSize, customerName) => {
-  await queryServiceNote(currentPage, pageSize, customerName)
+const initLinks = (currentPage, pageSize, customerName) => {
+  queryServiceNote(
+    currentPage,
+    pageSize,
+    customerName,
+    (response) => {
+      serviceRecord.setTableData(response.data.rows)
+      serviceRecord.total = response.data.total
+    },
+    () => {
+      ElMessage.error('获取数据失败')
+    }
+  )
 }
 onMounted(() => {
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 })
 // 我的客户store仓库
 const serviceRecord = useServiceRecord()
@@ -228,16 +228,21 @@ const currentPage = ref(1)
 const pageSize = ref(5)
 const handleSizeChange = (val) => {
   pageSize.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 const handleCurrentChange = (val) => {
   currentPage.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 // 发送消息按钮回调
-const msgSend = async (title, desc) => {
-  await sendsmsService(
-    selectIdArr.value,
+const msgSend = (title, desc) => {
+  let data = []
+  console.log(selectIdArr)
+  selectIdArr.value.forEach((item) => {
+    data.push(item.service_id)
+  })
+  sendsmsService(
+    data,
     title,
     desc,
     () => {
@@ -249,9 +254,13 @@ const msgSend = async (title, desc) => {
   )
 }
 // 发送邮件按钮回调
-const emailSend = async (title, desc) => {
-  await sendEmailService(
-    selectIdArr.value,
+const emailSend = (title, desc) => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.service_id)
+  })
+  sendEmailService(
+    data,
     title,
     desc,
     () => {
@@ -263,70 +272,60 @@ const emailSend = async (title, desc) => {
   )
 }
 
-let tempLinkData = ref({
-  linkmanId: -1, //联系人ID
-  cuntomerId: '', //客户ID
-  customerName: '', //客户名称
-  linkName: '', //联系人名称
-  gender: 0, //联系人性别 1=男，0=女
-  position: '', //联系人职位
-  tel: '', //联系人座机
-  mobile: '', //联系人手机
-  qicq: '', //联系人QQ
-  email: '', //联系人邮箱
-  zipcode: '', //联系人邮政编码
-  address: '', //联系人地址
-  intro: '' //联系人简介
-})
-
-const tempLinkDataReset = () => {
-  tempLinkData.value = {
-    linkmanId: -1, //联系人ID
-    cuntomerId: '', //客户ID
-    customerName: '', //客户名称
-    linkName: '', //联系人名称
-    gender: 0, //联系人性别 1=男，0=女
-    position: '', //联系人职位
-    tel: '', //联系人座机
-    mobile: '', //联系人手机
-    qicq: '', //联系人QQ
-    email: '', //联系人邮箱
-    zipcode: '', //联系人邮政编码
-    address: '', //联系人地址
-    intro: '' //联系人简介
-  }
-}
 const customerName = ref()
 const serviceWay = ref()
 const serviceType = ref()
 // 获取客户名称下拉列表
-const contractGetName = async () => {
-  await getCustomerName()
-  serviceRecord.temp.customerName = customerName.value.value.label
+const contractGetName = () => {
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
+  serviceRecord.temp.customer_id = customerName.value.selectValue.value
 }
 // 获取服务类型下拉列表
 const serviceGettype = async () => {
   await getCustomerServiceType()
-  serviceRecord.temp.services = serviceType.value.value.label
+  serviceRecord.temp.services = serviceType.value.selectValue.label
 }
 // 获取服务方式下拉列表
 const serviceGetWay = async () => {
   await getCustomerServiceWay()
-  serviceRecord.temp.servicesmodel = serviceWay.value.value.label
+  serviceRecord.temp.servicesmodel = serviceWay.value.selectValue.label
 }
 // 点击添加按钮的回调
 const addMyClinet = async () => {
-  await getCustomerName()
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
   await getCustomerServiceType()
   await getCustomerServiceWay()
   serviceRecord.tempReset()
   dialogVisible.value = true
+  flag.value = false
+}
+const flag = ref(false)
+const close = () => {
+  if (flag.value) {
+    serviceRecord.tempReset()
+    customerName.value.reset()
+    serviceWay.value.reset()
+    serviceType.value.reset()
+    flag.value = false
+  }
 }
 // 添加按钮确定回调
-const save = async () => {
-  if (tempLinkData.value.linkmanId === -1) {
-    await addService(
-      tempLinkData.value,
+const save = () => {
+  if (!flag.value) {
+    addService(
+      serviceRecord.temp,
       () => {
         ElMessage.success('添加成功')
       },
@@ -335,8 +334,8 @@ const save = async () => {
       }
     )
   } else {
-    await modifyService(
-      tempLinkData.value,
+    modifyService(
+      serviceRecord.temp,
       () => {
         ElMessage.success('修改成功')
       },
@@ -345,17 +344,28 @@ const save = async () => {
       }
     )
   }
-  tempLinkDataReset()
+  serviceRecord.tempReset()
   select.resetData()
   dialogVisible.value = false
+  initLinks(currentPage.value, pageSize.value)
 }
 // 修改按钮回调
 const modify = async (row) => {
-  await getCustomerName()
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
   await getCustomerServiceType()
   await getCustomerServiceWay()
-  tempLinkData.value.linkmanId = row.linkmanId
+  const item = serviceRecord.tableData.find((item) => {
+    return item.service_id === row.service_id
+  })
+  serviceRecord.temp = item
   dialogVisible.value = true
+  flag.value = true
 }
 
 /**
@@ -368,18 +378,22 @@ const selectChange = (value) => {
   selectIdArr.value = value
 }
 // 批量删除按钮
-const deleteByQuery = async () => {
-  await removeService(
-    selectIdArr.value,
+const deleteByQuery = () => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.service_id)
+  })
+  removeService(
+    data,
     () => {
       ElMessage.success('删除成功')
+      // 删除后重新请求数据
+      initLinks(currentPage.value, pageSize.value)
     },
     () => {
       ElMessage.error('删除失败')
     }
   )
-  // 删除后重新请求数据
-  initLinks(currentPage, pageSize)
 }
 
 /**
@@ -387,7 +401,7 @@ const deleteByQuery = async () => {
  */
 let content = ref('')
 const searchDetails = () => {
-  initLinks(currentPage, pageSize, content.value)
+  initLinks(currentPage.value, pageSize.value, content.value)
   content.value = ''
 }
 
@@ -398,23 +412,36 @@ let confirmDelete = ref(false)
 let deleteId = ref()
 // 删除按钮回调
 const Deletes = (row) => {
-  deleteId.value = row.id
+  console.log(row.service_id)
+  deleteId.value = row.service_id
   confirmDelete.value = true
 }
-const Confirms = async () => {
+const Confirms = () => {
   confirmDelete.value = false
-  await removeService(
+  console.log(deleteId.value)
+  removeService(
     [deleteId.value],
     () => {
       ElMessage.success('删除成功')
+      // 删除后重新请求数据
+      initLinks(currentPage.value, pageSize.value)
     },
     () => {
       ElMessage.error('删除失败')
     }
   )
-  // 删除后重新请求数据
-  initLinks(currentPage, pageSize)
 }
+
+const rules = ref({
+  type: [{ required: true, message: '服务类型不能为空', trigger: 'blur' }],
+  way: [{ required: true, message: '服务方式不能为空', trigger: 'blur' }],
+  service_time: [
+    { required: true, message: '服务日期不能为空', trigger: 'blur' }
+  ],
+  tlen: [{ required: true, message: '花费时间不能为空', trigger: 'blur' }],
+  content: [{ required: true, message: '服务内容不能为空', trigger: 'blur' }],
+  cus: [{ required: true, message: '客户名称不能为空', trigger: 'blur' }]
+})
 </script>
 
 <style lang="scss" scoped>

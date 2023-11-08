@@ -9,7 +9,7 @@
           <el-form-item label="名称" prop="name">
             <el-input placeholder="请输入名称" v-model="form.name"></el-input>
           </el-form-item>
-          <el-form-item label="分类字典" prop="typeTag">
+          <el-form-item label="分类字典">
             <ChooseSelect
               :options="props.options"
               ref="chooseSelectRef"
@@ -67,7 +67,7 @@ const props = defineProps({
 const formRef = ref(null)
 
 const rules = ref({
-  name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入字典名称', trigger: 'blur' }],
   sort: [{ required: true, message: '', trigger: 'blur' }]
 })
 
@@ -78,7 +78,6 @@ const handleClear = () => {
       sort: 0,
       visible: false
     }
-    // typeTag = ''
     setTimeout(() => {
       chooseSelectRef.value.selectValue = ''
     })

@@ -10,17 +10,23 @@
   <BaseDataList
     class="card"
     :title="sendData.title"
-    :msg="sendData.opreateTip"
-    :table-column-attribute="sendData.tableColumnAttribute"
-    :table-data="sendData.tableData"
-    :page-sizes="sendData.pageSizes"
+    :msg="sendData.msg"
+    :table-column-attribute="tableColumnAttribute"
+    :table-data="salesOpportunityStore.tableData"
+    :page-sizes="salesOpportunityStore.pageSize"
     :total="sendData.total"
     useDropdownMenu="true"
     :dropdownMenuActionsInfo="sendData.dropdownMenuActionsInfo"
     useOperateColumn="true"
-    @update-table-data="get"
+    @update-table-data="
+      (pageSize, currentPage) =>
+        getSalesOpportunityList({
+          pageSize,
+          pageIndex: currentPage
+        })
+    "
+    @selectFuckingChange="selectChange"
     ref="baseDataListRef"
-    @selection-change="selectChange"
     @command="(command) => handleCommand(command, row)"
   >
     <template #menu>
@@ -56,7 +62,7 @@
                 type="danger"
                 icon="IconDelete"
                 style="margin-right: 10px"
-                :disabled="selectArr ? false : true"
+                :disabled="isDisabled"
                 >批量删除</el-button
               >
             </template>
@@ -79,7 +85,7 @@
             des="请选择沟通阶段"
           ></ChooseSelect>
           <el-input
-            v-model="searchSaleName"
+            v-model="searchOpportunityName"
             placeholder="输入商品机会名称"
             style="margin-right: 4px; width: 140px"
           />
@@ -95,26 +101,13 @@
           <el-button
             type="primary"
             style="margin-left: 4px"
-            @click="changeLoadAnimation"
-            :disabled="searchSaleName ? false : true"
+            @click="searchDetails"
+            :disabled="searchOpportunityName ? false : true"
           >
             <el-icon style="margin-right: 4px"><icon-search /></el-icon>搜索
           </el-button>
         </div>
       </div>
-    </template>
-    <!-- 分页 -->
-    <template>
-      <el-pagination
-        v-model:current-page="paginationData.currentPage"
-        v-model:page-size="paginationData.pageSize"
-        :page-sizes="sendData.pageSizes"
-        layout="prev, pager, next, jumper, ->, total, sizes"
-        :total="sendData.total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        style="margin-top: 30px"
-      />
     </template>
     <!-- 插槽显示图标 -->
     <template #ico>
@@ -197,17 +190,69 @@
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
 import { SoldOut, Plus } from '@element-plus/icons-vue'
+import { useSalesOpportunityStore } from '@/stores/salesmanager/salesopportunity.js'
+
+// 导入销售机会列表的仓库
+const salesOpportunityStore = useSalesOpportunityStore()
+
+// 搜索的销售合同主题名称
+const searchOpportunityName = ref('')
+
 // 搜索框的searchDetails方法还需完善
+const searchDetails = () => {
+  console.log('搜索', searchOpportunityName.value)
+  const searchData = salesOpportunityStore.tableData.filter((item) => {
+    return item.opportunity_title === searchOpportunityName.value
+  })
+  if (searchData.length === 0) {
+    // 设置搜索框为空
+    searchOpportunityName.value = ''
+    ElMessage({
+      type: 'warning',
+      message: '未找到相关数据，请重新输入合同主题'
+    })
+  } else {
+    salesOpportunityStore.tableData = searchData
+  }
+}
+
+const getSalesOpportunityList = async (params) => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  await salesOpportunityStore.getTableData(params)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+// 挂载时获得分页数据
+onMounted(() => {
+  // const params = {
+  //   pageIndex: 1,
+  //   pageSize: 5
+  // }
+  getSalesOpportunityList(1, 5)
+})
 
 // 批量删除所选列表
-let selectArr = ref([])
-// table表勾选时触发的事件
-const selectChange = (value) => {
-  selectArr.value = value
+const selectArr = ref([])
+
+const isDisabled = ref(true)
+// // table表勾选时触发的事件
+const selectChange = (length) => {
+  if (length === 0) {
+    // 改变按钮的状态
+    isDisabled.value = true
+  } else {
+    selectArr.value = baseDataListRef.value.rows
+    // salesOpportunityStore.tableData =
+    //       salesOpportunityStore.tableData.filter((item) => {
+    //         return item.chance_id !== selectArr.value.chance_id
+    //       })
+    console.log(selectArr.value)
+    isDisabled.value = false
+  }
 }
+
 // 删除成功的回调
 const deleteByQuery = () => {
   ElMessage.success('删除成功')
@@ -249,7 +294,7 @@ let dialogVisible = ref(false)
 
 //添加销售机会
 // 新增销售机会的数据
-let saleOppData = ref({
+const saleOppData = ref({
   id: '',
   sale_name: '',
   happen_date: '',
@@ -274,167 +319,75 @@ const saveData = () => {
   ElMessage.success('添加成功')
 }
 
-// 搜索的商品机会名称
-const searchSaleName = ref('')
+// 表格列表项
+const tableColumnAttribute = [
+  {
+    prop: 'titleAndCreateDate',
+    label: '销售机会主题',
+    sortable: false
+  },
+  {
+    prop: 'customer_nameAndLinkman_id',
+    label: '客户姓名',
+    sortable: false
+  },
+  {
+    prop: 'find_date',
+    label: '发现日期'
+  },
+  {
+    prop: 'bill_date',
+    label: '预计签单日期'
+  },
+  {
+    prop: 'money',
+    label: '金额'
+  },
+  {
+    prop: 'sales_stage',
+    label: '当前阶段'
+  },
+  {
+    prop: 'intro',
+    label: '需求'
+  }
+]
 
 // 数据传递
 const sendData = {
-  tableColumnAttribute: [
-    {
-      prop: 'sale_name',
-      label: '销售机会主题',
-      sortable: false
-    },
-    {
-      prop: 'cus_name',
-      label: '客户姓名',
-      sortable: false
-    },
-    {
-      prop: 'happen_date',
-      label: '发现日期'
-    },
-    {
-      prop: 'end_date',
-      label: '预计签单日期'
-    },
-    {
-      prop: 'money',
-      label: '金额'
-    },
-    {
-      prop: 'now_state',
-      label: '当前阶段'
-    },
-    {
-      prop: 'intro',
-      label: '需求'
-    }
-  ],
-  tableData: [
-    {
-      sale_name: '任天堂游戏公司',
-      cus_name: '任天堂',
-      happen_date: '2021-10-12',
-      end_date: '2021-10-20',
-      money: 230000,
-      now_state: '筹备阶段',
-      intro: '天王盖地虎'
-    },
-    {
-      sale_name: '任天堂游戏公司',
-      cus_name: '任天堂',
-      happen_date: '2021-10-12',
-      end_date: '2021-10-20',
-      money: 230000,
-      now_state: '筹备阶段',
-      intro: '天王盖地虎'
-    },
-    {
-      sale_name: '任天堂游戏公司',
-      cus_name: '任天堂',
-      happen_date: '2021-10-12',
-      end_date: '2021-10-20',
-      money: 230000,
-      now_state: '筹备阶段',
-      intro: '天王盖地虎'
-    },
-    {
-      sale_name: '任天堂游戏公司',
-      cus_name: '任天堂',
-      happen_date: '2021-10-12',
-      end_date: '2021-10-20',
-      money: 230000,
-      now_state: '筹备阶段',
-      intro: '天王盖地虎'
-    },
-    {
-      sale_name: '任天堂游戏公司',
-      cus_name: '任天堂',
-      happen_date: '2021-10-12',
-      end_date: '2021-10-20',
-      money: 230000,
-      now_state: '筹备阶段',
-      intro: '天王盖地虎'
-    },
-    {
-      sale_name: '任天堂游戏公司',
-      cus_name: '任天堂',
-      happen_date: '2021-10-12',
-      end_date: '2021-10-20',
-      money: 230000,
-      now_state: '筹备阶段',
-      intro: '天王盖地虎'
-    },
-    {
-      sale_name: '任天堂游戏公司',
-      cus_name: '任天堂',
-      happen_date: '2021-10-12',
-      end_date: '2021-10-20',
-      money: 230000,
-      now_state: '筹备阶段',
-      intro: '天王盖地虎'
-    },
-    {
-      sale_name: '任天堂游戏公司',
-      cus_name: '任天堂',
-      happen_date: '2021-10-12',
-      end_date: '2021-10-20',
-      money: 230000,
-      now_state: '筹备阶段',
-      intro: '天王盖地虎'
-    },
-    {
-      sale_name: '任天堂游戏公司',
-      cus_name: '任天堂',
-      happen_date: '2021-10-12',
-      end_date: '2021-10-20',
-      money: 230000,
-      now_state: '筹备阶段',
-      intro: '天王盖地虎'
-    },
-    {
-      sale_name: '任天堂游戏公司',
-      cus_name: '任天堂',
-      happen_date: '2021-10-12',
-      end_date: '2021-10-20',
-      money: 230000,
-      now_state: '筹备阶段',
-      intro: '天王盖地虎'
-    }
-  ],
   title: '销售机会',
-  opreateTip: '多一眼看一眼就会爆炸',
+  msg: '多一眼看一眼就会爆炸',
   dropdownMenuActionsInfo: [
     {
-      command: '修改',
+      command: 'update',
       // row为当前行的数据
       handleAction: (row) => {
-        dialogVisible.value = 'ture'
-        console.log('带着row的数据，拿id发请求拿到入库单明细', row)
+        dialogVisible.value = 'true'
+
+        console.log('修改当前行的数据', row)
       },
       actionName: '修改'
     },
 
     // 操作列表的删除操作 还需完善
     {
-      command: '删除',
+      command: 'delete',
       // row为当前行的数据
       handleAction: (row) => {
         alert('确认删除吗')
-        console.log('带着row的数据，拿id发请求拿到入库单明细', row)
+        // 获取当前行的id 这里需要使用获取id的接口
+        const chance_id = row.chance_id
+        console.log('删除当前行数据', chance_id)
+        salesOpportunityStore.tableData =
+          salesOpportunityStore.tableData.filter((item) => {
+            return item.chance_id !== chance_id
+          })
+        console.log(salesOpportunityStore.tableData)
       },
       actionName: '删除'
     }
   ],
 
-  // 传入删除操作的函数就会显示删除按钮
-  handleDelete: (row) => {
-    console.log('删除', row)
-  },
-  handleEdit: (row) => {
-    console.log('编辑', row)
-  },
   // 分页数组
   pageSizes: [5, 10, 15],
   total: 100
@@ -449,12 +402,6 @@ const handleCommand = (command, row) => {
 }
 
 const baseDataListRef = ref()
-//分页器组件点击调用get
-const get = (pageSize, currentPage) => {
-  console.log('调用父组件的更新数据的函数')
-  console.log('pageSize', pageSize)
-  console.log('currentPage', currentPage)
-}
 
 const getRows = () => {
   // 获取组件暴露出来的rows
@@ -467,10 +414,6 @@ const changeLoadAnimation = () => {
     baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   }, 500)
 }
-
-// const excel = () => {
-//   console.log('s', baseDataListRef.value.rows)
-// }
 </script>
 
 <style lang="scss" scoped>

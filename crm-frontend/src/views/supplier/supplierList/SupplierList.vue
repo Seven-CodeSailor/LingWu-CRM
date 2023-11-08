@@ -38,13 +38,66 @@
           placeholder="输入供应商名称关键字"
           style="margin-right: 4px; width: 200px"
         />
-        <DropDown
-          :inputValue1="tel"
-          inputTitle1="电话"
-          :inputValue2="address"
-          inputTitle2="通信地址"
-          @handleSearch="handleSearch"
-        ></DropDown>
+        <div class="drop_down">
+          <el-dropdown
+            trigger="click"
+            ref="dropdownRef"
+            @visible-change="clearValue"
+          >
+            <el-button type="primary">
+              <el-icon><icon-caret-bottom /></el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-form>
+                <!-- 输入框1 -->
+                <el-form-item>
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      电话
+                    </h4>
+                    <el-input v-model="tel" placeholder="搜索电话" />
+                  </div>
+                </el-form-item>
+                <!-- 输入框2 -->
+                <el-form-item>
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      通讯地址
+                    </h4>
+                    <el-input v-model="address" placeholder="搜索通信地址" />
+                  </div>
+                </el-form-item>
+                <!-- 搜索按钮 -->
+                <el-form-item>
+                  <div
+                    style="
+                      padding: 10px;
+                      display: flex;
+                      justify-content: flex-end;
+                      width: 100%;
+                    "
+                  >
+                    <el-button type="primary" @click="search">搜索</el-button>
+                  </div>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-dropdown>
+        </div>
         <el-button
           type="primary"
           style="margin-left: 4px"
@@ -66,13 +119,13 @@
       <el-table-column type="selection" width="55" />
       <el-table-column
         label="供应商名称"
-        prop="supplierName"
+        prop="name"
         sortable
       ></el-table-column>
-      <el-table-column label="经济类型" prop="ecoType"></el-table-column>
-      <el-table-column label="行业类型" prop="indType"></el-table-column>
-      <el-table-column label="联系人" prop="contact"></el-table-column>
-      <el-table-column label="电话号码" prop="telephone"></el-table-column>
+      <el-table-column label="经济类型" prop="ecitype"></el-table-column>
+      <el-table-column label="行业类型" prop="trade"></el-table-column>
+      <el-table-column label="联系人" prop="linkman_name"></el-table-column>
+      <el-table-column label="电话号码" prop="tel"></el-table-column>
       <el-table-column label="传真" prop="fax"></el-table-column>
       <el-table-column label="邮箱" prop="email"></el-table-column>
       <el-table-column label="介绍" prop="intro"></el-table-column>
@@ -96,6 +149,9 @@
           </el-dropdown>
         </template>
       </el-table-column>
+      <template #empty>
+        <el-empty description="没有数据"></el-empty>
+      </template>
     </el-table>
     <!-- 分页器 -->
     <el-pagination
@@ -113,12 +169,7 @@
   <!-- 添加联系人 -->
   <AddContact ref="addcontact"></AddContact>
   <!-- 删除确认 -->
-  <el-dialog
-    v-model="confirmDelete"
-    title="删除"
-    width="30%"
-    :before-close="(deleteId = null)"
-  >
+  <el-dialog v-model="confirmDelete" title="删除" width="30%">
     <span style="color: red; margin-left: 33%; font-size: 24px"
       >是否确认删除</span
     >
@@ -132,8 +183,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import DropDown from '@/components/DropDown/DropDown.vue'
+import { ref, onMounted, provide } from 'vue'
 import { ArrowDown } from '@element-plus/icons-vue'
 
 import useSupplierList from '@/stores/supplier/list/list.js'
@@ -159,8 +209,14 @@ const initLinks = async (
   await getSupplier(currentPage, pageSize, name, telephone, mombile, address)
 }
 onMounted(() => {
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 })
+
+const inits = () => {
+  initLinks(currentPage.value, pageSize.value)
+}
+
+provide('inits', inits)
 
 // 当前页数
 const currentPage = ref(1)
@@ -168,11 +224,11 @@ const currentPage = ref(1)
 const pageSize = ref(5)
 const handleSizeChange = (val) => {
   pageSize.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 const handleCurrentChange = (val) => {
   currentPage.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 
 /**
@@ -185,18 +241,23 @@ const selectChange = (value) => {
   selectIdArr.value = value
 }
 // 批量删除按钮
-const deleteByQuery = async () => {
-  await removeSupplier(
-    selectIdArr.value,
+const deleteByQuery = () => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.supplier_id)
+  })
+  removeSupplier(
+    data,
     () => {
       ElMessage.success('删除成功')
+      inits()
     },
     () => {
       ElMessage.error('删除失败')
     }
   )
   // 删除后重新请求数据
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 
 /**
@@ -207,23 +268,32 @@ const tel = ref('')
 const address = ref('')
 const searchDetails = () => {
   initLinks(
-    currentPage,
-    pageSize,
+    currentPage.value,
+    pageSize.value,
     content.value,
     tel.value,
     address.value,
-    () => {},
+    () => {
+      ElMessage.success('搜索成功')
+    },
     () => {
       ElMessage.error('搜索出错')
     }
   )
   content.value = ''
 }
-// 下拉框搜索按钮回调
-const handleSearch = () => {
-  searchDetails()
-  tel.value = ''
-  address.value = ''
+const dropdownRef = ref(null)
+const clearValue = () => {
+  tel.value = address.value = ''
+}
+const search = () => {
+  if (!tel.value && !address.value) {
+    ElMessage.error('输入不能为空')
+  } else {
+    searchDetails()
+    // 调用搜索函数后 关闭下拉菜单
+    dropdownRef.value.$el.click()
+  }
 }
 
 /**
@@ -233,14 +303,16 @@ const confirmDelete = ref(false)
 const deleteId = ref()
 // 删除按钮回调
 const Deletes = (row) => {
-  deleteId.value = row.supplierId
+  deleteId.value = row.supplier_id
   confirmDelete.value = true
 }
 const Confirms = async () => {
   await removeSupplier(
-    deleteId.value,
+    [deleteId.value],
     () => {
       ElMessage.success('删除成功')
+      deleteId.value = ''
+      inits()
     },
     () => {
       ElMessage.error('删除失败')
@@ -266,5 +338,8 @@ header {
 .dialog-footer {
   display: flex;
   justify-content: space-around;
+}
+:deep(.el-form-item) {
+  margin-bottom: 0;
 }
 </style>
