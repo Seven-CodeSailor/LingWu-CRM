@@ -1,8 +1,8 @@
 /*
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
- * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-08 15:20:35
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-08 22:01:34
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -149,6 +149,15 @@ export const getDictclassifylist = async (params, success, fail) => {
 //       fail(err)
 //     })
 // }
+
+/**
+ * @description: 获取部门名称列表数据(用于输入表单下拉列表)
+ * @param {*} params 请求参数: { deptName:部门名称 }
+ * @param {*} success 成功回调
+ * @param {*} fail 失败回调
+ * @Author{*} 暮秋(有问题找我)
+ * @return {*}
+ */
 
 /**
  * @description: 获取系统用户名称列表数据
