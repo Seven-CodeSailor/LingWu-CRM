@@ -149,7 +149,10 @@
             <el-option label="Area2" value="beijing" />
           </el-select> -->
           <!-- 调用选择框组件 -->
-          <ChooseSelect :options="selOptions" des="选择上级"></ChooseSelect>
+          <ChooseSelect
+            :options="departmentManage.departmentSelect"
+            des="选择上级"
+          ></ChooseSelect>
         </el-form-item>
         <el-form-item label="排位序号" :label-width="labelWidth" prop="sort">
           <el-input v-model="addForm.sort" autocomplete="off" />
@@ -386,13 +389,36 @@ const dropdownMenuActionsInfo = ref([
   {
     command: '修改',
     // row为当前行的数据
-    handleAction: (row) => {
+    handleAction: async (row) => {
       editDrawer.value = true
       console.log('修改回调函数', row)
-      // 需要发请求获取没有的数据
-      addForm.value.name = row.Department
-      addForm.value.desc = row.DepartmentDes
+      addForm.value.name = row.name
+      addForm.value.desc = row.intro
       addForm.value.sort = row.sort
+      // 发送 获取部门名称结构树请求,拿没有的数据
+      // 获取部门名称结构树
+      await getDepartmentTree(
+        {
+          depth: 0,
+          pid: 0
+        },
+        (res) => {
+          const { data } = res
+          console.log('修改业务拿数据', data)
+          // 根据部门id,拿到需要的那一条对象数据 row.id
+          let editObj = data.filter((item) => {
+            return item.id === row.id
+          })
+          console.log('符合条件的项', editObj)
+          // console.log(editObj.tel)
+          // 进行数据回显
+          addForm.value.phone = editObj[0].tel
+          addForm.value.fax = editObj[0].fax
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
     },
     actionName: '修改'
   },

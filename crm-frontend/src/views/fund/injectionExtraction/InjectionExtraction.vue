@@ -2,7 +2,7 @@
  * @Author: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
  * @Date: 2023-10-28 14:38:07
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-06 10:59:53
+ * @LastEditTime: 2023-11-08 10:30:20
  * @FilePath: \zero-one-crmsys\crm-frontend\src\views\fund\injectionExtraction\InjectionExtraction.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -60,15 +60,13 @@
           ></el-input>
           <DropDown
             :inputValue1="tel"
-            inputTitle1="供应商名称"
-            :inputValue2="tel"
-            inputTitle2="通信地址"
+            inputTitle1="搜索金额"
             :getDropDown="
               () => {
-                return [0, 1, 3]
+                return [0, 3]
               }
             "
-            @handle-search="handleSearch"
+            @handleSearch="handleSearch"
           ></DropDown>
           <el-button type="primary" :icon="Search" @click="handelSearch"
             >搜索</el-button
@@ -144,15 +142,35 @@ import DropDown from '@/components/DropDown/DropDown.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
 import { onMounted, ref } from 'vue'
 import { CreditCard, Plus, Search } from '@element-plus/icons-vue'
-// 导入公共接口 => 获取银行下拉菜单接口方法
-import { getBankAccountList } from '@/apis/publicInterface.js'
 // 导入 资金管理/资金抽取注入 仓库
 import useFundInjectionStore from '@/stores/fundManagement/fundInjection.js'
 const fundInjection = useFundInjectionStore()
-onMounted(() => {
-  getBankAccountList()
-  console.log('仓库的数据', fundInjection.bankSelectList)
+
+// 获取分页数据
+const $page = ref()
+setTimeout(() => {
+  $page.value = baseDataListRef.value.paginationData
+  console.log('当前分页器数据', $page.value)
 })
+console.log('当前分页器数据', $page)
+onMounted(async () => {
+  // console.log('仓库的数据', fundInjection.bankSelectList)
+
+  //获取数据列表 (分页+条件)
+  const result = await fundInjection.getFundStoreApi({
+    pageIndex: baseDataListRef.value.paginationData.currentPage,
+    pageSize: baseDataListRef.value.paginationData.pageSize,
+    // pageIndex: 1,
+    // pageSize: 5,
+    record_id: '',
+    money: '',
+    bank: '',
+    happen_date: '',
+    create_time: ''
+  })
+  console.log('获取结构', result)
+})
+
 // ref数据绑定BaseDataList这个组件
 const baseDataListRef = ref(null)
 // 表格数据传递

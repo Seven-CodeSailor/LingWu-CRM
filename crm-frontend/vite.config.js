@@ -1,8 +1,8 @@
 /*
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:18:17
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-06 22:28:57
+ * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
+ * @LastEditTime: 2023-11-08 10:18:47
  * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
  * @Description:
  *
@@ -59,6 +59,13 @@ export default ({ mode }) =>
           target: 'http://118.31.61.96:10031',
           rewrite: (path) => path.replace(/^\/api\/java3-area/, '')
         },
+        // 资金注入抽取=>暮秋
+        '/api/fin-capital-record/query-data': {
+          changeOrigin: true,
+          target: 'http://8.130.119.183:8090',
+          rewrite: (path) =>
+            path.replace(/^\/api\/fin-capital-record\/query-data/, '')
+        },
         '/api': {
           changeOrigin: true,
           // target: 'http://localhost:10100',
@@ -67,6 +74,7 @@ export default ({ mode }) =>
           //TODO[TEST_CODE]:使用ApiPost云MOCK
           target:
             'https://console-mock.apipost.cn/mock/99738a62-8857-4bb2-8010-c92424b03584',
+          // 'https://8.130.30.150:10001',
           rewrite: (path) => path.replace(/^\/api/, '')
         },
         '/captcha': {
