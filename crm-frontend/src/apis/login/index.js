@@ -24,6 +24,7 @@ export const login = (data, success, fail) => {
   Request.requestForm(Request.POST, currBaseUrl + '/auth-login', data)
     .then((res) => {
       console.log('res', res)
+      //这里需要处理token
       // 记录Token到本地
       if (res.data) {
         $store.setToken(res.data)

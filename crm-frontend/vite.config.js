@@ -95,44 +95,44 @@ export default ({ mode }) =>
             rewrite: (path) => path.replace(/^\/captcha/, '')
           }
         }
-      },
-      build: {
-        assetsDir: 'static',
-        chunkSizeWarningLimit: 1000,
-        rollupOptions: {
-          output: {
-            manualChunks(id) {
-              if (id.includes('node_modules')) {
-                return id
-                  .toString()
-                  .split('node_modules/')[1]
-                  .split('/')[0]
-                  .toString()
-              }
+      }
+    },
+    build: {
+      assetsDir: 'static',
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              return id
+                .toString()
+                .split('node_modules/')[1]
+                .split('/')[0]
+                .toString()
             }
           }
         }
-      },
-      plugins: [
-        vue(),
-        AutoImport({
-          resolvers: [ElementPlusResolver()]
-        }),
-        Components({
-          resolvers: [ElementPlusResolver()]
-        }),
-        createHtmlPlugin({
-          inject: {
-            data: {
-              title: getViteEnv(mode, 'VITE_APP_TITLE')
-            }
+      }
+    },
+    plugins: [
+      vue(),
+      AutoImport({
+        resolvers: [ElementPlusResolver()]
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()]
+      }),
+      createHtmlPlugin({
+        inject: {
+          data: {
+            title: getViteEnv(mode, 'VITE_APP_TITLE')
           }
-        })
-      ],
-      resolve: {
-        alias: {
-          '@': fileURLToPath(new URL('./src', import.meta.url))
         }
+      })
+    ],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url))
       }
     }
   })
