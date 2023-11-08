@@ -255,11 +255,7 @@ import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import { Operation, Plus, Search } from '@element-plus/icons-vue'
 // import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
-import {
-  getUserNameList,
-  getPostNameList,
-  getRoleNameList
-} from '@/apis/publicInterface.js'
+import { getUserNameList, getRoleNameList } from '@/apis/publicInterface.js'
 import { getDepartmentTree } from '@/apis/organizationStructure/department.js'
 import {
   getUserTableList,
@@ -392,35 +388,35 @@ onMounted(async () => {
     }
   )
 
-  // 获取岗位名称列表数据
-  await getPostNameList(
-    {
-      positionName: ''
-    },
-    (res) => {
-      const { data } = res
-      // console.log('获取岗位名称列表数据', data)
-      // 矫正数据
-      const newArr = data.map((item) => {
-        // 修改字段 id=>value name=>label
-        const obj = { value: '', label: '' }
-        obj.value = item.id
-        obj.label = item.name
-        return obj
-      })
-      // console.log('矫正字段', newArr)
-      // 存到 组织管理/岗位管理仓库
-      setTimeout(() => {
-        $postStore.setUserPostList(newArr)
-        // console.log('部门仓库', $postStore)
-      })
-    },
-    (error) => {
-      if (error) {
-        console.log(error)
-      }
-    }
-  )
+  // // 获取岗位名称列表数据
+  // await getPostNameList(
+  //   {
+  //     positionName: ''
+  //   },
+  //   (res) => {
+  //     const { data } = res
+  //     // console.log('获取岗位名称列表数据', data)
+  //     // 矫正数据
+  //     const newArr = data.map((item) => {
+  //       // 修改字段 id=>value name=>label
+  //       const obj = { value: '', label: '' }
+  //       obj.value = item.id
+  //       obj.label = item.name
+  //       return obj
+  //     })
+  //     // console.log('矫正字段', newArr)
+  //     // 存到 组织管理/岗位管理仓库
+  //     setTimeout(() => {
+  //       $postStore.setUserPostList(newArr)
+  //       // console.log('部门仓库', $postStore)
+  //     })
+  //   },
+  //   (error) => {
+  //     if (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  // )
 })
 // 获取分页数据
 const $page = ref()
@@ -1002,7 +998,7 @@ const handelSearch = async () => {
     },
     (res) => {
       const { data } = res
-      console.log('分页器改变请求的数据', data)
+      console.log('搜索请求的数据', data)
       // 更新分页器数据
       sendData.value.total = data.total
       // 重新渲染

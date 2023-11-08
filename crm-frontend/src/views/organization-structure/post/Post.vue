@@ -10,6 +10,7 @@
     :total="sendData.total"
     :useDropdownMenu="true"
     :dropdownMenuActionsInfo="dropdownMenuActionsInfo"
+    @updateTableData="handleSizeChange"
   >
     <template #ico>
       <el-icon><Operation /></el-icon>
@@ -19,12 +20,14 @@
         <template #header>
           <div class="card-header">
             <span>部门管理</span>
-            <el-button class="button" text>刷新</el-button>
+            <el-button class="button" @click="handelRefresh" text
+              >刷新</el-button
+            >
           </div>
         </template>
         <!-- 树形菜单标签结构 -->
         <el-tree
-          :data="treeData"
+          :data="postManageStore.postTreeMeau"
           :props="defaultProps"
           highlight-current="true"
           default-expand-all="true"
@@ -65,7 +68,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="isDelete = false">取消</el-button>
-        <el-button type="primary" @click="isDelete = false"> 确认 </el-button>
+        <el-button type="primary" @click="handelTheDel"> 确认 </el-button>
       </span>
     </template>
   </el-dialog>
@@ -88,15 +91,13 @@
           <el-input v-model="addForm.name" autocomplete="off" />
         </el-form-item>
         <el-form-item label="父级栏目" :label-width="labelWidth">
-          <!-- 调用选择框组件 -->
-          <!-- <ChooseSelect :options="selOptions" des="选择上级"></ChooseSelect> -->
-          <!-- 树形选择 -->
           <el-tree-select
             v-model="selectValue"
-            :data="treeData"
+            :data="postManageStore.postTreeMeau"
             check-strictly
             :render-after-expand="false"
             clearable
+            :props="defaultProps"
             :highlight-current="true"
             @change="handelSelect"
           />
@@ -105,7 +106,7 @@
           <el-input v-model="addForm.sort" autocomplete="off" />
         </el-form-item>
         <el-form-item label="启用" :label-width="labelWidth">
-          <el-switch v-model="addForm.delivery" />
+          <el-switch v-model="addDelivery" />
         </el-form-item>
         <el-form-item label="介绍" :label-width="labelWidth">
           <el-input v-model="addForm.desc" type="textarea" />
@@ -138,15 +139,13 @@
           <el-input v-model="addForm.name" autocomplete="off" />
         </el-form-item>
         <el-form-item label="父级" :label-width="labelWidth">
-          <!-- 调用选择框组件 -->
-          <!-- <ChooseSelect :options="selOptions" des="选择上级"></ChooseSelect> -->
-          <!-- 树形选择 -->
           <el-tree-select
             v-model="selectValue"
-            :data="treeData"
+            :data="postManageStore.postTreeMeau"
             check-strictly
             :render-after-expand="false"
             clearable
+            :props="defaultProps"
             :highlight-current="true"
             @change="handelSelect"
           />
@@ -155,7 +154,7 @@
           <el-input v-model="addForm.sort" autocomplete="off" />
         </el-form-item>
         <el-form-item label="启用" :label-width="labelWidth">
-          <el-switch v-model="addForm.delivery" />
+          <el-switch v-model="addDelivery" />
         </el-form-item>
         <el-form-item label="介绍" :label-width="labelWidth">
           <el-input v-model="addForm.desc" type="textarea" />
@@ -180,73 +179,124 @@ import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import { Operation, Plus, Search } from '@element-plus/icons-vue'
 // import { ElMessage } from 'element-plus'
 import { ref, onMounted } from 'vue'
-import { getRoleTree } from '../../../apis/organizationStructure/postManagement'
+import {
+  getPostTree,
+  getPostListApi,
+  addPostListApi,
+  deletePostListApi
+} from '../../../apis/organizationStructure/postManagement'
+// 导入 组织结构/岗位管理 仓库
+import usePostManageStore from '../../../stores/organizationStructure/postManagement'
+const postManageStore = usePostManageStore()
 
+// 获取分页数据
+const $page = ref()
+setTimeout(() => {
+  $page.value = baseDataListRef.value.paginationData
+  console.log('当前分页器数据', $page.value)
+})
 onMounted(async () => {
-  await getRoleTree(
+  // 获取菜单树
+  await getPostTree(
     {
       depth: 0,
       pid: 0
     },
     (res) => {
-      console.log('获取岗位名称结构树成功回调:', res)
+      const { data } = res
+      console.log('获取岗位名称结构树成功回调:', data)
+      defaultDep.value = data[0]
+      currentTreeOption.value = data[0]
       ElMessage({
         message: '获取成功',
         type: 'success'
       })
+      // 把数据存到 组织结构/岗位管理 仓库
+      postManageStore.setPostTreeMeau(data)
+    }
+  )
+  // 获取岗位列表(分页+条件)
+  baseDataListRef.value.openLoading = true
+  await getPostListApi(
+    {
+      keyword: '',
+      pageIndex: $page.value.currentPage,
+      pageSize: $page.value.pageSize,
+      pid: ''
+    },
+    (res) => {
+      const { data } = res
+      console.log('获取岗位列表(分页+条件):', data)
+      // 渲染数据 => 数据存到仓库
+      postManageStore.setPostListTable(data.rows)
+      sendData.value.tableData = data.rows
+      sendData.value.total = data.total
+      baseDataListRef.value.openLoading = false
     }
   )
 })
 
-// 树形菜单的数据
-const treeData = ref([
-  {
-    value: '1',
-    label: '董事会',
-    children: [
-      {
-        value: '1-1',
-        label: '总经理',
-        children: [
-          {
-            value: '1-1-1',
-            label: '财务总监'
-          },
-          {
-            value: ' 1-1-2',
-            label: '人事总监'
-          },
-          {
-            value: '1-1-3',
-            label: '技术总监'
-          }
-        ]
+/**
+ * 刷新菜单树
+ */
+const defaultDep = ref({})
+// 刷新部门名称结构树
+const handelRefresh = async () => {
+  await getPostTree(
+    {
+      depth: 0,
+      pid: 0
+    },
+    (res) => {
+      const { data } = res
+      console.log('刷新部门名称结构树', data)
+      // 把数据存到 组织结构/岗位管理 仓库
+      postManageStore.setPostTreeMeau(data)
+      ElMessage({
+        message: '刷新成功',
+        type: 'success'
+      })
+    },
+    (error) => {
+      if (error) {
+        console.log(error)
       }
-    ]
-  },
-  {
-    value: '2',
-    label: '不懂事会',
-    children: [
-      {
-        value: '2-1',
-        label: '鸡'
-      },
-      {
-        value: '2-2',
-        label: '你'
-      },
-      {
-        value: '2-3',
-        label: '太'
-      },
-      {
-        value: '2-4',
-        label: '美'
-      }
-    ]
-  }
-])
+    }
+  )
+}
+// 当前的树选项
+const currentTreeOption = ref()
+
+/**
+ * 分页器更新函数
+ * @param {*} pagesize
+ * @param {*} currentPage
+ */
+const handleSizeChange = async (pagesize, currentPage) => {
+  console.log('条数:', pagesize, '当前页', currentPage)
+  // 开启表格加载效果
+  baseDataListRef.value.openLoading = true
+  // 分页器改变,需要发请求重新获取数据并渲染
+  await getPostListApi(
+    {
+      deptId: currentTreeOption.value.id,
+      name: '',
+      pageIndex: currentPage,
+      pageSize: pagesize
+    },
+    (res) => {
+      const { data } = res
+      console.log('分页器改变请求的数据', data)
+      // 更新分页器数据
+      sendData.value.total = data.total
+      // 重新渲染
+      // console.log('要改的数组', sendData.value.tableData)
+      sendData.value.tableData = data.rows
+      baseDataListRef.value.openLoading = false
+    }
+  )
+}
+
 // 树形选择绑定值
 const selectValue = ref('')
 // 更新选中值
@@ -255,26 +305,67 @@ const handelSelect = (value) => {
 }
 
 const defaultProps = ref({
-  children: 'children',
-  label: 'label'
+  children: 'nodes',
+  label: 'name',
+  value: 'id'
 })
+
 // 点击树节点的事件
-const handleNodeClick = (data) => {
-  console.log('树形菜单数据:', data)
+// 防抖处理
+const isPass = ref(true)
+const handleNodeClick = async (treeData) => {
+  // 节流阀为true，就发请求
+  if (isPass.value === true) {
+    // 关闭阀门
+    isPass.value = false
+    // 收集数据发请求
+    currentTreeOption.value = treeData
+    console.log('当前部门:', currentTreeOption.value)
+    console.log('当前id:', currentTreeOption.value.id)
+    baseDataListRef.value.openLoading = true
+    await getPostListApi(
+      {
+        pid: currentTreeOption.value.id,
+        pageIndex: $page.value.currentPage,
+        pageSize: $page.value.pageSize
+      },
+      (res) => {
+        const { data } = res
+        console.log('点树形菜单请求得到的数据', data)
+        // 渲染
+        sendData.value.tableData = data.rows
+        sendData.value.total = data.total
+        baseDataListRef.value.openLoading = false
+      },
+      (error) => {
+        baseDataListRef.value.openLoading = false
+        if (error) {
+          console.log(error)
+        }
+      }
+    )
+    // 开启阀门
+    isPass.value = true
+  } else {
+    ElMessage({
+      message: '请求频率过高,不予处理',
+      type: 'warning'
+    })
+  }
 }
 
 // ref数据绑定BaseDataList这个组件
 const baseDataListRef = ref(null)
 // 表格数据传递
-const sendData = {
+const sendData = ref({
   tableColumnAttribute: [
     {
-      prop: 'Department',
+      prop: 'name',
       label: '职务名称',
       sortable: false
     },
     {
-      prop: 'DepartmentDes',
+      prop: 'intro',
       label: '职务描述',
       sortable: true
     },
@@ -284,53 +375,23 @@ const sendData = {
       sortable: true
     },
     {
-      prop: 'Enable',
+      prop: 'visible',
       label: '启用',
       useSwitch: true
     }
   ],
   tableData: [
     {
-      Department: '总经理',
-      DepartmentDes: '公司小领导',
+      name: '总经理',
+      intro: '公司小领导',
       sort: '4',
-      Enable: ''
+      visible: ''
     },
     {
-      Department: '财务总监',
-      DepartmentDes: '',
+      name: '财务总监',
+      intro: '',
       sort: '6',
-      Enable: ''
-    },
-    {
-      Department: '人事总监',
-      DepartmentDes: '',
-      sort: '4',
-      Enable: ''
-    },
-    {
-      Department: '技术总监',
-      DepartmentDes: '技术大牛',
-      sort: '7',
-      Enable: ''
-    },
-    {
-      Department: '蔡徐坤',
-      DepartmentDes: '厉不厉害你坤哥',
-      sort: '2',
-      Enable: ''
-    },
-    {
-      Department: '食堂阿姨',
-      DepartmentDes: '干饭人~',
-      sort: '3',
-      Enable: ''
-    },
-    {
-      Department: '商务总监',
-      DepartmentDes: '商务洽谈',
-      sort: '12',
-      Enable: ''
+      visible: ''
     }
   ],
   handleEdit: (row) => {
@@ -339,7 +400,7 @@ const sendData = {
   // 分页数组
   pageSizes: [5, 10, 15],
   total: 100
-}
+})
 // 操作菜单的数据和处理函数
 const dropdownMenuActionsInfo = ref([
   {
@@ -362,13 +423,69 @@ const dropdownMenuActionsInfo = ref([
     handleAction: (row) => {
       isDelete.value = true
       console.log('删除回调函数', row)
+      DelPostId.value = row.id
     },
     actionName: '删除'
   }
 ])
 
+/**
+ * 删除业务
+ */
+// 需要删除的岗位id
+const DelPostId = ref()
 // 删除消息提示
 const isDelete = ref(false)
+const handelTheDel = async () => {
+  console.log('要删除的岗位id:', DelPostId.value)
+  await deletePostListApi(
+    {
+      positionId: DelPostId.value
+    },
+    async (res) => {
+      console.log('删除成功回调:', res)
+      ElMessage({
+        message: '删除成功',
+        type: 'success'
+      })
+      //刷新岗位树
+      // 获取菜单树
+      await getPostTree(
+        {
+          depth: 0,
+          pid: 0
+        },
+        (res) => {
+          const { data } = res
+          ElMessage({
+            message: '已刷新数据',
+            type: 'success'
+          })
+          // 把数据存到 组织结构/岗位管理 仓库
+          postManageStore.setPostTreeMeau(data)
+        }
+      )
+      // 获取岗位列表(分页+条件)
+      baseDataListRef.value.openLoading = true
+      await getPostListApi(
+        {
+          keyword: '',
+          pageIndex: $page.value.currentPage,
+          pageSize: $page.value.pageSize,
+          pid: ''
+        },
+        (res) => {
+          const { data } = res
+          sendData.value.tableData = data.rows
+          sendData.value.total = data.total
+          baseDataListRef.value.openLoading = false
+          isDelete.value = false
+        }
+      )
+    }
+  )
+}
+
 // 控制抽屉打开关闭的数据
 const addDrawer = ref(false)
 // 抽屉表单数据
@@ -410,24 +527,99 @@ const handelAddFn = () => {
   for (let key in obj) {
     obj[key] = ''
   }
+  addDelivery.value = false
+  selectValue.value = ''
   addDrawer.value = true
 }
+
+const addDelivery = ref(false)
 
 // 按钮提交加载的数据和方法
 const btnLoading = ref(false)
 const handelAddSubmit = async () => {
   // 添加表单的校验,通过了才能发送添加请求
   await theAddForm.value.validate()
-  // 这里要处理添加接口的逻辑
+
+  // 判断是否选中父级
+  if (selectValue.value === '') {
+    ElMessage('请选择父级栏目')
+    return false
+  }
+
+  //收集数据
+  console.log(
+    '添加表单数据',
+    addForm.value,
+    '是否启用',
+    addDelivery.value,
+    '父级栏目:',
+    selectValue.value
+  )
+  // 矫正数据 启用=>1 2=> 禁用
+  if (addDelivery.value === true) {
+    addDelivery.value = 1
+  } else {
+    addDelivery.value = 2
+  }
   btnLoading.value = true
-  setTimeout(() => {
-    ElMessage({
-      message: '提交成功',
-      type: 'success'
-    })
-    btnLoading.value = false
-    addDrawer.value = false
-  }, 1000)
+  await addPostListApi(
+    {
+      intro: addForm.value.desc,
+      name: addForm.value.name,
+      parentID: selectValue.value,
+      sort: addForm.value.sort,
+      visible: addDelivery.value
+    },
+    async (res) => {
+      console.log('新增岗位成功回调:', res)
+      ElMessage({
+        message: '添加成功',
+        type: 'success'
+      })
+      // 刷新菜单树
+      await getPostTree(
+        {
+          depth: 0,
+          pid: 0
+        },
+        (res) => {
+          const { data } = res
+          // 把数据存到 组织结构/岗位管理 仓库
+          postManageStore.setPostTreeMeau(data)
+          ElMessage({
+            message: '数据已刷新',
+            type: 'success'
+          })
+        },
+        (error) => {
+          if (error) {
+            console.log(error)
+          }
+        }
+      )
+      // 刷新表格的数据
+      baseDataListRef.value.openLoading = true
+      await getPostListApi(
+        {
+          keyword: '',
+          pageIndex: $page.value.currentPage,
+          pageSize: $page.value.pageSize,
+          pid: selectValue.value
+        },
+        (res) => {
+          const { data } = res
+          console.log('获取岗位列表(分页+条件):', data)
+          // 渲染数据 => 数据存到仓库
+          postManageStore.setPostListTable(data.rows)
+          sendData.value.tableData = data.rows
+          sendData.value.total = data.total
+          baseDataListRef.value.openLoading = false
+        }
+      )
+    }
+  )
+  btnLoading.value = false
+  addDrawer.value = false
 }
 
 // 编辑业务
@@ -452,19 +644,45 @@ const editDrawer = ref(false)
 // 输入框绑定的数据
 const searchKey = ref('')
 // 搜索方法
-const handelSearch = () => {
+const handelSearch = async () => {
   if (searchKey.value === '') {
     ElMessage('搜索关键词不能为空')
     return false
   }
   btnLoading.value = true
-  setTimeout(() => {
-    btnLoading.value = false
-    ElMessage({
-      message: '搜索执行!调接口发请求',
-      type: 'success'
-    })
-  }, 1000)
+  // 开启表格加载效果
+  baseDataListRef.value.openLoading = true
+  // 分页器改变,需要发请求重新获取数据并渲染
+  await getPostListApi(
+    {
+      deptId: currentTreeOption.value.id,
+      keyword: searchKey.value,
+      pageIndex: $page.value.currentPage,
+      pageSize: $page.value.pageSize
+    },
+    (res) => {
+      const { data } = res
+      console.log('搜索请求的数据', data)
+      // 更新分页器数据
+      sendData.value.total = data.total
+      // 重新渲染
+      // console.log('要改的数组', sendData.value.tableData)
+      sendData.value.tableData = data.rows
+      baseDataListRef.value.openLoading = false
+      btnLoading.value = false
+      ElMessage({
+        message: '搜索成功',
+        type: 'success'
+      })
+    },
+    (error) => {
+      if (error) {
+        console.log(error)
+      }
+    }
+  )
+  // 置空搜索框
+  searchKey.value = ''
 }
 </script>
 
