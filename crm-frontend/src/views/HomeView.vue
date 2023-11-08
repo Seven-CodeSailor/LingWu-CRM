@@ -155,7 +155,6 @@ import {
 
 const messageInfo = useMessageInfo()
 const $store = userStore()
-console.log('store-in-home', $store)
 const layOutSettingStore = useLayOutSettingStore()
 
 // 菜单数据
