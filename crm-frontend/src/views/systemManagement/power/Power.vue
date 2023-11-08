@@ -146,8 +146,6 @@ const editFormData = ref({
   value: ''
 })
 
-const searchData = ref('')
-
 const sendData = reactive($store.sendData)
 const sendTreeData = $store.sendTreeData
 const showAddDrawer = ref(false)

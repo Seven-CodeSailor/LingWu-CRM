@@ -1,9 +1,9 @@
 /*
  * @Author: BINGWU
  * @Date: 2023-10-26 20:52:05
- * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-06 20:20:03
- * @FilePath: \crm-frontend\src\apis\login\index.js
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-08 11:01:20
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\login\index.js
  * @Describe:
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -32,8 +32,7 @@ export const login = (data, success, fail) => {
         // data.data.token =
         //   'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTkyMDQyMzcsImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.inkPd2E0H2DZZrCuhErMp4qXaSrHfaUfX6XN4BGe-1Hfajegeb0RiltDLjaGmDI1WUetI7iy6NaES6PTqquWgNMqJiECJl3iq8ouOS6BNF7zwZ-dtd7hh7iVtFwPUY6opIJEaLqly-Yy4QWyFcWBXg0-cbuIzVSmdFkVFY2jm2Gm2gKzVRxW3Y5G2ioS61uokszlwRMXuGonVb6lZ-Epdce1AH7sBySMUAPv0lqXLfj6H4HVjJ0ZbQNacfJTgjer-H68lSKzPmNmSfyEseXVTUnXtXeqossijuKHEtzfhgfDlQPJMr-yGxzAndsyIiTmJQCUOs3uyMY32oYCGR6KaQ'
         //qianmeng 回款管理token
-        data.data.token =
-          'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTkzODExMTAsImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.hu2fShFPnGXIlbwkPxm3vFTNwx8UdBhJaDwxFuiZJyRcC9lYcyqmzyrWkvA6b8PxiPSU957vzHt44feklBt7i_K-aKbCr5HhLx-0xV27W94kBVSscQWfImzRX1-FOJAHe0AxBfs5iT1bKeDgCoOz1kj3eDrBMujAh1P07ro0gbEa0gyttuIw1UTOVnTIgn8qCwQAi2EedVVIk3Hs5PfBbwhsjC5yklHtug7URpTRi0C1HHEOE9cINqCI_x6jmABCYEFypsXzTFgjs8QZJ0KW05Miae6hw0g39n4N2511edrfKvjNiMN8tJWQqmfcY73Dql6jh2JQARD7sEH6Ngv7xw'
+        data.data.token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpdGllcyI6WyJTVVBFUl9BRE1JTiJdLCJleHAiOjE2OTk1MTI5MzgsImlkIjoiMSIsInVzZXJfbmFtZSI6InJvdW1pb3UifQ.0KFl_To4CcDgAgjr81039z2Nzrx-aSEi_GaS331_FL27KLrC6uDZ1mU2AzkwGl1Cqw3xq1Q5f7Je6OTEJ9i2kx2bUueGYn22X5SK1L2_gZgLdNdBO6sqYnvdHWAnDKfJ0t6tk5Ef2LGG1R0xUzxqqpcKHfpKs74gtkHQyvzuZcUmieGkNLYeX3migZKP5295iCG1bIr1KQ7OLj3MkmRFD-Mes8o6D2OCaTnuONecq7YAVqkVO1JFYCks8Ed59uGsowaZJXABT77wE0OKm6eOT3TFudvaiwt9RVOLVhM9Vc1kaRjgHUCZmEZSyqNEAIrthmwlpvM8dVs7Mky9Y-4BOg'
         $store.setToken(data.data)
         // 执行成功回调
         success()

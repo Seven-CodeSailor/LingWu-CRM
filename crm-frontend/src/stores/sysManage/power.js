@@ -3,7 +3,7 @@ import {
   getPowerList,
   addPower,
   deletePower,
-  updatePowerList
+  updatePower
 } from '@/apis/sysManage/power.js'
 const useSysPower = defineStore('syspower', {
   state: () => ({
