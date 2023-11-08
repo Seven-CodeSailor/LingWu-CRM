@@ -33,9 +33,9 @@
           <el-form-item label="分类名称" prop="typeName"
             ><el-input v-model="data.name"></el-input
           ></el-form-item>
-          <el-form-item label="父级栏目" prop="upTypeName">
+          <el-form-item label="父级栏目" prop="parentID">
             <el-tree-select
-              v-model="data.upTypeName"
+              v-model="data.parentID"
               :data="incomeTypeStore.treeData"
               :render-after-expand="false"
             />
@@ -67,14 +67,14 @@ const treeRef = ref(null)
 
 const data = ref({
   name: '',
-  upTypeName: 1,
+  parentID: 1,
   sort: '',
   visible: true,
   intro: ''
 })
 const initData = ref({
   ame: '',
-  upTypeName: '',
+  parentID: '',
   sort: '',
   visible: true,
   intro: ''
@@ -96,6 +96,7 @@ const handleRemove = (node) => {
 }
 
 const handleEdit = (node) => {
+  console.log('node')
   treeRef.value.isEdit = true
   treeRef.value.showDrawer = true
   console.log('edit', node)
