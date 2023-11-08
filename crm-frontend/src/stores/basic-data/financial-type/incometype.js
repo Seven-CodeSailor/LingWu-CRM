@@ -14,6 +14,9 @@ function traverseArray(arr) {
           if (key === 'name') {
             // label 为name
             item.label = item[key]
+          } else if (key === 'id') {
+            // value 为 id
+            item.value = item[key]
           }
         }
       }
@@ -35,7 +38,6 @@ export const useIncomeTypeStore = defineStore('incometype', () => {
   }
   return {
     treeData,
-
     queryAllFeeincomeItem
   }
 })
