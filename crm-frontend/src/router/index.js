@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-25 22:24:51
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-08 13:12:12
+ * @LastEditTime: 2023-11-08 21:25:33
  * @FilePath: \zero-one-crmsys\crm-frontend\src\router\index.js
  * @Description:
  *
@@ -68,22 +68,19 @@ router.beforeEach(async function (to, from, next) {
     next()
     return
   }
-  console.log('运行到这里了')
   // 判断本地是否记录token值
   let store = userStore()
   let token = store.getToken
-  console.log('本地是否记录token值', token)
   // 如果有token
   if (token) {
     // 判断是否已经加载数据
     let isLoaded = store.isLoaded
     // 如果没有加载
     if (!isLoaded) {
-      console.log('loading')
       // 加载用户信息
       await store.loadUser()
       // 加载菜单资源
-      await store.loadMenus()
+      // await store.loadMenus()
       // 设置加载完毕
       store.setLoaded(true)
     }

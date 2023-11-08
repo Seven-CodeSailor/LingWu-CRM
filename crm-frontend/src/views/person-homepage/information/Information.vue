@@ -5,184 +5,121 @@
         <span>编辑资料</span>
       </div>
     </template>
-    <div class="card-body">
-      <el-form
-      :model="form"
-      label-width="120px"
-      style="margin: 18px 40px"
-      ref="ruleFormRef"
-      :rules="rules"
-      class="demo-ruleForm"
-      :size="formSize"
-      status-icon
-    >
-      <div class="card-body">
+
+    <page-container style="display: flex; margin: 26px 44px">
+      <div class="left">
         <el-form
           :model="form"
           label-width="120px"
-          style="margin: 18px 40px"
           ref="ruleFormRef"
           :rules="rules"
           class="demo-ruleForm"
           :size="formSize"
           status-icon
         >
-          <div class="group1">
-            <el-row>
-              <el-col :span="7">
-                <div class="grid-content ep-bg-purple">
-                  <el-form-item label="地址" prop="address">
-                    <el-input v-model="form.address" style="width: 400px" />
-                  </el-form-item>
-                </div>
-              </el-col>
+          <el-form-item label="地址" prop="address">
+            <el-input v-model="form.address" style="width: 350px" clearable />
+          </el-form-item>
 
-              <el-col :span="7">
-                <div class="grid-content ep-bg-purple">
-                  <el-form-item label="电子邮箱" prop="email">
-                    <el-input v-model="form.email" style="width: 300px" />
-                  </el-form-item>
-                </div>
-              </el-col>
+          <el-form-item label="电子邮箱" prop="email">
+            <el-input v-model="form.email" style="width: 200px" clearable />
+          </el-form-item>
 
-              <el-col :span="10">
-                <div class="grid-content ep-bg-purple">
-                  <el-form-item>
-                    <div class="head-avatar">
-                      更换头像
-                      <el-upload
-                        style="
-                          margin: 18px 22px;
-                          border: 1px #b6c1d0 solid;
-                          border-radius: 2%;
-                        "
-                        :auto-upload="false"
-                        class="avatar-uploader"
-                        :show-file-list="false"
-                      >
-                        <img v-if="imgUrl" :src="imgUrl" class="avatar" />
-                        <el-icon v-else class="avatar-uploader-icon"
-                          ><icon-Plus
-                        /></el-icon>
-                      </el-upload>
-                      <el-button type="primary" @click="pickPicture"
-                        ><el-icon> <icon-Plus /></el-icon> 选择图片</el-button
-                      >
-                      <el-button type="success" @click="saveUpdate"
-                        ><el-icon> <icon-Upload /></el-icon>上传头像</el-button
-                      >
-                    </div>
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
+          <el-form-item label="性别" prop="gender">
+            <el-radio-group v-model="form.gender">
+              <el-radio label="男" />
+              <el-radio label="女" />
+            </el-radio-group>
+          </el-form-item>
 
-            <el-row>
-              <el-col :span="10" style="margin-top: -275px"
-                ><div class="grid-content ep-bg-purple">
-                  <el-form-item label="性别" prop="gender">
-                    <el-radio-group v-model="form.gender">
-                      <el-radio label="男" />
-                      <el-radio label="女" />
-                    </el-radio-group>
-                  </el-form-item></div
-              ></el-col>
+          <el-form-item label="身份" prop="identity">
+            <el-input v-model="form.identity" style="width: 200px" clearable />
+          </el-form-item>
 
-              <el-col :span="16" style="margin-top: -230px"
-                ><div class="grid-content ep-bg-purple-light">
-                  <el-form-item label="身份" prop="identity">
-                    <el-input v-model="form.identity" style="width: 224px" />
-                  </el-form-item>
-                </div>
-              </el-col>
-
-              <el-col :span="12" style="margin-top: -180px"
-                ><div class="grid-content ep-bg-purple-light">
-                  <el-form-item label="简介" prop="intro">
-                    <el-input
-                      v-model="form.intro"
-                      type="textarea"
-                      :rows="4"
-                      placeholder="Please input"
-                    />
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-          </div>
-
-          <div class="group2">
-            <el-row>
-              <el-col :span="14" style="margin-top: -70px">
-                <div>
-                  <el-form-item label="固定电话" prop="mobile">
-                    <el-input v-model="form.mobile" style="width: 224px" />
-                  </el-form-item>
-                </div>
-              </el-col>
-
-              <el-col :span="12" style="margin-top: -20px">
-                <div>
-                  <el-form-item label="姓名" prop="name">
-                    <el-input v-model="form.name" style="width: 204px" />
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-          </div>
-
-          <div class="gropu3">
-            <el-row>
-              <el-col :span="7">
-                <div class="grid-content ep-bg-purple">
-                  <el-form-item label="QQ" prop="qicq">
-                    <el-input v-model="form.qicq" style="width: 224px" />
-                  </el-form-item>
-                </div>
-              </el-col>
-
-              <el-col :span="7">
-                <div class="grid-content ep-bg-purple">
-                  <el-form-item label="电话号码" prop="tel">
-                    <el-input v-model="form.tel" style="width: 400px" />
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-          </div>
-
-          <div class="group4" style="margin-top: 12px">
-            <el-row>
-              <el-col :span="7">
-                <div>
-                  <el-form-item label="邮政编码" prop="zipcode">
-                    <el-input v-model="form.zipcode" style="width: 50%" />
-                  </el-form-item>
-                </div>
-              </el-col>
-            </el-row>
-          </div>
-
-          <!-- 底部按钮 -->
-          <el-form-item style="margin-top: 2px">
-            <el-button type="primary" @click="submitForm">保存修改</el-button>
-            <!-- 重置还差逻辑，并且需要id表单里的data -->
-            <el-button type="info" @click="resetForm">重置</el-button>
+          <el-form-item label="简介" prop="intro">
+            <el-input
+              v-model="form.intro"
+              type="textarea"
+              :rows="4"
+              placeholder="Please input"
+            />
+          </el-form-item>
+          <el-form-item label="固定电话" prop="mobile">
+            <el-input v-model="form.mobile" style="width: 200px" clearable />
+          </el-form-item>
+          <el-form-item label="姓名" prop="name">
+            <el-input v-model="form.name" style="width: 120px" clearable />
+          </el-form-item>
+          <el-form-item label="QQ" prop="qicq">
+            <el-input v-model="form.qicq" style="width: 200px" clearable />
+          </el-form-item>
+          <el-form-item label="电话号码" prop="tel">
+            <el-input v-model="form.tel" style="width: 200px" clearable />
+          </el-form-item>
+          <el-form-item label="邮政编码" prop="zipcode">
+            <el-input v-model="form.zipcode" style="width: 120px" clearable />
           </el-form-item>
         </el-form>
       </div>
-    </el-form>
-    </div>
+      <div class="right" style="margin-left: 120px">
+        <el-upload
+          ref="uploadRef"
+          auto-upload="false"
+          class="avatar-uploader"
+          :show-file-list="false"
+          :on-change="onSelectFile"
+        >
+          <img v-if="imgUrl" :src="imgUrl" class="avatar" />
+          <el-icon v-else class="avatar-uploader-icon"><icon-Plus /></el-icon>
+        </el-upload>
+        <br />
+        <el-button
+          type="primary"
+          @click="uploadRef.$el.querySelector('input').click()"
+          ><el-icon> <icon-Plus /></el-icon> 选择图片</el-button
+        >
+        <el-button type="success" @click="onUpdateAvatar"
+          ><el-icon> <icon-Upload /></el-icon>上传头像</el-button
+        >
+      </div>
+    </page-container>
 
-   
+    <div class="card-body"></div>
+    <!-- 底部按钮 -->
+    <el-form-item style="margin-left: 150px">
+      <el-button type="primary" @click="submitForm">保存修改</el-button>
+      <!-- 重置还差逻辑，并且需要id表单里的data -->
+      <el-button type="info" @click="resetForm(ruleFormRef)">重置</el-button>
+    </el-form-item>
   </el-card>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-
-// 更换头像
-const imgUrl = ref('')
+// 假设引入store的数据，初始化imgUrl的值
+// import { useUserStore } from '@/stores'
+//引入用户头像更新的接口
+// import { userUpdateAvatarService } from '@/apis/user'
+// const userStore = useUserStore()
+// const imgUrl = ref('userStore.user.user_pic')
+const imgUrl = ref()
+const uploadRef = ref()
+const onSelectFile = (uploadFile) => {
+  // 基于filereader读取图片做预览
+  const reader = new FileReader()
+  reader.readAsDataURL(uploadFile.raw)
+  reader.onload = () => {
+    imgUrl.value = reader.result
+    console.log(imgUrl.value)
+  }
+}
+const onUpdateAvatar = async () => {
+  // 发送更新头像请求
+  await userUpdateAvatarService(imgUrl.value)
+  // userStore重新渲染
+  await userStore.getUser()
+  ElMessage.success('头像已保存')
+}
 
 const form = ref({
   address: '',
@@ -199,54 +136,15 @@ const form = ref({
 
 //校验规则
 const rules = {
-  address: [
-    {
-      required: false,
-      pattern: '',
-      message: '',
-      trigger: 'blur'
-    }
-  ],
-  email: [
-    {
-      trigger: 'blur'
-    }
-  ],
-  gender: [
-    {
-      trigger: 'blur'
-    }
-  ],
-  identity: [
-    {
-      trigger: 'blur'
-    }
-  ],
-  intro: [
-    {
-      trigger: 'blur'
-    }
-  ],
-  mobile: [
-    {
-      trigger: 'blur'
-    }
-  ],
-  name: [
-    {
-      trigger: 'blur'
-    }
-  ],
-  qicq: [
-    {
-      trigger: 'blur'
-    }
-  ],
-  zipcode: [
-    {
-      trigger: 'blur'
-    }
-  ],
+  address: [{ trigger: 'blur' }],
+  email: [{ trigger: 'blur' }],
+  gender: [{ trigger: 'blur'} ],
+  identity: [{ trigger: 'blur'  } ],
+  intro: [{ trigger: 'blur'  } ],
+  mobile: [{  trigger: 'blur'  } ],
+  name: [{ trigger: 'blur'   } ],
+  qicq: [{ trigger: 'blur'  }  ],
+  zipcode: [{ trigger: 'blur'  }  ]
 }
 
 //提交按钮的反馈逻辑
@@ -256,7 +154,8 @@ const submitForm = () => {
     type: 'success'
   })
 }
-const resetForm = () => {}
+// 表单重置逻辑(未完成)
+const resetForm = ref({})
 
 //两次密码需要相同的校验
 </script>

@@ -43,13 +43,66 @@
           placeholder="输入供应商联系人"
           style="margin-right: 4px; width: 200px"
         />
-        <DropDown
-          :inputValue1="name"
-          inputTitle1="供应商名称"
-          :inputValue2="address"
-          inputTitle2="通信地址"
-          @handleSearch="handleSearch"
-        ></DropDown>
+        <div class="drop_down">
+          <el-dropdown
+            trigger="click"
+            ref="dropdownRef"
+            @visible-change="clearValue"
+          >
+            <el-button type="primary">
+              <el-icon><icon-caret-bottom /></el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-form>
+                <!-- 输入框1 -->
+                <el-form-item class="el-form-items">
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      供应商名称
+                    </h4>
+                    <el-input v-model="name" placeholder="搜索供应商名称" />
+                  </div>
+                </el-form-item>
+                <!-- 输入框2 -->
+                <el-form-item class="el-form-items">
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      通讯地址
+                    </h4>
+                    <el-input v-model="address" placeholder="搜索通信地址" />
+                  </div>
+                </el-form-item>
+                <!-- 搜索按钮 -->
+                <el-form-item class="el-form-items">
+                  <div
+                    style="
+                      padding: 10px;
+                      display: flex;
+                      justify-content: flex-end;
+                      width: 100%;
+                    "
+                  >
+                    <el-button type="primary" @click="search">搜索</el-button>
+                  </div>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-dropdown>
+        </div>
         <el-button
           type="primary"
           style="margin-left: 4px"
@@ -71,15 +124,19 @@
       <el-table-column type="selection" width="55" />
       <el-table-column
         label="供应商名称"
-        prop="supplierName"
+        prop="supplier_name"
         sortable
       ></el-table-column>
-      <el-table-column label="供应商联系人" prop="name"></el-table-column>
-      <el-table-column label="性别" prop="gender"></el-table-column>
+      <el-table-column label="供应商联系人" prop="name"> </el-table-column>
+      <el-table-column label="性别" prop="gender">
+        <template #default="{ row }">
+          {{ row.gender === 0 ? '女' : '男' }}
+        </template>
+      </el-table-column>
       <el-table-column label="职位" prop="position"></el-table-column>
       <el-table-column label="手机" prop="mobile"></el-table-column>
       <el-table-column label="座机" prop="tel"></el-table-column>
-      <el-table-column label="QQ" prop="qq"></el-table-column>
+      <el-table-column label="QQ" prop="qicq"></el-table-column>
       <el-table-column label="邮箱" prop="email"></el-table-column>
       <el-table-column label="操作" fixed="right">
         <template #default="{ row }">
@@ -96,6 +153,9 @@
           </el-dropdown>
         </template>
       </el-table-column>
+      <template #empty>
+        <el-empty description="没有数据"></el-empty>
+      </template>
     </el-table>
     <!-- 分页器 -->
     <el-pagination
@@ -111,26 +171,24 @@
   <!-- 添加或修改客户信息 -->
   <el-drawer
     v-model="dialogVisible"
-    :title="
-      supplierContact.tempLinkData.linkmanId === ''
-        ? '添加联系人'
-        : '修改联系人'
-    "
+    :title="!flag ? '添加联系人' : '修改联系人'"
     size="50%"
+    @close="close"
   >
     <el-form
       :model="supplierContact.tempLinkData"
       label-width="120px"
       label-position="right"
+      :rules="rules"
     >
-      <el-form-item label="联系人姓名">
+      <el-form-item label="联系人姓名" prop="name">
         <el-input
           v-model="supplierContact.tempLinkData.name"
           placeholder="请输入联系人姓名"
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="性别">
+      <el-form-item label="性别" prop="gender">
         <el-radio-group v-model="supplierContact.tempLinkData.gender">
           <el-radio label="男" />
           <el-radio label="女" />
@@ -150,7 +208,7 @@
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="手机号">
+      <el-form-item label="手机号" prop="mobile">
         <el-input
           v-model="supplierContact.tempLinkData.mobile"
           placeholder="请输入手机号"
@@ -159,12 +217,12 @@
       </el-form-item>
       <el-form-item label="QQ">
         <el-input
-          v-model="supplierContact.tempLinkData.qq"
+          v-model="supplierContact.tempLinkData.qicq"
           placeholder="请输入QQ"
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="邮箱">
+      <el-form-item label="邮箱" prop="email">
         <el-input
           v-model="supplierContact.tempLinkData.email"
           placeholder="请输入邮箱"
@@ -191,17 +249,12 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="save"> 添加 </el-button>
+        <el-button type="primary" @click="save"> 确定 </el-button>
       </span>
     </template>
   </el-drawer>
   <!-- 删除确认 -->
-  <el-dialog
-    v-model="confirmDelete"
-    title="删除"
-    width="30%"
-    :before-close="(deleteId = null)"
-  >
+  <el-dialog v-model="confirmDelete" title="删除" width="30%">
     <span style="color: red; margin-left: 33%; font-size: 24px"
       >是否确认删除</span
     >
@@ -220,7 +273,6 @@ import useSelect from '@/stores/customer/select.js'
 import { getCustomerName } from '@/apis/publicInterface.js'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
-import DropDown from '@/components/DropDown/DropDown.vue'
 import { ArrowDown } from '@element-plus/icons-vue'
 
 import {
@@ -247,7 +299,7 @@ const initLinks = async (
   await getSupplier(currentPage, pageSize, keywords, supplierName, address)
 }
 onMounted(() => {
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 })
 // 下拉列表仓库
 const select = useSelect()
@@ -259,40 +311,52 @@ const currentPage = ref(1)
 const pageSize = ref(5)
 const handleSizeChange = (val) => {
   pageSize.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 const handleCurrentChange = (val) => {
   currentPage.value = val
-  initLinks(currentPage, pageSize)
+  initLinks(currentPage.value, pageSize.value)
 }
 
 const customerName = ref()
 const contractGetName = async () => {
-  await getCustomerName(customerName.value.selectValue)
-  console.log()
-  supplierContact.tempLinkData.supplierName =
-    customerName.value.selectValue.label
-  supplierContact.tempLinkData.supplierId = customerName.value.selectValue.value
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
+  supplierContact.tempLinkData.supplier_id =
+    customerName.value.selectValue.value
 }
 // 点击添加按钮的回调
-const addMyClinet = async () => {
-  await getCustomerName()
+const addMyClinet = () => {
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
   dialogVisible.value = true
+  flag.value = false
 }
 // 添加按钮确定回调
-const save = async () => {
-  if (supplierContact.tempLinkData.linkmanId === '') {
-    await addlinkman(
+const save = () => {
+  if (!flag.value) {
+    addlinkman(
       supplierContact.tempLinkData,
       () => {
         ElMessage.success('添加成功')
+        initLinks(currentPage.value, pageSize.value)
       },
       () => {
         ElMessage.error('添加失败')
       }
     )
   } else {
-    await modifylinkman(
+    modifylinkman(
       supplierContact.tempLinkData,
       () => {
         ElMessage.success('修改成功')
@@ -306,11 +370,28 @@ const save = async () => {
   customerName.value.reset()
   dialogVisible.value = false
 }
+const flag = ref(false)
+const close = () => {
+  if (flag.value) {
+    supplierContact.tempLinkDataReset()
+    flag.value = false
+  }
+}
 // 修改按钮回调
 const modify = async (row) => {
-  await getCustomerName()
-  supplierContact.tempLinkData.linkmanId = row.linkmanId
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
+  const item = supplierContact.tableData.find((item) => {
+    return item.linkman_id === row.linkman_id
+  })
+  supplierContact.tempLinkData = item
   dialogVisible.value = true
+  flag.value = true
 }
 
 /**
@@ -323,9 +404,13 @@ const selectChange = (value) => {
   selectIdArr.value = value
 }
 // 批量删除按钮
-const deleteByQuery = async () => {
-  await removelinkman(
-    selectIdArr.value,
+const deleteByQuery = () => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.linkman_id)
+  })
+  removelinkman(
+    data,
     () => {
       ElMessage.success('删除成功')
     },
@@ -334,7 +419,7 @@ const deleteByQuery = async () => {
     }
   )
   // 删除后重新请求数据
-  initLinks()
+  initLinks(currentPage.value, pageSize.value)
 }
 
 // 导出供应商联系人
@@ -353,9 +438,14 @@ const exportExcel = async (value1, value2) => {
 }
 
 // 发送消息按钮回调
-const msgSend = async (title, desc) => {
-  await sendMessage(
-    selectIdArr.value,
+const msgSend = (title, desc) => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.linkman_id)
+  })
+  sendMessage(
+    data,
+    title,
     desc,
     () => {
       ElMessage.success('发送短信成功')
@@ -366,9 +456,14 @@ const msgSend = async (title, desc) => {
   )
 }
 // 发送邮件按钮回调
-const emailSend = async (title, desc) => {
-  await sendEmail(
-    selectIdArr.value,
+const emailSend = (title, desc) => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.linkman_id)
+  })
+  sendEmail(
+    data,
+    title,
     desc,
     () => {
       ElMessage.success('发送邮件成功')
@@ -387,8 +482,8 @@ let name = ref('')
 let address = ref('')
 const searchDetails = () => {
   initLinks(
-    currentPage,
-    pageSize,
+    currentPage.value,
+    pageSize.value,
     content.value,
     name.value,
     address.value,
@@ -401,11 +496,19 @@ const searchDetails = () => {
   )
   content.value = ''
 }
+const dropdownRef = ref(null)
+const clearValue = () => {
+  name.value = address.value = ''
+}
 // 下拉框搜索按钮回调
-const handleSearch = () => {
-  searchDetails()
-  name.value = ''
-  address.value = ''
+const search = () => {
+  if (!name.value || !address.value) {
+    ElMessage.error('输入不能为空')
+  } else {
+    searchDetails()
+    // 调用搜索函数后 关闭下拉菜单
+    dropdownRef.value.$el.click()
+  }
 }
 
 /**
@@ -415,7 +518,7 @@ let confirmDelete = ref(false)
 let deleteId = ref()
 // 删除按钮回调
 const Deletes = (row) => {
-  deleteId.value = row.linkmanId
+  deleteId.value = row.linkman_id
   confirmDelete.value = true
 }
 const Confirms = async () => {
@@ -429,6 +532,14 @@ const Confirms = async () => {
     }
   )
   confirmDelete.value = false
+  initLinks(currentPage.value, pageSize.value)
+}
+
+const rules = {
+  name: [{ required: true, message: '联系人姓名不能为空', trigger: 'blur' }],
+  gender: [{ required: true, message: '性别不能为空', trigger: 'blur' }],
+  mobile: [{ required: true, message: '手机号不能为空', trigger: 'blur' }],
+  email: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }]
 }
 </script>
 
@@ -448,5 +559,8 @@ header {
 .dialog-footer {
   display: flex;
   justify-content: space-around;
+}
+:deep(.el-form-items) {
+  margin-bottom: 0;
 }
 </style>

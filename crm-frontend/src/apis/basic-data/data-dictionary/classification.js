@@ -10,7 +10,7 @@
  */
 //test
 import Request from '@/apis/request.js'
-const baseUrl = '/cpp1-dictionary'
+const baseUrl = '/cpp1-apiv1'
 /**
  * @description: 分页查询字典分类的数据
  * @param {Object} params // pageIndex pageSize

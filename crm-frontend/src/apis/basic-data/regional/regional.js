@@ -64,13 +64,3 @@ export const modifyArea = async (params) => {
 export const queryTree = async () => {
   return await Request.requestJson(Request.GET, baseUrl + '/j3-area/query-tree')
 }
-/**
- * @description: 获取区域下拉列表
- * @return {Promise}
- */
-export const selectArea = async () => {
-  return await Request.requestJson(
-    Request.GET,
-    baseUrl + '/j3-area/select-area'
-  )
-}

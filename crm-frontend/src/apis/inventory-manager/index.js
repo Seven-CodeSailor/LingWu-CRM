@@ -37,26 +37,62 @@ export const queryInventoryList = async (params) => {
   )
 }
 
-// 以下是mock测试用例,暂时别删
-export const getInventortOutTableList = (theUrl) => {
-  return Request.requestJson(Request.GET, theUrl)
-  // return new Promise((resolve) => {
-  //   resolve(data)
-  // }).then((res) => {
-  //   // 写死数据
-  //   // 将数据存储在pinia
-  //   console.log(res)
-  // })
+// 导出入库明细
+export const exportStorageDetails = async (
+  list_id = [],
+  success = () => {},
+  fail = () => {}
+) => {
+  let data = []
+  list_id.forEach((item) => {
+    data.push({ list_id: item })
+  })
+  Request.requestJson(
+    Request.POST,
+    '/inventory-manager/export-storage-details',
+    data
+  )
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
 }
 
-export const getOutTableList = () => {}
+// 确认入库
+export const modifyConfirmStorage = async (
+  id,
+  into_user_id,
+  success = () => {},
+  fail = () => {}
+) => {
+  Request.requestJson(Request.PUT, '/inventory-manager/modify-ConfirmStorage', {
+    id,
+    into_user_id
+  })
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
+}
 
-//
-export const test = async (data, success, fail) => {
-  await Request.requestJson(
-    Request.GET,
-    'https://mockapi.eolink.com/69jekXFeb89500c132462100d3745b0046ecd1264eeb224/test',
-    {}
+// 删除入库单
+export const deleteStorage = async (
+  id = [],
+  success = () => {},
+  fail = () => {}
+) => {
+  let data = []
+  id.forEach((item) => {
+    data.push({ id: item })
+  })
+  Request.requestJson(
+    Request.DELETE,
+    '/inventory-manager/modify-ConfirmStorage',
+    data
   )
     .then((response) => {
       success(response)

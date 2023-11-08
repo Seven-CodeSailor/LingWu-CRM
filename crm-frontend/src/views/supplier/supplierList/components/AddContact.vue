@@ -4,21 +4,22 @@
       :model="supplierList.contactInfo"
       label-width="120px"
       label-position="right"
+      :rules="rules"
     >
-      <el-form-item label="姓名">
+      <el-form-item label="姓名" prop="name">
         <el-input
           v-model="supplierList.contactInfo.name"
           placeholder="请输入联系人姓名"
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="性别">
+      <el-form-item label="性别" prop="gender">
         <el-radio-group v-model="supplierList.contactInfo.gender">
           <el-radio label="男" />
           <el-radio label="女" />
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="手机">
+      <el-form-item label="手机" prop="tel">
         <el-input
           v-model="supplierList.contactInfo.mobile"
           placeholder="请输入联系人手机"
@@ -41,12 +42,12 @@
       </el-form-item>
       <el-form-item label="QQ">
         <el-input
-          v-model="supplierList.contactInfo.qq"
+          v-model="supplierList.contactInfo.qicq"
           placeholder="请输入联系人QQ"
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="邮箱">
+      <el-form-item label="邮箱" prop="email">
         <el-input
           v-model="supplierList.contactInfo.email"
           placeholder="请输入联系人邮箱"
@@ -60,7 +61,7 @@
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="客户名称">
+      <el-form-item label="客户名称" prop="customerName">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户名称"
@@ -68,6 +69,13 @@
           @update:cid="contactGetName()"
           ref="customerName"
         ></ChooseSelect>
+      </el-form-item>
+      <el-form-item label="简介">
+        <el-input
+          v-model="supplierList.contactInfo.intro"
+          type="textarea"
+          style="width: 600px"
+        />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -99,17 +107,23 @@ const select = useSelect()
 // 控制添加联系人抽屉的显示和隐藏
 let dialogVisible1 = ref(false)
 // 添加联系人按钮回调，打开抽屉
-const addContact = async (row) => {
-  await getCustomerName()
+const addContact = (row) => {
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
   // 根据传入id获取数据
   dialogVisible1.value = true
-  supplierList.contactInfo.id = row.supplierId
+  supplierList.contactInfo.supplier_id = row.supplier_id
   console.log(row)
 }
 const customerName = ref()
 // 添加联系人保存数据按钮回调
-const saveContact = async () => {
-  await addlinkman(
+const saveContact = () => {
+  addlinkman(
     supplierList.contactInfo,
     () => {
       ElMessage.success('添加成功')
@@ -124,9 +138,26 @@ const saveContact = async () => {
   //   initCustomer()
 }
 // 获取客户名称下拉列表
-const contactGetName = async () => {
-  await getCustomerName()
-  supplierList.contactInfo.customerName = customerName.value.selectValue.label
+const contactGetName = () => {
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
+  supplierList.contactInfo.customer_name = customerName.value.selectValue.label
+  supplierList.contactInfo.customer_id = customerName.value.selectValue.value
+}
+
+const rules = {
+  name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+  gender: [{ required: true, message: '性别不能为空', trigger: 'blur' }],
+  email: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }],
+  tel: [{ required: true, message: '手机不能为空', trigger: 'blur' }],
+  customerName: [
+    { required: true, message: '客户名称不能为空', trigger: 'blur' }
+  ]
 }
 defineExpose({
   addContact

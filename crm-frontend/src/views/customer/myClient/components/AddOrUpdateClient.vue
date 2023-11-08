@@ -12,15 +12,16 @@
       :model="myclient.customerInfo"
       label-width="120px"
       label-position="right"
+      :rules="rules"
     >
-      <el-form-item label="客户名称">
+      <el-form-item label="客户名称" prop="name">
         <el-input
           v-model="myclient.customerInfo.name"
           placeholder="请输入客户名称"
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="客户来源">
+      <el-form-item label="客户来源" prop="belong">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户来源"
@@ -29,7 +30,7 @@
           ref="belong"
         ></ChooseSelect>
       </el-form-item>
-      <el-form-item label="客户等级">
+      <el-form-item label="客户等级" prop="level">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户等级"
@@ -38,7 +39,7 @@
           ref="level"
         ></ChooseSelect>
       </el-form-item>
-      <el-form-item label="客户行业">
+      <el-form-item label="客户行业" prop="induty">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户行业"
@@ -47,7 +48,7 @@
           ref="industry"
         ></ChooseSelect>
       </el-form-item>
-      <el-form-item label="联系手机">
+      <el-form-item label="联系手机" prop="mobile">
         <el-input v-model="myclient.customerInfo.tel" style="width: 500px" />
       </el-form-item>
       <el-form-item label="联系电话">
@@ -66,7 +67,7 @@
           style="width: 650px"
         />
       </el-form-item>
-      <el-form-item label="客户需求">
+      <el-form-item label="客户需求" prop="needs">
         <el-input v-model="myclient.customerInfo.needs" style="width: 500px" />
       </el-form-item>
       <el-form-item label="公海客户" v-if="!flag">
@@ -90,7 +91,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import useMyClient from '@/stores/customer/myclient.js'
 import useSelect from '@/stores/customer/select.js'
 import {
@@ -138,10 +139,11 @@ const getSelect = async () => {
   await getCustomerIndusty()
 }
 // 点击添加按钮的回调
-const addMyClinet = async () => {
+const addMyClinet = () => {
   getSelect()
   dialogVisible.value = true
 }
+const inits = inject('inits')
 // 添加或修改客户按钮确定回调
 const save = () => {
   dialogVisible.value = false
@@ -150,6 +152,7 @@ const save = () => {
       myclient.customerInfo,
       () => {
         ElMessage.success('添加成功')
+        inits()
       },
       () => {
         ElMessage.error('添加失败')
@@ -160,6 +163,7 @@ const save = () => {
       myclient.customerInfo,
       () => {
         ElMessage.success('修改成功')
+        inits()
       },
       () => {
         ElMessage.error('修改失败')
@@ -168,23 +172,27 @@ const save = () => {
   }
   myclient.customerReset()
   select.resetData()
-  //   initCustomer()
+  belong.value.reset()
+  level.value.reset()
+  industry.value.reset()
 }
 /**
  * 修改
  */
 // 修改按钮回调
-const modify = async (row) => {
+const modify = (row) => {
   flag.value = true
   getSelect()
-  await queryCustomerDetails(
+  queryCustomerDetails(
     row.customer_id,
     (response) => {
       myclient.customerInfo = {
         customer_id: row.customer_id,
         ...response.data
       }
-      console.log(response)
+      belong.value.setVal(myclient.customerInfo.source)
+      level.value.setVal(myclient.customerInfo.grade)
+      industry.value.setVal(myclient.customerInfo.industry)
     },
     () => {
       ElMessage.error('获取数据失败')
@@ -198,9 +206,21 @@ const flag = ref(false)
 const close = () => {
   if (flag.value) {
     myclient.customerReset()
+    belong.value.reset()
+    level.value.reset()
+    industry.value.reset()
     flag.value = false
   }
 }
+
+const rules = ref({
+  name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+  belong: [{ required: true, message: '客户来源不能为空', trigger: 'blur' }],
+  level: [{ required: true, message: '客户等级不能为空', trigger: 'blur' }],
+  induty: [{ required: true, message: '客户行业不能为空', trigger: 'blur' }],
+  mobile: [{ required: true, message: '手机号不能为空', trigger: 'blur' }],
+  needs: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }]
+})
 
 defineExpose({
   addMyClinet,

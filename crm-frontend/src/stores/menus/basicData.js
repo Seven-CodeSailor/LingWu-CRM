@@ -1,91 +1,91 @@
 const basicData = {
   text: '基础数据',
   href: '/basicData',
-  icon: '',
+  icon: 'IconPostCard',
   children: [
     {
       text: '数据字典',
       href: '/basicData/dictionary',
-      icon: '',
+      icon: 'IconPostCard',
       children: [
         {
           text: '字典分类',
           href: '/basicData/dictionary/classification',
-          icon: ''
+          icon: 'IconPostCard'
         },
         {
           text: '字典管理',
           href: '/basicData/dictionary/management',
-          icon: ''
+          icon: 'IconPostCard'
         }
       ]
     },
     {
       text: '地区管理',
       href: '/basicData/regional',
-      icon: ''
+      icon: 'IconPostCard'
     },
     {
       text: '财务类型',
       href: '/basicData/financial',
-      icon: '',
+      icon: 'IconPostCard',
       children: [
         {
           text: '费用收入类型',
           href: '/basicData/financial/incomeType',
-          icon: ''
+          icon: 'IconPostCard'
         },
         {
           text: '费用开支类型',
           href: '/basicData/financial/expenseType',
-          icon: ''
+          icon: 'IconPostCard'
         },
         {
           text: '银行账号管理',
           href: '/basicData/financial/bankAccount',
-          icon: ''
+          icon: 'IconPostCard'
         }
       ]
     },
     {
       text: '仓库管理',
       href: '/basicData/warehouse',
-      icon: ''
+      icon: 'IconPostCard'
     },
     {
       text: '商品管理',
       href: '/basicData/product',
-      icon: '',
+      icon: 'IconPostCard',
       children: [
         {
           text: '商品品牌',
           href: '/basicData/product/brand',
-          icon: ''
+          icon: 'IconPostCard'
         },
         {
           text: '商品类型',
           href: '/basicData/product/type',
-          icon: ''
+          icon: 'IconPostCard'
         },
         {
           text: '商品分类',
           href: '/basicData/product/classification',
-          icon: ''
+          icon: 'IconPostCard'
         },
         {
           text: '商品规格',
           href: '/basicData/product/specification',
-          icon: ''
+          icon: 'IconPostCard'
         },
         {
           text: '商品维护',
           href: '/basicData/product/maintenace',
-          icon: ''
+          icon: 'IconPostCard'
         },
         {
           text: '商品SKU',
           href: '/basicData/product/SKU',
-          icon: ''
+          icon: 'IconPostCard'
         }
       ]
     }

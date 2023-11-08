@@ -2,7 +2,7 @@
  * @Author: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
  * @Date: 2023-11-02 15:19:55
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-06 18:54:18
+ * @LastEditTime: 2023-11-07 14:53:47
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\organizationStructure\Roles.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -53,7 +53,7 @@ export const getRoleListApi = async (params, success, fail) => {
   await Request.requestForm(
     Request.GET,
     'http://101.34.252.80:10110/orgstructure/role/role/query-all',
-    { params }
+    { ...params }
   )
     .then((response) => {
       // 请求返回的数据就是response,在成功回调函数可以拿到
@@ -91,5 +91,68 @@ export const addRoleListApi = async (params, success, fail) => {
     })
     .catch((error) => {
       fail(error)
+    })
+}
+
+/**
+ * @description: 修改角色
+ * @param {*} params 请求参数:
+ * {
+ *  id: id,
+ *  intro: '简介',
+ *  name: '角色名称,
+ *  parentID: 父id,
+ *  sort: 排序,
+ *  visible: 	是否启用 1-启用，2-禁用
+ * }
+ * @param {*} success 成功回调
+ * @param {*} fail 失败回调
+ * @Author{*} 暮秋(有问题找我)
+ * @return {*}
+ */
+export const editRoleListApi = async (params, success) => {
+  await Request.requestJson(
+    Request.PUT,
+    'http://101.34.252.80:10110/orgstructure/role/role/modify-role',
+    params
+  )
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      console.log(error)
+      ElMessage({
+        message: '操作失败',
+        type: 'warning'
+      })
+    })
+}
+
+/**
+ * @description: 删除角色
+ * @param {*} params 请求参数:
+ * {
+ *  id: 角色id,
+ * }
+ * @param {*} success 成功回调
+ * @param {*} fail 失败回调
+ * @Author{*} 暮秋(有问题找我)
+ * @return {*}
+ */
+export const deleteRoleListApi = async (params, success) => {
+  await Request.requestForm(
+    Request.DELETE,
+    'http://101.34.252.80:10110/orgstructure/role/role/remove-role',
+    params
+  )
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      console.log(error)
+      ElMessage({
+        message: '操作失败',
+        type: 'warning'
+      })
     })
 }

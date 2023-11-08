@@ -1,21 +1,86 @@
 import Request from '../request'
+const BASEURL = '/sales-opportunities'
+/**
+ * @description: 获取销售机会分页列表
+ * @param {*} params 请求参数
+ *
+ */
+export const querySalesOpportunityList = async (params) => {
+  return await Request.requestJson(
+    Request.GET,
 
+    BASEURL + '/sales-opportunities/query-invoices',
+    params
+  )
+}
 
 /**
- * @description: 获取销售机会分页列表  参数字段配置的路径:  crm-frontend\src\stores\salesmanager\SalesContract.js
- * @param {*} data
- * 
+ * 添加销售机会
+ * @param {*} params
+ * @returns
  */
+export const addSalesOpportunity = async (params) => {
+  return await Request.requestForm(
+    Request.POST,
+    BASEURL + '/sales-opportunities/insert-sales-opportunity',
+    params
+  )
+}
+/**
+ * 修改销售机会
+ * @param {*} params
+ * @returns
+ */
+export const updateSalesOpportunity = async (params) => {
+  return await Request.requestForm(
+    Request.PUT,
+    BASEURL + '/sales-opportunities/update-sales-opportunity',
+    params
+  )
+}
+/**
+ * TODO 删除销售机会 支持批量删除
+ * @param {*} params
+ * @returns
+ */
+export const deleteSalesOpportunity = async (params) => {
+  return await Request.requestJson(
+    Request.DELETE,
+    BASEURL + '/sales-opportunities/delete-sales-opportunity',
+    params
+  )
+}
 
-export const querySalesOpportunity = (data) => {
-  return Request.requestJson(
+export const exportSalesOpportunity = async (params) => {
+  return await Request.requestJson(
     Request.GET,
-    //TODO
-    'https://mockapi.eolink.com/fhdz9TQ7632232d76db4f62838f5c8793d22b77760ead7b/​opportunities​/sales-oppo-list',
-    {
-      params:{
-        ...data
-      }
-    }
+    BASEURL + '/sales-opportunities/export-sales-opportunity',
+    params
+  )
+}
+
+/**
+ * TODO 批量发邮件
+ * @param {*} params
+ * @returns
+ */
+export const sendEmail = async (params) => {
+  return await Request.requestForm(
+    Request.POST,
+    BASEURL + '/sales-opportunities/salesContract/Mail/',
+    params
+  )
+}
+
+/**
+ * TODO 批量发短信
+ * @param {*} params
+ * @returns
+ */
+export const sendMails = async (params) => {
+  return await Request.requestForm(
+    Request.POST,
+    BASEURL + '/sales-opportunities/salesContract/Sms/',
+    params
   )
 }
