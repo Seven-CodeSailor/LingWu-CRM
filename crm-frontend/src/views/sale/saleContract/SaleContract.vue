@@ -11,7 +11,7 @@
     class="card"
     :title="sendData.title"
     :msg="sendData.msg"
-    :table-column-attribute="tableColumnAttribute"
+    :table-column-attribute="salesContractStore.tableColumnAttribute"
     :table-data="salesContractStore.tableData"
     :page-sizes="sendData.pageSizes"
     :total="salesContractStore.tableTotal"
@@ -125,26 +125,22 @@
   </BaseDataList>
 
   <!-- 添加或修改销售机会信息 -->
-  <el-drawer
-    v-model="dialogVisible"
-    :title="saleContractData.id === '' ? '添加合同' : '修改合同'"
-    size="50%"
-  >
+  <el-drawer v-model="dialogVisible" :title="添加合同" size="50%">
     <el-form
-      :model="saleContractData"
+      :model="newSaleContract"
       label-width="120px"
       label-position="right"
     >
       <el-form-item label="合同编号">
         <el-input
-          v-model="saleContractData.contract_no"
+          v-model="newSaleContract.contract_no"
           placeholder="输入合同编号"
           style="width: 500px"
         />
       </el-form-item>
       <el-form-item label="主题">
         <el-input
-          v-model="saleContractData.title"
+          v-model="newSaleContract.title"
           placeholder="输入主题"
           style="width: 500px"
         />
@@ -153,6 +149,7 @@
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户名称"
+          v-model="customer_nameData"
           :options="options"
         ></ChooseSelect>
       </el-form-item>
@@ -160,6 +157,7 @@
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户联系人"
+          v-model="linkman_nameData"
           :options="options"
         ></ChooseSelect>
       </el-form-item>
@@ -167,12 +165,13 @@
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户销售机会"
+          v-model="chance_nameData"
           :options="options"
         ></ChooseSelect>
       </el-form-item>
       <el-form-item label="起始日期">
         <el-date-picker
-          v-model="saleContractData.start_date"
+          v-model="start_dateData"
           type="datetime"
           placeholder="选择合同生效开始时间"
         >
@@ -180,18 +179,18 @@
       </el-form-item>
       <el-form-item label="预计签订日期">
         <el-date-picker
-          v-model="saleContractData.end_date"
+          v-model="end_dateData"
           type="datetime"
           placeholder="选择合同生效结束时间"
         >
         </el-date-picker>
       </el-form-item>
       <el-form-item label="合同金额">
-        <el-input v-model="saleContractData.money" style="width: 500px" />
+        <el-input v-model="newSaleContract.money" style="width: 500px" />
       </el-form-item>
       <el-form-item label="介绍">
         <el-input
-          v-model="saleContractData.intro"
+          v-model="newSaleContract.intro"
           type="textarea"
           style="width: 650px"
         />
@@ -200,6 +199,7 @@
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选我方代表"
+          v-model="our_user_nameData"
           :options="options"
         ></ChooseSelect>
       </el-form-item>
@@ -308,8 +308,12 @@ import { ref, onMounted, reactive } from 'vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
 import { SoldOut, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { useSalesContractStore } from '@/stores/salesmanager/SalesContract.js'
+import { useSalesContractStore } from '@/stores/salesmanager/salescontract.js'
 import AddGoods from '@/components/OrganizationStructure/AddGoods.vue'
+
+//导入仓库
+const salesContractStore = useSalesContractStore()
+
 //添加商品的ref
 const addGoodsRef = ref(null)
 
@@ -317,23 +321,21 @@ const addGoodsRef = ref(null)
 const searchContractName = ref('')
 
 // 搜索框的searchDetails方法还需完善
-const searchDetails = () => {
+const searchDetails = async () => {
   console.log('搜索', searchContractName.value)
-  const searchData = salesContractStore.tableData.filter((item) => {
-    return item.title === searchContractName.value
-  })
-  if (searchData.length === 0) {
-    ElMessage({
-      type: 'warning',
-      message: '未找到相关数据，请重新输入合同主题'
-    })
-  } else {
-    salesContractStore.tableData = searchData
-  }
+  // const res = await salesContractStore.tableData.
+  // if (searchData.length === 0) {
+  //   ElMessage({
+  //     type: 'warning',
+  //     message: '未找到相关数据，请重新输入合同主题'
+  //   })
+  // } else {
+  //   salesContractStore.tableData = searchData
+  // }
 }
 
 // 批量删除所选列表
-let selectArr = ref([])
+// let selectArr = ref([])
 
 const isDisabled = ref(true)
 // // table表勾选时触发的事件
@@ -392,28 +394,54 @@ const sellContractUniqueField = ref({
 // 控制抽屉的显示与否
 let dialogVisible = ref(false)
 
-//添加销售机会
-// 新增销售机会的数据
-let saleContractData = ref({
-  id: '',
-  contract_no: 0,
+//添加销售合同
+
+const customer_nameData = ref('')
+const linkman_nameData = ref('')
+const chance_nameData = ref('')
+const our_user_nameData = ref('')
+// 假设 el-date-picker 返回的日期数据存储在 dateData 中
+const start_dateData = ref('')
+const end_dateData = ref('')
+
+//解析日期的方法
+const parsedate = (date) => {
+  // 使用日期对象的方法获取年、月、日、小时和分钟
+  const dateData = new Date(date.value)
+  const year = dateData.getFullYear()
+  const month = String(dateData.getMonth() + 1).padStart(2, '0') // 月份从 0 开始，需要加1，并确保两位格式
+  const day = String(dateData.getDate()).padStart(2, '0') // 日
+  const hours = String(dateData.getHours()).padStart(2, '0')
+  const minutes = String(dateData.getMinutes()).padStart(2, '0')
+  // 组合成 "yyyy-mm-dd hh:mm" 格式的日期时间字符串
+  const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}`
+  return formattedDateTime
+}
+
+// 新增销售合同的数据
+let newSaleContract = ref({
+  contract_no: '',
   title: '',
+  customer_name: '',
+  linkman_name: '',
+  chance_name: '',
   start_date: '',
   end_date: '',
   money: 0,
-  intro: ''
+  intro: '',
+  our_user_name: ''
 })
 
 // 添加或者修改后的重置数据
-const resetData = ref({
-  id: '',
-  contract_no: 0,
-  title: '',
-  start_date: '',
-  end_date: '',
-  money: 0,
-  intro: ''
-})
+// const resetData = ref({
+//   id: '',
+//   contract_no: 0,
+//   title: '',
+//   start_date: '',
+//   end_date: '',
+//   money: 0,
+//   intro: ''
+// })
 
 // 添加按钮的回调函数
 let addData = () => {
@@ -436,76 +464,32 @@ const addGoodsData = () => {
 let dialogVisible1 = ref(false)
 
 // 点击保存按钮后的回调函数用来保存数据
-const saveData = () => {
-  saleContractData.value.contract_no = 0
-  saleContractData.value.happen_date = ''
-  saleContractData.value.end_date = ''
-  saleContractData.value.money = 0
-  saleContractData.value.intro = ''
-  dialogVisible.value = false
-  // 这里还需要对表单数据进行判断的 还需完善
-  if (saleContractData.value.id === '') {
-    console.log('新增数据成功')
+const saveData = async () => {
+  newSaleContract.value.customer_name = customer_nameData.value.label
+  newSaleContract.value.linkman_name = linkman_nameData.value.label
+  newSaleContract.value.chance_name = chance_nameData.value.label
+  newSaleContract.value.our_user_name = our_user_nameData.value.label
+  newSaleContract.value.start_date = parsedate(start_dateData)
+  newSaleContract.value.end_date = parsedate(end_dateData)
+  console.log('修改或者新增的合同数据：', newSaleContract.value)
+  // TODO这里应该添加表单校验 确保每一项都有数据
+
+  const res = await salesContractStore
+    .addNewContract(newSaleContract.value)
+    .catch(() => {
+      newSaleContract.value = salesContractStore.resetNewSalesContract.value
+      ElMessage.error('添加失败')
+    })
+  if (res.code === 10000) {
+    getSalesContractList(1, 5)
     ElMessage.success('添加成功')
+    // 重置数据
+    newSaleContract.value = salesContractStore.resetNewSalesContract.value
   }
-  // 还需完善
-  ElMessage.success('修改成功')
-  console.log('修改或者新增的合同数据：', saleContractData.value)
-  saleContractData.value = resetData.value
+  dialogVisible.value = false
 }
 
 const item = ref({})
-
-// 合同列表项
-const tableColumnAttribute = [
-  {
-    prop: 'title',
-    label: '合同主题',
-    sortable: false
-  },
-  {
-    prop: 'customer_id',
-    label: '客户名称',
-    sortable: true
-  },
-  {
-    prop: 'money',
-    label: '合同金额',
-    sortable: true
-  },
-  {
-    prop: 'back_money_status',
-    label: '回款/金额/状态',
-    sortable: true
-  },
-  {
-    prop: 'deliver_money_status',
-    label: '发票/金额/状态',
-    sortable: true
-  },
-  {
-    prop: 'start_date',
-    label: '开始时间',
-    sortable: true
-  },
-  {
-    prop: 'end_date',
-    label: '结束时间',
-    sortable: true
-  },
-  {
-    prop: 'status',
-    label: '合同状态',
-    // 是否使用标签功能
-    useTag: true
-  },
-  {
-    prop: 'invoice_status',
-    label: '交付状态',
-    // 是否使用标签功能
-    useTag: true
-  }
-]
 
 // 数据传递
 const sendData = {
@@ -527,25 +511,44 @@ const sendData = {
     {
       command: 'delete',
       // row为当前行的数据
-      handleAction: (row) => {
+      handleAction: async (row) => {
         alert('确认删除吗')
-        // 获取当前行的id 这里需要使用获取id的接口
-        const id = row.id
-        console.log('删除当前行数据', id)
-        salesContractStore.tableData = salesContractStore.tableData.filter(
-          (item) => {
-            return item.id !== id
+        console.log('id', row.contract_id)
+        // TODO 获取当前行的id 这里需要使用获取id的接口
+        const contractData = await salesContractStore
+          .getSalesContractIDList(row.contract_id)
+          .catch((err) => {
+            console.log('获取销售合同唯一ID失败', err)
+          })
+        const contractNo = contractData.data.contract_no
+        console.log('当前销售合同的编号：', contractNo)
+        if (contractData.code === 10000) {
+          const res = await salesContractStore
+            .deleteSales(contractNo)
+            .catch((err) => {
+              console.log(err)
+            })
+          if (res.code === 10000) {
+            getSalesContractList(1, 5)
+            ElMessage.success('删除成功')
+            console.log('删除成功', salesContractStore.tableData)
           }
-        )
-        console.log(salesContractStore.tableData)
+        }
       },
       actionName: '删除'
     },
     {
       command: 'details',
       handleAction: (row) => {
-        dialogVisible1.value = 'false'
-        console.log('录入明细', row)
+        // console.log(row.deliver_status.value)
+        if (row.deliver_status.value == '需要') {
+          dialogVisible1.value = 'false'
+          console.log('录入明细', row)
+        } else {
+          ElMessage.error(
+            '当前交付状态为：' + row.deliver_status.value + ',无法录入明细'
+          )
+        }
       },
       actionName: '录入明细'
     },
@@ -565,6 +568,11 @@ const sendData = {
     {
       command: 'noDeliveryRequired',
       handleAction: (row) => {
+        if (row.deliver_status.value == '需要') {
+          row.deliver_status.value = '无需交付'
+          ElMessage.success('修改交付状态成功')
+        }
+
         console.log('无需交付', row)
         // 这里还需要根据当前状态判断是否需要交付
       },
@@ -573,6 +581,10 @@ const sendData = {
     {
       command: 'deliveryRequired',
       handleAction: (row) => {
+        if (row.deliver_status.value == '无需交付') {
+          row.deliver_status.value = '需要'
+          ElMessage.success('开启交付成功')
+        }
         console.log('开启交付', row)
         // 这里还需要根据当前状态判断是否需要交付
       },
@@ -585,15 +597,29 @@ const sendData = {
         // 这里还需要根据当前状态判断是否需要交付
       },
       actionName: '查看清单'
+    },
+    {
+      command: 'createOutboundOrder',
+      handleAction: (row) => {
+        if (row.deliver_status.value == '待出库') {
+          ElMessage.success('生成出库单成功')
+        } else {
+          ElMessage.error(
+            '当前交付状态为:' + row.deliver_status.value + ',无法生成出库单'
+          )
+        }
+
+        console.log('生成出库单', row)
+
+        // 这里还需要根据当前状态判断是否需要交付
+      },
+      actionName: '生成出库单'
     }
   ],
   // 分页数组
   pageSizes: [5, 10, 15],
   total: 100
 }
-
-// 引入获取销售合同的仓库
-const salesContractStore = useSalesContractStore()
 
 //
 const getSalesContractList = async (params) => {
@@ -603,13 +629,8 @@ const getSalesContractList = async (params) => {
 }
 // 挂载时获得分页数据
 onMounted(() => {
-  // const bb = JSON.parse(JSON.stringify(Data))
-  // console.log('bb', bb)
-  const params = {
-    pageIndex: 1,
-    pageSize: 5
-  }
-  getSalesContractList(params)
+  getSalesContractList(1, 5)
+  console.log('分页列表数据', salesContractStore.getTableData)
 })
 
 // 录入明细的抽屉里的数据
@@ -807,9 +828,9 @@ const getRows = () => {
   console.log('rows', baseDataListRef.value.rows)
 }
 // 处理选择的行是否发生变化
-const handleSelectionChange = (newRows) => {
-  baseDataListRef.value.rows = newRows
-}
+// const handleSelectionChange = (newRows) => {
+//   baseDataListRef.value.rows = newRows
+// }
 // 开启/关闭表格加载动画 这里要刷新数据的，每次刷新数据要获取表格数据
 const changeLoadAnimation = () => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
