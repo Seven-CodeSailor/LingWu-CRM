@@ -36,7 +36,7 @@
 
 <script setup>
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 // 测试数据传递
 
@@ -224,6 +224,7 @@ const getRows = () => {
   // 关闭表格加载动画
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
+onMounted(() => {})
 </script>
 
 <style lang="scss" scoped></style>

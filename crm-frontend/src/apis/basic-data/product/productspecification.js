@@ -8,7 +8,7 @@
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from '@/apis/request.js'
-const baseUrl = ''
+const baseUrl = '/java4-apiv1'
 /**
  * @description: 增加商品规格
  * @param {Object} params

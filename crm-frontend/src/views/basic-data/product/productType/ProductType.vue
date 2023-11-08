@@ -3,7 +3,7 @@
     <BaseDataList
       title="商品类型"
       :table-column-attribute="tableColumnAttribute"
-      :table-data="tableData"
+      :table-data="productTypeStore.tableData"
       :handle-delete="handleDelete"
       :handle-edit="handleEdit"
       :total="888"
@@ -14,15 +14,20 @@
       <template #ico
         ><el-icon><icon-message-box /></el-icon
       ></template>
+      <template #menu>
+        <el-button type="primary" @click="handleAdd">添加</el-button>
+      </template>
     </BaseDataList>
     <ProductTypeForm></ProductTypeForm>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import ProductTypeForm from '../components/FormCom/ProductTypeForm.vue'
+import { useProductTypeStore } from '@/stores/basic-data/product/producttype'
+const productTypeStore = useProductTypeStore()
 const tableColumnAttribute = ref([
   {
     prop: 'attrName',
@@ -46,27 +51,11 @@ const tableColumnAttribute = ref([
 ])
 const handleDelete = () => {}
 const handleEdit = () => {}
-
-const tableData = [
-  {
-    attrName: '鸡蛋🥚',
-    detailedTypeInfoDTOList: '鸡',
-    visible: true,
-    sort: 99
-  },
-  {
-    attrName: '鸡蛋🥚',
-    detailedTypeInfoDTOList: '鸡',
-    visible: false,
-    sort: 99
-  },
-  {
-    attrName: '鸡蛋🥚',
-    detailedTypeInfoDTOList: '鸡',
-    visible: true,
-    sort: 99
-  }
-]
+const getTableData = async (params) => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  await productTypeStore.findSimpleTypeItem(params)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
 const baseDataListRef = ref(null)
 const handSwitchState = (state, row) => {
   console.log('调用后端的接口发请求修改开关的state后才能真正改变开关的状态')
@@ -81,6 +70,10 @@ const handSwitchState = (state, row) => {
       !baseDataListRef.value.openSwitchLoading
   }, 1000)
 }
+
+onMounted(async () => {
+  await getTableData({ pageSize: 5, pageIndex: 1 })
+})
 </script>
 
 <style lang="scss" scoped>

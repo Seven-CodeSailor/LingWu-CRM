@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:18:17
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-08 21:22:00
+ * @LastEditTime: 2023-11-08 21:28:34
  * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
  * @Description:
  *
@@ -49,83 +49,90 @@ export default ({ mode }) =>
           rewrite: (path) => path.replace(/^\/api\/java3-personal-homepage/, '')
         },
         '/api/cpp1-dictionary': {
-          changeOrigin: true,
-          target: 'http://8.130.16.24:8090',
-          rewrite: (path) => path.replace(/^\/api\/cpp1-dictionary/, '')
-        },
-        // 库存管理接口的跨域处理
-        '/api/cpp5-inventory': {
-          changeOrigin: true,
-          target: 'http://47.108.95.155:8090',
-          rewrite: (path) => path.replace(/^\/api\/cpp5-inventory/, '')
-        },
-        '/api/java3-file': {
-          changeOrigin: true,
-          target: 'http://8.130.45.222:8888',
-          rewrite: (path) => path.replace(/^\/api\/java3-file/, '')
-        },
-        '/api/java3-warehouse': {
-          changeOrigin: true,
-          target: 'http://8.130.82.226:10033',
-          rewrite: (path) => path.replace(/^\/api\/java3-warehouse/, '')
-        },
-        '/api/java3-area': {
-          changeOrigin: true,
-          target: 'http://118.31.61.96:10031',
-          rewrite: (path) => path.replace(/^\/api\/java3-area/, '')
-        },
-        '/api': {
-          changeOrigin: true,
-          // target: 'http://localhost:10100',
-          // rewrite: (path) => path.replace(/^\/api/, '')
+          '/api/java4-apiv1': {
+            changeOrigin: true,
+            target: 'http://47.115.221.50:10086',
+            rewrite: (path) => path.replace(/^\/api\/java4-apiv1/, '')
+          },
+          '/api/cpp1-apiv1': {
+            changeOrigin: true,
+            target: 'http://8.130.16.24:8090',
+            rewrite: (path) => path.replace(/^\/api\/cpp1-apiv1/, '')
+          },
+          // 库存管理接口的跨域处理
+          '/api/cpp5-inventory': {
+            changeOrigin: true,
+            target: 'http://47.108.95.155:8090',
+            rewrite: (path) => path.replace(/^\/api\/cpp5-inventory/, '')
+          },
+          '/api/java3-file': {
+            changeOrigin: true,
+            target: 'http://8.130.45.222:8888',
+            rewrite: (path) => path.replace(/^\/api\/java3-file/, '')
+          },
+          '/api/java3-warehouse': {
+            changeOrigin: true,
+            target: 'http://8.130.82.226:10033',
+            rewrite: (path) => path.replace(/^\/api\/java3-warehouse/, '')
+          },
+          '/api/java3-area': {
+            changeOrigin: true,
+            target: 'http://118.31.61.96:10031',
+            rewrite: (path) => path.replace(/^\/api\/java3-area/, '')
+          },
+          '/api': {
+            changeOrigin: true,
+            // target: 'http://localhost:10100',
+            // rewrite: (path) => path.replace(/^\/api/, '')
 
-          //TODO[TEST_CODE]:使用ApiPost云MOCK
-          target: 'http://8.130.30.150:10001',
-          rewrite: (path) => path.replace(/^\/api/, '')
-        },
-        '/captcha': {
-          changeOrigin: true,
-          target: 'http://localhost:10680',
-          rewrite: (path) => path.replace(/^\/captcha/, '')
+            //TODO[TEST_CODE]:使用ApiPost云MOCK
+            target: 'http://8.130.30.150:10001',
+            rewrite: (path) => path.replace(/^\/api/, '')
+          },
+          '/captcha': {
+            changeOrigin: true,
+            target: 'http://localhost:10680',
+            rewrite: (path) => path.replace(/^\/captcha/, '')
+          }
         }
-      }
-    },
-    build: {
-      assetsDir: 'static',
-      chunkSizeWarningLimit: 1000,
-      rollupOptions: {
-        output: {
-          manualChunks(id) {
-            if (id.includes('node_modules')) {
-              return id
-                .toString()
-                .split('node_modules/')[1]
-                .split('/')[0]
-                .toString()
+      },
+      build: {
+        assetsDir: 'static',
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+          output: {
+            manualChunks(id) {
+              if (id.includes('node_modules')) {
+                return id
+                  .toString()
+                  .split('node_modules/')[1]
+                  .split('/')[0]
+                  .toString()
+              }
             }
           }
         }
-      }
-    },
-    plugins: [
-      vue(),
-      AutoImport({
-        resolvers: [ElementPlusResolver()]
-      }),
-      Components({
-        resolvers: [ElementPlusResolver()]
-      }),
-      createHtmlPlugin({
-        inject: {
-          data: {
-            title: getViteEnv(mode, 'VITE_APP_TITLE')
+      },
+      plugins: [
+        vue(),
+        AutoImport({
+          resolvers: [ElementPlusResolver()]
+        }),
+        Components({
+          resolvers: [ElementPlusResolver()]
+        }),
+        createHtmlPlugin({
+          inject: {
+            data: {
+              title: getViteEnv(mode, 'VITE_APP_TITLE')
+            }
           }
+        })
+      ],
+      resolve: {
+        alias: {
+          '@': fileURLToPath(new URL('./src', import.meta.url))
         }
-      })
-    ],
-    resolve: {
-      alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url))
       }
     }
   })

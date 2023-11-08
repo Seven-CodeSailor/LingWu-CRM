@@ -2,7 +2,7 @@
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-06 22:25:55
+ * @LastEditTime: 2023-11-08 21:29:38
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -91,7 +91,7 @@ export const queryContactName = (
 export const getDictclassifylist = async (params, success, fail) => {
   await Request.requestJson(
     Request.GET,
-    'https://mockapi.eolink.com/KnVGhupeb89500c132462100d3745b0046ecd1264eeb224/get-dictclassifylist',
+    '/cpp1-apiv1/data-dictionary/dictclassify/get-dictclassifylist',
     {
       params
     }
@@ -216,22 +216,19 @@ export const querySupplierName = (
       fail()
     })
 }
-/*
- * @description: 获取区域列表
- * @param {*} params
- *{
-    queryCondition:"string“ 查询条件
-    pageIndex:"number" 当前页
-    pageSize:"number" 页码容量
- }
- * @param {*} success 成功的回调
- * @param {*} fail 失败的回调
- * @return {*}
+/**
+ * @description: 获取区域下拉列表
+ * @param {Object} params
+ * @param {Function} success
+ * @param {Function} fail
+ * @return {void}
  */
-export const queryListArea = async (params, success, fail) => {
-  await Request.requestJson(Request.GET, 'url', {
+export const selectArea = async (params, success, fail) => {
+  await Request.requestJson(
+    Request.GET,
+    '/java3-area/j3-area/select-area',
     params
-  })
+  )
     .then((response) => {
       success(response)
     })
@@ -270,12 +267,15 @@ export const queryNamePullList = (
  * @return {*}
  */
 export const queryAllFeeincome = async (success, fail) => {
-  await Request.requestJson(Request.GET, 'url')
-    .then((response) => {
-      success(response)
+  await Request.requestJson(
+    Request.GET,
+    '/cpp1-apiv1/financial-management/feeincome/query-all-feeincome'
+  )
+    .then(async (response) => {
+      await success(response)
     })
-    .catch((error) => {
-      fail(error)
+    .catch(async (error) => {
+      await fail(error)
     })
 }
 /**
@@ -301,7 +301,10 @@ export const queryAllExpensetype = async (success, fail) => {
  * @return {*}
  */
 export const getBankaccountlist = async (success, fail) => {
-  await Request.requestJson(Request.GET, 'url')
+  await Request.requestJson(
+    Request.GET,
+    '/cpp1-apiv1/financial-management/bankaccount/get-bankaccountlist'
+  )
     .then((response) => {
       success(response)
     })
