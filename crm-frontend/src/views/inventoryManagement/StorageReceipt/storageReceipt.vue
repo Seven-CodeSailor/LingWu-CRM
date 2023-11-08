@@ -1,220 +1,345 @@
-<!--
- * @Author: sayoriqwq 2531600563@qq.com
- * @Date: 2023-10-24 19:01:46
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-27 20:04:37
- * @FilePath: \zero-one-crmsys\crm-frontend\src\views\inventoryManagement\StorageReceipt\storageReceipt.vue
- * @Description: 
- * 
- * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved. 
--->
 <template>
-  <div class="container">
-    <div class="app-container">
-      <BaseDataList
-        :useHeader="true"
-        :title="sendData.title"
-        :msg="sendData.msg"
-        :table-column-attribute="sendData.tableColumnAttribute"
-        :handle-delete="sendData.handleDelete"
-        :table-data="sendData.tableData"
-        :page-sizes="sendData.pageSizes"
-        :total="sendData.total"
-        :usePagination="true"
-        :useDropdownMenu="true"
-        :dropdownMenuActionsInfo="sendData.dropdownMenuActionsInfo"
-        @update-table-data="get"
-        ref="baseDataListRef"
-      >
-        <!-- 插槽区 -->
-        <template #menu>
-          <div class="wrap">
-            <div class="wrap1">
-              <!-- 刷新 -->
-              <el-button
-                @click="refresh"
-                type="info"
-                circle
-                style="margin-right: 28px"
-              >
-                <el-button>
-                  <el-icon>
-                    <Refresh />
-                  </el-icon>
-                  刷新
-                </el-button>
-              </el-button>
-              <!-- 批量导出 -->
-              <BulkOPe
-                :excelData="excel"
-                tableName="入库表"
-                excelName="入库表格.xlsx"
-                :getOpt="() => [0, 1, 2]"
-              >
-                <template #excel> </template>
-                <template #file> </template>
-                <template #print> </template>
-              </BulkOPe>
-            </div>
-            <div class="wrap2">
-              <!-- 下拉选择框 -->
-              <ChooseSelect
-                placeholder="请输入商品名称或者SKU名称"
-                :options="options"
-              >
-              </ChooseSelect>
-              <el-button
-                type="primary"
-                :icon="Search"
-                style="margin-left: 10px; padding-left: 10px"
-              >
-                搜索
-              </el-button>
-            </div>
-            <el-button @click="getRows">获取被勾选的行</el-button>
-            <!-- <el-button @click="changeLoadAnimation">加载动画></el-button> -->
-          </div>
+  <el-card>
+    <!-- 头部 -->
+    <header>
+      <h3>
+        <slot name="ico"></slot>
+        <div style="margin-left: 8px">入库单</div>
+      </h3>
+    </header>
+    <!-- 操作搜索栏 -->
+    <section class="menu">
+      <div class="left">
+        <el-popconfirm
+          :title="`你确定要删除这些选择的入库单吗?`"
+          width="260px"
+          @confirm="deleteByQuery"
+        >
+          <template #reference>
+            <el-button
+              type="danger"
+              icon="IconDelete"
+              style="margin-right: 10px"
+              :disabled="selectIdArr.length ? false : true"
+              >批量删除</el-button
+            >
+          </template>
+        </el-popconfirm>
+      </div>
+      <div class="right" style="display: flex">
+        <el-input
+          v-model="content"
+          placeholder="输入主题"
+          style="margin-right: 4px; width: 200px"
+        />
+        <div class="drop_down">
+          <el-dropdown
+            trigger="click"
+            ref="dropdownRef"
+            @visible-change="clearValue"
+          >
+            <el-button type="primary">
+              <el-icon><icon-caret-bottom /></el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-form>
+                <!-- 输入框1 -->
+                <el-form-item class="el-form-items">
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      仓库编号
+                    </h4>
+                    <el-input v-model="name" placeholder="搜索仓库编号" />
+                  </div>
+                </el-form-item>
+                <!-- 输入框2 -->
+                <el-form-item class="el-form-items">
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      入库状态
+                    </h4>
+                    <el-input v-model="address" placeholder="搜索入库状态" />
+                  </div>
+                </el-form-item>
+                <!-- 搜索按钮 -->
+                <el-form-item class="el-form-items">
+                  <div
+                    style="
+                      padding: 10px;
+                      display: flex;
+                      justify-content: flex-end;
+                      width: 100%;
+                    "
+                  >
+                    <el-button type="primary" @click="search">搜索</el-button>
+                  </div>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-dropdown>
+        </div>
+        <el-button
+          type="primary"
+          style="margin-left: 4px"
+          @click="searchDetails"
+          :disabled="content ? false : true"
+          icon="IconSearch"
+        >
+          搜索</el-button
+        >
+      </div>
+    </section>
+    <!-- 表格部分 -->
+    <el-table
+      style="width: 100%; margin-bottom: 20px"
+      table-layout="auto"
+      :data="storageDetailsStore.tableData"
+      @selection-change="selectChange"
+    >
+      <el-table-column type="selection" width="55" />
+      <el-table-column label="合同编号" prop="contract_id"></el-table-column>
+      <el-table-column label="主题" prop="title"></el-table-column>
+      <el-table-column label="仓库编号" prop="store_id"></el-table-column>
+      <el-table-column label="备注" prop="intro"></el-table-column>
+      <el-table-column label="数量" prop="number"></el-table-column>
+      <el-table-column label="金额" prop="money"></el-table-column>
+      <el-table-column label="入库类型" prop="into_type"></el-table-column>
+      <el-table-column label="单号" prop="id"></el-table-column>
+      <el-table-column label="入库人" prop="into_user"></el-table-column>
+      <el-table-column label="创建人" prop="create_user"></el-table-column>
+      <el-table-column label="创建时间" prop="create_time"></el-table-column>
+      <el-table-column label="入库状态" prop="status"></el-table-column>
+      <el-table-column label="入库时间" prop="into_time"></el-table-column>
+      <el-table-column label="操作" fixed="right">
+        <template #default="{ row }">
+          <el-dropdown>
+            <el-button type="primary">
+              操作<el-icon class="el-icon--right"><arrow-down /></el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="modify(row)">入库</el-dropdown-item>
+                <el-dropdown-item @click="Deletes(row)">删除</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </template>
-      </BaseDataList>
-    </div>
-  </div>
+      </el-table-column>
+    </el-table>
+    <!-- 分页器 -->
+    <el-pagination
+      v-model:current-page="currentPage"
+      v-model:page-size="pageSize"
+      :page-sizes="[5, 10, 20, 50]"
+      :total="storageDetailsStore.totalTable"
+      layout="prev, pager, next, jumper, ->, total, sizes"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+  </el-card>
+  <!-- 入库确认 -->
+  <el-dialog v-model="confirmStorage" title="入库确认" width="30%">
+    <span style="color: red; margin-left: 33%; font-size: 24px"
+      >是否确认入库</span
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="confirmStorage = false">取消</el-button>
+        <el-button type="success" @click="confirmSto"> 确定 </el-button>
+      </span>
+    </template>
+  </el-dialog>
+  <!-- 删除确认 -->
+  <el-dialog v-model="confirmDelete" title="删除" width="30%">
+    <span style="color: red; margin-left: 33%; font-size: 24px"
+      >是否确认删除</span
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="confirmDelete = false">取消</el-button>
+        <el-button type="danger" @click="Confirms"> 确定 </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
-import { Refresh, Search } from '@element-plus/icons-vue'
-import BulkOPe from '@/components/BulkOpe/BulkOpe.vue'
-import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
-import { ref } from 'vue'
-//分页参数：
-//pageIndex & pageSize
-// 获取被勾选的行的数据（组件暴露出来的rows）
-const getRows = () => {
-  console.log('rows', baseDataListRef.value.rows)
-  return baseDataListRef.value.rows
+import { ref, onMounted } from 'vue'
+import useStorageDetailsStore from '@/stores/inventory/StorageDetails.js'
+import { ArrowDown } from '@element-plus/icons-vue'
+import {
+  queryInstorage,
+  deleteStorage,
+  modifyConfirmStorage
+} from '@/apis/inventory-manager/index.js'
+
+// 初始化数据
+const initLinks = (currentPage, pageSize, title, store_id, status) => {
+  queryInstorage(currentPage, pageSize, title, store_id, status, (response) => {
+    storageDetailsStore.totalTable = response.data.total
+    storageDetailsStore.setTableData(response.data.rows)
+  })
+}
+onMounted(() => {
+  initLinks(currentPage.value, pageSize.value)
+})
+// 入库单store仓库
+const storageDetailsStore = useStorageDetailsStore()
+// 当前页数
+const currentPage = ref(1)
+// 每页数据
+const pageSize = ref(5)
+const handleSizeChange = (val) => {
+  pageSize.value = val
+  initLinks(currentPage.value, pageSize.value)
+}
+const handleCurrentChange = (val) => {
+  currentPage.value = val
+  initLinks(currentPage.value, pageSize.value)
 }
 
-const sendData = {
-  tableColumnAttribute: [
-    {
-      prop: 'id',
-      label: '对应单号',
-      sortable: true
+/**
+ * 批量删除
+ */
+// 存储批量删除的客户的id
+let selectIdArr = ref([])
+// table复选框勾选时触发的事件
+const selectChange = (value) => {
+  selectIdArr.value = value
+}
+// 批量删除按钮
+const deleteByQuery = () => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.contract_id)
+  })
+  deleteStorage(
+    data,
+    () => {
+      ElMessage.success('删除成功')
+      selectIdArr.value = []
+      // 删除后重新请求数据
+      initLinks(currentPage.value, pageSize.value)
     },
-    {
-      prop: 'que',
-      label: '仓库',
-      sortable: true
-    },
-    {
-      // prop: 'create_user/create_time',
-      prop: 'create_user_time',
-      label: '创建人/时间'
-    },
-    {
-      prop: 'data',
-      label: '状态',
-      useTag: true
-    },
-    {
-      prop: 'number',
-      label: '入库数量'
-    },
-    {
-      // prop: 'into_user/into_time',
-      prop: 'into_time_user',
-      label: '入库(人员)/时间'
-    },
-    {
-      prop: 'into_type',
-      label: '入库类型'
-    },
-    {
-      prop: 'intro',
-      label: '备注'
+    () => {
+      ElMessage.error('删除失败')
     }
-  ],
-  tableData: [
-    {
-      id: '天河一期',
-      que: '仓库123456',
-      create_user_time: '张三/2022-10-10',
-      //后端字段为status，后续拿到接口再处理一下
-      data: { value: '已入库', tagType: 'success' },
-      number: '100',
-      into_time_user: '李四/2022-10-10',
-      into_type: '采购入库',
-      intro: '备注'
-    },
-    {
-      id: '天河2期',
-      que: '仓库123456',
-      create_user_time: '张三/2022-10-10',
-      //后端字段为status，后续拿到接口再处理一下
-      data: { value: '已入库', tagType: 'success' },
-      number: '100',
-      into_time_user: '李四/2022-10-10',
-      into_type: '采购入库',
-      intro: '备注'
-    }
-  ],
-  msg: '操作说明',
-  dropdownMenuActionsInfo: [
-    {
-      command: '查看',
-      // row为当前行的数据
-      handleAction: (row) => {
-        console.log('带着row的数据，拿id发请求拿到入库单明细', row)
-      },
-      actionName: '查看'
-    },
-    {
-      command: '添加',
-      // row为当前行的数据
-      handleAction: (row) => {
-        console.log(
-          'row.id发起添加请求，dialog弹出？然后dialog里submit的时候确认入库？',
-          row
-        )
-      },
-      actionName: '添加'
-    },
-    {
-      command: '删除',
-      // row为当前行的数据
-      handleAction: (row) => {
-        console.log('删除', row)
-      },
-      actionName: '删除'
-    }
-  ],
-  // 传入删除操作的函数就会显示删除按钮
-  handleDelete: (row) => {
-    console.log('删除', row)
-  },
-  pageSizes: [2, 10, 15, 200],
-  total: 100,
-  title: '入库单'
+  )
 }
 
-const baseDataListRef = ref(null)
-//分页器组件点击调用get
-const get = (pageSize, currentPage) => {
-  console.log('调用父组件的更新数据的函数')
-  console.log('pageSize', pageSize)
-  console.log('currentPage', currentPage)
+/**
+ * 入库
+ */
+const confirmStorage = ref(false)
+const storage = ref()
+const modify = (row) => {
+  storage.value = row.contract_id
+  confirmStorage.value = false
+}
+const confirmSto = () => {
+  confirmStorage.value = false
+  modifyConfirmStorage(
+    [storage.value],
+    () => {
+      ElMessage.success('入库成功')
+      // 删除后重新请求数据
+      initLinks(currentPage.value, pageSize.value)
+    },
+    () => {
+      ElMessage.error('入库失败')
+    }
+  )
 }
 
-// // 关闭表格加载动画
-// const changeLoadAnimation = () => {
-//   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-// }
+/**
+ * 搜索
+ */
+let content = ref('')
+let name = ref('')
+let address = ref('')
+const searchDetails = () => {
+  initLinks(
+    currentPage.value,
+    pageSize.value,
+    content.value,
+    name.value,
+    address.value
+  )
+  content.value = ''
+}
+const dropdownRef = ref(null)
+const clearValue = () => {
+  name.value = address.value = ''
+}
+// 下拉框搜索按钮回调
+const search = () => {
+  if (name.value === '' && address.value === '') {
+    ElMessage.error('输入不能为空')
+  } else {
+    searchDetails()
+    // 调用搜索函数后 关闭下拉菜单
+    dropdownRef.value.$el.click()
+  }
+}
+
+/**
+ * 删除
+ */
+let confirmDelete = ref(false)
+let deleteId = ref()
+// 删除按钮回调
+const Deletes = (row) => {
+  deleteId.value = row.contract_id
+  confirmDelete.value = true
+}
+const Confirms = () => {
+  confirmDelete.value = false
+  deleteStorage(
+    [deleteId.value],
+    () => {
+      ElMessage.success('删除成功')
+      // 删除后重新请求数据
+      initLinks(currentPage.value, pageSize.value)
+    },
+    () => {
+      ElMessage.error('删除失败')
+    }
+  )
+}
 </script>
 
-<style scoped>
-.wrap {
+<style lang="scss" scoped>
+header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 10px 20px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.dialog-footer {
+  display: flex;
+  justify-content: space-around;
+}
+:deep(.el-form-items) {
+  margin-bottom: 0;
 }
 </style>

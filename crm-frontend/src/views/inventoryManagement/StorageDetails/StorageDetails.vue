@@ -1,427 +1,351 @@
-<script setup>
-import { ref } from 'vue'
-
-import {
-  House
-  // Search,
-  // QuestionFilled,
-  // ArrowDown
-} from '@element-plus/icons-vue'
-// import Table from '@/components/table/Table.vue'
-// import BulkOPe from '@/components/BulkOpe/BulkOpe.vue'
-// import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
-// import { getInventortOutTableList } from '@/apis/inventory-manager/index.js'
-// // import { ElMessage } from 'element-plus'
-// import { ref, onMounted } from 'vue'
-import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
-// // 控制表格是否加载
-// const loading = ref(false)
-// // 控制操作说明显示隐藏的数据
-// const helpPop = ref(false)
-// const update = () => {
-//   loading.value = true
-//   setTimeout(() => {
-//     loading.value = false
-//   }, 500)
-// }
-// // 表格数据
-// const tableData = ref([
-//   {
-//     对应单号: '天河项目单号',
-//     仓库: '一号仓库12456',
-//     商品类型: '男装',
-//     仓库名称: '01仓库',
-//     时间: '2021-06-02 17:58:32',
-//     状态: '已出库',
-//     出库数量: 2,
-//     出库人员时间: '2021-06-02 17:58:45',
-//     出库类型: '销售出库',
-//     备注: ''
-//   },
-//   {
-//     对应单号: '天河项目单号',
-//     仓库: '一号仓库12456',
-//     商品类型: '男装',
-//     仓库名称: '01仓库',
-//     时间: '2021-06-02 17:58:32',
-//     状态: '已出库',
-//     出库数量: 2,
-//     出库人员时间: '2021-06-02 17:58:45',
-//     出库类型: '销售出库',
-//     备注: ''
-//   },
-//   {
-//     对应单号: '天河项目单号',
-//     仓库: '一号仓库12456',
-//     商品类型: '男装',
-//     仓库名称: '01仓库',
-//     时间: '2021-06-02 17:58:32',
-//     状态: '已出库',
-//     出库数量: 2,
-//     出库人员时间: '2021-06-02 17:58:45',
-//     出库类型: '销售出库',
-//     备注: ''
-//   },
-//   {
-//     对应单号: '天河项目单号',
-//     仓库: '一号仓库12456',
-//     商品类型: '男装',
-//     仓库名称: '01仓库',
-//     时间: '2021-06-02 17:58:32',
-//     状态: '已出库',
-//     出库数量: 2,
-//     出库人员时间: '2021-06-02 17:58:45',
-//     出库类型: '销售出库',
-//     备注: ''
-//   }
-// ])
-// // 选择框数据
-// const options = ref([
-//   {
-//     value: 'Option1',
-//     label: '唱'
-//   },
-//   {
-//     value: 'Option2',
-//     label: '跳'
-//   },
-//   {
-//     value: 'Option3',
-//     label: 'rap'
-//   },
-//   {
-//     value: 'Option4',
-//     label: '篮球和只因'
-//   }
-// ])
-// // 分页器
-// const currentPage4 = ref(4)
-// const pageSize4 = ref(100)
-// onMounted(async () => {
-//   const res = await getInventortOutTableList(
-//     'https://mockapi.eolink.com/mhNuWI1f7e1a72810542d497358154a44cd9d9fb4b39f57/?responseId=1318425'
-//   )
-//   console.log(res)
-// })
-
-// // 处理选中表格行
-// const handelSelect = (selection) => {
-//   console.log(selection)
-// }
-
-// 数据传递
-const sendData = {
-  tableColumnAttribute: [
-    {
-      prop: 'OddNumbers',
-      label: '对应单号',
-      sortable: false
-    },
-    {
-      prop: 'Warehouse',
-      label: '仓库',
-      sortable: true
-    },
-    {
-      prop: 'founder',
-      label: '创建人/时间'
-    },
-    {
-      prop: 'state',
-      label: '状态'
-    },
-    {
-      prop: 'OutboundQuantity',
-      label: '出库数量'
-    },
-    {
-      prop: 'OutboundPersonnel',
-      label: '出库人员/时间'
-    },
-    {
-      prop: 'OutboundType',
-      label: '出库类型'
-    },
-    {
-      prop: 'remark',
-      label: '备注'
-    }
-  ],
-  tableData: [
-    {
-      OddNumbers: '31231231',
-      Warehouse: '一号仓库123',
-      supplierName: '北京',
-      founder: '小白',
-      contactAdd: '123123123',
-      state: '已出库',
-      OutboundQuantity: 20,
-      OutboundPersonnel: '小李同学',
-      OutboundType: '销售出库',
-      remark: '无'
-    },
-    {
-      OddNumbers: '31231231',
-      Warehouse: '一号仓库123',
-      supplierName: '北京',
-      founder: '小白',
-      contactAdd: '123123123',
-      state: '已出库',
-      OutboundQuantity: 20,
-      OutboundPersonnel: '小李同学',
-      OutboundType: '销售出库',
-      remark: '无'
-    },
-    {
-      OddNumbers: '31231231',
-      Warehouse: '一号仓库123',
-      supplierName: '北京',
-      founder: '小白',
-      contactAdd: '123123123',
-      state: '已出库',
-      OutboundQuantity: 20,
-      OutboundPersonnel: '小李同学',
-      OutboundType: '销售出库',
-      remark: '无'
-    },
-    {
-      OddNumbers: '31231231',
-      Warehouse: '一号仓库123',
-      supplierName: '北京',
-      founder: '小白',
-      contactAdd: '123123123',
-      state: '已出库',
-      OutboundQuantity: 20,
-      OutboundPersonnel: '小李同学',
-      OutboundType: '销售出库',
-      remark: '无'
-    },
-    {
-      OddNumbers: '31231231',
-      Warehouse: '一号仓库123',
-      supplierName: '北京',
-      founder: '小白',
-      contactAdd: '123123123',
-      state: '已出库',
-      OutboundQuantity: 20,
-      OutboundPersonnel: '小李同学',
-      OutboundType: '销售出库',
-      remark: '无'
-    },
-    {
-      OddNumbers: '31231231',
-      Warehouse: '一号仓库123',
-      supplierName: '北京',
-      founder: '小白',
-      contactAdd: '123123123',
-      state: '已出库',
-      OutboundQuantity: 20,
-      OutboundPersonnel: '小李同学',
-      OutboundType: '销售出库',
-      remark: '无'
-    },
-    {
-      OddNumbers: '31231231',
-      Warehouse: '一号仓库123',
-      supplierName: '北京',
-      founder: '小白',
-      contactAdd: '123123123',
-      state: '已出库',
-      OutboundQuantity: 20,
-      OutboundPersonnel: '小李同学',
-      OutboundType: '销售出库',
-      remark: '无'
-    }
-  ],
-  handleEdit: (row) => {
-    console.log('编辑', row)
-  },
-  // 分页数组
-  pageSizes: [5, 10, 15],
-  total: 100
-}
-const baseDataListRef = ref(null)
-// 操作菜单的数据和处理函数
-const dropdownMenuActionsInfo = ref([
-  {
-    command: '出库',
-    // row为当前行的数据
-    handleAction: (row) => {
-      console.log('出库回调函数', row)
-    },
-    actionName: '出库'
-  },
-  {
-    command: '删除',
-    // row为当前行的数据
-    handleAction: (row) => {
-      console.log('删除回调函数', row)
-    },
-    actionName: '删除'
-  }
-])
-</script>
 <template>
-  <!-- <el-card class="box-card">
-    <template #header>
-      <div class="head">
-        <div class="show0">
-          <el-icon style="vertical-align: middle" size="16">
-            <House />
-          </el-icon>
-          <p>出库单列表</p>
+  <el-card>
+    <!-- 头部 -->
+    <header>
+      <h3>
+        <slot name="ico"></slot>
+        <div style="margin-left: 8px">出库单</div>
+      </h3>
+    </header>
+    <!-- 操作搜索栏 -->
+    <section class="menu">
+      <div class="left">
+        <el-popconfirm
+          :title="`你确定要删除这些选择的出库单吗?`"
+          width="260px"
+          @confirm="deleteByQuery"
+        >
+          <template #reference>
+            <el-button
+              type="danger"
+              icon="IconDelete"
+              style="margin-right: 10px"
+              :disabled="selectIdArr.length ? false : true"
+              >批量删除</el-button
+            >
+          </template>
+        </el-popconfirm>
+      </div>
+      <div class="right" style="display: flex">
+        <el-input
+          v-model="content"
+          placeholder="输入主题"
+          style="margin-right: 4px; width: 200px"
+        />
+        <div class="drop_down">
+          <el-dropdown
+            trigger="click"
+            ref="dropdownRef"
+            @visible-change="clearValue"
+          >
+            <el-button type="primary">
+              <el-icon><icon-caret-bottom /></el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-form>
+                <!-- 输入框1 -->
+                <el-form-item class="el-form-items">
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      仓库编号
+                    </h4>
+                    <el-input v-model="name" placeholder="搜索仓库编号" />
+                  </div>
+                </el-form-item>
+                <!-- 输入框2 -->
+                <el-form-item class="el-form-items">
+                  <div style="padding: 0 10px">
+                    <h4
+                      style="
+                        font-weight: 700;
+                        margin-bottom: 2px;
+                        color: #909399;
+                        height: 26px;
+                      "
+                    >
+                      入库状态
+                    </h4>
+                    <el-input v-model="address" placeholder="搜索入库状态" />
+                  </div>
+                </el-form-item>
+                <!-- 搜索按钮 -->
+                <el-form-item class="el-form-items">
+                  <div
+                    style="
+                      padding: 10px;
+                      display: flex;
+                      justify-content: flex-end;
+                      width: 100%;
+                    "
+                  >
+                    <el-button type="primary" @click="search">搜索</el-button>
+                  </div>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-dropdown>
         </div>
-
-        <el-button @click="helpPop = true">
-          <el-icon><QuestionFilled /></el-icon> 操作说明
-        </el-button>
-        <el-dialog v-model="helpPop" title="操作说明" width="50%">
-          <span>这里是操作说明</span>
-        </el-dialog>
-      </div>
-    </template>
-    <div class="wrap">
-      <div class="wrap1">
-        <el-tooltip
-          class="box-item"
-          effect="light"
-          content="添加出库单"
-          placement="bottom"
+        <el-button
+          type="primary"
+          style="margin-left: 4px"
+          @click="searchDetails"
+          :disabled="content ? false : true"
+          icon="IconSearch"
         >
-          <el-button type="primary">添加</el-button>
-        </el-tooltip>
-
-        <BulkOPe :excelData="tableData" :getOpt="() => [0, 1, 2]">
-          <template #excel> </template>
-          <template #file> </template>
-          <template #print> </template>
-        </BulkOPe>
-      </div>
-      <div class="wrap2">
-        <ChooseSelect
-          :options="options"
-          des="请选择你要查找的内容"
-        ></ChooseSelect>
-        <el-dropdown>
-          <el-button type="default" size="large">
-            <el-icon><ArrowDown /></el-icon>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-input
-                placeholder="搜索供应商名称"
-                label="供应商"
-                title="供应商"
-              ></el-input>
-              <el-input placeholder="搜索通信地址" label="通信地址"></el-input>
-              <el-button type="primary" circle color="#626aef">
-                <el-icon><Search /></el-icon>
-              </el-button>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-        <el-button type="primary" circle color="#626aef">
-          <el-icon><Search /></el-icon>
-        </el-button>
-      </div>
-    </div>
-    <Table
-      :dataArr="tableData"
-      :isSelect="true"
-      :isLoading="loading"
-      @update:select="handelSelect"
-    ></Table>
-    <div class="footer">
-      <el-pagination
-        v-model:current-page="currentPage4"
-        v-model:page-size="pageSize4"
-        :page-sizes="[100, 200, 300, 400]"
-        :small="small"
-        :disabled="disabled"
-        :background="background"
-        layout="jumper, sizes, prev, pager, next,total "
-        :total="400"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </div>
-  </el-card> -->
-  <BaseDataList
-    class="card"
-    title="出库单列表"
-    msg="操作说明"
-    :useOperateColumn="true"
-    :useDropdownMenu="true"
-    :table-column-attribute="sendData.tableColumnAttribute"
-    :table-data="sendData.tableData"
-    :page-sizes="sendData.pageSizes"
-    :total="sendData.total"
-    :dropdownMenuActionsInfo="dropdownMenuActionsInfo"
-    @update-table-data="get"
-    ref="baseDataListRef"
-  >
-    <template #ico>
-      <el-icon>
-        <House />
-      </el-icon>
-    </template>
-    <template #menu>
-      <!-- 表格上面一行 -->
-      <div>
-        <!-- <el-button id="refresh">刷新</el-button> -->
-        <!-- 下拉选择框 -->
-        <BulkOPe :excelData="excel" :getOpt="() => [0, 1, 2]">
-          <template #excel>
-            <div>
-              下拉选择：<ChooseSelect @update:cid="changecid"></ChooseSelect>
-            </div>
-          </template>
-        </BulkOPe>
-        <el-button id="getCol" @click="getRows">获取被勾选的列</el-button>
-        <el-button @click="changeLoadAnimation"
-          >off或者open表格加载动画></el-button
+          搜索</el-button
         >
-        <el-button id="search">搜索</el-button>
       </div>
+    </section>
+    <!-- 表格部分 -->
+    <el-table
+      style="width: 100%; margin-bottom: 20px"
+      table-layout="auto"
+      :data="storageDetailsStore.tableData"
+      @selection-change="selectChange"
+    >
+      <el-table-column type="selection" width="55" />
+      <el-table-column label="商品id" prop="goods_id"></el-table-column>
+      <el-table-column label="SKUID" prop="sku_id"></el-table-column>
+      <el-table-column label="商品名" prop="goods_name"></el-table-column>
+      <el-table-column label="SKU名" prop="sku_name"></el-table-column>
+      <el-table-column label="数量" prop="number"></el-table-column>
+      <el-table-column label="商品类型" prop="category_name"></el-table-column>
+      <el-table-column label="仓库名称" prop="store_name"></el-table-column>
+      <el-table-column
+        label="对应出库单"
+        prop="out_stock_order"
+      ></el-table-column>
+      <el-table-column label="出库时间" prop="out_time"></el-table-column>
+      <el-table-column label="备注" prop="remarks"></el-table-column>
+      <el-table-column
+        label="供应商名称"
+        prop="supplier_name"
+      ></el-table-column>
+      <el-table-column label="创建人" prop="create_user_id"></el-table-column>
+      <el-table-column label="创建时间" prop="create_time"></el-table-column>
+      <el-table-column label="操作" fixed="right">
+        <template #default="{ row }">
+          <el-dropdown>
+            <el-button type="primary">
+              操作<el-icon class="el-icon--right"><arrow-down /></el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="modify(row)">入库</el-dropdown-item>
+                <el-dropdown-item @click="Deletes(row)">删除</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- 分页器 -->
+    <el-pagination
+      v-model:current-page="currentPage"
+      v-model:page-size="pageSize"
+      :page-sizes="[5, 10, 20, 50]"
+      :total="storageDetailsStore.totalTable"
+      layout="prev, pager, next, jumper, ->, total, sizes"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+  </el-card>
+  <!-- 入库确认 -->
+  <el-dialog v-model="confirmStorage" title="入库确认" width="30%">
+    <span style="color: red; margin-left: 33%; font-size: 24px"
+      >是否确认入库</span
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="confirmStorage = false">取消</el-button>
+        <el-button type="success" @click="confirmSto"> 确定 </el-button>
+      </span>
     </template>
-  </BaseDataList>
+  </el-dialog>
+  <!-- 删除确认 -->
+  <el-dialog v-model="confirmDelete" title="删除" width="30%">
+    <span style="color: red; margin-left: 33%; font-size: 24px"
+      >是否确认删除</span
+    >
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="confirmDelete = false">取消</el-button>
+        <el-button type="danger" @click="Confirms"> 确定 </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
-<style scoped>
-/* .head {
+
+<script setup>
+import { ref, onMounted } from 'vue'
+import useOutStorageDetails from '@/stores/inventory/notice.js'
+import { ArrowDown } from '@element-plus/icons-vue'
+import {
+  queryOutStock,
+  deleteOutstock,
+  confirmOutstock
+} from '@/apis/inventory-manager/index.js'
+
+// 初始化数据
+const initLinks = (currentPage, pageSize, title, store_id, status) => {
+  queryOutStock(currentPage, pageSize, title, store_id, status, (response) => {
+    storageDetailsStore.totalTable = response.data.total
+    storageDetailsStore.setTableData(response.data.rows)
+  })
+}
+onMounted(() => {
+  initLinks(currentPage.value, pageSize.value)
+})
+// 入库单store仓库
+const storageDetailsStore = useOutStorageDetails()
+// 当前页数
+const currentPage = ref(1)
+// 每页数据
+const pageSize = ref(5)
+const handleSizeChange = (val) => {
+  pageSize.value = val
+  initLinks(currentPage.value, pageSize.value)
+}
+const handleCurrentChange = (val) => {
+  currentPage.value = val
+  initLinks(currentPage.value, pageSize.value)
+}
+
+/**
+ * 批量删除
+ */
+// 存储批量删除的客户的id
+let selectIdArr = ref([])
+// table复选框勾选时触发的事件
+const selectChange = (value) => {
+  selectIdArr.value = value
+}
+// 批量删除按钮
+const deleteByQuery = () => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.contract_id)
+  })
+  deleteOutstock(
+    data,
+    () => {
+      ElMessage.success('删除成功')
+      selectIdArr.value = []
+      // 删除后重新请求数据
+      initLinks(currentPage.value, pageSize.value)
+    },
+    () => {
+      ElMessage.error('删除失败')
+    }
+  )
+}
+
+/**
+ * 出库
+ */
+const confirmStorage = ref(false)
+const storage = ref()
+const modify = (row) => {
+  storage.value = row.contract_id
+  confirmStorage.value = false
+}
+const confirmSto = () => {
+  confirmStorage.value = false
+  confirmOutstock(
+    [storage.value],
+    () => {
+      ElMessage.success('出库成功')
+      // 删除后重新请求数据
+      initLinks(currentPage.value, pageSize.value)
+    },
+    () => {
+      ElMessage.error('出库失败')
+    }
+  )
+}
+
+/**
+ * 搜索
+ */
+let content = ref('')
+let name = ref('')
+let address = ref('')
+const searchDetails = () => {
+  initLinks(
+    currentPage.value,
+    pageSize.value,
+    content.value,
+    name.value,
+    address.value
+  )
+  content.value = ''
+}
+const dropdownRef = ref(null)
+const clearValue = () => {
+  name.value = address.value = ''
+}
+// 下拉框搜索按钮回调
+const search = () => {
+  if (name.value === '' && address.value === '') {
+    ElMessage.error('输入不能为空')
+  } else {
+    searchDetails()
+    // 调用搜索函数后 关闭下拉菜单
+    dropdownRef.value.$el.click()
+  }
+}
+
+/**
+ * 删除
+ */
+let confirmDelete = ref(false)
+let deleteId = ref()
+// 删除按钮回调
+const Deletes = (row) => {
+  deleteId.value = row.contract_id
+  confirmDelete.value = true
+}
+const Confirms = () => {
+  confirmDelete.value = false
+  deleteOutstock(
+    [deleteId.value],
+    () => {
+      ElMessage.success('删除成功')
+      // 删除后重新请求数据
+      initLinks(currentPage.value, pageSize.value)
+    },
+    () => {
+      ElMessage.error('删除失败')
+    }
+  )
+}
+</script>
+
+<style lang="scss" scoped>
+header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-}
-.head p {
-  padding: 0 8px;
-}
-.box-card {
-  width: 100%;
-  height: 100%;
-}
-.wrap {
-  display: flex;
   align-items: center;
+  margin-bottom: 20px;
+}
+.menu {
+  display: flex;
   justify-content: space-between;
-  padding: 0 10px 20px;
-}
-button {
-  margin: 0 10px;
-}
-.footer {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-  width: 100%;
-}
-.show0 {
-  display: flex;
   align-items: center;
+  margin-bottom: 10px;
 }
-.show {
+.dialog-footer {
   display: flex;
-  align-items: center;
-  user-select: none;
-  cursor: pointer;
-} */
+  justify-content: space-around;
+}
+:deep(.el-form-items) {
+  margin-bottom: 0;
+}
 </style>

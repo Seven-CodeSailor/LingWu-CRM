@@ -16,13 +16,7 @@
         <el-input v-model="myclient.contractInfo.title" style="width: 650px" />
       </el-form-item>
       <el-form-item label="客户名称">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户名称"
-          :options="select.name"
-          @update:cid="contractGetName()"
-          ref="customerName3"
-        ></ChooseSelect>
+        <el-input v-model="customerName" style="width: 500px" disabled />
       </el-form-item>
       <el-form-item label="客户联系人">
         <ChooseSelect
@@ -103,7 +97,6 @@ import {
   getCustomerOpportnity,
   getCustomerRepresent
 } from '@/apis/customer/index.js'
-import { getCustomerName } from '@/apis/publicInterface.js'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 
 // 我的客户store仓库
@@ -116,15 +109,9 @@ const select = useSelect()
  */
 // 控制添加合同抽屉的显示和隐藏
 let dialogVisible5 = ref(false)
-const customerName3 = ref()
 const customerContacts2 = ref()
 const customerOpportunity1 = ref()
 const myRepresent = ref()
-// 获取客户名称下拉列表
-const contractGetName = async () => {
-  await getCustomerName()
-  myclient.contractInfo.customerName = customerName3.value.selectValue.label
-}
 // 获取客户联系人下拉列表
 const contractGetContacts = async () => {
   await getCustomerConcats()
@@ -141,18 +128,20 @@ const contractGetRepresent = async () => {
   await getCustomerRepresent()
   myclient.contractInfo.represent = myRepresent.value.selectValue.label
 }
+const customerName = ref()
 // 添加合同按钮回调
 const addContract = async (row) => {
-  await getCustomerName()
   await getCustomerConcats()
   await getCustomerOpportnity()
   await getCustomerRepresent()
   dialogVisible5.value = true
   myclient.contractInfo.id = row.id
+  customerName.value
 }
 // 根据已保存的数据，发送请求
 const saveContract = () => {
   dialogVisible5.value = false
+
   myclient.contractReset()
   select.resetData()
   ElMessage.success('添加成功')
