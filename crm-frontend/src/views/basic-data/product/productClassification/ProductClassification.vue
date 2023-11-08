@@ -32,7 +32,7 @@
         </div>
       </template>
       <template #form1>
-        <el-form :model="data">
+        <el-form :model="data" :rules="rules" ref="formRef">
           <el-form-item label="分类名称" prop="name"
             ><el-input v-model="data.name"></el-input
           ></el-form-item>
@@ -86,6 +86,7 @@ const data = ref({
 })
 const goodsCategoryId = ref(0)
 let loading = null
+const formRef = ref(null)
 const openLoading = () => {
   loading = ElLoading.service({
     lock: true,
@@ -93,6 +94,14 @@ const openLoading = () => {
     background: 'rgba(0, 0, 0, 0.7)'
   })
 }
+
+const rules = ref({
+  name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
+  shortName: [{ required: true, message: '请输入分类简称', trigger: 'blur' }],
+  description: [{ required: true, message: '请输入描述', trigger: 'blur' }],
+  sortIndex: [{ required: true, message: '请输入排序', trigger: 'change' }],
+  keywords: [{ required: true, message: '请输入关键字', trigger: 'blur' }]
+})
 
 const getTreeData = async () => {
   openLoading()
@@ -162,49 +171,54 @@ const handleEdit = async (node) => {
 }
 
 const handleSubmit = async () => {
-  const params = {
-    ...data.value
-  }
-  params.enabled = params.visible
-  delete params.visible
-  if (treeRef.value.isEdit) {
-    await modifyTreeData({
-      ...params,
-      goodsCategoryId: goodsCategoryId.value
-    })
-      .then((res) => {
-        ElMessage({
-          type: 'success',
-          message: res.message
+  formRef.value.validate(async (vaild) => {
+    if (vaild) {
+      const params = {
+        ...data.value
+      }
+      params.enabled = params.visible
+      delete params.visible
+      if (treeRef.value.isEdit) {
+        // 有点瑕疵，后面再说
+        await modifyTreeData({
+          ...params,
+          goodsCategoryId: goodsCategoryId.value
         })
-      })
-      .catch((err) => {
-        ElMessage.error(err.data.message)
-      })
-  } else {
-    params.parentId = params.parentId ? params.parentId : 0
-    await addTreeData(params)
-      .then((res) => {
-        ElMessage({
-          type: 'success',
-          message: res.message
-        })
-      })
-      .catch((err) => {
-        ElMessage.error(err.data.message)
-      })
-  }
-  await getTreeData()
-  data.value = {
-    name: '',
-    shortName: '',
-    parentId: '',
-    sortIndex: '',
-    visible: true,
-    keywords: '',
-    description: ''
-  }
-  treeRef.value.showDrawer = false
+          .then((res) => {
+            ElMessage({
+              type: 'success',
+              message: res.message
+            })
+          })
+          .catch((err) => {
+            ElMessage.error(err.data.message)
+          })
+      } else {
+        params.parentId = params.parentId ? params.parentId : 0
+        await addTreeData(params)
+          .then((res) => {
+            ElMessage({
+              type: 'success',
+              message: res.message
+            })
+          })
+          .catch((err) => {
+            ElMessage.error(err.data.message)
+          })
+      }
+      await getTreeData()
+      data.value = {
+        name: '',
+        shortName: '',
+        parentId: '',
+        sortIndex: '',
+        visible: true,
+        keywords: '',
+        description: ''
+      }
+      treeRef.value.showDrawer = false
+    }
+  })
 }
 
 const handleCancel = () => {
