@@ -1,12 +1,3 @@
-<!--
- * @Author: setti5 2283356040@qq.com
- * @Date: 2023-10-28 21:29:26
- * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-08 15:08:26
- * @FilePath: \zero-one-crmsys\crm-frontend\src\views\person-homepage\notice\Notice.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
-
 <template>
   <div class="notice">
     <BaseDataList
@@ -19,7 +10,8 @@
       :dropdown-menu-actions-info="dropdownMenuActionsInfo"
       :useDropdownMenu="true"
       ref="baseDataListRef"
-      @update-table-data="handelPageChange"
+      @update-table-data="updateTableData"
+      @update-switch-state="updateSwitchState"
     >
       <!-- 导航图标 -->
       <template #ico>
@@ -62,7 +54,7 @@
             <el-button
               type="primary"
               style="margin-left: 4px"
-              @click="searchDetails"
+              @click="handleSearch"
             >
               <el-icon style="margin-right: 4px"> <icon-search /> </el-icon>
               搜索
@@ -86,7 +78,7 @@
         <el-form-item label="通知对象" prop="ownerDeptId">
           <ChooseSelect
             v-model="form.ownerDeptId"
-            :options="options"
+            :options="noticeStore.optionsDepartmentName"
             des="请选通知部门"
             style="width: 60%"
           ></ChooseSelect>
@@ -94,7 +86,7 @@
         <el-form-item label="指定对象" prop="ownerUserId">
           <ChooseSelect
             v-model="form.ownerUserId"
-            :options="noticeStore.ownerUserId"
+            :options="noticeStore.optionsUserName"
             des="请选指定对象"
             style="width: 60%"
           >
@@ -111,17 +103,17 @@
     </el-drawer>
 
     <!-- 查看公告的抽屉内容 -->
-    <el-drawer v-model="dialogVisible" title="查看通知" size="40%">
+    <el-drawer v-model="dialogVisible" title="查看通知">
       <el-card>
         <template #header>
           <div class="card-header" style="text-align: center">
-            <span style="font-size: 24px; font-weight: 700">
-              {{ detail.title }}
+            <span style="font-size: 24px; font-weight: 150">
+              <!-- {{ detail.title }} -->聚餐
             </span>
           </div>
         </template>
         <div class="card-body" style="margin-top: 20px">
-          {{ detail.content }}
+          <!-- {{ detail.content }} -->七点半, 01烧烤店集合
         </div>
       </el-card>
       <template #footer>
@@ -171,8 +163,13 @@ const tableColumnAttribute = [
   {
     prop: 'ownerUserId',
     label: '接收人'
+  },
+  {
+    prop: 'ownerDeptId',
+    label: '接收部门'
   }
 ]
+const title = ref('')
 
 // 操作栏下拉菜单选项
 const dropdownMenuActionsInfo = [
@@ -192,68 +189,154 @@ const dropdownMenuActionsInfo = [
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(async () => {
-        await deleteTableData({ ids: [row.storeId] }).then((res) => {
-          ElMessage({
-            type: 'success',
-            message: res.message
+      })
+        .then(async () => {
+          await deleteTableData({ ids: [row.storeId] }).then((res) => {
+            ElMessage({
+              type: 'success',
+              message: res.message
+            })
+          })
+          await getTableData({
+            pageIndex: baseDataListRef.value.paginationData.currentPage,
+            pageSize: baseDataListRef.value.paginationData.pageSize
           })
         })
-        await getTableData({
-          pageIndex: baseDataListRef.value.paginationData.currentPage,
-          pageSize: baseDataListRef.value.paginationData.pageSize
+        .catch(() => {
+          ElMessage({
+            type: 'info',
+            message: '删除已取消'
+          })
         })
-      })
-      .catch(() => {
-        ElMessage({
-          type: 'info',
-          message: '删除已取消'
-        })
-      })
     },
     actionName: '删除'
   }
 ]
 
 const inputValue = ref('')
-// const storeId = ref('')  
+const storeId = ref('')
 const getTableData = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   await noticeStore.getStoreList(params)
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
+// 删除公告逻辑
 const deleteTableData = async (params) => {
-  return await warehouseStore.deleteStoreItem(params)
+  return await noticeStore.removeNoticeItem(params)
+}
+// 添加公告逻辑
+const addTableData = async (params) => {
+  return await noticeStore.addNoticeItem(params)
+}
+// 标记已读公告
+const checkTableData = async (params) => {
+  return await noticeStore.updateNoticeItem(params)
 }
 
+// 公告状态跳转
+const updateSwitchState = async (state, row) => {
+  baseDataListRef.value.openSwitchLoading =
+    !baseDataListRef.value.openSwitchLoading
+  await checkTableData({ visible: state ? 1 : 0, storeId: row.storeId }).then(
+    (res) => {
+      ElMessage({
+        message: res.message,
+        type: 'success'
+      })
+    }
+  )
+  if (inputValue.value) {
+    // 输入框有值
+    await noticeStore.getStoreList({
+      pageIndex: baseDataListRef.value.paginationData.currentPage,
+      pageSize: baseDataListRef.value.paginationData.pageSize,
+      keyWord: inputValue.value
+    })
+  } else {
+    await noticeStore.getStoreList({
+      pageIndex: baseDataListRef.value.paginationData.currentPage,
+      pageSize: baseDataListRef.value.paginationData.pageSize
+    })
+  }
+  baseDataListRef.value.openSwitchLoading =
+    !baseDataListRef.value.openSwitchLoading
+}
 
-const addDrawerData = async (params) => {
-  return await noticeStore.postNoticeStore(params)
+const updateTableData = async (pageSize, pageIndex) => {
+  // 如果输入框有值 就带着输入框的值去分页
+  if (inputValue.value) {
+    await getTableData({ pageSize, pageIndex, keyWord: inputValue.value })
+  } else {
+    await getTableData({ pageSize, pageIndex })
+  }
+}
+
+const handleSearch = async () => {
+  if (inputValue.value) {
+    // 执行搜索后初始化分页数据
+    baseDataListRef.value.paginationData.pageSize = 5
+    baseDataListRef.value.paginationData.currentPage = 1
+    const params = {
+      pageSize: 5,
+      pageIndex: 1,
+      keyWord: inputValue.value
+    }
+    await getTableData(params)
+  } else {
+    ElMessage.error('输入不能为空')
+  }
 }
 
 // 批量删除的逻辑
-const deleteBatches = () => {
+const deleteBatches = async () => {
   if (!baseDataListRef.value.rows.length) {
-    ElMessage.error('请先选择')
+    ElMessage.error('请先选择要删除的数据')
   } else {
-    console.log('1')
+    const ids = baseDataListRef.value.rows.map((row) => {
+      return row.storeId
+    })
+    await deleteTableData({ ids }).then((res) => {
+      ElMessage({
+        message: res.message,
+        type: 'success'
+      })
+    })
+    await getTableData({
+      pageIndex: baseDataListRef.value.paginationData.currentPage,
+      pageSize: baseDataListRef.value.paginationData.pageSize
+    })
   }
 }
 // 批量已读的逻辑(批量已读的逻辑未定)
-const readBatches = () => {
+const readBatches = async () => {
   if (!baseDataListRef.value.rows.length) {
-    ElMessage.success('全部已读')
+    ElMessage.error('请先选择数据')
   } else {
-    console.log('1')
+    const ids = baseDataListRef.value.rows.map((row) => {
+      return row.storeIds
+    })
+    await updateTableData({ ids }).then((res) => {
+      ElMessage({
+        message: res.message,
+        type: 'success'
+      })
+    })
+    await getTableData({
+      pageIndex: baseDataListRef.value.paginationData.currentPage,
+      pageSize: baseDataListRef.value.paginationData.pageSize
+    })
   }
 }
 
 // 添加公告抽屜表单
 const addDrawer = ref(false)
-const formRef = ref(null)
 // 添加公告逻辑
 const addEvent = () => {
   addDrawer.value = true
+}
+
+const addDrawerData = async (params) => {
+  return await noticeStore.postNoticeStore(params)
 }
 const form = ref({
   title: '',
@@ -308,13 +391,13 @@ const rules = {
 }
 //添加公告表单提交逻辑
 const handleSubmit = () => {
-  noticeFormRef.value.validate((valid) => {
-    if (valid) {
-      console.log(valid)
-      addDrawer.value = false
-    }
-  })
-  // 以下作为参考，可有可无
+  noticeFormRef.value
+    .validate((valid) => {
+      if (valid) {
+        console.log(valid)
+        addDrawer.value = false
+      }
+    })
   console.log('sumbit')
   console.log(form.value)
   const params = {
@@ -336,36 +419,15 @@ const look = (row) => {
     (dialogVisible.value = true)
 }
 
-// 表格标题栏操作下拉菜单的数据
-const operateData = ref([
-  {
-    command: '查看',
-    // row为当前行的数据
-    handleAction: (row) => {
-      addDrawer.value = true
-      console.log('查看回调函数', row)
-    },
-    actionName: '查看'
-  },
-  {
-    command: '刪除',
-    // row为当前行的数据
-    handleAction: (row) => {
-      console.log('刪除回调函数', row)
-    },
-    actionName: '刪除'
-  }
-])
-
 // 分页逻辑
-onMounted(() => {
+onMounted(async () => {
   const params = {
     pageIndex: 1,
     pageSize: 5
   }
   // getStockStorageList(params)
-  noticeStore.getStoreList(params)
-  noticeStore.getOptionsUserName()
+  await noticeStore.getStoreList(params)
+  await noticeStore.getOptionsUserName()
 })
 </script>
 

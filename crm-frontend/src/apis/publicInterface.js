@@ -1,8 +1,8 @@
 /*
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-05 21:10:25
+ * @LastEditors: setti5 2283356040@qq.com
+ * @LastEditTime: 2023-11-08 18:06:41
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -147,6 +147,35 @@ export const getBankAccountList = (
     })
     .catch((err) => {
       fail(err)
+    })
+}
+
+/**
+ * @description: 获取部门名称列表数据(用于输入表单下拉列表)
+ * @param {*} params 请求参数: { deptName:部门名称 }
+ * @param {*} success 成功回调
+ * @param {*} fail 失败回调
+ * @Author{*} 暮秋(有问题找我)
+ * @return {*}
+ */
+export const getDepartmentList = async (params, success) => {
+  await Request.requestForm(
+    Request.GET,
+    'http://101.34.252.80:10110/orgstructure/dept/dept/list-name-all',
+    {
+      ...params
+    }
+  )
+    .then((response) => {
+      // 请求返回的数据就是response,在成功回调函数可以拿到
+      success(response)
+    })
+    .catch((error) => {
+      console.log(error)
+      ElMessage({
+        message: '操作失败',
+        type: 'warning'
+      })
     })
 }
 

@@ -2,13 +2,19 @@
  * @Author: pipazi 2283356040@qq.com
  * @Date: 2023-11-01 21:29:40
  * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-07 12:13:51
+ * @LastEditTime: 2023-11-08 18:05:27
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\personal-homapage\notice.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 import Request from '@/apis/request.js'
 const baseUrl = '/java3-personal-homepage'
+
+/**
+ * @description: 哥儿难受也——公告通知
+ * @param {Object} params // pageIndex pageSize
+ * @return {Promise}
+ */
 
 // 获取系统公告
 export const queryNotion = async (params) => {
@@ -19,7 +25,7 @@ export const queryNotion = async (params) => {
   )
 }
 
-// 发布公告
+// 发布公告（通过添加按钮）
 export const addNotice = async (params) => {
   return await Request.requestForm(
     Request.POST,
@@ -34,7 +40,7 @@ export const addNotice = async (params) => {
     // })
 }
 
-// 查看指定公告详情
+// 查看指定公告详情（通过查看操作）
 export const getNotice = async (params) => {
   await Request.requestForm(
     Request.GET,
@@ -50,8 +56,7 @@ export const getNotice = async (params) => {
 }
 
 
-
-// 删除公告（可批量删除)
+// 删除公告（可批量删除)按钮
 export const removeNotice = async (params) => {
   return await Request.requestJson(
     Request.POST,
@@ -67,7 +72,7 @@ export const removeNotice = async (params) => {
 }
 
 
-// 标记已读公告(可批量标记)
+// 标记已读公告(可批量标记)按钮
 export const updateNotice = async (params) => {
   return await Request.requestJson(
     Request.POST,
@@ -81,3 +86,4 @@ export const updateNotice = async (params) => {
   //   console.log(err)
   // })
 }
+

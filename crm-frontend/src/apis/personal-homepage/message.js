@@ -27,12 +27,12 @@ export const queryMessageId = async (params) => {
     baseUrl + '/j3-message-remind/{id}',
     params
   )
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+    // .then((res) => {
+    //   console.log(res)
+    // })
+    // .catch((err) => {
+    //   console.log(err)
+    // })
 }
 
 // 消息删除
@@ -42,12 +42,12 @@ export const deleteMassage = async (params) => {
       baseUrl + '/j3-message-remind/deleteMassage',
       params
     )
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+      // .then((res) => {
+      //   console.log(res)
+      // })
+      // .catch((err) => {
+      //   console.log(err)
+      // })
 }
 
 // 批量消息已读（批量操作）
@@ -57,12 +57,12 @@ export const markReadMessage = async (params) => {
       baseUrl + '/j3-message-remind/mark-read-message',
       params
     )
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+      // .then((res) => {
+      //   console.log(res)
+      // })
+      // .catch((err) => {
+      //   console.log(err)
+      // })
 }
 
 // 发布消息
@@ -72,12 +72,12 @@ export const publishMessage = async (params) => {
       baseUrl + '/j3-message-remind/publish-message',
       params
     )
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+      // .then((res) => {
+      //   console.log(res)
+      // })
+      // .catch((err) => {
+      //   console.log(err)
+      // })
 }
 
 
