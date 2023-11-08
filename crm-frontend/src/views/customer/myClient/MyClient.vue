@@ -44,6 +44,7 @@
           :action="action"
           :baseURL="baseURL"
           :importExcel="importExcel"
+          :handle-change="handleChange"
         >
         </BulkOPe>
       </div>
@@ -188,7 +189,7 @@
                 <el-dropdown-item @click="communicate.addCommunicate(row)"
                   >添加沟通记录</el-dropdown-item
                 >
-                <el-dropdown-item divided @click="service.addService(row)"
+                <el-dropdown-item divided @click="service.addServices(row)"
                   >添加服务记录</el-dropdown-item
                 >
                 <el-dropdown-item @click="opportunity.addOpportunity(row)"
@@ -197,10 +198,7 @@
                 <el-dropdown-item divided @click="contract.addContract(row)"
                   >添加合同</el-dropdown-item
                 >
-                <el-dropdown-item divided @click="details.detail(row)"
-                  >详情</el-dropdown-item
-                >
-                <el-dropdown-item @click="addOrUpdateClient.modify(row)"
+                <el-dropdown-item divided @click="addOrUpdateClient.modify(row)"
                   >修改</el-dropdown-item
                 >
                 <el-dropdown-item @click="Deletes(row)">删除</el-dropdown-item>
@@ -236,8 +234,6 @@
   <Opportunity ref="opportunity"></Opportunity>
   <!-- 添加合同 -->
   <Contract ref="contract"></Contract>
-  <!-- 查看详情 -->
-  <Detail ref="details"></Detail>
   <!-- 删除确认 -->
   <el-dialog v-model="confirmDelete" title="删除" width="30%">
     <span style="color: red; margin-left: 33%; font-size: 24px"
@@ -260,6 +256,7 @@ import {
   deleteCustomer,
   invesHightSea,
   exportCustomer,
+  uploadCustomerFile,
   importCustomer
 } from '@/apis/customer/index.js'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
@@ -271,7 +268,6 @@ import Communicate from './components/Communicate.vue'
 import Service from './components/Service.vue'
 import Opportunity from './components/Opportunity.vue'
 import Contract from './components/Contract.vue'
-import Detail from './components/Detail.vue'
 
 // 添加或修改客户的组件实例
 const addOrUpdateClient = ref()
@@ -290,9 +286,6 @@ const opportunity = ref()
 
 // 添加合同的组件实例
 const contract = ref()
-
-//查看详情的组件实例
-const details = ref()
 
 // 初始化数据
 const initCustomer = async (
@@ -367,13 +360,30 @@ const exportExcel = (value1, value2) => {
 }
 
 // 导入文件-文件上传的全地址
-const action = ref('http://8.130.17.229:8090')
-const baseURL = ref('/customer-mycustomer/upload-customer-file')
+const action = ref(
+  'http://8.130.17.229:8090/customer-mycustomer/upload-customer-file'
+)
+
+const excelFile = ref(null)
+
+const handleChange = (file) => {
+  console.log(file)
+  excelFile.value = file
+  // uploadCustomerFile(
+  //   excelFile.value.raw,
+  //   () => {
+  //     ElMessage.success('文件上传成功')
+  //   },
+  //   () => {
+  //     ElMessage.error('文件上传失败')
+  //   }
+  // )
+}
 
 //导入文件的按钮回调
-const importExcel = async (fileList) => {
+const importExcel = async () => {
   await importCustomer(
-    fileList.value,
+    excelFile.value.raw,
     () => {
       ElMessage.success('导入成功')
     },

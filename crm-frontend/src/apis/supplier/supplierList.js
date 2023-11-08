@@ -114,10 +114,23 @@ export const modifySupplier = async (
   success = () => {},
   fail = () => {}
 ) => {
+  const data = {
+    supplierId: params.supplier_id,
+    supplierName: params.name,
+    ecoType: params.ecotype,
+    trade: params.trade,
+    address: params.address,
+    linkman: params.linkman,
+    telephone: params.tel,
+    fax: params.fax,
+    email: params.email,
+    intro: params.intro
+  }
+  console.log(data)
   await Request.requestJson(
     Request.PUT,
     '/supplier-manage/supplier/modify-supplier',
-    params
+    data
   )
     .then((response) => {
       success(response)

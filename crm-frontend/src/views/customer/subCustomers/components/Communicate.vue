@@ -6,13 +6,7 @@
       label-position="right"
     >
       <el-form-item label="客户名称">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户名称"
-          :options="select.name"
-          @update:cid="communicateGetName()"
-          ref="customerName0"
-        ></ChooseSelect>
+        <el-input v-model="customerName" style="width: 500px" disabled />
       </el-form-item>
       <el-form-item label="客户联系人">
         <ChooseSelect
@@ -21,7 +15,6 @@
           :options="select.contacts"
           @update:cid="communicateGetContacts()"
           ref="customerContact"
-          :disabled="myclient.communicateInfo.customerName ? false : true"
         ></ChooseSelect>
       </el-form-item>
       <el-form-item label="客户销售机会">
@@ -31,7 +24,6 @@
           :options="select.opportnity"
           @update:cid="communicateGetOpportunity()"
           ref="customerOpportunity"
-          :disabled="myclient.communicateInfo.customerName ? false : true"
         ></ChooseSelect>
       </el-form-item>
       <el-form-item label="当前阶段">
@@ -97,13 +89,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import useMyClient from '@/stores/customer/subclient.js'
+import useMyClient from '@/stores/customer/myclient.js'
 import useSelect from '@/stores/customer/select.js'
 import {
-  getCustomerConcats,
   getCustomerOpportnity,
   getCustomerStage,
-  getCustomerWay
+  getCustomerWay,
+  queryContactName
 } from '@/apis/customer/index.js'
 import { getCustomerName } from '@/apis/publicInterface.js'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
@@ -118,19 +110,15 @@ const select = useSelect()
  */
 // 控制添加沟通记录抽屉的显示和隐藏
 let dialogVisible2 = ref(false)
-const customerName0 = ref()
 const customerContact = ref()
 const customerOpportunity = ref()
 const customerStage = ref()
 const communicateWay = ref()
-// 获取客户名称下拉列表
-const communicateGetName = async () => {
-  await getCustomerName()
-  myclient.communicateInfo.customerName = customerName0.value.selectValue.label
-}
 // 获取客户联系人下拉列表
-const communicateGetContacts = async () => {
-  await getCustomerConcats()
+const communicateGetContacts = () => {
+  queryContactName('', (response) => {
+    console.log(response)
+  })
   myclient.communicateInfo.contact = customerContact.value.selectValue.label
 }
 // 获取客户销售机会下拉列表
@@ -149,15 +137,25 @@ const communicateGetWay = async () => {
   await getCustomerWay()
   myclient.communicateInfo.way = communicateWay.value.selectValue.label
 }
+const customerName = ref()
 // 添加沟通记录按钮回调
 const addCommunicate = async (row) => {
-  await getCustomerName()
-  await getCustomerConcats()
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.rows.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
+  queryContactName('', (response) => {
+    console.log(response)
+  })
   await getCustomerOpportnity()
   await getCustomerStage()
   await getCustomerWay()
   dialogVisible2.value = true
-  myclient.communicateInfo.id = row.id
+  myclient.communicateInfo.customer_id = row.customer_id
+  customerName.value = row.name
 }
 // 保存数据，发送请求
 const saveCommunicate = () => {

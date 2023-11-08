@@ -171,22 +171,24 @@
   <!-- 添加或修改客户信息 -->
   <el-drawer
     v-model="dialogVisible"
-    :title="addOrUpdata === 0 ? '添加联系人' : '修改联系人'"
+    :title="!flag ? '添加联系人' : '修改联系人'"
     size="50%"
+    @close="close"
   >
     <el-form
       :model="supplierContact.tempLinkData"
       label-width="120px"
       label-position="right"
+      :rules="rules"
     >
-      <el-form-item label="联系人姓名">
+      <el-form-item label="联系人姓名" prop="name">
         <el-input
           v-model="supplierContact.tempLinkData.name"
           placeholder="请输入联系人姓名"
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="性别">
+      <el-form-item label="性别" prop="gender">
         <el-radio-group v-model="supplierContact.tempLinkData.gender">
           <el-radio label="男" />
           <el-radio label="女" />
@@ -206,7 +208,7 @@
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="手机号">
+      <el-form-item label="手机号" prop="mobile">
         <el-input
           v-model="supplierContact.tempLinkData.mobile"
           placeholder="请输入手机号"
@@ -220,7 +222,7 @@
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="邮箱">
+      <el-form-item label="邮箱" prop="email">
         <el-input
           v-model="supplierContact.tempLinkData.email"
           placeholder="请输入邮箱"
@@ -247,17 +249,12 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="save"> 添加 </el-button>
+        <el-button type="primary" @click="save"> 确定 </el-button>
       </span>
     </template>
   </el-drawer>
   <!-- 删除确认 -->
-  <el-dialog
-    v-model="confirmDelete"
-    title="删除"
-    width="30%"
-    :before-close="(deleteId = null)"
-  >
+  <el-dialog v-model="confirmDelete" title="删除" width="30%">
     <span style="color: red; margin-left: 33%; font-size: 24px"
       >是否确认删除</span
     >
@@ -333,10 +330,8 @@ const contractGetName = async () => {
   supplierContact.tempLinkData.supplier_id =
     customerName.value.selectValue.value
 }
-const addOrUpdata = ref(0)
 // 点击添加按钮的回调
 const addMyClinet = () => {
-  addOrUpdata.value = 0
   getCustomerName('', (response) => {
     let data = []
     response.data.forEach((item) => {
@@ -345,10 +340,11 @@ const addMyClinet = () => {
     select.setName(data)
   })
   dialogVisible.value = true
+  flag.value = false
 }
 // 添加按钮确定回调
 const save = () => {
-  if (addOrUpdata.value === 0) {
+  if (!flag.value) {
     addlinkman(
       supplierContact.tempLinkData,
       () => {
@@ -374,12 +370,28 @@ const save = () => {
   customerName.value.reset()
   dialogVisible.value = false
 }
+const flag = ref(false)
+const close = () => {
+  if (flag.value) {
+    supplierContact.tempLinkDataReset()
+    flag.value = false
+  }
+}
 // 修改按钮回调
 const modify = async (row) => {
-  addOrUpdata.value = 1
-  await getCustomerName()
-  supplierContact.tempLinkData.linkmanId = row.linkmanId
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
+  const item = supplierContact.tableData.find((item) => {
+    return item.linkman_id === row.linkman_id
+  })
+  supplierContact.tempLinkData = item
   dialogVisible.value = true
+  flag.value = true
 }
 
 /**
@@ -426,9 +438,14 @@ const exportExcel = async (value1, value2) => {
 }
 
 // 发送消息按钮回调
-const msgSend = async (title, desc) => {
-  await sendMessage(
-    selectIdArr.value,
+const msgSend = (title, desc) => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.linkman_id)
+  })
+  sendMessage(
+    data,
+    title,
     desc,
     () => {
       ElMessage.success('发送短信成功')
@@ -439,9 +456,14 @@ const msgSend = async (title, desc) => {
   )
 }
 // 发送邮件按钮回调
-const emailSend = async (title, desc) => {
-  await sendEmail(
-    selectIdArr.value,
+const emailSend = (title, desc) => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.linkman_id)
+  })
+  sendEmail(
+    data,
+    title,
     desc,
     () => {
       ElMessage.success('发送邮件成功')
@@ -511,6 +533,13 @@ const Confirms = async () => {
   )
   confirmDelete.value = false
   initLinks(currentPage.value, pageSize.value)
+}
+
+const rules = {
+  name: [{ required: true, message: '联系人姓名不能为空', trigger: 'blur' }],
+  gender: [{ required: true, message: '性别不能为空', trigger: 'blur' }],
+  mobile: [{ required: true, message: '手机号不能为空', trigger: 'blur' }],
+  email: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }]
 }
 </script>
 

@@ -108,10 +108,22 @@ export const modifylinkman = async (
   fail = () => {}
 ) => {
   params['gender'] = params['gender'] === '男' ? 1 : 0
+  const data = {
+    linkman_id: params.linkman_id,
+    name: params.supplier_name,
+    gender: params.gender,
+    tel: params.tel,
+    position: params.position,
+    mobile: params.mobile,
+    email: params.email,
+    qicq: params.qicq,
+    address: params.address,
+    supplier_id: params.supplier_id
+  }
   await Request.requestJson(
-    Request.POST,
+    Request.PUT,
     '/supplier-manage/supplier-linkman/modify-link-man',
-    params
+    data
   )
     .then((response) => {
       success(response)
@@ -188,7 +200,7 @@ export const sendMessage = async (
  * @returns
  */
 export const sendEmail = async (
-  supplier_list = [],
+  id_list = [],
   type,
   mess,
   success = () => {},
@@ -198,7 +210,7 @@ export const sendEmail = async (
     Request.POST,
     '/supplier-manage/supplier-linkman/send-email',
     {
-      supplier_list,
+      id_list,
       type,
       mess
     }

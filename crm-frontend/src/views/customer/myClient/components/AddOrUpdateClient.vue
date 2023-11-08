@@ -12,15 +12,16 @@
       :model="myclient.customerInfo"
       label-width="120px"
       label-position="right"
+      :rules="rules"
     >
-      <el-form-item label="客户名称">
+      <el-form-item label="客户名称" prop="name">
         <el-input
           v-model="myclient.customerInfo.name"
           placeholder="请输入客户名称"
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="客户来源">
+      <el-form-item label="客户来源" prop="belong">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户来源"
@@ -29,7 +30,7 @@
           ref="belong"
         ></ChooseSelect>
       </el-form-item>
-      <el-form-item label="客户等级">
+      <el-form-item label="客户等级" prop="level">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户等级"
@@ -38,7 +39,7 @@
           ref="level"
         ></ChooseSelect>
       </el-form-item>
-      <el-form-item label="客户行业">
+      <el-form-item label="客户行业" prop="induty">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户行业"
@@ -47,7 +48,7 @@
           ref="industry"
         ></ChooseSelect>
       </el-form-item>
-      <el-form-item label="联系手机">
+      <el-form-item label="联系手机" prop="mobile">
         <el-input v-model="myclient.customerInfo.tel" style="width: 500px" />
       </el-form-item>
       <el-form-item label="联系电话">
@@ -66,7 +67,7 @@
           style="width: 650px"
         />
       </el-form-item>
-      <el-form-item label="客户需求">
+      <el-form-item label="客户需求" prop="needs">
         <el-input v-model="myclient.customerInfo.needs" style="width: 500px" />
       </el-form-item>
       <el-form-item label="公海客户" v-if="!flag">
@@ -211,6 +212,15 @@ const close = () => {
     flag.value = false
   }
 }
+
+const rules = ref({
+  name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+  belong: [{ required: true, message: '客户来源不能为空', trigger: 'blur' }],
+  level: [{ required: true, message: '客户等级不能为空', trigger: 'blur' }],
+  induty: [{ required: true, message: '客户行业不能为空', trigger: 'blur' }],
+  mobile: [{ required: true, message: '手机号不能为空', trigger: 'blur' }],
+  needs: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }]
+})
 
 defineExpose({
   addMyClinet,

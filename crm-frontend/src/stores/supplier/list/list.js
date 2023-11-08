@@ -40,30 +40,32 @@ const useSupplierList = defineStore('supplierList', () => {
 
   // 存储联系人的数据
   let contactInfo = ref({
-    id: '',
+    supplier_id: '',
     name: '',
     gender: '',
     mobile: '',
     position: '',
     tel: '',
-    qq: '',
+    qicq: '',
     email: '',
     address: '',
-    customerName: ''
+    intro: '',
+    customer_id: '',
+    customer_name: ''
   })
   // 重置数据
   const contactReset = () => {
     contactInfo.value = {
-      id: '',
+      supplier_id: '',
       name: '',
       gender: '',
       mobile: '',
       position: '',
       tel: '',
-      qq: '',
+      qicq: '',
       email: '',
       address: '',
-      customerName: ''
+      intro: ''
     }
   }
   return {

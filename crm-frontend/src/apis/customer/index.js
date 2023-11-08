@@ -696,10 +696,7 @@ export const uploadCustomerFile = async (
   success = () => {},
   fail = () => {}
 ) => {
-  await Request.postFile(
-    Request.POST,
-    '/customer-mycustomer/upload-customer-file'
-  )
+  await Request.postFile('/customer-mycustomer/upload-customer-file')
     .then(async (response) => {
       window.location.href = response.data
       success(response)
@@ -735,7 +732,7 @@ export const importCustomer = (str, success = () => {}, fail = () => {}) => {
 }
 
 /**
- * 导入客户
+ * 接收客户
  * @param {*} success 成功的回调
  * @param {*} fail 失败的回调
  * @returns
@@ -855,6 +852,7 @@ export const addNewContact = async (
   param['gender'] === '男' ? (param['gender'] = 1) : (param['gender'] = 0)
   delete param['linkman_id']
   delete param['customerName']
+  delete param['qq']
   console.log(param)
   await Request.requestJson(
     Request.POST,
@@ -927,27 +925,25 @@ export const removeContact = async (
  * @param {*} fail 失败的回调
  * @returns
  */
-export const queryContactFile = (
-  ownerId,
-  createId,
+export const queryContactFile = async (
+  owner_user_id,
+  create_user_id,
   success = () => {},
   fail = () => {}
 ) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(ownerId, createId)
-    }, 0)
-  })
-    .then(() => {
-      let data = []
-      if (data) {
-        success()
-        return
-      }
-      fail()
+  await Request.requestForm(
+    Request.GET,
+    '/customer-contact/query-contact-file',
+    {
+      owner_user_id,
+      create_user_id
+    }
+  )
+    .then((response) => {
+      success(response)
     })
-    .catch((err) => {
-      fail(err)
+    .catch((error) => {
+      fail(error)
     })
 }
 
@@ -958,14 +954,14 @@ export const queryContactFile = (
  * @returns
  */
 export const sendsms = async (
-  customerId = [],
+  linkman_id = [],
   ctype,
   content,
   success = () => {},
   fail = () => {}
 ) => {
   await Request.requestJson(Request.POST, '/customer-contact/send-sms', {
-    customerId,
+    linkman_id,
     ctype,
     content
   })
@@ -984,14 +980,14 @@ export const sendsms = async (
  * @returns
  */
 export const sendEmail = async (
-  customerId,
+  linkman_id = [],
   ctype,
   content,
   success = () => {},
   fail = () => {}
 ) => {
   await Request.requestJson(Request.POST, '/customer-contact/send-email', {
-    customerId,
+    linkman_id,
     ctype,
     content
   })
@@ -1017,7 +1013,7 @@ export const queryServiceNote = async (
   fail = () => {}
 ) => {
   await Request.requestForm(
-    Request.POST,
+    Request.GET,
     '/customer-servicerecords/service-note',
     {
       pageIndex,
@@ -1071,10 +1067,11 @@ export const modifyService = async (
   success = () => {},
   fail = () => {}
 ) => {
+  console.log(param)
   await Request.requestJson(
     Request.PUT,
     '/customer-servicerecords/modify-service',
-    param
+    { ...param }
   )
     .then((response) => {
       success(response)
@@ -1124,7 +1121,7 @@ export const exportService = async (
 ) => {
   await Request.requestJson(
     Request.POST,
-    '/customer-servicerecords/remove-service',
+    '/customer-servicerecords/export-servicenote',
     {
       customer_id,
       service_id_list
@@ -1152,15 +1149,11 @@ export const sendsmsService = async (
   success = () => {},
   fail = () => {}
 ) => {
-  await Request.requestJson(
-    Request.POST,
-    '/customer-servicerecords/remove-service',
-    {
-      customer_id,
-      ctype,
-      message
-    }
-  )
+  await Request.requestJson(Request.POST, '/customer-servicerecords/send-sms', {
+    customer_id,
+    ctype,
+    message
+  })
     .then((response) => {
       success(response)
     })
@@ -1178,17 +1171,17 @@ export const sendsmsService = async (
 export const sendEmailService = async (
   customer_id,
   ctype,
-  message,
+  content,
   success = () => {},
   fail = () => {}
 ) => {
   await Request.requestJson(
     Request.POST,
-    '/customer-servicerecords/remove-service',
+    '/customer-servicerecords/send-email',
     {
       customer_id,
       ctype,
-      message
+      content
     }
   )
     .then((response) => {

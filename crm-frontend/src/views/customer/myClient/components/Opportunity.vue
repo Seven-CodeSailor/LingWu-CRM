@@ -12,13 +12,7 @@
         />
       </el-form-item>
       <el-form-item label="客户名称">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户名称"
-          :options="select.name"
-          @update:cid="customerGetName()"
-          ref="customerName2"
-        ></ChooseSelect>
+        <el-input v-model="customerName" style="width: 500px" disabled />
       </el-form-item>
       <el-form-item label="客户联系人">
         <ChooseSelect
@@ -27,7 +21,6 @@
           :options="select.contacts"
           @update:cid="customerGetContacts()"
           ref="customerContacts1"
-          :disabled="myclient.opportunityInfo.customerName ? false : true"
         ></ChooseSelect>
       </el-form-item>
       <el-form-item label="当前阶段">
@@ -85,7 +78,6 @@ import { ref } from 'vue'
 import useMyClient from '@/stores/customer/myclient.js'
 import useSelect from '@/stores/customer/select.js'
 import { getCustomerConcats, getCustomerStage } from '@/apis/customer/index.js'
-import { getCustomerName } from '@/apis/publicInterface.js'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 
 // 我的客户store仓库
@@ -98,14 +90,8 @@ const select = useSelect()
  */
 // 控制添加销售机会抽屉的显示和隐藏
 let dialogVisible4 = ref(false)
-const customerName2 = ref()
 const customerContacts1 = ref()
 const customerStage1 = ref()
-// 获取客户名称下拉列表
-const customerGetName = async () => {
-  await getCustomerName()
-  myclient.opportunityInfo.customerName = customerName2.value.selectValue.label
-}
 // 获取客户联系人下拉列表
 const customerGetContacts = async () => {
   await getCustomerConcats()
@@ -116,13 +102,14 @@ const customerGetStage = async () => {
   await getCustomerStage()
   myclient.opportunityInfo.stage = customerStage1.value.selectValue.label
 }
+const customerName = ref()
 // 添加销售机会按钮回调
 const addOpportunity = async (row) => {
-  await getCustomerName()
   await getCustomerConcats()
   await getCustomerStage()
   dialogVisible4.value = true
-  myclient.opportunityInfo.id = row.id
+  myclient.opportunityInfo.id = row.custoemr_id
+  customerName.value = row.name
 }
 // 根据已保存的数据，发送请求
 const saveOpportunity = () => {

@@ -9,15 +9,16 @@
       :model="supplierList.addOrUpdateSupplier"
       label-width="120px"
       label-position="right"
+      :rules="rules"
     >
-      <el-form-item label="供应商名称">
+      <el-form-item label="供应商名称" prop="name">
         <el-input
           v-model="supplierList.addOrUpdateSupplier.name"
           placeholder="请输入供应商名称"
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="经济类型">
+      <el-form-item label="经济类型" prop="ecotype">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择经济类型"
@@ -26,7 +27,7 @@
           ref="ecoType"
         ></ChooseSelect>
       </el-form-item>
-      <el-form-item label="行业类型">
+      <el-form-item label="行业类型" prop="trade">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择行业类型"
@@ -35,14 +36,14 @@
           ref="indType"
         ></ChooseSelect>
       </el-form-item>
-      <el-form-item label="联系人">
+      <el-form-item label="联系人" prop="linkman_name">
         <el-input
           v-model="supplierList.addOrUpdateSupplier.linkman_name"
           placeholder="请输入联系人"
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="电话">
+      <el-form-item label="电话" prop="tel">
         <el-input
           v-model="supplierList.addOrUpdateSupplier.tel"
           placeholder="请输入电话"
@@ -56,7 +57,7 @@
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="邮箱">
+      <el-form-item label="邮箱" prop="email">
         <el-input
           v-model="supplierList.addOrUpdateSupplier.email"
           placeholder="请输入邮箱"
@@ -165,6 +166,16 @@ const modify = (row) => {
   supplierList.addOrUpdateSupplier = item
   dialogVisible.value = true
   flag.value = true
+}
+const rules = {
+  name: [{ required: true, message: '供应商名称不能为空', trigger: 'blur' }],
+  linkman_name: [
+    { required: true, message: '联系人不能为空', trigger: 'blur' }
+  ],
+  email: [{ required: true, message: '邮箱不能为空', trigger: 'blur' }],
+  tel: [{ required: true, message: '电话不能为空', trigger: 'blur' }],
+  ecotype: [{ required: true, message: '经济类型不能为空', trigger: 'blur' }],
+  trade: [{ required: true, message: '行业类型不能为空', trigger: 'blur' }]
 }
 
 defineExpose({
