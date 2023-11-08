@@ -386,7 +386,6 @@ onMounted(async () => {
       baseDataListRef.value.openLoading = false
     },
     (error) => {
-      baseDataListRef.value.openLoading = false
       if (error) {
         console.log(error)
       }
@@ -480,33 +479,48 @@ const defaultProps = ref({
   value: 'id'
 })
 // 点击树节点的事件
+// 防抖处理
+const isPass = ref(true)
 const handleNodeClick = async (treeData) => {
-  currentTreeOption.value = treeData
-  console.log('当前部门:', currentTreeOption.value)
-  console.log('当前id:', currentTreeOption.value.id)
-  baseDataListRef.value.openLoading = true
-  await getUserTableList(
-    {
-      deptId: currentTreeOption.value.id,
-      // name: '',
-      pageIndex: $page.value.currentPage,
-      pageSize: $page.value.pageSize
-    },
-    (res) => {
-      const { data } = res
-      console.log('点树形菜单请求得到的数据', data)
-      // 渲染
-      sendData.value.tableData = data.rows
-      sendData.value.total = data.total
-      baseDataListRef.value.openLoading = false
-    },
-    (error) => {
-      baseDataListRef.value.openLoading = false
-      if (error) {
-        console.log(error)
+  // 节流阀为true，就发请求
+  if (isPass.value === true) {
+    // 关闭阀门
+    isPass.value = false
+    // 收集数据发请求
+    currentTreeOption.value = treeData
+    console.log('当前部门:', currentTreeOption.value)
+    console.log('当前id:', currentTreeOption.value.id)
+    baseDataListRef.value.openLoading = true
+    await getUserTableList(
+      {
+        deptId: currentTreeOption.value.id,
+        // name: '',
+        pageIndex: $page.value.currentPage,
+        pageSize: $page.value.pageSize
+      },
+      (res) => {
+        const { data } = res
+        console.log('点树形菜单请求得到的数据', data)
+        // 渲染
+        sendData.value.tableData = data.rows
+        sendData.value.total = data.total
+        baseDataListRef.value.openLoading = false
+      },
+      (error) => {
+        baseDataListRef.value.openLoading = false
+        if (error) {
+          console.log(error)
+        }
       }
-    }
-  )
+    )
+    // 开启阀门
+    isPass.value = true
+  } else {
+    ElMessage({
+      message: '请求频率过高,不予处理',
+      type: 'warning'
+    })
+  }
 }
 // 当前树形菜单部门数据
 const currentTreeOption = ref({})

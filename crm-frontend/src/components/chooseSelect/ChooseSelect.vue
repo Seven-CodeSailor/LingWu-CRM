@@ -1,8 +1,8 @@
 <!--
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-30 21:35:22
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-10-30 21:36:32
+ * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
+ * @LastEditTime: 2023-11-07 20:48:04
  * @FilePath: \zero-one-crmsys\crm-frontend\src\components\chooseSelect\ChooseSelect.vue
  * @Description: 
  * 
@@ -55,6 +55,7 @@ const props = defineProps({
     default: false
   }
 })
+
 // 定义子传父方法
 const emit = defineEmits(['update:cid'])
 

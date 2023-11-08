@@ -11,6 +11,7 @@
     :useDropdownMenu="true"
     :dropdownMenuActionsInfo="dropdownMenuActionsInfo"
     @updateTableData="handleSizeChange"
+    @updateSwitchState="handelSwitchChange"
   >
     <template #ico>
       <el-icon><Operation /></el-icon>
@@ -68,7 +69,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="isDelete = false">取消</el-button>
-        <el-button type="primary" @click="isDelete = false"> 确认 </el-button>
+        <el-button type="primary" @click="handelDelete"> 确认 </el-button>
       </span>
     </template>
   </el-dialog>
@@ -76,7 +77,7 @@
   <el-drawer
     size="45%"
     v-model="addDrawer"
-    title="添加用户"
+    title="添加角色"
     direction="rtl"
     open-delay="100"
   >
@@ -98,6 +99,7 @@
             check-strictly
             :render-after-expand="false"
             clearable
+            :props="defaultProps"
             :highlight-current="true"
             @change="handelSelect"
           />
@@ -106,7 +108,7 @@
           <el-input v-model="addForm.sort" autocomplete="off" />
         </el-form-item>
         <el-form-item label="启用" :label-width="labelWidth">
-          <el-switch v-model="addForm.delivery" />
+          <el-switch v-model="delivery" />
         </el-form-item>
         <el-form-item label="介绍" :label-width="labelWidth">
           <el-input v-model="addForm.desc" type="textarea" />
@@ -124,7 +126,7 @@
   <el-drawer
     size="45%"
     v-model="editDrawer"
-    title="修改部门"
+    title="修改角色"
     direction="rtl"
     open-delay="100"
   >
@@ -138,9 +140,8 @@
         <el-form-item label="名称" :label-width="labelWidth" prop="name">
           <el-input v-model="addForm.name" autocomplete="off" />
         </el-form-item>
+
         <el-form-item label="父级" :label-width="labelWidth">
-          <!-- 调用选择框组件 -->
-          <!-- <ChooseSelect :options="selOptions" des="选择上级"></ChooseSelect> -->
           <!-- 树形选择 -->
           <el-tree-select
             v-model="selectValue"
@@ -148,6 +149,7 @@
             check-strictly
             :render-after-expand="false"
             clearable
+            :props="defaultProps"
             :highlight-current="true"
             @change="handelSelect"
           />
@@ -156,7 +158,7 @@
           <el-input v-model="addForm.sort" autocomplete="off" />
         </el-form-item>
         <el-form-item label="启用" :label-width="labelWidth">
-          <el-switch v-model="addForm.delivery" />
+          <el-switch v-model="delivery" />
         </el-form-item>
         <el-form-item label="介绍" :label-width="labelWidth">
           <el-input v-model="addForm.desc" type="textarea" />
@@ -245,15 +247,13 @@
 
 <script setup>
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-// import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
 import { Operation, Plus, Search } from '@element-plus/icons-vue'
-// import { ElMessage } from 'element-plus'
 import { onMounted, ref } from 'vue'
-// 导入api方法
-// import { getUserTableList } from '@/apis/organizationStructure/user.js'
 import {
   getRoleTree,
-  addRoleListApi
+  addRoleListApi,
+  editRoleListApi,
+  deleteRoleListApi
 } from '../../../apis/organizationStructure/Roles.js'
 // 导入 组织结构/角色管理 仓库
 import useRoleManageStore from '../../../stores/organizationStructure/rolesManage'
@@ -295,21 +295,22 @@ onMounted(async () => {
   // 开启表格加载
   baseDataListRef.value.openLoading = true
 
+  // console.log($page)
   const res = await $RoleManage.getTheRoleList({
     keyword: defaultRole.value.name,
     pageIndex: $page.value.currentPage,
     pageSize: $page.value.pageSize,
     pid: ''
   })
+  baseDataListRef.value.openLoading = false
 
   const {
     _rawValue: { data }
   } = res
-  // console.log(data)
+  console.log(res.value)
   // 重新渲染
   sendData.value.total = data.total
   sendData.value.tableData = data.rows
-  baseDataListRef.value.openLoading = false
 })
 
 // 获取分页数据
@@ -327,30 +328,47 @@ const handelSelect = (value) => {
 }
 
 const defaultProps = ref({
-  children: 'children',
-  label: 'label'
+  children: 'nodes',
+  label: 'name',
+  value: 'id'
 })
 // 点击树节点的事件
+// 防抖处理
+const isPass = ref(true)
 const handleNodeClick = async (treeData) => {
-  console.log('树形菜单数据:', treeData)
-  currentTreeOption.value = treeData
-  // 基于当前菜单树的数据，重新渲染表格
-  // 开启表格加载
-  baseDataListRef.value.openLoading = true
-  const res = await $RoleManage.getTheRoleList({
-    keyword: currentTreeOption.value.name,
-    pageIndex: $page.value.currentPage,
-    pageSize: $page.value.pageSize,
-    pid: ''
-  })
-  const {
-    _rawValue: { data }
-  } = res
-  // console.log(data)
-  // 重新渲染
-  sendData.value.total = data.total
-  sendData.value.tableData = data.rows
-  baseDataListRef.value.openLoading = false
+  // 节流阀为true，就发请求
+  if (isPass.value === true) {
+    // 关闭阀门
+    isPass.value = false
+    // 发请求
+    console.log('树形菜单数据:', treeData)
+    currentTreeOption.value = treeData
+    // 基于当前菜单树的数据，重新渲染表格
+    // 开启表格加载
+    baseDataListRef.value.openLoading = true
+    const res = await $RoleManage.getTheRoleList({
+      // keyword: currentTreeOption.value.name,
+      keyword: '',
+      pageIndex: $page.value.currentPage,
+      pageSize: $page.value.pageSize,
+      pid: currentTreeOption.value.parentID
+    })
+    const {
+      _rawValue: { data }
+    } = res
+    // console.log(data)
+    // 重新渲染
+    sendData.value.total = data.total
+    sendData.value.tableData = data.rows
+    baseDataListRef.value.openLoading = false
+    // 开启阀门
+    isPass.value = true
+  } else {
+    ElMessage({
+      message: '请求频率过高,不予处理',
+      type: 'warning'
+    })
+  }
 }
 
 // ref数据绑定BaseDataList这个组件
@@ -445,12 +463,25 @@ const dropdownMenuActionsInfo = ref([
     // row为当前行的数据
     handleAction: (row) => {
       editDrawer.value = true
+      isShowSelect.value = true
       console.log('修改回调函数', row)
+      // 数据回显
+      // 启用按钮的回显
+      if (row.visible === 1) {
+        delivery.value = true
+      } else {
+        delivery.value = false
+      }
       // 需要发请求获取没有的数据
-      addForm.value.name = row.Department
-      addForm.value.desc = row.DepartmentDes
+      addForm.value.name = row.name
+      addForm.value.desc = row.intro
       addForm.value.sort = row.sort
-      // console.log(row.Department)
+      // 父级下拉选择
+      if (row.parentID === 0) {
+        row.parentID = '已是最高权限，无父级'
+      }
+      selectValue.value = row.parentID
+      editRow.value = row
     },
     actionName: '修改'
   },
@@ -460,13 +491,79 @@ const dropdownMenuActionsInfo = ref([
     handleAction: (row) => {
       isDelete.value = true
       console.log('删除回调函数', row)
+      delRoleId.value = row.id
     },
     actionName: '删除'
   }
 ])
-
+/**
+ * 删除业务
+ */
 // 删除消息提示
 const isDelete = ref(false)
+// 处理删除角色的方法
+const delRoleId = ref()
+const handelDelete = async () => {
+  await deleteRoleListApi(
+    {
+      id: delRoleId.value
+    },
+    async (res) => {
+      console.log('删除角色成功回调函数', res)
+      ElMessage({
+        message: '删除成功',
+        type: 'success'
+      })
+      // 重新渲染菜单树和表格数据
+      //获取角色名称结构树
+      await getRoleTree(
+        {
+          depth: 0,
+          pid: 0
+        },
+        (res) => {
+          const { data } = res
+          // 处理数据 id =>value name => label
+          const newArr = data.map((item) => {
+            for (let key in item) {
+              if (key === 'id') {
+                item.value = item[key]
+              }
+              if (key === 'name') {
+                item.label = item[key]
+              }
+            }
+            return item
+          })
+          // console.log('矫正后的角色结构树:', newArr)
+          // 把数据存到 组织结构/角色管理 仓库
+          $RoleManage.setRoleTreeList(newArr)
+          console.log('角色管理 仓库数据:', $RoleManage.roleTreeList)
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+      baseDataListRef.value.openLoading = true
+      const result = await $RoleManage.getTheRoleList({
+        // keyword: currentTreeOption.value.name,
+        keyword: '',
+        pageIndex: $page.value.currentPage,
+        pageSize: $page.value.pageSize,
+        pid: currentTreeOption.value.parentID
+      })
+      const {
+        _rawValue: { data }
+      } = result
+      // console.log(data)
+      // 重新渲染
+      sendData.value.total = data.total
+      sendData.value.tableData = data.rows
+      baseDataListRef.value.openLoading = false
+    }
+  )
+  isDelete.value = false
+}
 // 控制抽屉打开关闭的数据
 const addDrawer = ref(false)
 // 抽屉表单数据
@@ -475,9 +572,10 @@ const addForm = ref({
   region: '选择上级',
   // 排位序号
   sort: '',
-  delivery: false,
   desc: ''
 })
+// 是否启用的按钮
+const delivery = ref(true)
 // 表单元素宽度
 const labelWidth = ref('100px')
 // ref绑定表单
@@ -486,23 +584,23 @@ const editForm = ref()
 
 //表单校验规则
 
-// const formRule = ref({
-//   // 部门名称
-//   name: [
-//     { required: true, message: '请输入名称', trigger: 'blur' },
-//     { min: 1, max: 10, message: '名称必须是1-10位的字符', trigger: 'blur' }
-//   ],
-//   // 父级栏目需要用数据判断用户是否选中
-//   // 排位序号
-//   sort: [
-//     { required: true, message: '请输入排位序号', trigger: 'blur' },
-//     {
-//       pattern: /^\d+$/,
-//       message: '输入格式是任意长度数字',
-//       trigger: 'blur'
-//     }
-//   ]
-// })
+const formRule = ref({
+  // 部门名称
+  name: [
+    { required: true, message: '请输入名称', trigger: 'blur' },
+    { min: 1, max: 10, message: '名称必须是1-10位的字符', trigger: 'blur' }
+  ],
+  // 父级栏目需要用数据判断用户是否选中
+  // 排位序号
+  sort: [
+    { required: true, message: '请输入排位序号', trigger: 'blur' },
+    {
+      pattern: /^\d+$/,
+      message: '输入格式是任意长度数字',
+      trigger: 'blur'
+    }
+  ]
+})
 
 // 点击添加打开抽屉,置空数据
 const handelAddFn = () => {
@@ -512,6 +610,7 @@ const handelAddFn = () => {
     obj[key] = ''
   }
   addDrawer.value = true
+  delivery.value = false
 }
 
 /**
@@ -561,8 +660,19 @@ const handelRefreshTree = async () => {
 const btnLoading = ref(false)
 const handelAddSubmit = async () => {
   // 添加表单的校验,通过了才能发送添加请求
-  // await theAddForm.value.validate()
-
+  await theAddForm.value.validate()
+  if (delivery.value === '') {
+    ElMessage({
+      message: '请选择是否启用',
+      type: 'warning'
+    })
+    return false
+  }
+  if (delivery.value === true) {
+    delivery.value = 1
+  } else {
+    delivery.value = 0
+  }
   // 收集数据
   console.log(
     '名称:',
@@ -570,74 +680,213 @@ const handelAddSubmit = async () => {
     '排序:',
     addForm.value.sort,
     '启用:',
-    addForm.value.delivery,
+    delivery.value,
     '介绍:',
     addForm.value.desc,
     '父级栏目:',
     selectValue.value
   )
   // 这里要处理添加接口的逻辑
+  btnLoading.value = true
   await addRoleListApi(
     {
       intro: addForm.value.desc,
       name: addForm.value.name,
       parentID: selectValue.value,
       sort: addForm.value.sort,
-      visible: addForm.value.delivery
+      visible: delivery.value
     },
-    (res) => {
+    async (res) => {
       console.log('新增角色:', res)
+      ElMessage({
+        message: '提交成功',
+        type: 'success'
+      })
+      baseDataListRef.value.openLoading = true
+
+      // 重新刷新角色结构树
+      await getRoleTree(
+        {
+          depth: 0,
+          pid: selectValue.value
+        },
+        (res) => {
+          const { data } = res
+          console.log('刷新角色名称结构树', data)
+          // 处理数据 id =>value name => label
+          const newArr = data.map((item) => {
+            for (let key in item) {
+              if (key === 'id') {
+                item.value = item[key]
+              }
+              if (key === 'name') {
+                item.label = item[key]
+              }
+            }
+            return item
+          })
+          // console.log('矫正后的角色结构树:', newArr)
+          // 把数据存到 组织结构/角色管理 仓库
+          $RoleManage.setRoleTreeList(newArr)
+          console.log('角色管理 仓库数据:', $RoleManage.roleTreeList)
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+
+      // 重新获取数据 刷新
+      const result = await $RoleManage.getTheRoleList({
+        keyword: '',
+        pageIndex: $page.value.currentPage,
+        pageSize: $page.value.pageSize,
+        pid: selectValue.value
+      })
+      const {
+        _rawValue: { data }
+      } = result
+      // 重新渲染
+      sendData.value.total = data.total
+      sendData.value.tableData = data.rows
+      baseDataListRef.value.openLoading = false
     },
     (error) => {
       console.log(error)
     }
   )
-  btnLoading.value = true
-  setTimeout(() => {
-    ElMessage({
-      message: '提交成功',
-      type: 'success'
-    })
-    btnLoading.value = false
-    addDrawer.value = false
-  }, 1000)
+  baseDataListRef.value.openLoading = false
+
+  btnLoading.value = false
+  addDrawer.value = false
 }
 
 // 编辑业务
+const editRow = ref()
 // 操作 => 修改抽屉
 // 保存数据 按钮
 const handelEditSubmit = async () => {
   // 修改的表单校验,通过才能发送put更新数据请求
   await editForm.value.validate()
+  console.log(editRow.value)
+  await editRoleListApi(
+    {
+      id: editRow.value.id,
+      intro: editRow.value.intro,
+      name: editRow.value.name,
+      parentID: editRow.value.parentID,
+      sort: editRow.value.sort,
+      visible: editRow.value.visible
+    },
+    async (res) => {
+      console.log('修改角色的成功回调', res)
+      ElMessage({
+        message: '修改成功',
+        type: 'success'
+      })
+      editDrawer.value = false
+      // 重新获取数据 刷新
+      baseDataListRef.value.openLoading = true
+      const result = await $RoleManage.getTheRoleList({
+        keyword: currentTreeOption.value.name,
+        pageIndex: $page.value.currentPage,
+        pageSize: $page.value.pageSize,
+        pid: editRow.value.parentID
+      })
+      const {
+        _rawValue: { data }
+      } = result
+      // 重新渲染
+      sendData.value.total = data.total
+      sendData.value.tableData = data.rows
+      baseDataListRef.value.openLoading = false
+    }
+  )
   // 在这里处理更新修改的接口
-  setTimeout(() => {
-    ElMessage({
-      message: '修改成功',
-      type: 'success'
-    })
-    editDrawer.value = false
-  }, 1000)
+  editDrawer.value = false
 }
+
+// 表格的按钮更改处理函数
+const handelSwitchChange = async (state, row) => {
+  console.log('按钮数据更新:', state, row)
+  // 点击按钮需要切换启用状态
+  const newVisible = ref()
+  if (row.visible === 1) {
+    newVisible.value = 0
+  } else {
+    newVisible.value = 1
+  }
+  baseDataListRef.value.openSwitchLoading = true
+  await editRoleListApi(
+    {
+      id: row.id,
+      intro: row.intro,
+      name: row.name,
+      parentID: row.parentID,
+      sort: row.sort,
+      visible: newVisible.value
+    },
+    async (res) => {
+      console.log('修改角色的成功回调', res)
+      ElMessage({
+        message: '修改成功',
+        type: 'success'
+      })
+      // 重新获取数据 刷新
+      const result = await $RoleManage.getTheRoleList({
+        keyword: currentTreeOption.value.name,
+        pageIndex: $page.value.currentPage,
+        pageSize: $page.value.pageSize,
+        pid: ''
+      })
+      const {
+        _rawValue: { data }
+      } = result
+      // 重新渲染
+      sendData.value.total = data.total
+      sendData.value.tableData = data.rows
+    }
+  )
+  baseDataListRef.value.openSwitchLoading = false
+  state = !state
+}
+
 // 控制编辑抽屉打开/关闭的数据
 const editDrawer = ref(false)
+// 控制父级下拉选择的显示隐藏
+const isShowSelect = ref(true)
 
 // 搜索业务
 // 输入框绑定的数据
 const searchKey = ref('')
 // 搜索方法
-const handelSearch = () => {
+const handelSearch = async () => {
   if (searchKey.value === '') {
     ElMessage('搜索关键词不能为空')
     return false
   }
   btnLoading.value = true
-  setTimeout(() => {
-    btnLoading.value = false
-    ElMessage({
-      message: '搜索执行!调接口发请求',
-      type: 'success'
-    })
-  }, 1000)
+  // 开启表格加载
+  baseDataListRef.value.openLoading = true
+  const res = await $RoleManage.getTheRoleList({
+    keyword: searchKey.value,
+    pageIndex: $page.value.currentPage,
+    pageSize: $page.value.pageSize,
+    pid: ''
+  })
+  baseDataListRef.value.openLoading = false
+
+  const {
+    _rawValue: { data }
+  } = res
+  console.log(res.value)
+  // 重新渲染
+  sendData.value.total = data.total
+  sendData.value.tableData = data.rows
+  btnLoading.value = false
+  ElMessage({
+    message: '操作成功',
+    type: 'success'
+  })
 }
 
 // 菜单权限业务

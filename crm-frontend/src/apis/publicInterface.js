@@ -1,8 +1,8 @@
 /*
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-08 21:42:13
+ * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
+ * @LastEditTime: 2023-11-08 15:20:35
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -103,52 +103,52 @@ export const getDictclassifylist = async (params, success, fail) => {
       fail(error)
     })
 }
-// 导入 资金管理/资金注入抽取 仓库
-import useFundInjectionStore from '@/stores/fundManagement/fundInjection.js'
-const fundInjection = useFundInjectionStore()
-/**
- * 获取银行账户列表数据(用于输入表单下拉列表)
- * @param {*} success 成功的回调
- * @param {*} fail 失败的回调
- * @returns
- */
-export const getBankAccountList = (
-  param,
-  success = () => {},
-  fail = () => {}
-) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(param)
-    }, 0)
-  })
-    .then(() => {
-      let bankSelectList = [
-        {
-          value: 'Option1',
-          label: '所有回款账户'
-        },
-        {
-          value: 'Option2',
-          label: '工商银行982731237861283'
-        },
-        {
-          value: 'Option3',
-          label: '农业银行982731237861283'
-        }
-      ]
-      if (bankSelectList) {
-        // fundInjection是仓库名,把这个数据存到仓库
-        fundInjection.setBankSelectList(bankSelectList)
-        success()
-        return true
-      }
-      fail()
-    })
-    .catch((err) => {
-      fail(err)
-    })
-}
+// // 导入 资金管理/资金注入抽取 仓库
+// import useFundInjectionStore from '@/stores/fundManagement/fundInjection.js'
+// const fundInjection = useFundInjectionStore()
+// /**
+//  * 获取银行账户列表数据(用于输入表单下拉列表)
+//  * @param {*} success 成功的回调
+//  * @param {*} fail 失败的回调
+//  * @returns
+//  */
+// export const getBankAccountList = (
+//   param,
+//   success = () => {},
+//   fail = () => {}
+// ) => {
+//   return new Promise((resolve) => {
+//     setTimeout(() => {
+//       resolve(param)
+//     }, 0)
+//   })
+//     .then(() => {
+//       let bankSelectList = [
+//         {
+//           value: 'Option1',
+//           label: '所有回款账户'
+//         },
+//         {
+//           value: 'Option2',
+//           label: '工商银行982731237861283'
+//         },
+//         {
+//           value: 'Option3',
+//           label: '农业银行982731237861283'
+//         }
+//       ]
+//       if (bankSelectList) {
+//         // fundInjection是仓库名,把这个数据存到仓库
+//         fundInjection.setBankSelectList(bankSelectList)
+//         success()
+//         return true
+//       }
+//       fail()
+//     })
+//     .catch((err) => {
+//       fail(err)
+//     })
+// }
 
 /**
  * @description: 获取系统用户名称列表数据
@@ -276,24 +276,21 @@ export const queryAllExpensetype = async (success, fail) => {
     })
 }
 
-/**
- * @description: 获取银行账号下拉列表数据
- * @param {*} success 成功的回调
- * @param {*} fail 失败的回调
- * @return {*}
- */
-export const getBankaccountlist = async (success, fail) => {
-  await Request.requestJson(
-    Request.GET,
-    '/cpp1-apiv1/financial-management/bankaccount/get-bankaccountlist'
-  )
-    .then((response) => {
-      success(response)
-    })
-    .catch((error) => {
-      fail(error)
-    })
-}
+// /**
+//  * @description: 获取银行账号下拉列表数据
+//  * @param {*} success 成功的回调
+//  * @param {*} fail 失败的回调
+//  * @return {*}
+//  */
+// export const getBankaccountlist = async (success, fail) => {
+//   await Request.requestJson(Request.GET, 'url')
+//     .then((response) => {
+//       success(response)
+//     })
+//     .catch((error) => {
+//       fail(error)
+//     })
+// }
 
 /**
  * @description: 查询仓库（分页或仓库名）
@@ -366,14 +363,49 @@ export const getRoleNameList = async (params, success, fail) => {
 }
 
 /**
- * 获取销售合同数据列表(用于下拉列表查询数据)
- * @param {*} params 传递的参数
- * @returns
+ * @description: 获取部门名称列表数据(用于输入表单下拉列表)
+ * @param {*} params 请求参数: { deptName:部门名称 }
+ * @param {*} success 成功回调
+ * @param {*} fail 失败回调
+ * @Author{*} 暮秋(有问题找我)
+ * @return {*}
  */
-export const getSalesContractDataForSelectAPI = async (params) => {
-  return await Request.requestJson(
+export const getDepartmentList = async (params, success) => {
+  await Request.requestForm(
     Request.GET,
-    '/sales-contract' + '/sales-contract/sales-cont-list',
-    params
+    'http://101.34.252.80:10110/orgstructure/dept/dept/list-name-all',
+    {
+      ...params
+    }
   )
+    .then((response) => {
+      // 请求返回的数据就是response,在成功回调函数可以拿到
+      success(response)
+    })
+    .catch((error) => {
+      console.log(error)
+      ElMessage({
+        message: '操作失败',
+        type: 'warning'
+      })
+    })
+}
+
+/**
+ * @description: 获取银行账号下拉列表数据
+ * @param {*} success 成功的回调
+ * @param {*} fail 失败的回调
+ * @return {*}
+ */
+export const getBankaccountlist = async (success, fail) => {
+  await Request.requestJson(
+    Request.GET,
+    '/cpp1-apiv1/financial-management/bankaccount/get-bankaccountlist'
+  )
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      fail(error)
+    })
 }
