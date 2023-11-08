@@ -31,7 +31,23 @@ export const queryBrand = async (params) => {
 export const addBrand = async (params) => {
   return await Request.requestJson(
     Request.POST,
-    baseUrl + '/j4Commodity/commodityBrand/add-brand',
+    baseUrl + '/goods/commodityBrand/add-brand',
+    params
+  )
+}
+
+export const modifyBrand = async (params) => {
+  return await Request.requestJson(
+    Request.PUT,
+    baseUrl + '/goods/commodityBrand/modify-brand',
+    params
+  )
+}
+
+export const removeBrand = async (params) => {
+  return await Request.requestJson(
+    Request.PUT,
+    baseUrl + '/goods/commodityBrand/remove-brand',
     params
   )
 }

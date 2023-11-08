@@ -73,7 +73,7 @@ const data = ref({
   intro: ''
 })
 const initData = ref({
-  ame: '',
+  name: '',
   parentID: '',
   sort: '',
   visible: true,
@@ -99,7 +99,7 @@ const handleEdit = (node) => {
   console.log('node')
   treeRef.value.isEdit = true
   treeRef.value.showDrawer = true
-  console.log('edit', node)
+  node.visible = node.visible ? true : false
 }
 
 const handleSubmit = () => {
