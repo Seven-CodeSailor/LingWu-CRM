@@ -136,12 +136,24 @@ $base-tabbar-height: 50px;
 </style>
 
 <script setup>
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, onMounted } from 'vue'
 import { userStore } from '@/stores/user'
 import useLayOutSettingStore from '@/stores/setting.js'
 import Setting from './tabbar/setting/Setting.vue'
+import { queryMessageNotices } from '@/apis/systemPage/index.js'
 import BreadCrumb from './tabbar/bread-crumb/BreadCrumb.vue'
 import Menu from './menu/Menu.vue'
+import useMessageInfo from '@/stores/system-page/messageInfo.js'
+import {
+  countCustomerGrade,
+  countCustomerIndustry,
+  countCustomerNumber,
+  countCustomerSource,
+  countBusinessSalestage,
+  countBusinessNumber
+} from '@/apis/systemPage/index.js'
+
+const messageInfo = useMessageInfo()
 const store = userStore()
 const layOutSettingStore = useLayOutSettingStore()
 
@@ -166,4 +178,25 @@ watch(
     fold.value = layOutSettingStore.fold
   }
 )
+onMounted(() => {
+  queryMessageNotices()
+  countCustomerGrade((response) => {
+    messageInfo.setLevel(response.data)
+  })
+  countCustomerIndustry((response) => {
+    messageInfo.setIndustry(response.data)
+  })
+  countCustomerNumber((response) => {
+    messageInfo.setCustomerNum(response.data)
+  })
+  countCustomerSource((response) => {
+    messageInfo.setBelong(response.data)
+  })
+  countBusinessSalestage((response) => {
+    messageInfo.setStates(response.data)
+  })
+  countBusinessNumber((response) => {
+    messageInfo.setBusNum(response.data)
+  })
+})
 </script>

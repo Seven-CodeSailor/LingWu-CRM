@@ -2,8 +2,11 @@
   <!-- 添加或修改客户信息 -->
   <el-drawer
     v-model="dialogVisible"
-    :title="myclient.customerInfo.id === '' ? '添加客户信息' : '修改客户信息'"
+    :title="
+      myclient.customerInfo.customer_id === '' ? '添加客户信息' : '修改客户信息'
+    "
     size="50%"
+    @close="close"
   >
     <el-form
       :model="myclient.customerInfo"
@@ -64,9 +67,9 @@
         />
       </el-form-item>
       <el-form-item label="客户需求">
-        <el-input v-model="myclient.customerInfo.demand" style="width: 500px" />
+        <el-input v-model="myclient.customerInfo.needs" style="width: 500px" />
       </el-form-item>
-      <el-form-item label="公海客户">
+      <el-form-item label="公海客户" v-if="!flag">
         <el-checkbox-group v-model="myclient.customerInfo.seaCustomer">
           <el-checkbox
             name="type"
@@ -87,8 +90,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import useMyClient from '@/stores/customer/subclient.js'
+import { ref, inject } from 'vue'
+import useMyClient from '@/stores/customer/myclient.js'
 import useSelect from '@/stores/customer/select.js'
 import {
   getCustomerBelong,
@@ -117,12 +120,12 @@ const industry = ref()
 // 获取客户归属的值
 const customerGetBelong = async () => {
   await getCustomerBelong()
-  myclient.customerInfo.belong = belong.value.selectValue.label
+  myclient.customerInfo.source = belong.value.selectValue.label
 }
 // 获取客户等级的值
 const customerGetLevel = async () => {
   await getCustomerLevel()
-  myclient.customerInfo.level = level.value.selectValue.label
+  myclient.customerInfo.grade = level.value.selectValue.label
 }
 //获取客户行业的值
 const customerGetIndusty = async () => {
@@ -135,28 +138,31 @@ const getSelect = async () => {
   await getCustomerIndusty()
 }
 // 点击添加按钮的回调
-const addMyClinet = async () => {
+const addMyClinet = () => {
   getSelect()
   dialogVisible.value = true
 }
+const inits = inject('inits')
 // 添加或修改客户按钮确定回调
-const save = async () => {
+const save = () => {
   dialogVisible.value = false
-  if (myclient.customerInfo.id === '') {
-    await postCustomer(
+  if (myclient.customerInfo.customer_id === '') {
+    postCustomer(
       myclient.customerInfo,
       () => {
         ElMessage.success('添加成功')
+        inits()
       },
       () => {
         ElMessage.error('添加失败')
       }
     )
   } else {
-    await putCustomer(
+    putCustomer(
       myclient.customerInfo,
       () => {
         ElMessage.success('修改成功')
+        inits()
       },
       () => {
         ElMessage.error('修改失败')
@@ -165,22 +171,45 @@ const save = async () => {
   }
   myclient.customerReset()
   select.resetData()
-  //   initCustomer()
+  belong.value.reset()
+  level.value.reset()
+  industry.value.reset()
 }
 /**
  * 修改
  */
 // 修改按钮回调
-const modify = async (row) => {
-  await queryCustomerDetails(
-    row.id,
-    () => {},
+const modify = (row) => {
+  flag.value = true
+  getSelect()
+  queryCustomerDetails(
+    row.customer_id,
+    (response) => {
+      myclient.customerInfo = {
+        customer_id: row.customer_id,
+        ...response.data
+      }
+      belong.value.setVal(myclient.customerInfo.source)
+      level.value.setVal(myclient.customerInfo.grade)
+      industry.value.setVal(myclient.customerInfo.industry)
+    },
     () => {
       ElMessage.error('获取数据失败')
     }
   )
-  myclient.customerInfo.id = row.id
+  myclient.customerInfo.customer_id = row.customer_id
   dialogVisible.value = true
+}
+
+const flag = ref(false)
+const close = () => {
+  if (flag.value) {
+    myclient.customerReset()
+    belong.value.reset()
+    level.value.reset()
+    industry.value.reset()
+    flag.value = false
+  }
 }
 
 defineExpose({

@@ -11,16 +11,21 @@
 // 这里导入你要使用的图标
 // 写成多行避免解决冲突麻烦
 import {
+  Avatar,
   Bell,
   ChatDotRound,
   Check,
+  CollectionTag,
   FullScreen,
   Histogram,
   Menu,
   MoonNight,
   Plus,
+  Postcard,
   Refresh,
-  Sunny
+  ShoppingCart,
+  Sunny,
+  Van
 } from '@element-plus/icons-vue'
 import { Setting } from '@element-plus/icons-vue'
 import { User } from '@element-plus/icons-vue'
@@ -76,4 +81,9 @@ export default (app) => {
   app.component('IconFolderChecked', FolderChecked)
   app.component('IconCheck', Check)
   app.component('IconHistogram', Histogram)
+  app.component('IconPostCard', Postcard)
+  app.component('IconAvatar', Avatar)
+  app.component('IconCollectionTag', CollectionTag)
+  app.component('IconShop', ShoppingCart)
+  app.component('IconVan', Van)
 }

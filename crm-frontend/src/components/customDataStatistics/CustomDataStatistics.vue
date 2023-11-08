@@ -51,7 +51,6 @@ let props = defineProps({
 let data = ref({
   title: '数据统计',
   x: ['我的客户', '下属客户', '公海客户'],
-  contractsNumber: [0, 0, 0],
   amount: [0, 0, 0]
 })
 
@@ -91,16 +90,6 @@ let initData = () => {
         axisLabel: {
           formatter: '{value} 个'
         }
-      },
-      {
-        type: 'value',
-        name: '合同金额/万元(人民币)',
-        position: 'right',
-        min: '0',
-        max: `${Math.max(...data.value.amount) || 0}`,
-        axisLabel: {
-          formatter: '{value} 万'
-        }
       }
     ],
     series: [
@@ -108,43 +97,21 @@ let initData = () => {
         name: '合同数',
         type: 'bar',
         yAxisIndex: 0,
-        data: data.value.contractsNumber,
-        itemStyle: {
-          normal: {
-            //这里是重点
-            color: function (params) {
-              //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
-              let colorList = [
-                '#194f97',
-                '#555555',
-                '#bd6b08',
-                '#00686b',
-                '#c82d31',
-                '#625ba1'
-              ]
-              return colorList[params.dataIndex]
-            }
-          }
-        }
-      },
-      {
-        name: '金额数',
-        type: 'bar',
-        smooth: true,
-        yAxisIndex: 0,
         data: data.value.amount,
+        barWidth: 30,
         itemStyle: {
           normal: {
             //这里是重点
             color: function (params) {
               //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
               let colorList = [
-                '#898989',
-                '#9c9800',
-                '#007f54',
-                '#a195c5',
-                '#103667',
-                '#f19272'
+                '#CD9786',
+                '#AE7681',
+                '#C8CDE1',
+                '#B89D74',
+                '#D1E8F2',
+                '#DAC9BD',
+                '#C67D6E'
               ]
               return colorList[params.dataIndex]
             }
@@ -156,33 +123,17 @@ let initData = () => {
   mychart.setOption(option)
 }
 
-let time = ref('今日')
+let time = ref('销售状态')
 
 // 下拉框选项
 const options = [
   {
     value: 1,
-    label: '今日'
+    label: '销售状态'
   },
   {
     value: 2,
-    label: '昨日'
-  },
-  {
-    value: 7,
-    label: '本周'
-  },
-  {
-    value: 30,
-    label: '本月'
-  },
-  {
-    value: 90,
-    label: '本季度'
-  },
-  {
-    value: 365,
-    label: '本年'
+    label: '商机总数'
   }
 ]
 
@@ -207,7 +158,8 @@ watch(time, () => {
     right: 0;
   }
   .charts {
-    height: 100%;
+    width: 700px;
+    height: 400px;
   }
 }
 </style>
