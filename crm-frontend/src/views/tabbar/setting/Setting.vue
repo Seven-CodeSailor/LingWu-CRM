@@ -36,8 +36,8 @@
     <el-form>
       <el-form-item label="暗黑模式">
         <el-switch
-          @change="changeDark"
-          v-model="dark"
+          @change="setTheme(activeThemeName)"
+          v-model="isDark"
           class="mt-2"
           style="margin-left: 24px"
           inline-prompt
@@ -84,7 +84,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { userStore } from '@/stores/user'
 import useLayOutSettingStore from '@/stores/setting.js'
 import { useRouter } from 'vue-router'
@@ -124,14 +124,19 @@ const fullScreen = () => {
   }
 }
 //收集开关的数据
-let dark = ref(false)
+// let dark = ref(false)
 //switch开关的chang事件进行暗黑模式的切换
-const changeDark = () => {
-  //获取HTML根节点
-  let html = document.documentElement
-  //判断HTML标签是否有类名dark
-  dark.value ? (html.className = 'dark') : (html.className = '')
-}
+// const changeDark = () => {
+//   //获取HTML根节点
+//   let html = document.documentElement
+//   //判断HTML标签是否有类名dark
+//   dark.value ? (html.className = 'dark') : (html.className = '')
+// }
+import { useTheme } from '@/hooks/useTheme'
+const { activeThemeName, setTheme } = useTheme()
+const isDark = computed(() => {
+  return activeThemeName.value === 'dark'
+})
 // 消息提醒
 const message = ref(false)
 </script>

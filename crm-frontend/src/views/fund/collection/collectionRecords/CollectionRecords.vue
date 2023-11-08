@@ -123,7 +123,9 @@ import { Search, Plus } from '@element-plus/icons-vue'
 import { onMounted, ref } from 'vue'
 const $store = useCollectionRecord()
 
-onMounted(() => {})
+onMounted(() => {
+  $store.getCollectionRecordList({ pageIndex: 1, pageSize: 10 })
+})
 const addFormData = ref({
   record_id: 0,
   customer_name: 'string',

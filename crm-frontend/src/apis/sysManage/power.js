@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-04 21:32:59
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-04 21:38:29
+ * @LastEditTime: 2023-11-07 21:07:12
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\sysManage\power.js
  * @Description:
  *
@@ -18,17 +18,18 @@ const addPower = (data) => {
   )
 }
 
-const deletePower = (data) => {
+const deletePower = (id) => {
   return Request.requestForm(
-    Request.POST,
+    Request.DELETE,
     '/systemmanagement/fly-sys-method/deletemethod',
-    data
+    id
   )
 }
 
-const getPowerList = (pageParams, searchData) => {
-  return Request.requestForm(
-    Request.GET,
+//这里给的是POST，也没办法
+const getPowerList = (pageParams, searchData = {}) => {
+  return Request.requestJson(
+    Request.POST,
     '/systemmanagement/fly-sys-method/getMethodList',
     {
       ...pageParams,
@@ -37,7 +38,7 @@ const getPowerList = (pageParams, searchData) => {
   )
 }
 
-const updatePowerList = (data) => {
+const updatePower = (data) => {
   return Request.requestJson(
     Request.PUT,
     '/systemmanagement/fly-sys-method/modify-method',
@@ -45,4 +46,4 @@ const updatePowerList = (data) => {
   )
 }
 
-export { addPower, getPowerList, updatePowerList, deletePower }
+export { addPower, getPowerList, updatePower, deletePower }
