@@ -2,7 +2,7 @@
  * @Author: pipazi 2283356040@qq.com
  * @Date: 2023-11-03 12:56:03
  * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-07 22:49:23
+ * @LastEditTime: 2023-11-09 02:43:31
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\personal-homapage\message.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -13,7 +13,7 @@ const baseUrl = '/java3-personal-homepage'
 
 // 根据分页条件获取消息列表
 export const queryMessage = async (params) => {
-  await Request.requestForm(
+  return await Request.requestForm(
     Request.GET,
     baseUrl + '/j3-message-remind/queryMessage',
     params
@@ -22,7 +22,7 @@ export const queryMessage = async (params) => {
 
 // 查看消息详情
 export const queryMessageId = async (params) => {
-  await Request.requestForm(
+  return await Request.requestForm(
     Request.GET,
     baseUrl + '/j3-message-remind/{id}',
     params
@@ -37,7 +37,7 @@ export const queryMessageId = async (params) => {
 
 // 消息删除
 export const deleteMassage = async (params) => {
-    await Request.requestJson(
+  return  await Request.requestJson(
       Request.DELETE,
       baseUrl + '/j3-message-remind/deleteMassage',
       params
@@ -52,7 +52,7 @@ export const deleteMassage = async (params) => {
 
 // 批量消息已读（批量操作）
 export const markReadMessage = async (params) => {
-    await Request.requestJson(
+  return  await Request.requestJson(
       Request.POST,
       baseUrl + '/j3-message-remind/mark-read-message',
       params
@@ -67,7 +67,7 @@ export const markReadMessage = async (params) => {
 
 // 发布消息
 export const publishMessage = async (params) => {
-    await Request.requestForm(
+  return  await Request.requestForm(
       Request.POST,
       baseUrl + '/j3-message-remind/publish-message',
       params
