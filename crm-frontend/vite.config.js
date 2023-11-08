@@ -28,6 +28,11 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
+        '/api/login/': {
+          changeOrigin: true,
+          target: 'http://39.101.76.24:10200/',
+          rewrite: (path) => path.replace(/^\/api/, '')
+        },
         '/api/systemmanagement/': {
           changeOrigin: true,
           target: 'http://8.130.37.147:10300/',
