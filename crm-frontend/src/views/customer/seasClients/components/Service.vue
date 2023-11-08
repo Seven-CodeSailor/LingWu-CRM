@@ -26,14 +26,14 @@
       <el-form-item label="服务时间">
         <el-col :span="11">
           <el-date-picker
-            v-model="myclient.serviceInfo.data"
+            v-model="myclient.serviceInfo.service_time"
             type="date"
             placeholder="服务日期"
           />
         </el-col>
       </el-form-item>
       <el-form-item label="花费时间(分钟)">
-        <el-input-number v-model="myclient.serviceInfo.spendTime" min="0" />
+        <el-input-number v-model="myclient.serviceInfo.tlen" min="0" />
       </el-form-item>
       <el-form-item label="服务内容">
         <el-input
@@ -43,13 +43,11 @@
         />
       </el-form-item>
       <el-form-item label="客户名称">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户名称"
-          :options="select.name"
-          @update:cid="serviceGetName()"
-          ref="customerName1"
-        ></ChooseSelect>
+        <el-input
+          v-model="myclient.serviceInfo.customer_name"
+          style="width: 500px"
+          disabled
+        />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -67,10 +65,11 @@ import useSeasClient from '@/stores/customer/seasclient.js'
 import useSelect from '@/stores/customer/select.js'
 import {
   getCustomerServiceType,
-  getCustomerServiceWay
+  getCustomerServiceWay,
+  addService
 } from '@/apis/customer/index.js'
-import { getCustomerName } from '@/apis/publicInterface.js'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
+import { ElMessage } from 'element-plus'
 
 // 我的客户store仓库
 const myclient = useSeasClient()
@@ -81,41 +80,43 @@ const select = useSelect()
  */
 // 控制添加服务记录抽屉的显示和隐藏
 let dialogVisible3 = ref(false)
-const customerName1 = ref()
 const serviceWay = ref()
 const serviceType = ref()
-// 获取客户名称下拉列表
-const serviceGetName = async () => {
-  await getCustomerName()
-  myclient.serviceInfo.customerName = customerName1.value.selectValue.label
-}
 // 获取服务类型下拉列表
 const serviceGettype = async () => {
   await getCustomerServiceType()
-  myclient.serviceInfo.type = serviceType.value.selectValue.label
+  myclient.serviceInfo.services = serviceType.value.selectValue.label
 }
 // 获取服务方式下拉列表
 const serviceGetWay = async () => {
   await getCustomerServiceWay()
-  myclient.serviceInfo.way = serviceWay.value.selectValue.label
+  myclient.serviceInfo.servicesmodel = serviceWay.value.selectValue.label
 }
 // 添加服务记录按钮回调
-const addService = async (row) => {
-  await getCustomerName()
+const addServices = async (row) => {
   await getCustomerServiceType()
   await getCustomerServiceWay()
   dialogVisible3.value = true
-  myclient.serviceInfo.id = row.id
+  myclient.serviceInfo.customer_id = row.customer_id
+  myclient.serviceInfo.customer_name = row.name
 }
 // 保存数据，发送请求
 const saveService = () => {
+  addService(
+    myclient.serviceInfo,
+    () => {
+      ElMessage.success('添加成功')
+    },
+    () => {
+      ElMessage.error('添加失败')
+    }
+  )
   dialogVisible3.value = false
   myclient.serviceReset()
   select.resetData()
-  ElMessage.success('添加成功')
 }
 defineExpose({
-  addService
+  addServices
 })
 </script>
 

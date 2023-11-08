@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-const useInventoryList = defineStore('inventoryList', () => {
+const useOutStorageDetails = defineStore('outStorageDetails', () => {
   const tableData = ref([])
   const totalTable = ref(0)
   const setTableData = (data = []) => {
@@ -14,4 +14,4 @@ const useInventoryList = defineStore('inventoryList', () => {
   }
 })
 
-export default useInventoryList
+export default useOutStorageDetails

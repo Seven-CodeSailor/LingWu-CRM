@@ -1,165 +1,185 @@
 <template>
-  <div class="storage_details">
-    <BaseDataList
-      title="入库明细"
-      :table-column-attribute="tableColumnAttribute"
-      :use-operate-column="false"
-      :page-sizes="[5, 10, 15]"
-      :total="stockStorageDetailsStore.tableTotal"
-      :table-data="stockStorageDetailsStore.tableData"
-      @update-table-data="
-        (pageSize, currentPage) =>
-          getTableData({
-            pageSize,
-            pageIndex: currentPage
-          })
-      "
-      ref="baseDataListRef"
+  <el-card>
+    <!-- 头部 -->
+    <header>
+      <h3>
+        <slot name="ico"></slot>
+        <div style="margin-left: 8px">入库明细</div>
+      </h3>
+    </header>
+    <!-- 操作搜索栏 -->
+    <section class="menu">
+      <div class="left">
+        <el-button
+          type="primary"
+          style="margin-right: 10px"
+          :disabled="selectIdArr.length ? false : true"
+          @click="exportExcel"
+          >批量导出</el-button
+        >
+      </div>
+      <div class="right" style="display: flex">
+        <el-input
+          v-model="content"
+          placeholder="输入商品名称"
+          style="margin-right: 4px; width: 200px"
+        />
+        <el-button
+          type="primary"
+          style="margin-left: 4px"
+          @click="searchDetails"
+          :disabled="content ? false : true"
+          icon="IconSearch"
+        >
+          搜索
+        </el-button>
+      </div>
+    </section>
+    <!-- 表格部分 -->
+    <el-table
+      style="width: 100%; margin-bottom: 20px"
+      table-layout="auto"
+      :data="inventoryList.tableData"
+      @selection-change="selectChange"
     >
-      <template #menu>
-        <div class="menu">
-          <div class="left">
-            <BulkOPe :getOpt="() => [0]" :export-excel="handleExport">
-            </BulkOPe>
-          </div>
-          <div class="right">
-            <el-input
-              v-model="inputValue"
-              placeholder="输入商品名称或者SKU名称"
-              style="margin-right: 4px"
-            />
-            <DropDown
-              v-model:input-value1="topInputValue"
-              v-model:input-value2="bottomInputValue"
-              input-title1="供应商名称"
-              input-title2="通信地址"
-              @handle-search="handleSearch"
-            ></DropDown>
-            <el-button
-              type="primary"
-              style="margin-left: 4px"
-              @click="searchDetails"
-            >
-              <el-icon style="margin-right: 4px"><icon-search /></el-icon
-              >搜索</el-button
-            >
-          </div>
-        </div>
-      </template>
-      <template #ico
-        ><el-icon><icon-message-box /></el-icon
-      ></template>
-    </BaseDataList>
-  </div>
+      <el-table-column type="selection" width="55" />
+      <el-table-column label="商品ID" prop="goods_id"></el-table-column>
+      <el-table-column label="SKUID" prop="sku_id"></el-table-column>
+      <el-table-column
+        label="商品名称"
+        prop="goods_name"
+        sortable
+      ></el-table-column>
+      <el-table-column label="SKU名称" prop="sku_name"></el-table-column>
+      <el-table-column
+        label="库存数量"
+        prop="number"
+        sortable
+      ></el-table-column>
+      <el-table-column label="商品类型" prop="category_name"></el-table-column>
+      <el-table-column label="仓库名称" prop="store_name"></el-table-column>
+      <el-table-column label="对应入库单" prop="into_intro"></el-table-column>
+      <el-table-column
+        label="入库时间"
+        prop="into_time"
+        sortable
+      ></el-table-column>
+      <el-table-column label="备注" prop="remarks"></el-table-column>
+    </el-table>
+    <!-- 分页器 -->
+    <el-pagination
+      v-model:current-page="currentPage"
+      v-model:page-size="pageSize"
+      :page-sizes="[5, 10, 20, 50]"
+      :total="inventoryList.totalTable"
+      layout="prev, pager, next, jumper, ->, total, sizes"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+  </el-card>
 </template>
 
 <script setup>
-// 冰雾
 import { ref, onMounted } from 'vue'
-import BaseDataList from '@/components/DataList/BaseDataList.vue'
-import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
-import DropDown from '@/components/DropDown/DropDown.vue'
-import { useStockStorageDetailsStore } from '@/stores/inventory/stockstoragedetails.js'
-const tableColumnAttribute = [
-  {
-    prop: 'goodsIdAndSkuId',
-    label: '商品ID/SKU ID'
-  },
-  {
-    prop: 'goodsNameAndSkuNmae',
-    label: '商品名称/SKU 名称',
-    sortable: true
-  },
-  {
-    prop: 'number',
-    label: '数量'
-  },
-  {
-    prop: 'categoryName',
-    label: '商品类型'
-  },
-  {
-    prop: 'storeName',
-    label: '仓库名称'
-  },
-  {
-    prop: 'intoIntro',
-    label: '对应入库单'
-  },
-  {
-    prop: 'intoTime',
-    label: '入库时间'
-  },
-  {
-    prop: 'remarks',
-    label: '备注'
-  }
-]
-const baseDataListRef = ref(null)
-const inputValue = ref('')
+import useStockStorageList from '@/stores/inventory/stockstoragedetails.js'
+import {
+  queryInventoryList,
+  exportStorageDetails
+} from '@/apis/inventory-manager/index.js'
+import { ElMessage } from 'element-plus'
 
-const stockStorageDetailsStore = useStockStorageDetailsStore()
+const inventoryList = useStockStorageList()
 
-const getTableData = async (params) => {
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  await stockStorageDetailsStore.getStorageDetails(params)
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-}
-
-const searchDetails = () => {
-  console.log('t', stockStorageDetailsStore.tableData)
-  if (!inputValue.value) {
-    ElMessage.error('输入不能为空')
-  } else {
-    console.log('pp', baseDataListRef.value.paginationData)
-    baseDataListRef.value.paginationData.pageSize = 5
-    baseDataListRef.value.paginationData.currentPage = 1
-    // 搜索数据的时候就重新初始化页面容量和当前页的页码
-    const params = {
-      pageSize: 5,
-      pageIndex: 1
-      // 如何知道我输入的是sku名称或商品名
+// 初始化数据
+const initRecords = (currentPage, pageSize, goods_name) => {
+  queryInventoryList(
+    { pageIndex: currentPage, pageSize, goods_name },
+    (response) => {
+      inventoryList.setTableData(response.data.rows)
+      inventoryList.totalTable = response.data.total
+    },
+    (error) => {
+      ElMessage.error(error)
     }
-    getTableData(params)
-  }
+  )
 }
-
-const topInputValue = ref('')
-const bottomInputValue = ref('')
-const handleSearch = () => {
-  console.log('调用search函数')
-}
-
 onMounted(() => {
-  const params = {
-    pageIndex: 1,
-    pageSize: 5
-  }
-  getTableData(params)
+  initRecords(currentPage.value, pageSize.value)
 })
+// 当前页数
+const currentPage = ref(1)
+// 每页数据
+const pageSize = ref(5)
+const handleSizeChange = (val) => {
+  pageSize.value = val
+  initRecords(currentPage.value, pageSize.value)
+}
+const handleCurrentChange = (val) => {
+  currentPage.value = val
+  initRecords(currentPage.value, pageSize.value)
+}
+
+/**
+ * 批量导出
+ */
+// 存储批量导出的客户的id
+let selectIdArr = ref([])
+// table复选框勾选时触发的事件
+const selectChange = (value) => {
+  selectIdArr.value = value
+}
+// 导出文件按钮回调
+const exportExcel = () => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.goods_id)
+  })
+  exportStorageDetails(
+    data,
+    () => {
+      ElMessage.success('导出成功')
+    },
+    () => {
+      ElMessage.error('导出失败')
+    }
+  )
+}
+
+/**
+ * 搜索
+ */
+let content = ref('')
+const searchDetails = () => {
+  initRecords(
+    currentPage.value,
+    pageSize.value,
+    content.value,
+    () => {
+      ElMessage.success('查询成功')
+    },
+    () => {
+      ElMessage.error('查询失败')
+    }
+  )
+  content.value = ''
+}
 </script>
 
 <style lang="scss" scoped>
-.storage_details {
-  width: 100%;
-  height: 100%;
-  .menu {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    .left {
-      height: 40px;
-    }
-    .right {
-      height: 40px;
-      display: flex;
-      align-items: center;
-    }
-  }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
-// 表格里的内容换行用
-:deep(.el-table .cell) {
-  white-space: pre-wrap;
+.menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.dialog-footer {
+  display: flex;
+  justify-content: space-around;
 }
 </style>

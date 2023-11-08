@@ -737,7 +737,11 @@ export const importCustomer = (str, success = () => {}, fail = () => {}) => {
  * @param {*} fail 失败的回调
  * @returns
  */
-export const receiveCustomer = (list, success = () => {}, fail = () => {}) => {
+export const receiveCustomer = (
+  list = [],
+  success = () => {},
+  fail = () => {}
+) => {
   Request.requestJson(
     Request.PUT,
     '/crm-c2-customer-mycustomer/receive-custormer',

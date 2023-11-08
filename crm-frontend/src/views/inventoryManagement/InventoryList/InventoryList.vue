@@ -1,171 +1,201 @@
 <template>
-  <!-- 测试 -->
-  <BaseDataList
-    title="库存清单"
-    :tableColumnAttribute="tableColumnAttribute"
-    :use-operate-column="false"
-    :table-data="inventoryList.tableData"
-    :page-sizes="[5, 10, 15]"
-    :total="inventoryList.totalTable"
-    @update-table-data="
-      (pageSize, currentPage) =>
-        getList({
-          pageSize,
-          pageIndex: currentPage
-        })
-    "
-    ref="baseDataListRef"
-  >
-    <template #menu>
-      <div class="menu">
-        <div class="left">
-          <BulkOPe
-            :excelData="() => stockStorageDetailsStore.tableData"
-            :getOpt="() => [0]"
-            excelName="入库明细.xlsx"
-            tableName="入库明细的sheet表"
-          >
-          </BulkOPe>
-        </div>
-        <div class="right">
-          <el-input
-            v-model="name"
-            placeholder="输入商品名称或者SKU名称"
-            style="margin-right: 4px"
-          />
-          <DropDown
-            v-model:topInputValue="supplier_name"
-            v-model:bottomInputValue="mailing_address"
-            topInputTitle="供应商名称"
-            bottomInputTitle="通信地址"
-            @handle-search="handleSearch"
-          ></DropDown>
-          <el-button
-            type="primary"
-            style="margin-left: 4px"
-            @click="searchDetails"
-          >
-            <el-icon style="margin-right: 4px"><icon-search /></el-icon
-            >搜索</el-button
-          >
-        </div>
+  <el-card>
+    <!-- 头部 -->
+    <header>
+      <h3>
+        <slot name="ico"></slot>
+        <div style="margin-left: 8px">库存清单</div>
+      </h3>
+    </header>
+    <!-- 操作搜索栏 -->
+    <section class="menu">
+      <div class="left">
+        <el-button
+          type="primary"
+          style="margin-right: 10px"
+          :disabled="selectIdArr.length ? false : true"
+          @click="exportExcel"
+          >批量导出</el-button
+        >
       </div>
-    </template>
-  </BaseDataList>
+      <div class="right" style="display: flex">
+        <el-input
+          v-model="content"
+          placeholder="输入商品名称"
+          style="margin-right: 4px; width: 200px"
+        />
+        <el-button
+          type="primary"
+          style="margin-left: 4px"
+          @click="searchDetails"
+          :disabled="content ? false : true"
+          icon="IconSearch"
+        >
+          搜索
+        </el-button>
+      </div>
+    </section>
+    <!-- 表格部分 -->
+    <el-table
+      style="width: 100%; margin-bottom: 20px"
+      table-layout="auto"
+      :data="inventoryList.tableData"
+      @selection-change="selectChange"
+    >
+      <el-table-column type="selection" width="55" />
+      <el-table-column label="商品ID" prop="goods_id"></el-table-column>
+      <el-table-column label="SKUID" prop="sku_id"></el-table-column>
+      <el-table-column
+        label="商品名称"
+        prop="goods_name"
+        sortable
+      ></el-table-column>
+      <el-table-column label="SKU名称" prop="sku_name"></el-table-column>
+      <el-table-column
+        label="库存数量"
+        prop="number"
+        sortable
+      ></el-table-column>
+      <el-table-column label="商品类型" prop="category_name"></el-table-column>
+      <el-table-column
+        label="仓库名称"
+        prop="store_name"
+        sortable
+      ></el-table-column>
+      <el-table-column
+        label="销售价格"
+        prop="sale_price"
+        sortable
+      ></el-table-column>
+      <el-table-column
+        label="成本价格"
+        prop="cost_amount"
+        sortable
+      ></el-table-column>
+      <el-table-column label="预计利润" prop="anticipated_profit" sortable>
+      </el-table-column>
+      <el-table-column label="原厂编码" prop="Original_code"></el-table-column>
+      <el-table-column
+        label="供应商名称"
+        prop="supplier_name"
+      ></el-table-column>
+    </el-table>
+    <!-- 分页器 -->
+    <el-pagination
+      v-model:current-page="currentPage"
+      v-model:page-size="pageSize"
+      :page-sizes="[5, 10, 20, 50]"
+      :total="inventoryList.totalTable"
+      layout="prev, pager, next, jumper, ->, total, sizes"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+  </el-card>
 </template>
 
 <script setup>
-import BaseDataList from '@/components/DataList/BaseDataList.vue'
-import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
-import DropDown from '@/components/DropDown/DropDown.vue'
-import useInventoryList from '@/stores/inventory/inventoryList.js'
 import { ref, onMounted } from 'vue'
+import useInventoryList from '@/stores/inventory/inventoryList.js'
+import {
+  queryInVentoryList,
+  exportInventoryList
+} from '@/apis/inventory-manager/index.js'
+import { ElMessage } from 'element-plus'
 
 const inventoryList = useInventoryList()
 
-// BaseDataList实例，接收返回的数据
-const baseDataListRef = ref(null)
-
-// 分页数据
-let params = ref({
-  pageIndex: 1,
-  pageSize: 5
+// 初始化数据
+const initRecords = (currentPage, pageSize, goods_name) => {
+  queryInVentoryList(
+    currentPage,
+    pageSize,
+    goods_name,
+    (response) => {
+      inventoryList.setTableData(response.data.rows)
+      inventoryList.totalTable = response.data.total
+    },
+    (error) => {
+      ElMessage.error(error)
+    }
+  )
+}
+onMounted(() => {
+  initRecords(currentPage.value, pageSize.value)
 })
-// 表头列数据
-const tableColumnAttribute = [
-  {
-    prop: 'goodsIdAndSkuId',
-    label: '商品ID/SKU ID'
-  },
-  {
-    prop: 'goodsNameAndSkuNmae',
-    label: '商品名称/SKU 名称',
-    sortable: true
-  },
-  {
-    prop: 'number',
-    label: '库存数量',
-    sortable: true
-  },
-  {
-    prop: 'categoryName',
-    label: '商品类型'
-  },
-  {
-    prop: 'storeName',
-    label: '仓库名称'
-  },
-  {
-    prop: 'salePrice',
-    label: '销售价格'
-  },
-  {
-    prop: 'costPrice',
-    label: '成本价格'
-  },
-  {
-    prop: 'costAmount',
-    label: '成本金额'
-  },
-  {
-    prop: 'anticipatedProfit',
-    label: '预计利润'
-  },
-  {
-    prop: 'originalCode',
-    label: '原厂编码'
-  }
-]
-
-const getList = async (extra) => {
-  await inventoryList.getTableData({ ...params.value, ...extra })
+// 当前页数
+const currentPage = ref(1)
+// 每页数据
+const pageSize = ref(5)
+const handleSizeChange = (val) => {
+  pageSize.value = val
+  initRecords(currentPage.value, pageSize.value)
+}
+const handleCurrentChange = (val) => {
+  currentPage.value = val
+  initRecords(currentPage.value, pageSize.value)
 }
 
-onMounted(async () => {
-  getList()
-})
+/**
+ * 批量导出
+ */
+// 存储批量导出的客户的id
+let selectIdArr = ref([])
+// table复选框勾选时触发的事件
+const selectChange = (value) => {
+  selectIdArr.value = value
+}
+// 导出文件按钮回调
+const exportExcel = () => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.goods_id)
+  })
+  exportInventoryList(
+    data,
+    () => {
+      ElMessage.success('导出成功')
+    },
+    () => {
+      ElMessage.error('导出失败')
+    }
+  )
+}
 
-// 按sku名称或商品名搜索
-const name = ref()
+/**
+ * 搜索
+ */
+let content = ref('')
 const searchDetails = () => {
-  if (!name.value) {
-    ElMessage.error('输入不能为空')
-  } else {
-    getList({ name: name.value })
-    name.value = ''
-  }
-}
-
-// 按供应商和通信地址搜索
-const supplier_name = ref()
-const mailing_address = ref()
-const handleSearch = () => {
-  if (!supplier_name.value && !mailing_address.value) {
-    ElMessage.error('至少有一个输入')
-  } else {
-    getList({
-      supplier_name: supplier_name.value,
-      mailing_address: mailing_address.value
-    })
-    supplier_name.value = ''
-    mailing_address.value = ''
-  }
+  initRecords(
+    currentPage.value,
+    pageSize.value,
+    content.value,
+    () => {
+      ElMessage.success('查询成功')
+    },
+    () => {
+      ElMessage.error('查询失败')
+    }
+  )
+  content.value = ''
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 .menu {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
-  .left {
-    height: 40px;
-  }
-  .right {
-    height: 40px;
-    display: flex;
-    align-items: center;
-  }
+}
+.dialog-footer {
+  display: flex;
+  justify-content: space-around;
 }
 </style>
