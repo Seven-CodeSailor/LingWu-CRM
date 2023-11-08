@@ -1,5 +1,5 @@
 import Request from '../request'
-const BASEURL = ''
+const BASEURL = '/sales-opportunities'
 /**
  * @description: 获取销售机会分页列表
  * @param {*} params 请求参数
