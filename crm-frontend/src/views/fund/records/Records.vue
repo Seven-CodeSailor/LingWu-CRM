@@ -17,7 +17,13 @@
     <!-- 操作搜索栏 -->
     <section class="menu">
       <div class="left">
-        <BulkOPe :getOpt="() => [0]" :exportFile="exportFile()"> </BulkOPe>
+        <el-button
+          type="primary"
+          style="margin-right: 10px"
+          :disabled="selectIdArr.length ? false : true"
+          @click="exportExcel"
+          >批量导出</el-button
+        >
       </div>
       <div class="right" style="display: flex">
         <el-input
@@ -44,39 +50,37 @@
       @selection-change="selectChange"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column label="银行账号" prop="bankId"></el-table-column>
+      <el-table-column label="银行账号" prop="bank_id"></el-table-column>
       <el-table-column label="收入" prop="income" sortable>
         <template #default="{ row }">
-          {{ '+' + row.income.toFixed(2) }}
+          {{ '+' + row.income }}
         </template>
       </el-table-column>
-      <el-table-column label="支出" prop="expenditrue" sortable>
+      <el-table-column label="支出" prop="expenditure" sortable>
         <template #default="{ row }">
-          {{ '-' + row.expenditrue.toFixed(2) }}
+          {{ '-' + row.expenditure }}
         </template>
       </el-table-column>
       <el-table-column label="余额" prop="surplus" sortable>
         <template #default="{ row }">
-          {{ row.surplus.toFixed(2) }}
+          {{ row.surplus }}
         </template>
       </el-table-column>
       <el-table-column label="支出类型" prop="type">
         <template #default="{ row }">
-          <el-tag :type="row.type === '2' ? 'success' : 'info'">{{
-            row.type
-          }}</el-tag>
+          <el-tag type="success">{{ row.type || '未填写' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="关联单号" prop="connectId"></el-table-column>
-      <el-table-column label="创建人" prop="createUser"></el-table-column>
-      <el-table-column label="创建时间" prop="createTime"></el-table-column>
+      <el-table-column label="关联单号" prop="connect_id"></el-table-column>
+      <el-table-column label="创建人" prop="create_user"></el-table-column>
+      <el-table-column label="创建时间" prop="create_time"></el-table-column>
     </el-table>
     <section>
       支出金额合计：¥<span style="color: red">
-        {{ records.totalExpenditure.toFixed(2) }}
+        {{ records.totalExpenditure }}
       </span>
       收入金额合计：¥<span style="color: red">
-        {{ records.totalIncome.toFixed(2) }}
+        {{ records.totalIncome }}
       </span>
     </section>
     <!-- 分页器 -->
@@ -84,7 +88,7 @@
       v-model:current-page="currentPage"
       v-model:page-size="pageSize"
       :page-sizes="[5, 10, 20, 50]"
-      :total="records.tableData.length"
+      :total="records.total"
       layout="prev, pager, next, jumper, ->, total, sizes"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -94,23 +98,21 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-// import useSelect from '@/stores/customer/select.js'
-import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
-// import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 import useRecords from '@/stores/fund/records/records.js'
 import {
   queryFlowredords,
   exportFlowrecords
 } from '@/apis/fund/recoreds/index.js'
+import { ElMessage } from 'element-plus'
 
 const records = useRecords()
 
 // 初始化数据
-const initRecords = async (currentPage, pageSize, bankId) => {
-  await queryFlowredords(currentPage, pageSize, bankId)
+const initRecords = (currentPage, pageSize, bankId) => {
+  queryFlowredords(currentPage, pageSize, bankId)
 }
 onMounted(() => {
-  initRecords(currentPage, pageSize)
+  initRecords(currentPage.value, pageSize.value)
 })
 // 当前页数
 const currentPage = ref(1)
@@ -118,11 +120,11 @@ const currentPage = ref(1)
 const pageSize = ref(5)
 const handleSizeChange = (val) => {
   pageSize.value = val
-  initRecords(currentPage, pageSize)
+  initRecords(currentPage.value, pageSize.value)
 }
 const handleCurrentChange = (val) => {
   currentPage.value = val
-  initRecords(currentPage, pageSize)
+  initRecords(currentPage.value, pageSize.value)
 }
 
 /**
@@ -135,8 +137,20 @@ const selectChange = (value) => {
   selectIdArr.value = value
 }
 // 导出文件按钮回调
-const exportFile = async () => {
-  await exportFlowrecords(selectIdArr)
+const exportExcel = () => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.bank_id)
+  })
+  exportFlowrecords(
+    data,
+    () => {
+      ElMessage.success('导出成功')
+    },
+    () => {
+      ElMessage.error('导出失败')
+    }
+  )
 }
 
 /**
@@ -144,7 +158,17 @@ const exportFile = async () => {
  */
 let content = ref('')
 const searchDetails = () => {
-  initRecords(currentPage, pageSize, content)
+  initRecords(
+    currentPage.value,
+    pageSize.value,
+    content.value,
+    () => {
+      ElMessage.success('查询成功')
+    },
+    () => {
+      ElMessage.error('查询失败')
+    }
+  )
   content.value = ''
 }
 </script>

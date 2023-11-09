@@ -22,6 +22,7 @@
               v-model="form.oldPassword"
               placeholder="请输入之前登录密码"
               style="width: 30%"
+              clearable
             />
           </el-form-item>
           <el-form-item label="新密码" prop="newPassword">
@@ -29,6 +30,7 @@
               v-model="form.newPassword"
               placeholder="请输入新的登录密码"
               style="width: 30%"
+              clearable
             />
           </el-form-item>
           <el-form-item label="密码确认" prop="confirmPassword">
@@ -36,6 +38,7 @@
               v-model="form.confirmPassword"
               placeholder="请再次输入新的登录密码"
               style="width: 50%"
+              clearable
             />
           </el-form-item>
           <el-form-item style="margin-top: 44px">

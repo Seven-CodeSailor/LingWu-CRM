@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-31 15:56:56
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-02 21:34:36
+ * @LastEditTime: 2023-11-06 23:16:47
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\fund\collection\collectionPlan.js
  * @Description:
  *
@@ -10,7 +10,11 @@
  */
 //1
 import { defineStore } from 'pinia'
-import { getCollectionPlanList } from '@/apis/fund/collectionPlan/index.js'
+// import { getCollectionPlanList } from '@/apis/fund/collectionPlan/index.js'
+import {
+  getCollectionPlanList,
+  updateCollectionPlan
+} from '@/apis/fund/collectionPlan/index.js'
 export const useCollectionPlan = defineStore('collectionPlan', {
   state: () => ({
     clientNameList: ['sayoriqwq', 'sayori'],
@@ -54,20 +58,22 @@ export const useCollectionPlan = defineStore('collectionPlan', {
       pageSizes: [2, 4, 6, 10],
       total: 10,
       useDropdownMenu: true
+    },
+    pageParams: {
+      pageSize: '',
+      pageIndex: ''
     }
   }),
   getters: {},
   actions: {
-    //发请求拿table表的数据
-    async getCollectionPlanList(pageParams) {
-      const data = await getCollectionPlanList(pageParams).catch((e) => {
-        ElMessage.warn(e.message)
-      })
-      if (!data.data) return
-      this.sendData.tableData = data.data.rows
-      //处理tag列数据
+    async getCollectionPlanList(pageParams, searchParams) {
+      const res = await getCollectionPlanList(pageParams, searchParams).catch(
+        (e) => e
+      )
+      console.log('res', res)
+      this.sendData.tableData = res.data.rows
       this.sendData.tableData.map((item) => {
-        item.weather === '已回款'
+        item.ifpay === 'YES'
           ? (item.data = {
               value: '已回款',
               tagType: 'success'
@@ -77,7 +83,13 @@ export const useCollectionPlan = defineStore('collectionPlan', {
               tagType: 'danger'
             })
       })
-      this.sendData.tableData = data.data.rows
+      this.sendData.total = res.data.total
+    },
+
+    async updateCollectionPlan(data) {
+      const res = await updateCollectionPlan(data).catch((e) => e)
+      //上传参数异常，做不了
+      console.log('res', res)
     }
   }
 })

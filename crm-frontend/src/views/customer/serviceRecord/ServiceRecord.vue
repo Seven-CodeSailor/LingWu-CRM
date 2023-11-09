@@ -6,13 +6,6 @@
         <slot name="ico"></slot>
         <div style="margin-left: 8px">服务记录</div>
       </h3>
-      <el-button
-        class="button"
-        @click="operatingInstructionDialogVisible = true"
-      >
-        <el-icon style="margin-right: 4px"> <icon-question /></el-icon
-        >操作说明</el-button
-      >
     </header>
     <!-- 操作搜索栏 -->
     <section class="menu">
@@ -107,17 +100,17 @@
   <!-- 添加或修改客户信息 -->
   <el-drawer
     v-model="dialogVisible"
-    :title="
-      serviceRecord.temp.service_id === '' ? '添加服务记录' : '修改服务记录'
-    "
+    :title="!flag ? '添加服务记录' : '修改服务记录'"
     size="50%"
+    @close="close"
   >
     <el-form
       :model="serviceRecord.temp"
       label-width="120px"
       label-position="right"
+      :rules="rules"
     >
-      <el-form-item label="服务类型">
+      <el-form-item label="服务类型" prop="type">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择服务类型"
@@ -126,7 +119,7 @@
           ref="serviceType"
         ></ChooseSelect>
       </el-form-item>
-      <el-form-item label="服务方式">
+      <el-form-item label="服务方式" prop="way">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择服务方式"
@@ -135,7 +128,7 @@
           ref="serviceWay"
         ></ChooseSelect>
       </el-form-item>
-      <el-form-item label="服务日期">
+      <el-form-item label="服务日期" prop="service_time">
         <el-col :span="11">
           <el-date-picker
             v-model="serviceRecord.temp.service_time"
@@ -144,17 +137,17 @@
           />
         </el-col>
       </el-form-item>
-      <el-form-item label="花费时间(分钟)">
+      <el-form-item label="花费时间(分钟)" prop="tlen">
         <el-input-number v-model="serviceRecord.temp.tlen" min="0" />
       </el-form-item>
-      <el-form-item label="服务内容">
+      <el-form-item label="服务内容" prop="content">
         <el-input
           v-model="serviceRecord.temp.content"
           type="textarea"
           style="width: 650px"
         />
       </el-form-item>
-      <el-form-item label="客户名称">
+      <el-form-item label="客户名称" prop="cus">
         <ChooseSelect
           style="margin-right: 10px; width: 250px"
           des="请选择客户名称"
@@ -167,17 +160,12 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="save"> 添加 </el-button>
+        <el-button type="primary" @click="save"> 确定 </el-button>
       </span>
     </template>
   </el-drawer>
   <!-- 删除确认 -->
-  <el-dialog
-    v-model="confirmDelete"
-    title="删除"
-    width="30%"
-    :before-close="(deleteId = null)"
-  >
+  <el-dialog v-model="confirmDelete" title="删除" width="30%">
     <span style="color: red; margin-left: 33%; font-size: 24px"
       >是否确认删除</span
     >
@@ -247,9 +235,14 @@ const handleCurrentChange = (val) => {
   initLinks(currentPage.value, pageSize.value)
 }
 // 发送消息按钮回调
-const msgSend = async (title, desc) => {
-  await sendsmsService(
-    selectIdArr.value,
+const msgSend = (title, desc) => {
+  let data = []
+  console.log(selectIdArr)
+  selectIdArr.value.forEach((item) => {
+    data.push(item.service_id)
+  })
+  sendsmsService(
+    data,
     title,
     desc,
     () => {
@@ -261,9 +254,13 @@ const msgSend = async (title, desc) => {
   )
 }
 // 发送邮件按钮回调
-const emailSend = async (title, desc) => {
-  await sendEmailService(
-    selectIdArr.value,
+const emailSend = (title, desc) => {
+  let data = []
+  selectIdArr.value.forEach((item) => {
+    data.push(item.service_id)
+  })
+  sendEmailService(
+    data,
     title,
     desc,
     () => {
@@ -312,11 +309,22 @@ const addMyClinet = async () => {
   await getCustomerServiceWay()
   serviceRecord.tempReset()
   dialogVisible.value = true
+  flag.value = false
+}
+const flag = ref(false)
+const close = () => {
+  if (flag.value) {
+    serviceRecord.tempReset()
+    customerName.value.reset()
+    serviceWay.value.reset()
+    serviceType.value.reset()
+    flag.value = false
+  }
 }
 // 添加按钮确定回调
-const save = async () => {
-  if (serviceRecord.temp.service_id === '') {
-    await addService(
+const save = () => {
+  if (!flag.value) {
+    addService(
       serviceRecord.temp,
       () => {
         ElMessage.success('添加成功')
@@ -326,7 +334,7 @@ const save = async () => {
       }
     )
   } else {
-    await modifyService(
+    modifyService(
       serviceRecord.temp,
       () => {
         ElMessage.success('修改成功')
@@ -343,11 +351,21 @@ const save = async () => {
 }
 // 修改按钮回调
 const modify = async (row) => {
-  await getCustomerName()
+  getCustomerName('', (response) => {
+    let data = []
+    response.data.forEach((item) => {
+      data.push({ value: item.customer_id, label: item.name })
+    })
+    select.setName(data)
+  })
   await getCustomerServiceType()
   await getCustomerServiceWay()
-  serviceRecord.temp.service_id = row.service_id
+  const item = serviceRecord.tableData.find((item) => {
+    return item.service_id === row.service_id
+  })
+  serviceRecord.temp = item
   dialogVisible.value = true
+  flag.value = true
 }
 
 /**
@@ -369,13 +387,13 @@ const deleteByQuery = () => {
     data,
     () => {
       ElMessage.success('删除成功')
+      // 删除后重新请求数据
+      initLinks(currentPage.value, pageSize.value)
     },
     () => {
       ElMessage.error('删除失败')
     }
   )
-  // 删除后重新请求数据
-  initLinks(currentPage.value, pageSize.value)
 }
 
 /**
@@ -394,23 +412,36 @@ let confirmDelete = ref(false)
 let deleteId = ref()
 // 删除按钮回调
 const Deletes = (row) => {
-  deleteId.value = row.id
+  console.log(row.service_id)
+  deleteId.value = row.service_id
   confirmDelete.value = true
 }
-const Confirms = async () => {
+const Confirms = () => {
   confirmDelete.value = false
-  await removeService(
+  console.log(deleteId.value)
+  removeService(
     [deleteId.value],
     () => {
       ElMessage.success('删除成功')
+      // 删除后重新请求数据
+      initLinks(currentPage.value, pageSize.value)
     },
     () => {
       ElMessage.error('删除失败')
     }
   )
-  // 删除后重新请求数据
-  initLinks(currentPage.value, pageSize.value)
 }
+
+const rules = ref({
+  type: [{ required: true, message: '服务类型不能为空', trigger: 'blur' }],
+  way: [{ required: true, message: '服务方式不能为空', trigger: 'blur' }],
+  service_time: [
+    { required: true, message: '服务日期不能为空', trigger: 'blur' }
+  ],
+  tlen: [{ required: true, message: '花费时间不能为空', trigger: 'blur' }],
+  content: [{ required: true, message: '服务内容不能为空', trigger: 'blur' }],
+  cus: [{ required: true, message: '客户名称不能为空', trigger: 'blur' }]
+})
 </script>
 
 <style lang="scss" scoped>

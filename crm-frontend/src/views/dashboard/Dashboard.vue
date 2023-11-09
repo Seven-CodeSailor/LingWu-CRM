@@ -6,30 +6,20 @@
         <p class="subtitle">01星球CRM</p>
       </div>
     </div>
-    <div class="bottoms">
-      <el-descriptions
-        :title="dashBoard.announcement[0].title"
-        v-if="dashBoard.announcement[0].content !== ''"
-      >
-        <el-descriptions-item label="">{{
-          dashBoard.announcement[0].content
-        }}</el-descriptions-item>
-      </el-descriptions>
-      <el-descriptions
-        title="系统公告"
-        v-if="dashBoard.announcement[0].content === ''"
-      >
-        <el-descriptions-item label="">暂无公告</el-descriptions-item>
-      </el-descriptions>
-    </div>
+    <Statistics></Statistics>
   </el-card>
 </template>
 <script setup>
+import { onMounted } from 'vue'
+import { queryAnnouncement } from '@/apis/homepage/index.js'
 // 引入用户相关的仓库，获取当前用户的头像、昵称
 import { userStore } from '@/stores/user.js'
-import useDashBoard from '@/stores/dashboard/dashBoard.js'
+import Statistics from '@/views/tabbar/setting/components/Statistics.vue'
 const user = userStore()
-const dashBoard = useDashBoard()
+
+onMounted(() => {
+  queryAnnouncement()
+})
 
 // 封装一个函数：获取一个结果：早上|上午|中午|下午|晚上
 const getTime = () => {
@@ -56,8 +46,8 @@ const getTime = () => {
 <style lang="scss" scoped>
 .box {
   display: flex;
-  margin-bottom: 30px;
-  padding-bottom: 30px;
+  margin-bottom: 10px;
+  padding-bottom: 20px;
   border-bottom: 2px solid #aeaeae;
   .avatar {
     width: 100px;
@@ -81,5 +71,8 @@ const getTime = () => {
 }
 .bottoms {
   padding-left: 20px;
+}
+ul li {
+  list-style: none;
 }
 </style>

@@ -16,7 +16,6 @@ export const useClassificationStore = defineStore('classification', () => {
   const tableData = ref([])
   const total = ref(0)
   const getDictclassify = async (params) => {
-    console.log('getDictclassify', params)
     await queryDictclassify(params)
       .then((response) => {
         tableData.value = response.data.rows
@@ -27,15 +26,12 @@ export const useClassificationStore = defineStore('classification', () => {
       })
   }
   const addDictclassifyItem = async (params) => {
-    console.log('addDictclassifyItem', params)
     return await addDictclassify(params)
   }
   const modifyDictclassifyItem = async (params) => {
-    console.log('modifyDictclassifyItem', params)
     return await modifyDictclassify(params)
   }
   const deleteDictclassifyItem = async (params) => {
-    console.log('deleteDictclassifyItem', params)
     return await deleteDictclassify(params)
   }
   return {

@@ -1,3 +1,13 @@
+/*
+ * @Author: sayoriqwq 2531600563@qq.com
+ * @Date: 2023-10-31 21:47:07
+ * @LastEditors: sayoriqwq 2531600563@qq.com
+ * @LastEditTime: 2023-11-04 21:30:46
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\sysManage\menu.js
+ * @Description:
+ *
+ * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
+ */
 import Request from '../request'
 
 const baseUrl = '/menu'
@@ -16,4 +26,28 @@ const getSysMenuTree = (data, success, fail) => {
     })
 }
 
-export { getSysMenuTree }
+//目前要求传一个id
+const getMenuList = (id) => {
+  return Request.requestForm(Request.GET, `/menu/${id}`)
+}
+const addMenu = (data) => {
+  return Request.requestJson(
+    Request.POST,
+    '/systemmanagement/fly-sys-menu/add',
+    data
+  )
+}
+
+//删除菜单和子菜单，但现在只能传id
+const deleteMenu = (id) => {
+  return Request.requestForm(
+    Request.DELETE,
+    `/systemmanagement/fly-sys-menu/delete/${id}`
+  )
+}
+
+const updateMenu = (data) => {
+  return Request.POST, '/systemmanagement/fly-sys-menu/update', data
+}
+
+export { getSysMenuTree, addMenu, deleteMenu, updateMenu, getMenuList }

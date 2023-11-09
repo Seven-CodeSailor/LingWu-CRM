@@ -56,8 +56,8 @@ let data = ref({
 let charts = ref()
 
 onMounted(() => {
+  data.value = props.getData(1)
   initData()
-  console.log(data.value)
 })
 
 // 初始化数据列表
@@ -105,7 +105,7 @@ let initData = () => {
           normal: {
             label: {
               show: true,
-              formatter: '{b}:{c}元'
+              formatter: '{b}:{c}'
             },
             labelLine: {
               show: true,
@@ -195,33 +195,25 @@ let initData = () => {
   mychart.setOption(option)
 }
 
-const time = ref('今日')
+const time = ref('客户等级')
 
 // 下拉框选项
 const options = [
   {
     value: 1,
-    label: '今日'
+    label: '客户等级'
   },
   {
     value: 2,
-    label: '昨日'
+    label: '客户行业'
   },
   {
-    value: 7,
-    label: '本周'
+    value: 3,
+    label: '客户来源'
   },
   {
-    value: 30,
-    label: '本月'
-  },
-  {
-    value: 90,
-    label: '本季度'
-  },
-  {
-    value: 365,
-    label: '本年'
+    value: 4,
+    label: '我的客户总数'
   }
 ]
 
@@ -248,7 +240,8 @@ watch(time, () => {
   }
   .charts {
     margin-top: 10%;
-    height: 100%;
+    width: 600px;
+    height: 400px;
   }
 }
 </style>

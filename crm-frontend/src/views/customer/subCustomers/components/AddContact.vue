@@ -7,7 +7,7 @@
     >
       <el-form-item label="姓名">
         <el-input
-          v-model="myclient.contactInfo.name"
+          v-model="myclient.contactInfo.linkman_name"
           placeholder="请输入联系人姓名"
           style="width: 500px"
         />
@@ -27,7 +27,7 @@
       </el-form-item>
       <el-form-item label="职位">
         <el-input
-          v-model="myclient.contactInfo.position"
+          v-model="myclient.contactInfo.postion"
           placeholder="请输入联系人职位"
           style="width: 500px"
         />
@@ -41,7 +41,7 @@
       </el-form-item>
       <el-form-item label="QQ">
         <el-input
-          v-model="myclient.contactInfo.qq"
+          v-model="myclient.contactInfo.qicq"
           placeholder="请输入联系人QQ"
           style="width: 500px"
         />
@@ -53,21 +53,19 @@
           style="width: 500px"
         />
       </el-form-item>
-      <el-form-item label="通信地址">
+      <el-form-item label="地址">
         <el-input
           v-model="myclient.contactInfo.address"
-          placeholder="请输入联系人通信地址"
+          placeholder="请输入联系人地址"
           style="width: 500px"
         />
       </el-form-item>
       <el-form-item label="客户名称">
-        <ChooseSelect
-          style="margin-right: 10px; width: 250px"
-          des="请选择客户名称"
-          :options="select.name"
-          @update:cid="contactGetName()"
-          ref="customerName"
-        ></ChooseSelect>
+        <el-input
+          v-model="myclient.contactInfo.customerName"
+          style="width: 500px"
+          disabled
+        />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -81,11 +79,9 @@
 
 <script setup>
 import { ref } from 'vue'
-import useMyClient from '@/stores/customer/subclient.js'
+import useMyClient from '@/stores/customer/myclient.js'
 import useSelect from '@/stores/customer/select.js'
 import { addNewContact } from '@/apis/customer/index.js'
-import { getCustomerName } from '@/apis/publicInterface.js'
-import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 
 // 我的客户store仓库
 const myclient = useMyClient()
@@ -98,16 +94,15 @@ const select = useSelect()
 // 控制添加联系人抽屉的显示和隐藏
 let dialogVisible1 = ref(false)
 // 添加联系人按钮回调，打开抽屉
-const addContact = async (row) => {
-  await getCustomerName()
+const addContact = (row) => {
   // 根据传入id获取数据
   dialogVisible1.value = true
-  myclient.contactInfo.id = row.id
+  myclient.contactInfo.customer_id = row.customer_id
+  myclient.contactInfo.customerName = row.name
 }
-const customerName = ref()
 // 添加联系人保存数据按钮回调
 const saveContact = async () => {
-  await addNewContact(
+  addNewContact(
     myclient.contactInfo,
     () => {
       ElMessage.success('添加成功')
@@ -120,11 +115,6 @@ const saveContact = async () => {
   myclient.contactReset()
   select.resetData()
   //   initCustomer()
-}
-// 获取客户名称下拉列表
-const contactGetName = async () => {
-  await getCustomerName()
-  myclient.contactInfo.customerName = customerName.value.selectValue.label
 }
 defineExpose({
   addContact

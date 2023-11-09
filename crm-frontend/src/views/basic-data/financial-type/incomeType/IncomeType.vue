@@ -1,7 +1,7 @@
 <template>
   <div class="IncomeType">
     <Tree
-      :data="treeData"
+      :data="incomeTypeStore.treeData"
       @append="handleAdd"
       @remove="handleRemove"
       @submit="handleSubmit"
@@ -31,17 +31,14 @@
       <template #form1>
         <el-form :model="data">
           <el-form-item label="分类名称" prop="typeName"
-            ><el-input v-model="data.typeName"></el-input
+            ><el-input v-model="data.name"></el-input
           ></el-form-item>
-          <el-form-item label="父级栏目" prop="upTypeName">
-            <el-select v-model="data.upTypeName" placeholder="请选择分类">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+          <el-form-item label="父级栏目" prop="parentID">
+            <el-tree-select
+              v-model="data.parentID"
+              :data="incomeTypeStore.treeData"
+              :render-after-expand="false"
+            />
           </el-form-item>
 
           <el-form-item label="排位序号" prop="sort"
@@ -63,29 +60,29 @@
 
 <script setup>
 import Tree from '@/components/Tree/Tree.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useIncomeTypeStore } from '@/stores/basic-data/financial-type/incometype'
+const incomeTypeStore = useIncomeTypeStore()
 const treeRef = ref(null)
+
 const data = ref({
-  typeName: '',
-  upTypeName: '',
+  name: '',
+  parentID: 1,
   sort: '',
   visible: true,
   intro: ''
 })
 const initData = ref({
-  typeName: '',
-  upTypeName: '',
+  name: '',
+  parentID: '',
   sort: '',
   visible: true,
   intro: ''
 })
-const data1 = ref({
-  typeName: '鸡',
-  upTypeName: '鸡蛋',
-  sort: 99,
-  visible: true,
-  intro: '我是ikun你记住'
-})
+
+const getTreeData = async () => {
+  await incomeTypeStore.queryAllFeeincomeItem()
+}
 
 const handleAdd = (node) => {
   data.value = initData.value
@@ -99,61 +96,19 @@ const handleRemove = (node) => {
 }
 
 const handleEdit = (node) => {
-  data.value = data1.value
+  console.log('node')
   treeRef.value.isEdit = true
   treeRef.value.showDrawer = true
-  console.log('edit', node)
+  node.visible = node.visible ? true : false
 }
 
 const handleSubmit = () => {
   console.log('submit')
 }
 
-const treeData = [
-  {
-    id: 1,
-    label: '鸡窝',
-    children: [
-      {
-        id: 4,
-        label: '公鸡窝',
-        children: [
-          {
-            id: 9,
-            label: '鸡蛋'
-          },
-          {
-            id: 10,
-            label: '鸡蛋'
-          }
-        ]
-      }
-    ]
-  }
-]
-
-const options = [
-  {
-    value: 'Option1',
-    label: 'Option1'
-  },
-  {
-    value: 'Option2',
-    label: 'Option2'
-  },
-  {
-    value: 'Option3',
-    label: 'Option3'
-  },
-  {
-    value: 'Option4',
-    label: 'Option4'
-  },
-  {
-    value: 'Option5',
-    label: 'Option5'
-  }
-]
+onMounted(async () => {
+  await getTreeData()
+})
 </script>
 
 <style lang="scss" scoped>

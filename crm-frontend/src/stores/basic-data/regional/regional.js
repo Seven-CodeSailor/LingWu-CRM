@@ -1,3 +1,12 @@
+/*
+ * @Author: BINGWU
+ * @Date: 2023-11-04 00:21:11
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-07 16:32:16
+ * @FilePath: \crm-frontend\src\stores\basic-data\regional\regional.js
+ * @Describe: 
+ * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
+ */
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import {
@@ -5,86 +14,39 @@ import {
   deleteArea,
   insertArea,
   modifyArea,
-  queryTree,
-  selectArea
+  queryTree
 } from '@/apis/basic-data/regional/regional'
+
+function traverseArray(arr) {
+  for (const item of arr) {
+    if (typeof item === 'object') {
+      for (const key in item) {
+        if (Array.isArray(item[key])) {
+          // children 为nodes
+          item.children = item[key]
+          // 如果属性是数组就继续递归
+          traverseArray(item[key])
+        } else {
+          if (key === 'id') {
+            // value 为 id
+            item.value = item[key]
+          } else if (key === 'name') {
+            // label 为name
+            item.label = item[key]
+          }
+        }
+      }
+    }
+  }
+}
+
 export const useRegionalStore = defineStore('regional', () => {
   const tableData = ref([])
-  const total = ref(999)
-  const areaTreeData = ref([
-    {
-      value: '1',
-      label: 'Level one 1',
-      children: [
-        {
-          value: '1-1',
-          label: 'Level two 1-1',
-          children: [
-            {
-              value: '1-1-1',
-              label: 'Level three 1-1-1'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      value: '2',
-      label: 'Level one 2',
-      children: [
-        {
-          value: '2-1',
-          label: 'Level two 2-1',
-          children: [
-            {
-              value: '2-1-1',
-              label: 'Level three 2-1-1'
-            }
-          ]
-        },
-        {
-          value: '2-2',
-          label: 'Level two 2-2',
-          children: [
-            {
-              value: '2-2-1',
-              label: 'Level three 2-2-1'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      value: '3',
-      label: 'Level one 3',
-      children: [
-        {
-          value: '3-1',
-          label: 'Level two 3-1',
-          children: [
-            {
-              value: '3-1-1',
-              label: 'Level three 3-1-1'
-            }
-          ]
-        },
-        {
-          value: '3-2',
-          label: 'Level two 3-2',
-          children: [
-            {
-              value: '3-2-1',
-              label: 'Level three 3-2-1'
-            }
-          ]
-        }
-      ]
-    }
-  ])
+  const total = ref(0)
+  const areaTreeData = ref()
   const getListAreaItem = async (params) => {
     await queryListArea(params)
       .then((response) => {
-        console.log('res', response.data.rows)
         tableData.value = response.data.rows
         total.value = response.data.total
       })
@@ -102,23 +64,16 @@ export const useRegionalStore = defineStore('regional', () => {
     return await modifyArea(params)
   }
   const queryTreeItem = async () => {
-    queryTree()
+    await queryTree()
       .then((response) => {
-        console.log('res', response)
+        areaTreeData.value = response.data
+        traverseArray(areaTreeData.value)
       })
       .catch((error) => {
         console.log('err', error)
       })
   }
-  const selectAreaItem = async () => {
-    await selectArea()
-      .then((response) => {
-        console.log('res', response)
-      })
-      .catch((error) => {
-        console.log('err', error)
-      })
-  }
+
   return {
     tableData,
     total,
@@ -127,7 +82,6 @@ export const useRegionalStore = defineStore('regional', () => {
     deleteAreaItem,
     insertAreaItem,
     modifyAreaItem,
-    queryTreeItem,
-    selectAreaItem
+    queryTreeItem
   }
 })

@@ -1,27 +1,27 @@
 const sale = {
   text: '销售管理',
   href: '/sale',
-  icon: 'IconHouse',
+  icon: 'IconShop',
   children: [
     {
       text: '销售机会',
       href: '/sale/opportunity',
-      icon: 'IconHouse'
+      icon: 'IconShop'
     },
     {
       text: '跟踪记录',
       href: '/sale/trackRecords',
-      icon: 'IconHouse'
+      icon: 'IconShop'
     },
     {
       text: '销售合同',
       href: '/sale/saleContract',
-      icon: 'IconHouse'
+      icon: 'IconShop'
     },
     {
       text: '销售简报',
       href: '/sale/saleKit',
-      icon: 'IconHouse'
+      icon: 'IconShop'
     }
   ]
 }

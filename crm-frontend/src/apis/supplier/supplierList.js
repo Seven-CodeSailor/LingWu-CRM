@@ -50,13 +50,14 @@ export const getSupplier = async (
   pageSize,
   name,
   telephone,
-  mombile,
+  mobile,
   address,
   success = () => {},
   fail = () => {}
 ) => {
-  let data = { name, telephone, mombile, address }
+  let data = { name, telephone, mobile, address }
   const params = delEmptyQueryNodes(delEmptyQueryNodes(data))
+  console.log(params)
   await Request.requestForm(
     Request.GET,
     '/supplier-manage/supplier/get-supplier',
@@ -87,7 +88,7 @@ export const addSupplier = async (
   success = () => {},
   fail = () => {}
 ) => {
-  delete params['supplierId']
+  delete params['supplier_id']
   console.log(params)
   await Request.requestJson(
     Request.POST,
@@ -113,10 +114,23 @@ export const modifySupplier = async (
   success = () => {},
   fail = () => {}
 ) => {
+  const data = {
+    supplierId: params.supplier_id,
+    supplierName: params.name,
+    ecoType: params.ecotype,
+    trade: params.trade,
+    address: params.address,
+    linkman: params.linkman,
+    telephone: params.tel,
+    fax: params.fax,
+    email: params.email,
+    intro: params.intro
+  }
+  console.log(data)
   await Request.requestJson(
     Request.PUT,
     '/supplier-manage/supplier/modify-supplier',
-    params
+    data
   )
     .then((response) => {
       success(response)
@@ -137,10 +151,15 @@ export const removeSupplier = async (
   success = () => {},
   fail = () => {}
 ) => {
+  const rows = []
+  list.forEach((item) => {
+    rows.push(item)
+  })
+  console.log(rows)
   await Request.requestJson(
     Request.DELETE,
     '/supplier-manage/supplier/remove-supplier',
-    { rows: list }
+    { rows }
   )
     .then((response) => {
       success(response)

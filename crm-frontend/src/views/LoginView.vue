@@ -92,7 +92,9 @@ import { login } from '@/apis/login'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import VanillaTilt from 'vanilla-tilt'
-
+import { userStore } from '@/stores/user'
+const $store = userStore()
+console.log('store-in-login', $store)
 // 获取router对象
 const $router = useRouter()
 
@@ -160,7 +162,6 @@ function submitForm2() {
 
   doLogin('dddd')
 }
-
 
 // 验证码组件引用
 const verify = ref(null)

@@ -136,17 +136,29 @@ $base-tabbar-height: 50px;
 </style>
 
 <script setup>
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, nextTick, onMounted } from 'vue'
 import { userStore } from '@/stores/user'
 import useLayOutSettingStore from '@/stores/setting.js'
 import Setting from './tabbar/setting/Setting.vue'
+import { queryMessageNotices } from '@/apis/systemPage/index.js'
 import BreadCrumb from './tabbar/bread-crumb/BreadCrumb.vue'
 import Menu from './menu/Menu.vue'
-const store = userStore()
+import useMessageInfo from '@/stores/system-page/messageInfo.js'
+import {
+  countCustomerGrade,
+  countCustomerIndustry,
+  countCustomerNumber,
+  countCustomerSource,
+  countBusinessSalestage,
+  countBusinessNumber
+} from '@/apis/systemPage/index.js'
+
+const messageInfo = useMessageInfo()
+const $store = userStore()
 const layOutSettingStore = useLayOutSettingStore()
 
 // 菜单数据
-const menus = store.getMenus
+const menus = $store.getMenus
 // 控制当前组件是否销毁重建
 let flag = ref(true)
 // 监听仓库内部数据是否发生变化，变化说明用户点击了刷新按钮
@@ -166,4 +178,25 @@ watch(
     fold.value = layOutSettingStore.fold
   }
 )
+onMounted(() => {
+  queryMessageNotices()
+  countCustomerGrade((response) => {
+    messageInfo.setLevel(response.data)
+  })
+  countCustomerIndustry((response) => {
+    messageInfo.setIndustry(response.data)
+  })
+  countCustomerNumber((response) => {
+    messageInfo.setCustomerNum(response.data)
+  })
+  countCustomerSource((response) => {
+    messageInfo.setBelong(response.data)
+  })
+  countBusinessSalestage((response) => {
+    messageInfo.setStates(response.data)
+  })
+  countBusinessNumber((response) => {
+    messageInfo.setBusNum(response.data)
+  })
+})
 </script>
