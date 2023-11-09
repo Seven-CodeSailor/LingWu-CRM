@@ -144,7 +144,7 @@
 
 <script setup>
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-import BulkOPe from '@/components/BulkOPe/BulkOPe.vue'
+import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
 import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
 import { onMounted, ref } from 'vue'
