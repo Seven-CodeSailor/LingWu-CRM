@@ -2,15 +2,15 @@
   <div class="container">
     <div class="app-container">
       <BaseDataList
-        :table-column-attribute="sendData.tableColumnAttribute"
-        :table-data="sendData.tableData"
+        :table-column-attribute="$store.sendData.tableColumnAttribute"
+        :table-data="$store.sendData.tableData"
         :handle-delete="handleDelete"
         :handle-edit="handleEdit"
-        :use-pagination="sendData.usePagination"
-        :page-sizes="sendData.pageSizes"
-        :total="sendData.total"
-        :use-header="sendData.useHeader"
-        :title="sendData.title"
+        :use-pagination="$store.sendData.usePagination"
+        :page-sizes="$store.sendData.pageSizes"
+        :total="$store.sendData.total"
+        :use-header="$store.sendData.useHeader"
+        :title="$store.sendData.title"
         @update-table-data="get"
         @updateSwitchState="handleSwitch"
         ref="baseDataListRef"
@@ -30,7 +30,8 @@
               </el-button>
             </div>
             <el-tree
-              :data="sendTreeData"
+              :props="defaultProps"
+              :data="$store.sendTreeData"
               @node-click="handleNodeClick"
             ></el-tree>
           </el-card>
@@ -203,8 +204,13 @@ import { onMounted, ref, reactive } from 'vue'
 const $store = useSysMenu()
 
 onMounted(() => {
-  $store.init()
+  $store.getSysMenuTree()
 })
+
+const defaultProps = {
+  children: 'children',
+  label: 'name'
+}
 const addFormData = reactive({
   zhongwen: '',
   yingwen: '',
@@ -223,8 +229,6 @@ const editFormData = reactive({
 
 const searchData = ref('')
 
-const sendData = reactive($store.sendData)
-const sendTreeData = $store.sendTreeData
 const showAddDrawer = ref(false)
 const showEditDrawer = ref(false)
 
@@ -280,8 +284,7 @@ const handleClose = (done) => {
 }
 
 const handleNodeClick = (data) => {
-  console.log('带着data的id发请求reload列表', data.id)
-  // $store.loadTableData()
+  $store.getMenuList(data.id)
 }
 const handleCancel = () => {
   showAddDrawer.value = false
