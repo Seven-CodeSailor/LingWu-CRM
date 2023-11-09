@@ -11,8 +11,6 @@
         :total="$store.sendData.total"
         :use-header="$store.sendData.useHeader"
         :title="$store.sendData.title"
-        @update-table-data="get"
-        @updateSwitchState="handleSwitch"
         ref="baseDataListRef"
       >
         <template #ico>
@@ -80,44 +78,31 @@
       <template #default>
         <div>
           <el-form v-model="editFormData">
-            <el-form-item label="中文栏目名称" prop="zhongwen"
+            <el-form-item label="中文栏目名称" prop="name"
               ><el-input
                 placeholder="请输入中文栏目名称"
-                v-model="editFormData.zhongwen"
+                v-model="editFormData.name"
               ></el-input
             ></el-form-item>
-            <el-form-item label="英文栏目名称" prop="yingwen"
+            <el-form-item label="英文栏目名称" prop="nameEn"
               ><el-input
                 placeholder="请输入英文栏目名称"
-                v-model="editFormData.yingwen"
+                v-model="editFormData.nameEn"
               ></el-input
             ></el-form-item>
-            <el-form-item label="超链接地址" prop="lianjie"
+            <el-form-item label="链接地址" prop="url"
               ><el-input
-                placeholder="请输入超链接地址"
-                v-model="editFormData.lianjie"
+                placeholder="请输入链接地址"
+                v-model="editFormData.url"
               ></el-input
             ></el-form-item>
-            <el-form-item label="父级栏目" prop="fuji">
-              <el-select
-                v-model="editFormData.fuji"
-                class="m-2"
-                placeholder="Select"
-                size="large"
-              >
-                <el-option
-                  v-for="item in sendTreeData"
-                  :key="item.id"
-                  :label="item.label"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="是否启用" prop="shifouqiyong">
-              <el-checkbox
-                v-model="editFormData.shifouqiyong"
-                size="large"
-              ></el-checkbox>
+            <el-form-item label="父级栏目(点击获取id)" prop="parentID">
+              <el-tree-select
+                v-model="editFormData.parentID"
+                :props="defaultProps"
+                :data="$store.sendTreeData"
+                @node-click="handleNodeClickForDropDown"
+              />
             </el-form-item>
           </el-form>
         </div>
@@ -162,7 +147,7 @@
                 v-model="addFormData.lianjie"
               ></el-input
             ></el-form-item>
-            <el-form-item label="父级栏目" prop="fuji">
+            <el-form-item label="父级栏目id" prop="fuji">
               <el-select
                 v-model="addFormData.fuji"
                 class="m-2"
@@ -212,19 +197,17 @@ const defaultProps = {
   label: 'name'
 }
 const addFormData = reactive({
-  zhongwen: '',
-  yingwen: '',
-  lianjie: '',
-  fuji: '',
-  shifouqiyong: false
+  name: '',
+  nameEn: '',
+  url: '',
+  parentID: ''
 })
 
-const editFormData = reactive({
-  zhongwen: '',
-  yingwen: '',
-  lianjie: '',
-  fuji: '',
-  shifouqiyong: false
+const editFormData = ref({
+  name: '',
+  nameEn: '',
+  url: '',
+  parentID: ''
 })
 
 const searchData = ref('')
@@ -237,16 +220,11 @@ const handleAdd = () => {
   showAddDrawer.value = true
 }
 
-const handleEdit = (row) => {
+const handleEdit = async (row) => {
   showEditDrawer.value = true
   //发请求回填数据
-  console.log('当前的row，数据不够', row)
-  //mock一点数据回填
-  editFormData.zhongwen = '中文'
-  editFormData.yingwen = 'en'
-  editFormData.lianjie = 'sayoriqwq.site'
-  editFormData.fuji = '1'
-  editFormData.shifouqiyong = true
+  editFormData.value = row
+  console.log(row.parentId)
 }
 
 const handleDelete = (row) => {
@@ -258,25 +236,26 @@ const handleSearch = () => {
 }
 
 const handleRefresh = () => {
-  console.log('发请求刷新页面')
-  // $store.loadTableData()
+  $store.getSysMenuTree()
+  $store.getMenuList(1)
 }
 
-const handleSwitch = () => {
-  console.log('发请求改变状态')
-}
 const saveAddData = () => {
   console.log('带着data', addFormData, '发add请求')
   showAddDrawer.value = false
-  //解promise之后:
   ElMessage.success('添加成功')
   console.log('addDrawerRef', addDrawerRef.value)
   addDrawerRef.value.resetFields()
 }
 
-const saveEditData = () => {
+const saveEditData = async () => {
   console.log('带着data', editFormData, '发edit请求')
   showEditDrawer.value = false
+  const res = await $store.updateMenu(editFormData.value)
+  if (res.code === 10000) {
+    ElMessage.success('修改成功')
+    $store.getMenuList(editFormData.value.parentID)
+  }
 }
 const handleClose = (done) => {
   console.log('关闭前的confirm')
@@ -285,15 +264,15 @@ const handleClose = (done) => {
 
 const handleNodeClick = (data) => {
   $store.getMenuList(data.id)
+  console.log('id', data.id)
+}
+
+const handleNodeClickForDropDown = (data) => {
+  editFormData.value.parentID = data.id
 }
 const handleCancel = () => {
   showAddDrawer.value = false
   console.log('取消')
-}
-const get = (pageSize, currentPage) => {
-  console.log('调用父组件的更新数据的函数')
-  console.log('pageSize', pageSize)
-  console.log('currentPage', currentPage)
 }
 </script>
 

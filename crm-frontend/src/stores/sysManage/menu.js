@@ -2,14 +2,19 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-29 13:05:59
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-09 21:56:42
+ * @LastEditTime: 2023-11-09 23:23:28
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\sysManage\menu.js
  * @Description:
  *
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
  */
 import { defineStore } from 'pinia'
-import { getSysMenuTree, getMenuList } from '@/apis/sysManage/menu.js'
+import {
+  getSysMenuTree,
+  getMenuList,
+  addMenu,
+  updateMenu
+} from '@/apis/sysManage/menu.js'
 const useSysMenu = defineStore('sysmenu', {
   state: () => ({
     sendData: {
@@ -19,14 +24,18 @@ const useSysMenu = defineStore('sysmenu', {
           label: '菜单名称'
         },
         {
-          prop: 'url',
-          label: '菜单路径'
+          prop: 'nameEn',
+          label: '菜单英文名称'
         },
         {
-          prop: 'shifouqiyong',
-          label: '启用',
-          useSwitch: true
+          prop: 'url',
+          label: '菜单路径'
         }
+        // {
+        //   prop: 'shifouqiyong',
+        //   label: '启用',
+        //   useSwitch: true
+        // }
       ],
       tableData: [],
       useDropdownMenu: false,
@@ -36,7 +45,8 @@ const useSysMenu = defineStore('sysmenu', {
       //在树形菜单里显示
       title: ''
     },
-    sendTreeData: []
+    sendTreeData: [],
+    parentids: []
   }),
 
   actions: {
@@ -52,9 +62,19 @@ const useSysMenu = defineStore('sysmenu', {
     },
     async getMenuList(id) {
       const res = await getMenuList(id).catch((e) => e)
-      console.log('res', res)
       this.sendData.tableData = res.data
-      console.log('res.data', res.data)
+    },
+    async getDropMenu(id) {
+      const res = await getMenuList(id).catch((e) => e)
+      this.sendData.parentids = res.data
+    },
+    async addMenu(data) {
+      const res = await addMenu(data)
+      console.log('res-add', res)
+    },
+    async updateMenu(data) {
+      const res = await updateMenu(data)
+      return res
     }
   }
 })
