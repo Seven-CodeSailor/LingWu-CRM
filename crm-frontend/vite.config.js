@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:18:17
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-09 15:37:00
+ * @LastEditTime: 2023-11-09 18:16:25
  * @FilePath: \crm-frontend\vite.config.js
  * @Description:
  *

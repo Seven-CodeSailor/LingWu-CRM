@@ -2,7 +2,7 @@
  * @Author: BINGWU
  * @Date: 2023-11-07 22:08:16
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-09 00:18:21
+ * @LastEditTime: 2023-11-09 18:17:16
  * @FilePath: \crm-frontend\src\apis\basic-data\financial-type\incometype.js
  * @Describe: 费用收入模块api
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა

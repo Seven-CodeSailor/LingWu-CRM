@@ -8,7 +8,7 @@
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from '@/apis/request.js'
-const baseUrl = '/java3-area'
+const baseUrl = ''
 /**
  * @description: 获取区域列表
  * @param {Object} params
