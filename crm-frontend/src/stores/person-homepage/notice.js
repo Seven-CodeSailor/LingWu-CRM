@@ -2,7 +2,7 @@
  * @Author: setti5 2283356040@qq.com
  * @Date: 2023-11-01 21:29:40
  * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-08 18:07:03
+ * @LastEditTime: 2023-11-09 16:31:16
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\person-homepage\notice.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -24,35 +24,13 @@ export const useNoticeStore = defineStore('notice', () => {
   const tableData = ref([])
   const total = ref()
   // 公共接口——获取成员列表
-  const optionsUserName = ref([
-    {
-      value: 'Option1',
-      label: '零起飞工作室111111'
-    },
-    {
-      value: 'Option2',
-      label: '商务部'
-    },
-    {
-      value: 'Option3',
-      label: '技术部'
-    }
-  ])
+  const optionsUserName = ref()
   // 公共接口——获取部门列表
-  const optionsDepartmentName = ref([
-    {
-      value: 'Option1',
-      label: '零起飞工作室111111'
-    },
-    {
-      value: 'Option2',
-      label: '商务部'
-    },
-    {
-      value: 'Option3',
-      label: '技术部'
-    }
-  ])
+  const optionsDepartmentName = ref()
+  const setOptionsDepartmentName = (dataList)=> {
+    optionsDepartmentName.value = dataList
+  }
+  
   const getStoreList = async (params) => {
     console.log('getStoreList', params)
     await queryNotion(params)
@@ -81,8 +59,13 @@ export const useNoticeStore = defineStore('notice', () => {
       })
     })
   }
-  const getOptionsDepartName = () => {
-    getDepartmentList({}, (res) => {
+  const getOptionsDepartName = async(paramsObj) => {
+    const {
+      deptName
+    } = paramsObj
+    await getDepartmentList({
+      deptName
+    }, (res) => {
       optionsDepartmentName.value = res.data.map((row)=>{
         return {
           label:row.name,
@@ -121,7 +104,8 @@ export const useNoticeStore = defineStore('notice', () => {
       addNoticeItem,
       getNoticeItem,
       removeNoticeItem,
-      updateNoticeItem
+      updateNoticeItem,
+      setOptionsDepartmentName
   }
 })
 

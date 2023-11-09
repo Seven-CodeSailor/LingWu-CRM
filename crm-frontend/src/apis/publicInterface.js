@@ -1,8 +1,8 @@
 /*
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-08 22:01:34
+ * @LastEditors: setti5 2283356040@qq.com
+ * @LastEditTime: 2023-11-09 16:06:35
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -158,6 +158,7 @@ export const getDictclassifylist = async (params, success, fail) => {
  * @Author{*} 暮秋(有问题找我)
  * @return {*}
  */
+
 
 /**
  * @description: 获取系统用户名称列表数据
@@ -378,9 +379,9 @@ export const getRoleNameList = async (params, success, fail) => {
 export const getDepartmentList = async (params, success) => {
   await Request.requestForm(
     Request.GET,
-    '/orgstructure/dept/dept/list-name-all',
+    'http://101.34.252.80:10110/orgstructure/dept/dept/list-name-all',
     {
-      ...params
+    ...params
     }
   )
     .then((response) => {

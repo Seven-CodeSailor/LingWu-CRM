@@ -61,32 +61,40 @@
           </el-form-item>
         </el-form>
       </div>
-      <div class="right" style="margin-left: 120px">
+      <div class="right" style="margin-left: 120px; margin-top: 26px">
         <el-upload
           style="
             border: 1px solid rgb(202, 200, 200);
             border-radius: 2%;
             text-align: center;
             justify-content: center;
+            align-items: center;
+            height: 180px;
+            width: 180px;
           "
           ref="uploadRef"
           auto-upload="false"
           class="avatar-uploader"
           :show-file-list="false"
           :on-change="onSelectFile"
+         
         >
-          <img v-if="imgUrl" :src="imgUrl" class="avatar" />
-          <el-icon v-else class="avatar-uploader-icon" style=""
+          <img v-if="imgUrl" :src="imgUrl" class="avatar"   />
+          <el-icon v-else class="avatar-uploader-icon" 
             ><icon-Plus
           /></el-icon>
         </el-upload>
         <br />
         <el-button
+          style="font-size: small; width: 88px;"
           type="primary"
           @click="uploadRef.$el.querySelector('input').click()"
           ><el-icon> <icon-Plus /></el-icon> 选择图片</el-button
         >
-        <el-button type="success" @click="onUpdateAvatar"
+        <el-button
+          style="font-size: small; width: 88px;"
+          type="success"
+          @click="onUpdateAvatar"
           ><el-icon> <icon-Upload /></el-icon>上传头像</el-button
         >
       </div>
