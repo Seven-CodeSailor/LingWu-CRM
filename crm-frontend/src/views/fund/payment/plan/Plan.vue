@@ -313,7 +313,7 @@
 import BaseDataList from '../components/BaseTable.vue'
 import BulkOPe from '@/components/BulkOPe/BulkOPe.vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
-import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
+import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 import { onMounted, ref } from 'vue'
 import { CreditCard, Plus, Search } from '@element-plus/icons-vue'
 // 导入公共接口 => 获取银行下拉菜单接口方法
