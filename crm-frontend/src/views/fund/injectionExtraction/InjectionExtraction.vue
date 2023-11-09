@@ -146,7 +146,7 @@
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
-import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
+import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 import { onMounted, ref } from 'vue'
 import { CreditCard, Plus, Search } from '@element-plus/icons-vue'
 import { getBankaccountlist } from '../../../apis/publicInterface'
