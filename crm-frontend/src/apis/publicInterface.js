@@ -2,7 +2,7 @@
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-09 18:16:51
+ * @LastEditTime: 2023-11-09 22:40:37
  * @FilePath: \crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -254,10 +254,7 @@ export const queryNamePullList = (
  * @return {*}
  */
 export const queryAllFeeincome = async (success, fail) => {
-  await Request.requestJson(
-    Request.GET,
-    '/cpp1-apiv1/feeincome/query-all-feeincome'
-  )
+  await Request.requestJson(Request.GET, '/feeincome/query-all-feeincome')
     .then(async (response) => {
       await success(response)
     })
