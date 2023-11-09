@@ -38,7 +38,7 @@
             type="primary"
             :icon="Plus"
             style="margin: 0; width: 90px"
-            @click="addData"
+            @click="dialogVisible = true"
             >添加数据</el-button
           >
           <el-button @click="changeLoadAnimation">刷新</el-button>
@@ -124,7 +124,7 @@
     </template>
   </BaseDataList>
 
-  <!-- 添加或修改销售机会信息 -->
+  <!-- 添加或修改销售合同信息 -->
   <el-drawer v-model="dialogVisible" :title="添加合同" size="50%">
     <el-form
       :model="newSaleContract"
@@ -392,7 +392,14 @@ const sellContractUniqueField = ref({
 })
 
 // 控制抽屉的显示与否
-let dialogVisible = ref(false)
+const dialogVisible = ref(false)
+
+// const resetData = () => {
+//   console.log('抽屉的值', dialogVisible.value)
+//   dialogVisible.value = false
+//   newSaleContract.value = salesContractStore.resetNewSalesContract.value
+//   console.log('重置数据', newSaleContract.value)
+// }
 
 //添加销售合同
 
@@ -444,9 +451,6 @@ let newSaleContract = ref({
 // })
 
 // 添加按钮的回调函数
-let addData = () => {
-  dialogVisible.value = true
-}
 
 const addGoodsData = () => {
   addGoodsRef.value.baseDataListRef1.rows.forEach((row) => {
@@ -624,6 +628,7 @@ const sendData = {
 //
 const getSalesContractList = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  console.log('获取到的数据111', baseDataListRef.value)
   await salesContractStore.getTableData(params)
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }

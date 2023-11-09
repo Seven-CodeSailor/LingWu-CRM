@@ -216,7 +216,7 @@ import { usePaymentRecordsStore } from '@/stores/fund/paymentrecords/paymentReco
 // 搜索框的searchDetails方法还需完善
 
 // 批量删除所选列表
-let selectArr = ref([])
+// let selectArr = ref([])
 
 const isDisabled = ref(true)
 // // table表勾选时触发的事件
@@ -280,15 +280,15 @@ let paymentRecordsData = ref({
 })
 
 // 添加或者修改后的重置数据
-const resetData = ref({
-  id: '',
-  contract_no: 0,
-  title: '',
-  start_date: '',
-  end_date: '',
-  money: 0,
-  intro: ''
-})
+// const resetData = ref({
+//   id: '',
+//   contract_no: 0,
+//   title: '',
+//   start_date: '',
+//   end_date: '',
+//   money: 0,
+//   intro: ''
+// })
 
 // 添加按钮的回调函数
 let addData = () => {

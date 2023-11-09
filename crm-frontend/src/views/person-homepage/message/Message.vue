@@ -8,16 +8,9 @@
       :page-sizes="[5, 10, 15]"
       :table-data="messageStore.tableData"
       :total="messageStore.total"
-      
       :handle-delete="handleDelete"
       ref="baseDataListRef"
-      @update-table-data="
-        (pageSize, currentPage) =>
-          queryMessageStore({
-            pageSize,
-            pageIndex: currentPage
-          })
-      "
+      @update-table-data=updateTableData
     >
       <!-- 导航图标 -->
       <template #ico>
@@ -102,7 +95,7 @@ const deleteBatches = async () => {
     })
     await deleteTableData({ ids }).then((res) => {
       ElMessage({
-        message: '删除成功',
+        message: res.message,
         type: 'success'
       })
     })
@@ -206,7 +199,7 @@ const dropdownMenuActionsInfo = [
   }
 ]
 
-// 批量删除和已读的逻辑需要
+
 const baseDataListRef = ref(null)
 const inputValue = ref('')
 
@@ -258,6 +251,7 @@ onMounted(() => {
     pageSize: 5
   }
   messageStore.getMessageList(params)
+  
 })
 
 // 删除单条数据
@@ -274,6 +268,7 @@ const handleDelete = (row) => {
     })
   })
 }
+
 
 // 查看公告抽屉罗辑
 const detail = ref({

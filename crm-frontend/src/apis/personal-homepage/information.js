@@ -14,7 +14,7 @@ const baseUrl = '/java3-personal-homepage'
 export const modifyOwnerInfo = async (params) => {
   await Request.requestForm(
     Request.POST,
-    baseUrl + '/j3-owner-info/modify-owner-info',
+    '/j3-owner-info/modify-owner-info',
     params
   )
     .then((res) => {

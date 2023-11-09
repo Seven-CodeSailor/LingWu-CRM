@@ -59,7 +59,7 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-import ChooseSelect from '@/components//ChooseSelect/ChooseSelect.vue'
+import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 import DictionaryManageFormCom from '../components/FormCom/DictionaryManageFormCom.vue'
 import { useManagementStore } from '@/stores/basic-data/data-dictionary/management'
 const baseDataListRef = ref(null)

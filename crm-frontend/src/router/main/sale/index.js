@@ -33,7 +33,7 @@ const routes = [
         // 销售简报
         path: '/sale/saleKit',
         name: 'saleKit',
-        component: () => import('@/views/sale/saleKit/SaleKit.vue')
+        component: () => import('@/views/sale/saleKit/Salekit.vue')
       }
     ]
   }
