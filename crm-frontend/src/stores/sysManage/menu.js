@@ -13,7 +13,8 @@ import {
   getSysMenuTree,
   getMenuList,
   addMenu,
-  updateMenu
+  updateMenu,
+  deleteMenu
 } from '@/apis/sysManage/menu.js'
 const useSysMenu = defineStore('sysmenu', {
   state: () => ({
@@ -70,10 +71,14 @@ const useSysMenu = defineStore('sysmenu', {
     },
     async addMenu(data) {
       const res = await addMenu(data)
-      console.log('res-add', res)
+      return res
     },
     async updateMenu(data) {
       const res = await updateMenu(data)
+      return res
+    },
+    async deleteMenu(id) {
+      const res = await deleteMenu(id)
       return res
     }
   }
