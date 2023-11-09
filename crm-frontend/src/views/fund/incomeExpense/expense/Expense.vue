@@ -139,12 +139,12 @@ import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
 import { onMounted, ref } from 'vue'
 import { CreditCard, Plus, Search } from '@element-plus/icons-vue'
 // 导入公共接口 => 获取银行下拉菜单接口方法
-import { getBankAccountList } from '@/apis/publicInterface.js'
+// import { getBankAccountList } from '@/apis/publicInterface.js'
 // 导入 资金管理/资金抽取注入 仓库
 import useFundInjectionStore from '@/stores/fundManagement/fundInjection.js'
 const fundInjection = useFundInjectionStore()
 onMounted(() => {
-  getBankAccountList()
+  // getBankAccountList()
   console.log('仓库的数据', fundInjection.bankSelectList)
 })
 // ref数据绑定BaseDataList这个组件
