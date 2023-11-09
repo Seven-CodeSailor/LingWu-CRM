@@ -183,28 +183,28 @@ function useVerify(type) {
  * @param res 验证通过信息
  */
 function handleSuccess(res) {
-  //TODO[TEST_CODE]:测试调用二次验证
-  // Request.requestForm(
-  //   Request.POST,
-  //   '/login',
-  //   { captchaVerification: res.captchaVerification },
-  //   { baseURL: import.meta.env.VITE_CAPTCHA_URL }
-  // )
-  //   .then((res) => {
-  //     console.log(res)
-  //     if (res.data.repCode === '0000') {
-  //       // 跳转到首页
-  //       $router.push('/home')
-  //       // 登录成功提示
-  //       ElMessage.success('登录成功，前往首页')
-  //       return
-  //     }
-  //     ElMessage.error('账号或密码错误')
-  //   })
-  //   .catch((res) => {
-  //     console.log(res)
-  //     ElMessage.error('账号或密码错误')
-  //   })
+  // TODO[TEST_CODE]:测试调用二次验证
+  Request.requestForm(
+    Request.POST,
+    '/login',
+    { captchaVerification: res.captchaVerification },
+    { baseURL: import.meta.env.VITE_CAPTCHA_URL }
+  )
+    .then((res) => {
+      console.log(res)
+      if (res.data.repCode === '0000') {
+        // 跳转到首页
+        $router.push('/home')
+        // 登录成功提示
+        ElMessage.success('登录成功，前往首页')
+        return
+      }
+      ElMessage.error('账号或密码错误')
+    })
+    .catch((res) => {
+      console.log(res)
+      ElMessage.error('账号或密码错误')
+    })
 
   doLogin(res.captchaVerification)
 }

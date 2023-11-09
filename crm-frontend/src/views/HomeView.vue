@@ -31,7 +31,7 @@
             <span>首页</span>
           </el-menu-item>
           <!-- 多级菜单 -->
-          <Menu :menu-list="menus"></Menu>
+          <Menu :menu-list="$store.menus"></Menu>
         </el-menu>
       </el-scrollbar>
     </div>
@@ -157,8 +157,6 @@ const messageInfo = useMessageInfo()
 const $store = userStore()
 const layOutSettingStore = useLayOutSettingStore()
 
-// 菜单数据
-const menus = $store.getMenus
 // 控制当前组件是否销毁重建
 let flag = ref(true)
 // 监听仓库内部数据是否发生变化，变化说明用户点击了刷新按钮
@@ -178,7 +176,9 @@ watch(
     fold.value = layOutSettingStore.fold
   }
 )
-onMounted(() => {
+onMounted(async () => {
+  $store.loadMenus()
+
   queryMessageNotices()
   countCustomerGrade((response) => {
     messageInfo.setLevel(response.data)

@@ -2,7 +2,7 @@
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
  * @LastEditors: BINGWU HuJiaCheng2003@163.com
- * @LastEditTime: 2023-11-09 22:40:37
+ * @LastEditTime: 2023-11-09 22:45:56
  * @FilePath: \crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
@@ -375,7 +375,7 @@ export const getRoleNameList = async (params, success, fail) => {
 export const getDepartmentList = async (params, success) => {
   await Request.requestForm(
     Request.GET,
-    '/orgstructure/dept/dept/list-name-all',
+    'http://101.34.252.80:10110/orgstructure/dept/dept/list-name-all',
     {
       ...params
     }
