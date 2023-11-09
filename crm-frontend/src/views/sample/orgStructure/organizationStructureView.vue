@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import organizationStructure from '@/components/organizationStructure/index.vue'
+import organizationStructure from '@/components/OrganizationStructure/index.vue'
 
 const sendData = {
   tableColumnAttribute: [
