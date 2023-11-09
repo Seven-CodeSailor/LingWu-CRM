@@ -6,13 +6,6 @@
         <slot name="ico"></slot>
         <div style="margin-left: 8px">账户流水记录</div>
       </h3>
-      <el-button
-        class="button"
-        @click="operatingInstructionDialogVisible = true"
-      >
-        <el-icon style="margin-right: 4px"> <icon-question /></el-icon
-        >操作说明</el-button
-      >
     </header>
     <!-- 操作搜索栏 -->
     <section class="menu">

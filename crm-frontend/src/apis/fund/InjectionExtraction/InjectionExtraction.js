@@ -8,7 +8,7 @@
  */
 // 这里是资金注入抽取的api
 import Request from '../../request'
-const BASEURL = '/fin-capital-record'
+const BASEURL = ''
 /**
  * @description: 查询资金注入抽取单号记录(分页+条件)
  * @param {*} params 请求参数:

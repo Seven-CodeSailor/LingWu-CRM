@@ -82,7 +82,6 @@ export const addlinkman = async (
 ) => {
   delete params['linkman_id']
   params['gender'] = params['gender'] === '男' ? 1 : 0
-  console.log(params)
   await Request.requestJson(
     Request.POST,
     '/supplier-manage/supplier-linkman/add-linkman',

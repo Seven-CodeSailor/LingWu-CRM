@@ -8,4 +8,4 @@
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from '@/apis/request.js'
-const baseUrl = '/cpp1-apiv1'
+const baseUrl = ''

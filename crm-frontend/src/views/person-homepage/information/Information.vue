@@ -7,7 +7,7 @@
     </template>
 
     <page-container style="display: flex; margin: 26px 44px">
-      <div class="left">
+      <div class="left" style="width: 50%">
         <el-form
           :model="form"
           label-width="120px"
@@ -41,7 +41,7 @@
               v-model="form.intro"
               type="textarea"
               :rows="4"
-              placeholder="Please input"
+              placeholder="请输入内容"
             />
           </el-form-item>
           <el-form-item label="固定电话" prop="mobile">
@@ -63,6 +63,12 @@
       </div>
       <div class="right" style="margin-left: 120px">
         <el-upload
+          style="
+            border: 1px solid rgb(202, 200, 200);
+            border-radius: 2%;
+            text-align: center;
+            justify-content: center;
+          "
           ref="uploadRef"
           auto-upload="false"
           class="avatar-uploader"
@@ -70,7 +76,9 @@
           :on-change="onSelectFile"
         >
           <img v-if="imgUrl" :src="imgUrl" class="avatar" />
-          <el-icon v-else class="avatar-uploader-icon"><icon-Plus /></el-icon>
+          <el-icon v-else class="avatar-uploader-icon" style=""
+            ><icon-Plus
+          /></el-icon>
         </el-upload>
         <br />
         <el-button
@@ -89,7 +97,7 @@
     <el-form-item style="margin-left: 150px">
       <el-button type="primary" @click="submitForm">保存修改</el-button>
       <!-- 重置还差逻辑，并且需要id表单里的data -->
-      <el-button type="info" @click="resetForm(ruleFormRef)">重置</el-button>
+      <el-button type="info" @click="resetForm">重置</el-button>
     </el-form-item>
   </el-card>
 </template>
@@ -121,6 +129,12 @@ const onUpdateAvatar = async () => {
   ElMessage.success('头像已保存')
 }
 
+// 提交表单验证逻辑
+const ruleFormRef = ref()
+// import { userUpdateInformationService } from '@/api/user'
+// import { useUserStore } from '@/stores'
+// import { useRouter } from 'vue-router'
+
 const form = ref({
   address: '',
   email: '',
@@ -135,27 +149,28 @@ const form = ref({
 })
 
 //校验规则
-const rules = {
-  address: [{ trigger: 'blur' }],
-  email: [{ trigger: 'blur' }],
-  gender: [{ trigger: 'blur'} ],
-  identity: [{ trigger: 'blur'  } ],
-  intro: [{ trigger: 'blur'  } ],
-  mobile: [{  trigger: 'blur'  } ],
-  name: [{ trigger: 'blur'   } ],
-  qicq: [{ trigger: 'blur'  }  ],
-  zipcode: [{ trigger: 'blur'  }  ]
-}
+// const rules = {
+//   address: [{ trigger: 'blur' }],
+//   email: [{ trigger: 'blur' }],
+//   gender: [{ trigger: 'blur'} ],
+//   identity: [{ trigger: 'blur'  } ],
+//   intro: [{ trigger: 'blur'  } ],
+//   mobile: [{  trigger: 'blur'  } ],
+//   name: [{ trigger: 'blur'   } ],
+//   qicq: [{ trigger: 'blur'  }  ],
+//   zipcode: [{ trigger: 'blur'  }  ]
+// }
 
 //提交按钮的反馈逻辑
 const submitForm = () => {
-  ElMessage({
-    message: '修改成功',
-    type: 'success'
-  })
+  // ruleFormRef.value.validate()
+  // userUpdateInformationService(form.value)
+  ElMessage.success('修改成功')
 }
-// 表单重置逻辑(未完成)
-const resetForm = ref({})
+
+const resetForm = () => {
+  ruleFormRef.value.resetFields()
+}
 
 //两次密码需要相同的校验
 </script>
