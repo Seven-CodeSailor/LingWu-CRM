@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-29 13:05:59
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-09 21:53:08
+ * @LastEditTime: 2023-11-09 21:56:42
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\sysManage\menu.js
  * @Description:
  *
@@ -32,9 +32,7 @@ const useSysMenu = defineStore('sysmenu', {
       useDropdownMenu: false,
       useSelectColumn: false,
       useHeader: false,
-      usePagination: true,
-      pageSizes: [2, 10, 15, 200],
-      total: 100,
+      usePagination: false,
       //在树形菜单里显示
       title: ''
     },
@@ -47,6 +45,8 @@ const useSysMenu = defineStore('sysmenu', {
       const res = await getSysMenuTree().catch((e) => e)
       console.log(res.data)
       res.data.name = '菜单管理'
+      //后端没做这个的id和name，但是我认为这里这个层级关系还是应该保留的，为了防止传undefined请求错误后堵塞后面发请求，这里随便给了一个id
+      res.data.id = 1
       this.sendTreeData = [res.data]
       console.log('sendTreeData', this.sendTreeData)
     },
