@@ -14,7 +14,7 @@ const baseUrl = '/java3-personal-homepage'
 export const modifyPassword = async (params) => {
   await Request.requestForm(
     Request.POST,
-    baseUrl + '/j3-owner-info/modify-password',
+    '/j3-owner-info/modify-password',
     params
   )
     .then((res) => {
