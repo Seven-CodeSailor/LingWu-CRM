@@ -1,21 +1,20 @@
 /*
  * @Author: setti5 2283356040@qq.com
- * @Date: 2023-11-01 21:29:51
+ * @Date: 2023-11-08 23:03:14
  * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-08 19:58:24
- * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\person-homepage\message.js
+ * @LastEditTime: 2023-11-08 23:29:21
+ * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\person-homepage\messagepro.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-// import { 
-//   // queryMessage,
-//   // queryMessageId,
-//   // deleteMassage,
-//   // markReadMessage,
-//   // publishMessage,
-//  } from '@/apis/personal-homapage/message.js'
-
+import { 
+  queryMessage,
+  queryMessageId,
+  deleteMassage,
+  markReadMessage,
+  publishMessage,
+ } from '@/apis/personal-homepage/message.js'
 export const useMessageStore = defineStore('message', () => {
   const tableData = ref([])
   const total = ref()
@@ -24,7 +23,13 @@ export const useMessageStore = defineStore('message', () => {
     console.log('getMessageList', params)
     await queryMessage(params)
       .then((res) => {
-          tableData.value = res.data.rows
+          tableData.value = res.data.rows.map((row)=>{
+            row.status = {
+              value:row.flag?'已处理':"未处理",
+              tagType:row.flag?'danger':"info"
+            }
+            return row
+          })
           total.value = res.data.total
       })
       .catch((err) => {
@@ -49,9 +54,9 @@ export const useMessageStore = defineStore('message', () => {
     tableData,
     total,
     getMessageList,
-    // getMessageIdList,
-    // deleteMessageItem,
-    // markMessageItem,
-    // publishMessageItem
+    getMessageIdList,
+    deleteMessageItem,
+    markMessageItem,
+    publishMessageItem
   }
-})
+  })

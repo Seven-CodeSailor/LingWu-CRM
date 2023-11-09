@@ -65,8 +65,9 @@
       </div>
     </template>
     <template #statistics>
-      <p>金额合计:
-        <span class="money">{{ 75600.00}} 元</span>
+      <p>
+        金额合计:
+        <span class="money">{{ 75600.0 }} 元</span>
       </p>
     </template>
   </BaseDataList>
@@ -94,7 +95,7 @@
         label-width="120px"
         :rules="formRule"
       >
-      <el-form-item label="选择分类" :label-width="labelWidth">
+        <el-form-item label="选择分类" :label-width="labelWidth">
           <!-- 调用选择框组件 -->
           <ChooseSelect :options="optionType" des="请选择分类"></ChooseSelect>
         </el-form-item>
@@ -138,12 +139,12 @@ import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
 import { onMounted, ref } from 'vue'
 import { CreditCard, Plus, Search } from '@element-plus/icons-vue'
 // 导入公共接口 => 获取银行下拉菜单接口方法
-import { getBankAccountList } from '@/apis/publicInterface.js'
+// import { getBankAccountList } from '@/apis/publicInterface.js'
 // 导入 资金管理/资金抽取注入 仓库
 import useFundInjectionStore from '@/stores/fundManagement/fundInjection.js'
 const fundInjection = useFundInjectionStore()
 onMounted(() => {
-  getBankAccountList()
+  // getBankAccountList()
   console.log('仓库的数据', fundInjection.bankSelectList)
 })
 // ref数据绑定BaseDataList这个组件

@@ -73,11 +73,6 @@ const routes = [
         component: () => import('@/views/sample/chartDemo/ChartDemo.vue')
       },
       {
-        path: '/sample/organizationStructure',
-        component: () =>
-          import('@/views/sample/orgStructure/OrganizationStructureView.vue')
-      },
-      {
         path: '/sample/newsCenter',
         component: () => import('@/views/sample/newsCenter/NewsCenterView.vue')
       },

@@ -2,13 +2,13 @@
  * @Author: pipazi 2283356040@qq.com
  * @Date: 2023-11-01 21:29:40
  * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-08 18:05:27
+ * @LastEditTime: 2023-11-09 17:07:53
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\personal-homapage\notice.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 import Request from '@/apis/request.js'
-const baseUrl = '/java3-personal-homepage'
+// const baseUrl = '/java3-personal-homepage'
 
 /**
  * @description: 哥儿难受也——公告通知
@@ -20,7 +20,8 @@ const baseUrl = '/java3-personal-homepage'
 export const queryNotion = async (params) => {
   return await Request.requestForm(
     Request.GET,
-    baseUrl  + '/j3-notice-remind/query-notion',
+    // baseUrl  + '/j3-notice-remind/query-notion',
+    '/j3-notice-remind/query-notion',
     params
   )
 }
@@ -29,7 +30,7 @@ export const queryNotion = async (params) => {
 export const addNotice = async (params) => {
   return await Request.requestForm(
     Request.POST,
-    baseUrl + '/j3-notice-remind/add-notice',
+    '/j3-notice-remind/add-notice',
     params
   )
     // .then((res) => {
@@ -44,7 +45,7 @@ export const addNotice = async (params) => {
 export const getNotice = async (params) => {
   await Request.requestForm(
     Request.GET,
-    baseUrl + '/j3-notice-remind/get-notice',
+    '/j3-notice-remind/get-notice',
     params
   )
     // .then((res) => {
@@ -60,7 +61,7 @@ export const getNotice = async (params) => {
 export const removeNotice = async (params) => {
   return await Request.requestJson(
     Request.POST,
-    baseUrl  + '/j3-notice-remind/remove-notice',
+    '/j3-notice-remind/remove-notice',
     params
   )
   // .then((res) => {
@@ -76,7 +77,7 @@ export const removeNotice = async (params) => {
 export const updateNotice = async (params) => {
   return await Request.requestJson(
     Request.POST,
-    baseUrl  + '/j3-notice-remind/update-notice',
+    '/j3-notice-remind/update-notice',
     params
   )
   // .then((res) => {

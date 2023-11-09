@@ -7,7 +7,7 @@
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from '@/apis/request.js'
-const baseUrl = '/cpp1-apiv1'
+const baseUrl = ''
 /**
  * @description: 查询字典管理数据
  * @param {Object} params // pageSize pageIndex name  分类名称 typetag 调用标识

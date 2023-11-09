@@ -7,10 +7,7 @@ export const queryAnnouncement = async (
   success = () => {},
   fail = () => {}
 ) => {
-  Request.requestForm(
-    Request.GET,
-    '/sysindex/system-message-remind/query-announcement-notices'
-  )
+  Request.requestForm(Request.GET, '/sysindex/query-announcement-notices')
     .then((response) => {
       dashBoard.setAnnouncement(response.data)
       success(response)

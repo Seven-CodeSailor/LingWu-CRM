@@ -66,7 +66,7 @@ import { ArrowDown } from '@element-plus/icons-vue'
 import { ref, onMounted } from 'vue'
 import Excel from '@/components/BulkOpe/Excel.vue'
 import FileUpload from '@/components/BulkOpe/FileUpload.vue'
-import Message from '@/components/Bulkope/Message.vue'
+import Message from '@/components/BulkOpe/Message.vue'
 
 const props = defineProps({
   // 定义该批量操作需要几个功能，0为批量导出，1为批量导入，2为批量发短信，3为批量发邮件，4为批量删除

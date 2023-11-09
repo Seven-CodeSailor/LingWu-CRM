@@ -1,9 +1,17 @@
-// 这里是出库单的store仓库模块  负责人 => 暮秋
-import { definePinia } from 'pinia'
+import { defineStore } from 'pinia'
 import { ref } from 'vue'
-export const useStorageDetailsStore = definePinia('StorageDetails', () => {
+
+const useStorageDetailsStore = defineStore('StorageDetails', () => {
   const tableData = ref([])
+  const totalTable = ref(0)
+  const setTableData = (data = []) => {
+    tableData.value = data
+  }
   return {
-    tableData
+    tableData,
+    totalTable,
+    setTableData
   }
 })
+
+export default useStorageDetailsStore

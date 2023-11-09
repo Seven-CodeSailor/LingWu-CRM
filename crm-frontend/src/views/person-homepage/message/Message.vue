@@ -6,17 +6,11 @@
       :use-operate-column="true"
       :dropdown-menu-actions-info="dropdownMenuActionsInfo"
       :page-sizes="[5, 10, 15]"
-      :total="messageStore.total"
       :table-data="messageStore.tableData"
+      :total="messageStore.total"
       :handle-delete="handleDelete"
       ref="baseDataListRef"
-      @update-table-data="
-        (pageSize, currentPage) =>
-          queryMessageStore({
-            pageSize,
-            pageIndex: currentPage
-          })
-      "
+      @update-table-data=updateTableData
     >
       <!-- 导航图标 -->
       <template #ico>
@@ -87,20 +81,44 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useMessageStore } from '@/stores/person-homepage/message.js'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
-// import { queryMessage } from '@/apis/personal-homapage/message.js'
+import { useMessageStore } from '../../../stores/person-homepage/messagepro';
+
 
 // 批量删除的逻辑
 const deleteBatches = async () => {
   if (!baseDataListRef.value.rows.length) {
-    ElMessage.error('请先选择将要删除的选项')
+    ElMessage.error('请先选择要删除的数据')
   } else {
     const ids = baseDataListRef.value.rows.map((row) => {
-      return row.storeId
+      return row.id
     })
-    await deleteBatches({ ids }).then((res) => {
+    await deleteTableData({ ids }).then((res) => {
+      ElMessage({
+        message: res.message,
+        type: 'success'
+      })
+    })
+    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+    await isUseInputValueGetTableData(
+      baseDataListRef.value.paginationData.currentPage,
+      baseDataListRef.value.paginationData.pageSize
+    )
+    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  }
+}
+// 批量已读的逻辑(批量已读的逻辑未定)
+const readBatches = async () => {
+  if (!baseDataListRef.value.rows.length) {
+    ElMessage.error('请先选择数据')
+  } else {
+    const ids = baseDataListRef.value.rows.map((row) => {
+      return (row.status = {
+        value: row.status ? '已读' : '未读',
+        tagType: row.status ? 'info' : 'danger'
+      })
+    })
+    await updateTableData({ ids }).then((res) => {
       ElMessage({
         message: res.message,
         type: 'success'
@@ -110,15 +128,6 @@ const deleteBatches = async () => {
       pageIndex: baseDataListRef.value.paginationData.currentPage,
       pageSize: baseDataListRef.value.paginationData.pageSize
     })
-    // console.log('1')
-  }
-}
-// 批量已读的逻辑(批量已读的逻辑未定)
-const readBatches = () => {
-  if (!baseDataListRef.value.rows.length) {
-    ElMessage.success('全部已读')
-  } else {
-    console.log('1')
   }
 }
 
@@ -168,7 +177,7 @@ const dropdownMenuActionsInfo = [
         type: 'warning'
       })
         .then(() => {
-          deleteTableData({ ids: [row.storeId] }).then((res) => {
+          deleteTableData({ ids: [row.id] }).then((res) => {
             ElMessage({
               message: res.message,
               type: 'success'
@@ -190,7 +199,7 @@ const dropdownMenuActionsInfo = [
   }
 ]
 
-// 批量删除和已读的逻辑需要
+
 const baseDataListRef = ref(null)
 const inputValue = ref('')
 
@@ -242,6 +251,7 @@ onMounted(() => {
     pageSize: 5
   }
   messageStore.getMessageList(params)
+  
 })
 
 // 删除单条数据
@@ -258,6 +268,7 @@ const handleDelete = (row) => {
     })
   })
 }
+
 
 // 查看公告抽屉罗辑
 const detail = ref({

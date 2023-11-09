@@ -8,7 +8,7 @@
 
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getSalesContractDataForSelectAPI } from '@/apis/publicInterface.js'
+// import { getSalesContractDataForSelectAPI } from '@/apis/publicInterface.js'
 import {
   querySalesContractData,
   getSalesContractIDListAPI,
@@ -204,7 +204,8 @@ export const useSalesContractStore = defineStore('salescontract', () => {
    * @returns
    */
   const getSalesContractDataForSelect = async (params) => {
-    return await getSalesContractDataForSelectAPI(params)
+    console.log(params)
+    // return await getSalesContractDataForSelectAPI(params)
   }
 
   /**

@@ -10,10 +10,7 @@ const messageInfo = useMessageInfo()
  * @returns
  */
 export const queryMessageNotices = (success = () => {}, fail = () => {}) => {
-  Request.requestForm(
-    Request.GET,
-    '/sysindex/system-message-remind/query-message-notices'
-  )
+  Request.requestForm(Request.GET, '/sysindex/query-message-notices')
     .then((response) => {
       messageInfo.setMessageInfo(response.data)
       let index = 0
@@ -35,14 +32,10 @@ export const markAsRead = async (
   success = () => {},
   fail = () => {}
 ) => {
-  Request.requestForm(
-    Request.PUT,
-    '/sysindex/system-message-remind/mark-as-read',
-    {
-      id,
-      messageType
-    }
-  )
+  Request.requestForm(Request.PUT, '/sysindex/mark-as-read', {
+    id,
+    messageType
+  })
     .then((response) => {
       success(response)
     })
@@ -64,11 +57,10 @@ export const countBusinessMoney = async (
   success = () => {},
   fail = () => {}
 ) => {
-  await Request.requestForm(
-    Request.GET,
-    '/systemindex/businessstatistics/count-business-money',
-    { firstData, secondData }
-  )
+  await Request.requestForm(Request.GET, '/sysindex/count-business-money', {
+    firstData,
+    secondData
+  })
     .then((response) => {
       success(response)
     })
@@ -88,10 +80,7 @@ export const countBusinessNumber = async (
   success = () => {},
   fail = () => {}
 ) => {
-  await Request.requestForm(
-    Request.GET,
-    '/systemindex/businessstatistics/count-business-number'
-  )
+  await Request.requestForm(Request.GET, '/sysindex/count-business-number')
     .then((response) => {
       success(response)
     })
@@ -111,10 +100,7 @@ export const countBusinessSalestage = async (
   success = () => {},
   fail = () => {}
 ) => {
-  await Request.requestForm(
-    Request.GET,
-    '/systemindex/businessstatistics/count-business-salestage'
-  )
+  await Request.requestForm(Request.GET, '/sysindex/count-business-salestage')
     .then((response) => {
       success(response)
     })
@@ -138,7 +124,7 @@ export const countBusinessSuccessrate = async (
 ) => {
   await Request.requestForm(
     Request.GET,
-    '/systemindex/businessstatistics/count-business-successrate',
+    '/sysindex/count-business-successrate',
     { firstData, secondData }
   )
     .then((response) => {
@@ -160,10 +146,7 @@ export const countCustomerGrade = async (
   success = () => {},
   fail = () => {}
 ) => {
-  await Request.requestForm(
-    Request.GET,
-    '/systemindex/customerstatistics/count-customer-grade'
-  )
+  await Request.requestForm(Request.GET, '/sysindex/count-customer-grade')
     .then((response) => {
       success(response)
     })
@@ -183,10 +166,7 @@ export const countCustomerIndustry = async (
   success = () => {},
   fail = () => {}
 ) => {
-  await Request.requestForm(
-    Request.GET,
-    '/systemindex/customerstatistics/count-customer-industry'
-  )
+  await Request.requestForm(Request.GET, '/sysindex/count-customer-industry')
     .then((response) => {
       success(response)
     })
@@ -206,10 +186,7 @@ export const countCustomerNumber = async (
   success = () => {},
   fail = () => {}
 ) => {
-  await Request.requestForm(
-    Request.GET,
-    '/systemindex/customerstatistics/count-customer-number'
-  )
+  await Request.requestForm(Request.GET, '/sysindex/count-customer-number')
     .then((response) => {
       success(response)
     })
@@ -229,10 +206,7 @@ export const countCustomerSource = async (
   success = () => {},
   fail = () => {}
 ) => {
-  await Request.requestForm(
-    Request.GET,
-    '/systemindex/customerstatistics/count-customer-source'
-  )
+  await Request.requestForm(Request.GET, '/sysindex/count-customer-source')
     .then((response) => {
       success(response)
     })
