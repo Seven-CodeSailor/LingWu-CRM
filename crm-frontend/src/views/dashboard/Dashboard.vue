@@ -2,7 +2,9 @@
   <el-card>
     <div class="box">
       <div class="bottom">
-        <h3 class="title">{{ getTime() }}好{{ user.user }}</h3>
+        <h3 class="title">
+          {{ getTime() }}好:&nbsp;&nbsp;{{ user.user.roles[0] }}
+        </h3>
         <p class="subtitle">01星球CRM</p>
       </div>
     </div>

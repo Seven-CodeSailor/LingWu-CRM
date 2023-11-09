@@ -1,27 +1,27 @@
 import { defineStore } from 'pinia'
 import Request from '@/apis/request'
 
-import inventory from './menus/inventory'
-import homepage from './menus/homepage'
-import system from './menus/system'
-import organization from './menus/organization'
-import basicData from './menus/basicData'
-import customer from './menus/customer'
-import sale from './menus/sale'
-import fund from './menus/fund'
-import supplier from './menus/supplier'
-// 测试菜单数据
-let testMenus = [
-  homepage,
-  system,
-  organization,
-  basicData,
-  customer,
-  sale,
-  inventory,
-  fund,
-  supplier
-]
+// import inventory from './menus/inventory'
+// import homepage from './menus/homepage'
+// import system from './menus/system'
+// import organization from './menus/organization'
+// import basicData from './menus/basicData'
+// import customer from './menus/customer'
+// import sale from './menus/sale'
+// import fund from './menus/fund'
+// import supplier from './menus/supplier'
+// // 测试菜单数据
+// let testMenus = [
+//   homepage,
+//   system,
+//   organization,
+//   basicData,
+//   customer,
+//   sale,
+//   inventory,
+//   fund,
+//   supplier
+// ]
 
 export const userStore = defineStore('user', {
   state: () => ({
@@ -34,7 +34,7 @@ export const userStore = defineStore('user', {
     // 保存当前用户
     user: null,
     // 菜单数据
-    menus: testMenus
+    menus: null
   }),
   getters: {
     // 获取token
@@ -54,7 +54,7 @@ export const userStore = defineStore('user', {
         Request.GET,
         '/login/current-user'
       ).catch((e) => e)
-      console.log('loaduser', data)
+      this.user = data.data
     },
     // 加载菜单
     async loadMenus() {
@@ -63,7 +63,7 @@ export const userStore = defineStore('user', {
 
       // 发送获取菜单请求
       let data = await Request.requestForm(Request.GET, '/login/get-menus')
-      // this.menus = data.data
+      this.menus = data.data
       console.log('loadmenu', data)
     },
     // 加载刷新凭证
