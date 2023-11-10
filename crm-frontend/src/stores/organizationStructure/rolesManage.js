@@ -2,7 +2,7 @@
  * @Author: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
  * @Date: 2023-11-02 15:21:31
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-07 09:23:41
+ * @LastEditTime: 2023-11-10 16:16:45
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\organizationStructure\rolesManage.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -56,10 +56,18 @@ export const useRoleManageStore = defineStore('roleManage', () => {
     )
     return $res
   }
+  // 菜单权限的数据
+  const roleMeauPower = ref([])
+  // 设置菜单权限数据的方法
+  const setroleMeauPower = (dataList)=> {
+    roleMeauPower.value = dataList
+  }
   return {
     roleTreeList,
     setRoleTreeList,
-    getTheRoleList
+    getTheRoleList,
+    roleMeauPower,
+    setroleMeauPower
   }
 })
 export default useRoleManageStore

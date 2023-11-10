@@ -184,58 +184,24 @@
     open-delay="100"
   >
     <el-tree
-      :data="dataSource"
+      :data="$RoleManage.roleMeauPower"
+      v-model="$RoleManage.roleMeauPower.visible"
       show-checkbox
       node-key="id"
       empty-text="没有数据"
+      :props="defaultProps"
       :expand-on-click-node="false"
       :render-content="renderContent"
     >
       <template #default="{ node }">
-        <!-- <span class="custom-tree-node">
-          <span>{{ node.label }}</span>
-          <span>
-            <a @click="append(data)"> Append </a>
-            <a @click="remove(node, data)"> Delete </a>
-          </span>
-        </span> -->
         <span>{{ node.label }}</span>
-        <el-checkbox-group v-model="authForm.type">
-          <el-checkbox label="增加" name="type" />
-          <el-checkbox label="修改" name="type" />
-          <el-checkbox label="删除" name="type" />
+        <el-checkbox-group v-model="authForm.type" v-if="node.type">
+          <el-checkbox :label="node.sysMethodVoList" name="type" />
+          <el-checkbox :label="node.sysMethodVoList" name="type" />
+          <el-checkbox :label="node.sysMethodVoList" name="type" />
         </el-checkbox-group>
       </template>
     </el-tree>
-    <!-- 用表格来处理权限 -->
-    <!-- <el-table row-key="item">
-      <el-table-column label="名称"></el-table-column>
-      <el-table-column label="权限值"></el-table-column>
-      <el-table-column label="修改时间"></el-table-column>
-      <el-table-column label="操作">
-        <template #default="{ row }">
-          <el-button
-            type="primary"
-            @click="addPermisstion(row)"
-            size="small"
-            :disabled="row.level == 4 ? true : false"
-          >
-            {{ row.level == 3 ? '添加功能' : '添加菜单' }}
-          </el-button>
-          <el-button
-            type="primary"
-            @click="updatePermisstion(row)"
-            size="small"
-            :disabled="row.level == 1 ? true : false"
-          >
-            编辑
-          </el-button>
-        </template>
-      </el-table-column>
-      <template #empty>
-        <el-empty description="没有数据"></el-empty>
-      </template>
-    </el-table> -->
     <div class="drawerFooter">
       <el-button @click="powerDrawer = false">取消</el-button>
       <el-button type="primary" :loading="btnLoading" @click="handelPowerSubmit"
@@ -253,7 +219,8 @@ import {
   getRoleTree,
   addRoleListApi,
   editRoleListApi,
-  deleteRoleListApi
+  deleteRoleListApi,
+  getRolePowerApi
 } from '../../../apis/organizationStructure/Roles.js'
 // 导入 组织结构/角色管理 仓库
 import useRoleManageStore from '../../../stores/organizationStructure/rolesManage'
@@ -452,9 +419,24 @@ const handleSizeChange = async (pagesize, currentPage) => {
 const dropdownMenuActionsInfo = ref([
   {
     command: '菜单权限',
-    handleAction: (row) => {
+    handleAction: async (row) => {
       powerDrawer.value = true
       console.log('菜单权限回调函数', row)
+      await getRolePowerApi(
+        {
+          roleId: row.id
+        },
+        (res) => {
+          const { data } = res
+          console.log('获取菜单权限成功回调:', data)
+          ElMessage({
+            message: '数据渲染成功',
+            type: 'success'
+          })
+          // 把菜单权限数据存到 角色仓库
+          $RoleManage.setroleMeauPower(data)
+        }
+      )
     },
     actionName: '菜单权限'
   },
@@ -892,351 +874,6 @@ const handelSearch = async () => {
 // 菜单权限业务
 // 控制权限抽屉打开关闭的数据
 const powerDrawer = ref(false)
-// 抽屉里的权限树形数据 => 真多啊
-const dataSource = ref([
-  {
-    id: 1,
-    label: '客户管理',
-    children: [
-      {
-        id: 2,
-        label: '我的客户'
-      },
-      {
-        id: 3,
-        label: '下属客户'
-      },
-      {
-        id: 4,
-        label: '公共客户'
-      },
-      {
-        id: 5,
-        label: '客户联系人'
-      },
-      {
-        id: 6,
-        label: '服务记录'
-      },
-      {
-        id: 7,
-        label: '销售机会'
-      },
-      {
-        id: 8,
-        label: '跟踪记录'
-      },
-      {
-        id: 9,
-        label: '销售合同'
-      },
-      {
-        id: 10,
-        label: '网站管理'
-      }
-    ]
-  },
-  {
-    id: 11,
-    label: '供应商管理',
-    children: [
-      {
-        id: 12,
-        label: '供应商列表'
-      },
-      {
-        id: 13,
-        label: '供应商联系人'
-      }
-    ]
-  },
-  {
-    id: 14,
-    label: '采购管理',
-    children: [
-      {
-        id: 15,
-        label: '采购订单'
-      },
-      {
-        id: 16,
-        label: '采购明细'
-      }
-    ]
-  },
-  {
-    id: 17,
-    label: '库存管理',
-    children: [
-      {
-        id: 18,
-        label: '库存清单'
-      },
-      {
-        id: 19,
-        label: '入库单'
-      },
-      {
-        id: 20,
-        label: '入库明细'
-      },
-      {
-        id: 21,
-        label: '出库单'
-      },
-      {
-        id: 22,
-        label: '出库明细'
-      }
-    ]
-  },
-  {
-    id: 23,
-    label: '统计分析',
-    children: [
-      {
-        id: 24,
-        label: '采购合同统计'
-      },
-      {
-        id: 25,
-        label: '多维度统计'
-      },
-      {
-        id: 26,
-        label: '销售合同统计'
-      }
-    ]
-  },
-  {
-    id: 23,
-    label: '资金管理',
-    children: [
-      {
-        id: 24,
-        label: '资金注入抽取'
-      },
-      {
-        id: 25,
-        label: '付款管理',
-        children: [
-          {
-            id: 24,
-            label: '付款计划'
-          },
-          {
-            id: 24,
-            label: '付款记录'
-          },
-          {
-            id: 24,
-            label: '收款记录'
-          }
-        ]
-      },
-      {
-        id: 26,
-        label: '回款管理',
-        children: [
-          {
-            id: 24,
-            label: '回款计划'
-          },
-          {
-            id: 24,
-            label: '回款记录'
-          },
-          {
-            id: 24,
-            label: '开票记录'
-          }
-        ]
-      },
-      {
-        id: 26,
-        label: '收入开支',
-        children: [
-          {
-            id: 24,
-            label: '其他收入单'
-          },
-          {
-            id: 24,
-            label: '费用支出单'
-          }
-        ]
-      },
-      {
-        id: 26,
-        label: '账户流水记录'
-      }
-    ]
-  },
-  {
-    id: 23,
-    label: '员工管理',
-    children: [
-      {
-        id: 23,
-        label: '员工档案'
-      },
-      {
-        id: 23,
-        label: '用工记录'
-      },
-      {
-        id: 23,
-        label: '个人证书'
-      },
-      {
-        id: 23,
-        label: '考核记录'
-      },
-      {
-        id: 23,
-        label: '奖罚记录'
-      },
-      {
-        id: 23,
-        label: '谈话记录'
-      },
-      {
-        id: 23,
-        label: '劳动合同'
-      }
-    ]
-  },
-  {
-    id: 23,
-    label: '基础数据',
-    children: [
-      {
-        id: 23,
-        label: '组织结构',
-        children: [
-          {
-            id: 23,
-            label: '门店管理'
-          },
-          {
-            id: 23,
-            label: '部门管理'
-          },
-          {
-            id: 23,
-            label: '角色管理'
-          },
-          {
-            id: 23,
-            label: '岗位管理'
-          },
-          {
-            id: 23,
-            label: '用户管理'
-          }
-        ]
-      },
-      {
-        id: 23,
-        label: '数据字典',
-        children: [
-          {
-            id: 23,
-            label: '字典分类'
-          },
-          {
-            id: 23,
-            label: '字典管理'
-          }
-        ]
-      },
-      {
-        id: 23,
-        label: '商品管理',
-        children: [
-          {
-            id: 23,
-            label: '商品维护'
-          },
-          {
-            id: 23,
-            label: '商品SKU'
-          },
-          {
-            id: 23,
-            label: '商品品牌'
-          },
-          {
-            id: 23,
-            label: '商品分类'
-          },
-          {
-            id: 23,
-            label: '商品类型'
-          },
-          {
-            id: 23,
-            label: '商品规格'
-          }
-        ]
-      },
-      {
-        id: 23,
-        label: '财务类型'
-      },
-      {
-        id: 23,
-        label: '仓库管理'
-      },
-      {
-        id: 23,
-        label: '地区管理'
-      }
-    ]
-  },
-  {
-    id: 23,
-    label: '系统管理',
-    children: [
-      {
-        id: 23,
-        label: '系统参数'
-      },
-      {
-        id: 23,
-        label: '系统菜单'
-      },
-      {
-        id: 23,
-        label: '系统方法'
-      },
-      {
-        id: 23,
-        label: '密码修改'
-      },
-      {
-        id: 23,
-        label: '消息通知'
-      },
-      {
-        id: 23,
-        label: '公告通知'
-      },
-      {
-        id: 23,
-        label: '数据库管理'
-      },
-      {
-        id: 23,
-        label: '字段扩展'
-      },
-      {
-        id: 23,
-        label: '系统升级'
-      }
-    ]
-  }
-])
 const authForm = ref({
   type: []
 })

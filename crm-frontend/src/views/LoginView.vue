@@ -7,11 +7,10 @@
         <div class="card" ref="cardElement1">
           <div class="content">
             <h2>01</h2>
-            <h3>01星球</h3>
+            <h3>CRM系统</h3>
             <p>
-              使用 element-ui 的 input 输入框时，你可以通过以
-              下几种方式来改变输入框的样式，使用 ::placeholder
-              选择器来改变默认提示文字的样式
+              通过我们的CRM系统,您可以轻松管理组织结构,
+              实现人员分配和团队管理,精确掌控资金流向, 实时监控财务状况
             </p>
             <a href="#">关注我们</a>
           </div>
@@ -19,11 +18,11 @@
         <div class="card" ref="cardElement2">
           <div class="content">
             <h2>01</h2>
-            <h3>01星球</h3>
+            <h3>产品亮点</h3>
             <p>
-              使用 element-ui 的 input 输入框时，你可以通过以
-              下几种方式来改变输入框的样式，使用 ::placeholder
-              选择器来改变默认提示文字的样式
+              无论您是管理人员、财务人员还是销售团队成员,
+              我们的系统都为您提供了强大的工具,帮助您更高
+              效地管理业务、提升团队协作和优化业务流程。
             </p>
             <a href="#">加入我们</a>
           </div>
