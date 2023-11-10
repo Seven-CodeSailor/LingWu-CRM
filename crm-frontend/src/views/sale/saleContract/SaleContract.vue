@@ -308,7 +308,7 @@ import { ref, onMounted, reactive } from 'vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
 import { SoldOut, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { useSalesContractStore } from '@/stores/salesmanager/salescontract.js'
+import { useSalesContractStore } from '@/stores/salesmanager/SalesContract.js'
 import AddGoods from '@/components/OrganizationStructure/AddGoods.vue'
 
 //导入仓库
