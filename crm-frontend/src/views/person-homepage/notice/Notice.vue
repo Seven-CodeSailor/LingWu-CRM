@@ -136,7 +136,7 @@ import { ref, onMounted } from 'vue'
 import { getDepartmentList } from '../../../apis/publicInterface'
 import { useNoticeStore } from '@/stores/person-homepage/notice.js'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
+import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 // 表格数据引入
 const noticeStore = useNoticeStore()
 // 放入值的逻辑
@@ -170,7 +170,7 @@ const tableColumnAttribute = [
     label: '接收人'
   }
 ]
-const title = ref('')
+// const title = ref('')
 const formRef = ref(null)
 const checkNoticeForm = ref({
   messageTitle: '',
@@ -330,7 +330,7 @@ const deleteBatches = async () => {
     const ids = baseDataListRef.value.rows.map((row) => {
       return row.id
     })
-    await deleteTableData({ ids }).then((res) => {
+    await deleteTableData({ ids }).then(() => {
       ElMessage({
         message: '删除成功',
         type: 'success'
@@ -355,7 +355,7 @@ const readBatches = async () => {
         tagType: row.status ? 'info' : 'danger'
       })
     })
-    await updateTableData({ id }).then((res) => {
+    await updateTableData({ id }).then(() => {
       ElMessage({
         message: '操作成功',
         type: 'success'
