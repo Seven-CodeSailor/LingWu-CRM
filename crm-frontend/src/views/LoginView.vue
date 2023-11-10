@@ -3,7 +3,7 @@
   <el-row class="login-page">
     <el-col :span="12" class="bgImg">
       <div class="container">
-        <h1 id="title">01星球-大项目</h1>
+        <h1 id="title">01星球-CRM</h1>
         <div class="card" ref="cardElement1">
           <div class="content">
             <h2>01</h2>
