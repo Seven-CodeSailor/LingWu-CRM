@@ -243,9 +243,8 @@ const saveAddData = async () => {
   if (res.code === 10000) {
     ElMessage.success('添加成功')
     $store.getMenuList(addFormData.value.parentID)
+    addDrawerRef.value.resetFields()
   }
-
-  // addDrawerRef.value.resetFields()
 }
 
 const saveEditData = async () => {
