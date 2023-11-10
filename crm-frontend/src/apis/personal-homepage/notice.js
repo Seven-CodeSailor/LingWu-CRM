@@ -2,7 +2,7 @@
  * @Author: pipazi 2283356040@qq.com
  * @Date: 2023-11-01 21:29:40
  * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-09 17:07:53
+ * @LastEditTime: 2023-11-10 00:57:32
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\personal-homapage\notice.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -28,6 +28,7 @@ export const queryNotion = async (params) => {
 
 // 发布公告（通过添加按钮）
 export const addNotice = async (params) => {
+  console.log('222222');
   return await Request.requestForm(
     Request.POST,
     '/j3-notice-remind/add-notice',
@@ -43,6 +44,7 @@ export const addNotice = async (params) => {
 
 // 查看指定公告详情（通过查看操作）
 export const getNotice = async (params) => {
+ 
   await Request.requestForm(
     Request.GET,
     '/j3-notice-remind/get-notice',
