@@ -288,7 +288,7 @@ const handleExport = () => {
         startIndex + searchStr.length
       ) // 提取后面的内容
       // 下载文件
-      await downloadFile('/java3-file' + extractedString, '仓库管理')
+      await downloadFile('/file-server' + extractedString, '仓库管理')
       ElMessage({
         message: '导出成功',
         type: 'success'
