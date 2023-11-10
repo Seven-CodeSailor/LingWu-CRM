@@ -28,12 +28,12 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
-        // 下载j3组文件
-        '/api/file-server': {
-          changeOrigin: true,
-          target: 'http://8.130.45.222:8888',
-          rewrite: (path) => path.replace(/^\/api\/file-server/, '')
-        },
+        // // 下载j3组文件
+        // '/api/file-server': {
+        //   changeOrigin: true,
+        //   target: 'http://8.130.45.222:8888',
+        //   rewrite: (path) => path.replace(/^\/api\/file-server/, '')
+        // },
         '/api': {
           changeOrigin: true,
           // target: 'http://localhost:10100',
