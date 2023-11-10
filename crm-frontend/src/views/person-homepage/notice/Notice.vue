@@ -171,7 +171,8 @@ const tableColumnAttribute = [
   {
     prop: 'status',
     label: '状态',
-    useTag: true
+    useTag: true,
+    sortable: true
   },
   {
     prop: 'ownerUserId',
@@ -315,7 +316,7 @@ const handleSearch = async () => {
     const params = {
       pageSize: 5,
       pageIndex: 1,
-      keyWord: inputValue.value
+      title: inputValue.value
     }
     await getTableData(params)
   } else {
@@ -350,18 +351,23 @@ const readBatches = async () => {
   if (!baseDataListRef.value.rows.length) {
     ElMessage.error('请先选择数据')
   } else {
-    const id = baseDataListRef.value.rows.map((row) => {
-      return (row.status = {
-        value: row.status ? '已读' : '未读',
-        tagType: row.status ? 'info' : 'danger'
-      })
+    const ids = baseDataListRef.value.rows.map((row) => {
+      if (row.status.value === '未读') {
+        return row.id
+      }
     })
-    await updateTableData({ id }).then(() => {
+    await checkTableData({ids}).then(res=>{
       ElMessage({
-        message: '操作成功',
+        message: res.message,
         type: 'success'
       })
     })
+    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+    await isUseInputValueGetTableData(
+      baseDataListRef.value.paginationData.pageSize,
+      baseDataListRef.value.paginationData.currentPage
+    )
+    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   }
 }
 

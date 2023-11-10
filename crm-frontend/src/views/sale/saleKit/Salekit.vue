@@ -35,31 +35,19 @@
 import { SoldOut } from '@element-plus/icons-vue'
 import SalesKit from '@/components/chartStatistics/salesManagement/SalesKit.vue'
 import SalesBoard from '@/components/chartStatistics/salesManagement/SalesBoard.vue'
-import { ref, onMounted } from 'vue'
-import { useSalesBoardStore } from '@/stores/salesmanager/salesBoard.js'
+import { ref } from 'vue'
 
 // 导入销售榜的仓库
-const salesBoardStore = useSalesBoardStore()
 
 // 控制操作提示弹框
 const openDialog = ref(false)
-
-const getSalesBoardList = async (params) => {
-  await salesBoardStore.getData(params)
-  console.log('获取到的数据', salesBoardStore.tableData)
-}
-
-onMounted(() => {
-  console.log('挂载时加载数据')
-  getSalesBoardList
-})
 
 // 数量统计的数据
 const getData = (timePick = '本周') => {
   let chartData = {}
   switch (timePick) {
     case '本周':
-      chartData.contractsNum = salesBoardStore.tableData.total
+      chartData.contractsNum = [25, 53, 23, 64, 67, 56, 81]
       chartData.amount = [
         100000, 120000, 430000, 590000, 690000, 280000, 810000
       ]
