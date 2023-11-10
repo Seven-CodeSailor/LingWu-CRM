@@ -28,11 +28,11 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
-        '/api/login/': {
-          changeOrigin: true,
-          target: 'http://39.101.76.24:10200/',
-          rewrite: (path) => path.replace(/^\/api/, '')
-        },
+        // '/api/login/': {
+        //   changeOrigin: true,
+        //   target: 'http://39.101.76.24:10200/',
+        //   rewrite: (path) => path.replace(/^\/api/, '')
+        // },
         '/api': {
           changeOrigin: true,
           // target: 'http://localhost:10100',
@@ -42,7 +42,8 @@ export default ({ mode }) =>
         },
         '/captcha': {
           changeOrigin: true,
-          target: 'http://localhost:10680',
+          // target: 'http://localhost:10680',
+          target: 'http://39.101.76.24:10200',
           rewrite: (path) => path.replace(/^\/captcha/, '')
         }
       }

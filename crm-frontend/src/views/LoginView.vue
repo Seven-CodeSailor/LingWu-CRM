@@ -85,10 +85,10 @@
 
 <script setup>
 import Verify from '@/components/verifition/Verify.vue'
-// import Request from '@/apis/request'
+import Request from '@/apis/request'
 import { ref, reactive, onMounted } from 'vue'
 import { login } from '@/apis/login'
-import { ElMessage } from 'element-plus'
+
 import { useRouter } from 'vue-router'
 import VanillaTilt from 'vanilla-tilt'
 import { userStore } from '@/stores/user'
@@ -148,8 +148,9 @@ function submitForm() {
 
   // 弹出验证码框
   // useVerify('clickWord')
+  useVerify('blockPuzzle')
 
-  doLogin('ccc')
+  // doLogin('ccc')
 }
 
 function submitForm2() {

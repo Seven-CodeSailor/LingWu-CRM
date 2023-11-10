@@ -11,10 +11,10 @@
     class="card"
     :title="sendData.title"
     :msg="sendData.opreateTip"
-    :table-column-attribute="sendData.tableColumnAttribute"
-    :table-data="sendData.tableData"
+    :table-column-attribute="trackRecordsStore.tableColumnAttribute"
+    :table-data="trackRecordsStore.tableData"
     :page-sizes="sendData.pageSizes"
-    :total="sendData.total"
+    :total="trackRecordsStore.tableTotaltotal"
     useDropdownMenu="true"
     :dropdownMenuActionsInfo="sendData.dropdownMenuActionsInfo"
     useOperateColumn="true"
@@ -34,7 +34,7 @@
             @click="addData"
             >添加数据</el-button
           >
-          <el-button @click="changeLoadAnimation">刷新</el-button>
+          <el-button @click="chanLoadAnimation">刷新</el-button>
           <!-- 下拉选择框 -->
           <BulkOPe :excelData="getRows" :getOpt="() => [0, 2, 3, 4]">
             <template #excel>
@@ -207,9 +207,25 @@
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
 import BulkOPe from '@/components/BulkOpe/BulkOPe.vue'
 import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import DropDown from '@/components/DropDown/DropDown.vue'
 import { SoldOut, Plus } from '@element-plus/icons-vue'
+import { useTrackRecordsStore } from '@/stores/salesmanager/trackRecords.js'
+
+const trackRecordsStore = useTrackRecordsStore()
+
+const getTrackRecordsList = async (params) => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  console.log('获取到的数据111', baseDataListRef.value)
+  await trackRecordsStore.getTableData(params)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
+// 挂载时获得分页数据
+onMounted(() => {
+  getTrackRecordsList(1, 5)
+  console.log('分页列表数据', trackRecordsStore.getTableData)
+})
+
 // 搜索框的searchDetails方法还需完善
 
 // 批量删除所选列表
@@ -270,16 +286,17 @@ const options = ref([
 // 控制抽屉的显示与否
 let dialogVisible = ref(false)
 
-//添加销售机会
-// 新增销售机会的数据
+// 新增跟踪记录的数据
 let trackRecordsData = ref({
-  id: '',
-  content: ''
+  AC: '',
+  AC_id: '',
+  FT: '',
+  CContent: '',
+  NT: '',
+  FM: '',
+  CS: '',
+  CS_id: 0
 })
-// 添加按钮的回调函数
-let addData = () => {
-  dialogVisible.value = true
-}
 
 // 点击保存按钮后的回调函数用来保存数据
 const saveData = () => {
@@ -295,114 +312,78 @@ const searchSaleName = ref('')
 
 // 数据传递
 const sendData = {
-  tableColumnAttribute: [
-    {
-      prop: 'associate_cus',
-      label: '关联客户',
-      sortable: false
-    },
-    {
-      prop: 'cus_linkman',
-      label: '客户联系人',
-      sortable: false
-    },
-    {
-      prop: 'follow_mode',
-      label: '跟进方式'
-    },
-    {
-      prop: 'follow_date',
-      label: '跟进时间'
-    },
-    {
-      prop: 'next_time',
-      label: '下次联系时间'
-    },
-    {
-      prop: 'content',
-      label: '沟通内容'
-    },
-    {
-      prop: 'status',
-      label: '当前阶段'
-    },
-    {
-      prop: 'sale_opp',
-      label: '销售机会'
-    }
-  ],
-  tableData: [
-    {
-      associate_cus: '蔡徐坤',
-      cus_linkman: '马云',
-      follow_mode: '意念交流',
-      follow_date: '2021-10-12',
-      next_time: '2021-10-20',
-      content: '你是来找茬的吧',
-      status: '筹备阶段',
-      sale_opp: '销售机会'
-    },
-    {
-      associate_cus: '蔡徐坤',
-      cus_linkman: '马云',
-      follow_mode: '意念交流',
-      follow_date: '2021-10-12',
-      next_time: '2021-10-20',
-      content: '你是来找茬的吧',
-      status: '筹备阶段',
-      sale_opp: '销售机会'
-    },
-    {
-      associate_cus: '蔡徐坤',
-      cus_linkman: '马云',
-      follow_mode: '意念交流',
-      follow_date: '2021-10-12',
-      next_time: '2021-10-20',
-      content: '你是来找茬的吧',
-      status: '筹备阶段',
-      sale_opp: '销售机会'
-    },
-    {
-      associate_cus: '蔡徐坤',
-      cus_linkman: '马云',
-      follow_mode: '意念交流',
-      follow_date: '2021-10-12',
-      next_time: '2021-10-20',
-      content: '你是来找茬的吧',
-      status: '筹备阶段',
-      sale_opp: '销售机会'
-    },
-    {
-      associate_cus: '蔡徐坤',
-      cus_linkman: '马云',
-      follow_mode: '意念交流',
-      follow_date: '2021-10-12',
-      next_time: '2021-10-20',
-      content: '你是来找茬的吧',
-      status: '筹备阶段',
-      sale_opp: '销售机会'
-    },
-    {
-      associate_cus: '蔡徐坤',
-      cus_linkman: '马云',
-      follow_mode: '意念交流',
-      follow_date: '2021-10-12',
-      next_time: '2021-10-20',
-      content: '你是来找茬的吧',
-      status: '筹备阶段',
-      sale_opp: '销售机会'
-    },
-    {
-      associate_cus: '蔡徐坤',
-      cus_linkman: '马云',
-      follow_mode: '意念交流',
-      follow_date: '2021-10-12',
-      next_time: '2021-10-20',
-      content: '你是来找茬的吧',
-      status: '筹备阶段',
-      sale_opp: '销售机会'
-    }
-  ],
+  // tableData: [
+  //   {
+  //     associate_cus: '蔡徐坤',
+  //     cus_linkman: '马云',
+  //     follow_mode: '意念交流',
+  //     follow_date: '2021-10-12',
+  //     next_time: '2021-10-20',
+  //     content: '你是来找茬的吧',
+  //     status: '筹备阶段',
+  //     sale_opp: '销售机会'
+  //   },
+  //   {
+  //     associate_cus: '蔡徐坤',
+  //     cus_linkman: '马云',
+  //     follow_mode: '意念交流',
+  //     follow_date: '2021-10-12',
+  //     next_time: '2021-10-20',
+  //     content: '你是来找茬的吧',
+  //     status: '筹备阶段',
+  //     sale_opp: '销售机会'
+  //   },
+  //   {
+  //     associate_cus: '蔡徐坤',
+  //     cus_linkman: '马云',
+  //     follow_mode: '意念交流',
+  //     follow_date: '2021-10-12',
+  //     next_time: '2021-10-20',
+  //     content: '你是来找茬的吧',
+  //     status: '筹备阶段',
+  //     sale_opp: '销售机会'
+  //   },
+  //   {
+  //     associate_cus: '蔡徐坤',
+  //     cus_linkman: '马云',
+  //     follow_mode: '意念交流',
+  //     follow_date: '2021-10-12',
+  //     next_time: '2021-10-20',
+  //     content: '你是来找茬的吧',
+  //     status: '筹备阶段',
+  //     sale_opp: '销售机会'
+  //   },
+  //   {
+  //     associate_cus: '蔡徐坤',
+  //     cus_linkman: '马云',
+  //     follow_mode: '意念交流',
+  //     follow_date: '2021-10-12',
+  //     next_time: '2021-10-20',
+  //     content: '你是来找茬的吧',
+  //     status: '筹备阶段',
+  //     sale_opp: '销售机会'
+  //   },
+  //   {
+  //     associate_cus: '蔡徐坤',
+  //     cus_linkman: '马云',
+  //     follow_mode: '意念交流',
+  //     follow_date: '2021-10-12',
+  //     next_time: '2021-10-20',
+  //     content: '你是来找茬的吧',
+  //     status: '筹备阶段',
+  //     sale_opp: '销售机会'
+  //   },
+  //   {
+  //     associate_cus: '蔡徐坤',
+  //     cus_linkman: '马云',
+  //     follow_mode: '意念交流',
+  //     follow_date: '2021-10-12',
+  //     next_time: '2021-10-20',
+  //     content: '你是来找茬的吧',
+  //     status: '筹备阶段',
+  //     sale_opp: '销售机会'
+  //   }
+  // ],
   title: '跟踪记录',
   opreateTip: '多一眼看一眼就会爆炸',
   dropdownMenuActionsInfo: [

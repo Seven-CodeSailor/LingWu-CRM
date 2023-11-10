@@ -632,7 +632,7 @@ const getSalesContractList = async (params) => {
   await salesContractStore.getTableData(params)
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
 }
-// 挂载时获得分页数据
+// 挂载时获得分页数据addTrackRecords
 onMounted(() => {
   getSalesContractList(1, 5)
   console.log('分页列表数据', salesContractStore.getTableData)
