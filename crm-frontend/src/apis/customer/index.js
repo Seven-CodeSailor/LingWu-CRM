@@ -1,6 +1,6 @@
 import Request from '../request'
 import useSelect from '@/stores/customer/select.js'
-import useMyClient from '@/stores/customer/myClient.js'
+import useMyClient from '@/stores/customer/myclient.js'
 
 const select = useSelect()
 const myclient = useMyClient()
