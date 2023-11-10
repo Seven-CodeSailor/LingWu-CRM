@@ -159,7 +159,6 @@ export const getDictclassifylist = async (params, success, fail) => {
  * @return {*}
  */
 
-
 /**
  * @description: 获取系统用户名称列表数据
  * @param {*} params 请求参数:{name(String)}
@@ -381,7 +380,7 @@ export const getDepartmentList = async (params, success) => {
     Request.GET,
     'http://101.34.252.80:10110/orgstructure/dept/dept/list-name-all',
     {
-    ...params
+      ...params
     }
   )
     .then((response) => {
