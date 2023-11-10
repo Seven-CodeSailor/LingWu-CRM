@@ -11,7 +11,7 @@ import Request from '@/apis/request.js'
 // const baseUrl = '/java3-personal-homepage'
 
 /**
- * @description: 哥儿难受也——公告通知
+ * @description: 公告通知
  * @param {Object} params // pageIndex pageSize
  * @return {Promise}
  */
