@@ -1,5 +1,5 @@
 import Request from '../request'
-import useDashBoard from '@/stores/dashboard/dashBoard.js'
+import useDashBoard from '@/stores/dashBoard/dashBoard.js'
 const dashBoard = useDashBoard()
 
 // 查询公告通知提醒列表

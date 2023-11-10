@@ -8,13 +8,13 @@
  */
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { 
+import {
   queryMessage,
   queryMessageId,
   deleteMassage,
   markReadMessage,
-  publishMessage,
- } from '@/apis/personal-homepage/message.js'
+  publishMessage
+} from '@/apis/personal-homepage/message.js'
 export const useMessageStore = defineStore('message', () => {
   const tableData = ref([])
   const total = ref()
@@ -23,14 +23,14 @@ export const useMessageStore = defineStore('message', () => {
     console.log('getMessageList', params)
     await queryMessage(params)
       .then((res) => {
-          tableData.value = res.data.rows.map((row)=>{
-            row.status = {
-              value:row.flag?'已处理':"未处理",
-              tagType:row.flag?'danger':"info"
-            }
-            return row
-          })
-          total.value = res.data.total
+        tableData.value = res.data.rows.map((row) => {
+          row.status = {
+            value: row.flag ? '已处理' : '未处理',
+            tagType: row.flag ? 'danger' : 'info'
+          }
+          return row
+        })
+        total.value = res.data.total
       })
       .catch((err) => {
         console.log('err', err)
@@ -59,4 +59,4 @@ export const useMessageStore = defineStore('message', () => {
     markMessageItem,
     publishMessageItem
   }
-  })
+})

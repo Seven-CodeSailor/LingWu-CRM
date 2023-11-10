@@ -35,11 +35,6 @@ import quarterOfYear from 'dayjs/plugin/quarterOfYear'
 //day.js年份插件
 dayjs.extend(quarterOfYear)
 
-//测试数组 后期会删除
-// let a = ['b', 'a', 'c']
-// let b = [2, 3, 1]
-// let c = b.map((e, i) => [e, a[i]])
-
 // 相应时间返回的方法
 function timeSpan() {
   let start = ''

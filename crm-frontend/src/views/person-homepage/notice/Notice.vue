@@ -10,7 +10,6 @@
       :dropdown-menu-actions-info="dropdownMenuActionsInfo"
       :useDropdownMenu="true"
       @update-table-data="updateTableData"
-      @update-switch-state="updateSwitchState"
       ref="baseDataListRef"
     >
       <!-- 导航图标 -->
@@ -110,21 +109,19 @@
       :handle-submit="submitDialogVisible"
     >
       <template #default>
-        <el-form :model="checkNoticeForm" :rules="rules" ref="formRef">
-          <el-form-item label="消息主题" prop="messageTitle">
-            <el-input v-model="checkNoticeForm.messageTitle"> </el-input>
+        <el-form :model="checkform" :rules="rules" ref="formRef">
+          <el-form-item label="消息主题">
+            <el-input v-model="checkform.title" disabled> </el-input>
           </el-form-item>
-          <el-form-item label="消息内容" prop="messageContent">
-            <el-input v-model="checkNoticeForm.messageContent" type="textarea">
+          <el-form-item label="消息内容">
+            <el-input v-model="checkform.content" type="textarea" disabled>
             </el-input>
           </el-form-item>
         </el-form>
       </template>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitDialogVisible = false"
-            >确定</el-button
-          >
+          <el-button type="primary" @click="checkSubmit">确定</el-button>
         </div>
       </template>
     </el-drawer>
@@ -136,12 +133,23 @@ import { ref, onMounted } from 'vue'
 import { getDepartmentList } from '../../../apis/publicInterface'
 import { useNoticeStore } from '@/stores/person-homepage/notice.js'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
+import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 // 表格数据引入
 const noticeStore = useNoticeStore()
 // 放入值的逻辑
 const baseDataListRef = ref(null)
 const noticeFormRef = ref(null)
+const inputValue = ref('')
+const storeId = ref('')
+const formRef = ref(null)
+// const checkNoticeFormRef = ref({
+//   noticeTitle: '',
+//   noticeContent: ''
+// })
+const checkform = ref({
+  title: '',
+  content: ''
+})
 // 表格标题栏
 const tableColumnAttribute = [
   {
@@ -163,41 +171,31 @@ const tableColumnAttribute = [
   {
     prop: 'status',
     label: '状态',
-    useTag: true
+    useTag: true,
+    sortable: true
   },
   {
     prop: 'ownerUserId',
     label: '接收人'
   }
 ]
-const title = ref('')
-const formRef = ref(null)
-const checkNoticeForm = ref({
-  messageTitle: '',
-  messageContent: ''
-})
+const rowId = ref('')
+const rowStatus = ref('')
 // 操作栏下拉菜单选项
 const dropdownMenuActionsInfo = [
-  //以下为原数据
-  // {
-  //   command: 'check',
-  //   // row为当前行的数据
-  //   handleAction: (row) => {
-  //     dialogVisible.value = true
-  //     console.log('查看的回调函数', row)
-  //   },
-  //   actionName: '查看'
-  // },
   {
     command: 'check',
     // row为当前行的数据
     handleAction: (row) => {
       dialogVisible.value = true
-      const { messageTitle, messageContent } = row
-      storeId.value = row.storeId
-      checkNoticeForm.value.form = {
-        messageTitle,
-        messageContent
+      const { title, content } = row
+      rowId.value = row.id
+      rowStatus.value = row.status.value
+      // storeId不能动，否则没有回调函数
+      storeId.value = row.id
+      checkform.value = {
+        title,
+        content
       }
       console.log('查看的回调函数', row)
     },
@@ -207,7 +205,7 @@ const dropdownMenuActionsInfo = [
     command: 'delete',
     handleAction: async (row) => {
       ElMessageBox.confirm('您确定要删除该条数据吗?', '警告', {
-        confirmButtonText: '确定',
+        confirmButtonText: '确认',
         cancelButtonText: '取消',
         type: 'warning'
       })
@@ -218,15 +216,17 @@ const dropdownMenuActionsInfo = [
               message: res.message
             })
           })
-          await getTableData({
-            pageIndex: baseDataListRef.value.paginationData.currentPage,
-            pageSize: baseDataListRef.value.paginationData.pageSize
-          })
+          baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+          await isUseInputValueGetTableData(
+            baseDataListRef.value.paginationData.pageSize,
+            baseDataListRef.value.paginationData.currentPage
+          )
+          baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
         })
         .catch(() => {
           ElMessage({
             type: 'info',
-            message: '删除已取消'
+            message: '操作已取消'
           })
         })
     },
@@ -234,8 +234,16 @@ const dropdownMenuActionsInfo = [
   }
 ]
 
-const inputValue = ref('')
-const storeId = ref('')
+const checkSubmit = async () => {
+  if (rowStatus.value === '未读') {
+    console.log(1111)
+    await changeState()
+  }
+
+  dialogVisible.value = false
+}
+
+// 获取表格公告列表逻辑
 const getTableData = async (params) => {
   baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   await noticeStore.getStoreList(params)
@@ -246,22 +254,29 @@ const getTableData = async (params) => {
 const deleteTableData = async (params) => {
   return await noticeStore.removeNoticeItem(params)
 }
-// 添加公告逻辑(post)
+// 添加新公告(post修改公告以添加新公告)逻辑
 const addTableData = async (params) => {
   return await noticeStore.addNoticeItem(params)
 }
-// 标记已读公告
+// 标记已读公告(可批量标记)逻辑
 const checkTableData = async (params) => {
   return await noticeStore.updateNoticeItem(params)
 }
+// 更新系统公告列表逻辑
+const updateTableData = async (pageSize, pageIndex) => {
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+  await isUseInputValueGetTableData(pageSize, pageIndex)
+  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+}
 
+// 是否使用搜索关键字获取列表数据逻辑
 const isUseInputValueGetTableData = async (pageSize, pageIndex) => {
   if (inputValue.value) {
     // 输入框有值
-    await noticeStoreStore.getStoreList({
+    await noticeStore.getStoreList({
       pageIndex,
       pageSize,
-      keyWord: inputValue.value
+      title: inputValue.value
     })
   } else {
     await noticeStore.getStoreList({
@@ -271,37 +286,24 @@ const isUseInputValueGetTableData = async (pageSize, pageIndex) => {
   }
 }
 
-const updateTableData = async (pageSize, pageIndex) => {
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-  await isUseInputValueGetTableData(pageSize, pageIndex)
-  baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
-}
-
-// 公告状态跳转
-const updateSwitchState = async (state, row) => {
+// 公告状态跳转（已读/未读）
+const changeState = async () => {
   baseDataListRef.value.openSwitchLoading =
     !baseDataListRef.value.openSwitchLoading
-  await checkTableData({ visible: state ? '已读' : '未读', id: row.id }).then(
-    (res) => {
-      ElMessage({
-        message: res.message,
-        type: 'success'
-      })
-    }
-  )
-  if (inputValue.value) {
-    // 输入框有值
-    await noticeStore.getStoreList({
-      pageIndex: baseDataListRef.value.paginationData.currentPage,
-      pageSize: baseDataListRef.value.paginationData.pageSize,
-      keyWord: inputValue.value
+  await checkTableData({ ids: [rowId.value] }).then((res) => {
+    console.log('1111', res)
+    ElMessage({
+      message: res.message,
+      type: 'success'
     })
-  } else {
-    await noticeStore.getStoreList({
-      pageIndex: baseDataListRef.value.paginationData.currentPage,
-      pageSize: baseDataListRef.value.paginationData.pageSize
-    })
-  }
+  })
+  // await isUseInputValueGetTableData(
+
+  // )
+  await getTableData({
+    pageSize: baseDataListRef.value.paginationData.pageSize,
+    pageIndex: baseDataListRef.value.paginationData.currentPage
+  })
   baseDataListRef.value.openSwitchLoading =
     !baseDataListRef.value.openSwitchLoading
 }
@@ -314,7 +316,7 @@ const handleSearch = async () => {
     const params = {
       pageSize: 5,
       pageIndex: 1,
-      keyWord: inputValue.value
+      title: inputValue.value
     }
     await getTableData(params)
   } else {
@@ -330,7 +332,7 @@ const deleteBatches = async () => {
     const ids = baseDataListRef.value.rows.map((row) => {
       return row.id
     })
-    await deleteTableData({ ids }).then((res) => {
+    await deleteTableData({ ids }).then(() => {
       ElMessage({
         message: '删除成功',
         type: 'success'
@@ -349,18 +351,23 @@ const readBatches = async () => {
   if (!baseDataListRef.value.rows.length) {
     ElMessage.error('请先选择数据')
   } else {
-    const id = baseDataListRef.value.rows.map((row) => {
-      return (row.status = {
-        value: row.status ? '已读' : '未读',
-        tagType: row.status ? 'info' : 'danger'
-      })
+    const ids = baseDataListRef.value.rows.map((row) => {
+      if (row.status.value === '未读') {
+        return row.id
+      }
     })
-    await updateTableData({ id }).then((res) => {
+    await checkTableData({ids}).then(res=>{
       ElMessage({
-        message: '操作成功',
+        message: res.message,
         type: 'success'
       })
     })
+    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+    await isUseInputValueGetTableData(
+      baseDataListRef.value.paginationData.pageSize,
+      baseDataListRef.value.paginationData.currentPage
+    )
+    baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
   }
 }
 
@@ -387,6 +394,7 @@ const addEvent = () => {
   addDrawer.value = true
 }
 
+// 存放添加表单的数据
 const form = ref({
   title: '',
   ownerDeptId: '',
@@ -441,20 +449,28 @@ const rules = {
 
 //添加公告表单提交逻辑
 const handleSubmit = async () => {
-  noticeFormRef.value.validate((valid) => {
+  noticeFormRef.value.validate(async (valid) => {
     if (valid) {
       const params = {
-        ...form.value
+        content: form.value.content,
+        title: form.value.title,
+        ownerDeptId: form.value.ownerDeptId.value,
+        ownerUserId: form.value.ownerUserId.value
       }
-      console.log(valid)
+      await addTableData(params).then((res) => {
+        ElMessage({
+          message: res.message,
+          type: 'success'
+        })
+      })
+      baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
+      await isUseInputValueGetTableData(
+        baseDataListRef.value.paginationData.pageSize,
+        baseDataListRef.value.paginationData.currentPage
+      )
+      baseDataListRef.value.openLoading = !baseDataListRef.value.openLoading
       addDrawer.value = false
     }
-  })
-  console.log('sumbit')
-  console.log(form.value)
-  await addTableData({
-    pageSize: baseDataListRef.value.paginationData.pageSize,
-    pageIndex: baseDataListRef.value.paginationData.currentPage
   })
 }
 
@@ -474,11 +490,24 @@ const look = (row) => {
 
 // 分页逻辑
 onMounted(async () => {
+  // await getTableData({
+  //   pageSize: 5,
+  //   currentPage: 1
+  // })
+  // noticeStore
+  //   .addNoticeItem({
+  //     title: '今晚开会',
+  //     ownerDeptId: 1,
+  //     ownerUserId: 1,
+  //     content: ''
+  //   })
+  //   .then((res) => {
+  //     console.log('res', res)
+  //   })
   const params = {
     pageIndex: 1,
     pageSize: 5
   }
-  // getStockStorageList(params)
   await noticeStore.getStoreList(params)
   await noticeStore.getOptionsUserName()
 

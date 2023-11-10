@@ -34,7 +34,7 @@ import { ref } from 'vue'
 import BusinessStatistics from './BusinessStatistics.vue'
 import ClientStatistics from './ClientStatistics.vue'
 import BusinessPre from './BusinessPre.vue'
-import useDashBoard from '@/stores/dashboard/dashBoard.js'
+import useDashBoard from '@/stores/dashBoard/dashBoard.js'
 const dashBoard = useDashBoard()
 const activeName = ref('first')
 </script>

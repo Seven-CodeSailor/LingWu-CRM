@@ -1,5 +1,5 @@
 import Request from '../request'
-const BASEURL = '/sales-contract'
+const BASEURL = ''
 
 /**
  * @description: 获取销售合同数据列表

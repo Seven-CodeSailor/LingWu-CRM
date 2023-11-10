@@ -179,15 +179,15 @@
 
 <script setup>
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-import ChooseSelect from '@/components/chooseSelect/chooseSelect.vue'
+import ChooseSelect from '@/components/chooseSelect/ChooseSelect.vue'
 import { Operation, Plus, Search } from '@element-plus/icons-vue'
-import { getDepartmentList } from '../../../apis/publicInterface.js'
+import { getDepartmentList } from '@/apis/publicInterface.js'
 import {
   getDepartmentTree,
   addDepartmentApi,
   deleteDepartmentApi
-} from '../../../apis/organizationStructure/department.js'
-import useDepartmentManageStore from '../../../stores/organizationStructure/departmentManage.js'
+} from '@/apis/organizationStructure/department.js'
+import useDepartmentManageStore from '@/stores/organizationStructure/departmentManage.js'
 const departmentManage = useDepartmentManageStore()
 import { ref, onMounted } from 'vue'
 

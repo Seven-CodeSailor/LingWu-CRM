@@ -2,7 +2,7 @@
  * @Author: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
  * @Date: 2023-11-02 15:19:55
  * @LastEditors: 暮秋pro oncwnuDcKAa9aHtUN1_rnIGw84kY@git.weixin.qq.com
- * @LastEditTime: 2023-11-07 14:53:47
+ * @LastEditTime: 2023-11-10 16:00:11
  * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\organizationStructure\Roles.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -152,6 +152,34 @@ export const deleteRoleListApi = async (params, success) => {
       console.log(error)
       ElMessage({
         message: '操作失败',
+        type: 'warning'
+      })
+    })
+}
+
+/**
+ * @description: 获取角色菜单权限树形数据
+ * @param {*} params 请求参数:
+ * {
+ *  roleId: 角色id
+ * }
+ * @param {*} success 成功回调
+ * @Author{*} 暮秋(有问题找我)
+ * @return {*}
+ */
+export const getRolePowerApi = async (params, success) => {
+  await Request.requestForm(
+    Request.GET,
+    'http://101.34.252.80:10110/orgstructure/role/role-menu/role-check-power',
+    params
+  )
+    .then((response) => {
+      success(response)
+    })
+    .catch((error) => {
+      console.log(error)
+      ElMessage({
+        message: '权限获取失败',
         type: 'warning'
       })
     })

@@ -2,7 +2,7 @@
  * @Author: setti5 2283356040@qq.com
  * @Date: 2023-11-01 21:29:40
  * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-09 16:31:16
+ * @LastEditTime: 2023-11-09 21:48:33
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\person-homepage\notice.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -30,7 +30,7 @@ export const useNoticeStore = defineStore('notice', () => {
   const setOptionsDepartmentName = (dataList)=> {
     optionsDepartmentName.value = dataList
   }
-  
+  // 获取公告列表
   const getStoreList = async (params) => {
     console.log('getStoreList', params)
     await queryNotion(params)
@@ -48,7 +48,7 @@ export const useNoticeStore = defineStore('notice', () => {
       console.log('err', err)
     })
   }
-
+  // 获取抽屉用户名下拉菜单
   const getOptionsUserName = ()=>{
   getUserNameList({}, (res) => {
       optionsUserName.value = res.data.map((row)=>{
@@ -59,6 +59,7 @@ export const useNoticeStore = defineStore('notice', () => {
       })
     })
   }
+  // 获取抽屉部门名下拉菜单
   const getOptionsDepartName = async(paramsObj) => {
     const {
       deptName
@@ -74,9 +75,8 @@ export const useNoticeStore = defineStore('notice', () => {
       })
     })
   }
-
+  // 添加公告
   const addNoticeItem = async (params)=>{
-    console.log('addNoticeItem', params)
     return await addNotice(params)
   }
   // 获取指定公告详情
@@ -84,19 +84,21 @@ export const useNoticeStore = defineStore('notice', () => {
     console.log('getNoticeItem', params)
     return await getNotice(params)
   }
+  // 删除公告
   const removeNoticeItem = async (params)=>{
     console.log('removeNoticeItem', params)
     return await removeNotice(params)
   }
+  // 标记已读公告（可批量标记）
   const updateNoticeItem = async (params)=>{
     console.log('updateNoticeItem', params)
     return await updateNotice(params)
   }
 
   return {
-      getStoreList,
       tableData,
       total,
+      getStoreList,
       getOptionsDepartName,
       optionsDepartmentName,
       getOptionsUserName,

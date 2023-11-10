@@ -10,7 +10,7 @@
       :total="messageStore.total"
       :handle-delete="handleDelete"
       ref="baseDataListRef"
-      @update-table-data=updateTableData
+      @update-table-data="updateTableData"
     >
       <!-- 导航图标 -->
       <template #ico>
@@ -82,8 +82,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import BaseDataList from '@/components/DataList/BaseDataList.vue'
-import { useMessageStore } from '../../../stores/person-homepage/messagepro';
-
+import { useMessageStore } from '@/stores/person-homepage/messagepro'
 
 // 批量删除的逻辑
 const deleteBatches = async () => {
@@ -199,7 +198,6 @@ const dropdownMenuActionsInfo = [
   }
 ]
 
-
 const baseDataListRef = ref(null)
 const inputValue = ref('')
 
@@ -251,7 +249,6 @@ onMounted(() => {
     pageSize: 5
   }
   messageStore.getMessageList(params)
-  
 })
 
 // 删除单条数据
@@ -269,7 +266,6 @@ const handleDelete = (row) => {
   })
 }
 
-
 // 查看公告抽屉罗辑
 const detail = ref({
   id: '',
@@ -283,7 +279,6 @@ const look = (row) => {
     (detail.value.content = row.content),
     (dialogVisible.value = true)
 }
-
 </script>
 
 <style lang="scss" scoped>

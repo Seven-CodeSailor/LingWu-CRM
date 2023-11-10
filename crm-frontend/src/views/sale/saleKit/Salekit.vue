@@ -37,6 +37,8 @@ import SalesKit from '@/components/chartStatistics/salesManagement/SalesKit.vue'
 import SalesBoard from '@/components/chartStatistics/salesManagement/SalesBoard.vue'
 import { ref } from 'vue'
 
+// 导入销售榜的仓库
+
 // 控制操作提示弹框
 const openDialog = ref(false)
 
@@ -96,19 +98,6 @@ const getDatas = (timePick = '本周') => {
         100000, 120000, 430000, 590000, 690000, 280000, 810000, 780000, 833000,
         910000
       ]
-
-      // [
-      //   [100000, 'A销售员'],
-      //   [120000, 'B销售员'],
-      //   [430000, 'C销售员'],
-      //   [590000, 'D销售员'],
-      //   [690000, 'E销售员'],
-      //   [280000, 'F销售员'],
-      //   [810000, 'G销售员'],
-      //   [780000, 'H销售员'],
-      //   [833000, 'I销售员'],
-      //   [910000, 'J销售员']
-      // ]
       chartData.salesman = [
         'J销售员',
         'I销售员',
