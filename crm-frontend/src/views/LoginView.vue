@@ -131,7 +131,7 @@ function doLogin(code) {
     },
     () => {
       // 跳转到首页
-      $router.push('/home')
+      $router.push('/dashboard')
       // 登录成功提示
       ElMessage.success('登录成功，前往首页')
     },
