@@ -62,8 +62,8 @@
               input-style="color: #a55eea;"
             ></el-input>
           </el-form-item>
-          <el-form-item class="wrap">
-            <el-button type="primary" @click="submitForm()" style="width: 200px"
+          <el-form-item class="wrap" style="width: 500px">
+            <el-button class="btn" type="primary" @click="submitForm()"
               >登录</el-button
             >
           </el-form-item>
@@ -218,6 +218,10 @@ function handleSuccess(res) {
 body {
   height: 100vh;
   overflow: hidden;
+}
+.btn {
+  width: 16.5vw;
+  left: -20px;
 }
 .login-page {
   height: 100vh;
