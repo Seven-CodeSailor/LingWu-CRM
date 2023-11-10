@@ -176,8 +176,6 @@ const handleSubmit = async () => {
       const params = {
         ...data.value
       }
-      params.enabled = params.visible
-      delete params.visible
       if (treeRef.value.isEdit) {
         // 有点瑕疵，后面再说
         await modifyTreeData({

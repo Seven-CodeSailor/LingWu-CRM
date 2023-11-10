@@ -1,9 +1,9 @@
 /*
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-11-05 21:18:17
- * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-08 22:06:53
- * @FilePath: \zero-one-crmsys\crm-frontend\vite.config.js
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-09 22:34:56
+ * @FilePath: \crm-frontend\vite.config.js
  * @Description:
  *
  * Copyright (c) 2023 by sayoriqwq 2531600563@qq.com, All Rights Reserved.
@@ -28,11 +28,12 @@ export default ({ mode }) =>
       port: 3000,
       https: false,
       proxy: {
-        // '/api/login/': {
-        //   changeOrigin: true,
-        //   target: 'http://39.101.76.24:10200/',
-        //   rewrite: (path) => path.replace(/^\/api/, '')
-        // },
+        // 下载j3组文件
+        '/api/file-server': {
+          changeOrigin: true,
+          target: 'http://8.130.45.222:8888',
+          rewrite: (path) => path.replace(/^\/api\/file-server/, '')
+        },
         '/api': {
           changeOrigin: true,
           // target: 'http://localhost:10100',

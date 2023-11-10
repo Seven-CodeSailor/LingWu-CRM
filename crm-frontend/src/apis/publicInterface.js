@@ -1,9 +1,9 @@
 /*
  * @Author: BINGWU
  * @Date: 2023-10-28 22:16:05
- * @LastEditors: setti5 2283356040@qq.com
- * @LastEditTime: 2023-11-09 16:06:35
- * @FilePath: \zero-one-crmsys\crm-frontend\src\apis\publicInterface.js
+ * @LastEditors: BINGWU HuJiaCheng2003@163.com
+ * @LastEditTime: 2023-11-09 22:45:56
+ * @FilePath: \crm-frontend\src\apis\publicInterface.js
  * @Mark: ૮(˶ᵔ ᵕ ᵔ˶)ა
  */
 import Request from './request'
@@ -254,10 +254,7 @@ export const queryNamePullList = (
  * @return {*}
  */
 export const queryAllFeeincome = async (success, fail) => {
-  await Request.requestJson(
-    Request.GET,
-    '/financial-management/feeincome/query-all-feeincome'
-  )
+  await Request.requestJson(Request.GET, '/feeincome/query-all-feeincome')
     .then(async (response) => {
       await success(response)
     })
