@@ -99,9 +99,8 @@
             <el-form-item label="父级栏目(点击获取id)" prop="parentID">
               <el-tree-select
                 v-model="editFormData.parentID"
-                :props="defaultProps"
                 :data="$store.sendTreeData"
-                @node-click="handleNodeClickForEditDropDown"
+                check-strictly
               />
             </el-form-item>
           </el-form>
@@ -150,11 +149,11 @@
             <el-form-item label="父级栏目(点击获取id)" prop="parentID">
               <el-tree-select
                 v-model="addFormData.parentID"
-                :props="defaultProps"
                 :data="$store.sendTreeData"
-                @node-click="handleNodeClickForAddDropDown"
+                check-strictly
               />
             </el-form-item>
+            <!-- @node-click="handleNodeClickForAddDropDown" -->
             <!-- <el-form-item label="是否启用" prop="shifouqiyong">
               <el-checkbox
                 v-model="addFormData.shifouqiyong"
@@ -185,10 +184,6 @@ onMounted(() => {
   $store.getSysMenuTree()
 })
 
-const defaultProps = {
-  children: 'children',
-  label: 'name'
-}
 const addFormData = ref({
   name: '',
   nameEn: '',
@@ -273,13 +268,6 @@ const handleNodeClick = (data) => {
   console.log('id', data.id)
 }
 
-const handleNodeClickForEditDropDown = (data) => {
-  editFormData.value.parentID = data.id
-}
-
-const handleNodeClickForAddDropDown = (data) => {
-  addFormData.value.parentID = data.id
-}
 const handleCancel = () => {
   showAddDrawer.value = false
   console.log('取消')

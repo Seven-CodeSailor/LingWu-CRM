@@ -2,7 +2,7 @@
  * @Author: sayoriqwq 2531600563@qq.com
  * @Date: 2023-10-29 13:05:59
  * @LastEditors: sayoriqwq 2531600563@qq.com
- * @LastEditTime: 2023-11-09 23:23:28
+ * @LastEditTime: 2023-11-10 16:37:05
  * @FilePath: \zero-one-crmsys\crm-frontend\src\stores\sysManage\menu.js
  * @Description:
  *
@@ -55,10 +55,23 @@ const useSysMenu = defineStore('sysmenu', {
     async getSysMenuTree() {
       const res = await getSysMenuTree().catch((e) => e)
       console.log(res.data)
-      res.data.name = '菜单管理'
-      //后端没做这个的id和name，但是我认为这里这个层级关系还是应该保留的，为了防止传undefined请求错误后堵塞后面发请求，这里随便给了一个id
-      res.data.id = 1
-      this.sendTreeData = [res.data]
+      // this.sendTreeData = res.data.children
+      function convertTreeData(treeData) {
+        if (!treeData || !Array.isArray(treeData)) {
+          return []
+        }
+
+        return treeData.map((node) => {
+          const newNode = {
+            id: node.id,
+            label: node.name,
+            value: node.id, // 新增 value 属性，值为 id
+            children: convertTreeData(node.children)
+          }
+          return newNode
+        })
+      }
+      this.sendTreeData = convertTreeData(res.data.children)
       console.log('sendTreeData', this.sendTreeData)
     },
     async getMenuList(id) {
